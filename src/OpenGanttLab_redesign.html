@@ -6462,8 +6462,9 @@ function pxmlAutoGuessMapping(db){
   pick('marca2',['marca2']);
   pickCustomByAlias('marca2',['Marca Activity Plan']);
   pickCustomByAlias('c2',['Especialidad Tarea']);
-  // Escenario y Categoría 1 no tienen equivalente estándar en el XML — punto de partida
-  // "Valor fijo" en blanco, para que el usuario lo complete o lo deje según el archivo.
+  pickCustomByAlias('c1',['Fase de Maduración']);
+  // Escenario y Categoría 1 no tienen equivalente estándar en el XML — si no se encontró
+  // un campo personalizado esperado, "Valor fijo" en blanco como punto de partida.
   if(!m.escenario||m.escenario==='__NONE__'){m.escenario='__FIXED__';if(m.escenario_fixed===undefined)m.escenario_fixed='';}
   if(!m.c1||m.c1==='__NONE__'){m.c1='__FIXED__';if(m.c1_fixed===undefined)m.c1_fixed='';}
   // Categoría 2: si no se encontró "Especialidad Tarea" como campo personalizado, "General" fijo como respaldo.
