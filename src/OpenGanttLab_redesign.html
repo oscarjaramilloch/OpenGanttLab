@@ -885,10 +885,6 @@ th,td{padding:0}
     <div id="datosXmlPane" style="display:none;flex:1;min-height:0;flex-direction:column;overflow:hidden">
       <div style="display:flex;align-items:center;gap:8px;padding:10px 20px;border-bottom:1px solid var(--line);background:var(--bg);flex-shrink:0">
         <span style="font-size:11px;color:var(--muted);flex:1" id="pxmlApplyStatus">Carga archivos .xml exportados desde Microsoft Project</span>
-        <button class="rb-flat" id="btnPxmlApply" onclick="pxmlApplyMappingUI()" style="background:var(--ogl-blue);color:#fff" title="Aplicar el mapeo configurado y cargar los datos a la Tabla de Datos">
-          <svg id="pxmlApplyIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-          <span id="pxmlApplyLabel">Aplicar y cargar a la tabla</span>
-        </button>
         <button class="rb-flat" onclick="exportProjectDbToExcel()" title="Exportar a Excel">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
         </button>
@@ -3399,15 +3395,16 @@ function buildTemplateXlsx(){
   const all=[XLSX_HEADER.map(h=>({t:'s',v:si(h)}))];
   return _xlsxZipFromRows(all,s);
 }
-async function saveChangesToExcel(){
-  if(!FILE_HANDLE){alert('Primero vincula un archivo Excel (botón 🔗 Vincular).');return;}
-  if(!TASKS.length){alert('No hay datos.');return;}
+async function saveChangesToExcel(silent){
+  if(!FILE_HANDLE){if(!silent)alert('Primero vincula un archivo Excel (botón 🔗 Vincular).');return;}
+  if(!TASKS.length){if(!silent)alert('No hay datos.');return;}
   const b=buildXlsx();if(!b)return;
   const btn=document.getElementById('btnSaveToExcel');
   try{
     if(btn)btn.classList.add('spinning');
     const perm=await FILE_HANDLE.queryPermission({mode:'readwrite'});
     if(perm!=='granted'){
+      if(silent)return; // no forzar el diálogo de permiso en segundo plano
       const req=await FILE_HANDLE.requestPermission({mode:'readwrite'});
       if(req!=='granted'){alert('Permiso de escritura denegado.');return;}
     }
@@ -3415,7 +3412,9 @@ async function saveChangesToExcel(){
     await ws.write(new Blob([b],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
     await ws.close();
     document.getElementById('status').textContent=`💾 Cambios guardados en ${FILE_HANDLE.name}.`;
-  }catch(e){alert('Error al guardar en el Excel: '+(e.message||e));}
+    _dirty=false;updateDirtyIndicator();
+    if(silent)apToast('Guardado automático realizado en '+FILE_HANDLE.name+' ('+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+').');
+  }catch(e){if(!silent)alert('Error al guardar en el Excel: '+(e.message||e));}
   finally{if(btn)btn.classList.remove('spinning');}
 }
 function downloadXlsx(){
@@ -3548,8 +3547,11 @@ function apRenderConfigUI(){
     });
   }
 }
-async function saveShare(){
-  if(!TASKS.length){alert('Primero carga datos.');return;}
+// Handle del archivo elegido la primera vez que se usó "Compartir" con la File System
+// Access API — lo reutiliza el autoguardado (ver autoSaveSilent) para reescribir el mismo
+// archivo sin volver a pedir selector cada 5 minutos.
+let _shareFileHandle=null;
+function _buildShareBlob(){
   const data={tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false})),
     scenarios:SCENARIOS,on:SCEN_ON,color:SCEN_COLOR,escColor:ESC_COLOR,cat2color:CAT2_COLOR,eventocolor:EVENTO_COLOR,presOpts:PRES_OPTS,presHidden:[...PRES_HIDDEN_KEYS],presTextBoxes:PRES_TEXTBOXES,presShapes:PRES_SHAPES,ganttTextBoxes:GANTT_TEXTBOXES,ganttOrder:GANTT_ORDER,ganttC2Order:GANTT_C2_ORDER,ganttTaskOrder:GANTT_TASK_ORDER,
     scale:document.getElementById('scale').value,mode:document.querySelector('input[name=mode]:checked').value,
@@ -3582,17 +3584,22 @@ async function saveShare(){
   // Inyectar datos en el tag ap_embed del snapshot
   const _TAG='<script id="ap_embed"';
   const _si=_src.indexOf(_TAG);
-  if(_si<0){alert('Error: no se encontró el tag de datos embebidos.');return;}
+  if(_si<0){alert('Error: no se encontró el tag de datos embebidos.');return null;}
   const _SCLT='<'+'/'+'script>';
   const _eo=_src.indexOf(_SCLT,_si)+_SCLT.length;
   const _openTag=_src.slice(_si,_src.indexOf('>',_si)+1);
   const out=_src.slice(0,_si)+_openTag+safe+_SCLT+_src.slice(_eo);
-  const blob=new Blob([out],{type:'text/html;charset=utf-8'});
+  return new Blob([out],{type:'text/html;charset=utf-8'});
+}
+async function saveShare(){
+  if(!TASKS.length){alert('Primero carga datos.');return;}
+  const blob=_buildShareBlob();if(!blob)return;
   // Usar File System Access API si está disponible (muestra selector de carpeta)
   if(window.showSaveFilePicker){
     try{
       const fh=await window.showSaveFilePicker({suggestedName:'OpenGanttLab_compartir.html',types:[{description:'Archivo HTML',accept:{'text/html':['.html']}}]});
       const ws=await fh.createWritable();await ws.write(blob);await ws.close();
+      _shareFileHandle=fh;
       document.getElementById('status').textContent='Archivo guardado correctamente.';_dirty=false;updateDirtyIndicator();return;
     }catch(e){if(e.name==='AbortError')return;/* fallback si falla */}
   }
@@ -3601,6 +3608,30 @@ async function saveShare(){
   const a=document.createElement('a');a.href=burl;a.download='OpenGanttLab_compartir.html';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(burl),5000);
   _dirty=false;updateDirtyIndicator();
 }
+/* ═══ AUTOGUARDADO (cada 5 min) ═══
+   Silencioso: solo actúa si ya existe un destino con permiso ya concedido — el Excel
+   vinculado (FILE_HANDLE) o el archivo elegido la primera vez que se usó "Compartir"
+   (_shareFileHandle) — para no interrumpir con selectores de archivo ni descargas
+   forzadas cada 5 minutos. Si no hay ningún destino vinculado, no hace nada; el aviso de
+   "cambios sin compartir" (Configuración) sigue siendo la única señal en ese caso. */
+async function autoSaveSilent(){
+  if(!_dirty||!TASKS.length)return;
+  try{
+    if(FILE_HANDLE){
+      await saveChangesToExcel(true);
+      return;
+    }
+    if(_shareFileHandle){
+      const perm=await _shareFileHandle.queryPermission({mode:'readwrite'});
+      if(perm!=='granted')return; // no forzar el diálogo de permiso en segundo plano
+      const blob=_buildShareBlob();if(!blob)return;
+      const ws=await _shareFileHandle.createWritable();await ws.write(blob);await ws.close();
+      _dirty=false;updateDirtyIndicator();
+      apToast('Guardado automático realizado ('+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+').');
+    }
+  }catch(e){/* autoguardado silencioso: no interrumpir con alerts por un fallo de fondo */}
+}
+setInterval(autoSaveSilent,5*60*1000);
 
 function downloadTemplate(){
   const b=buildTemplateXlsx();if(!b)return;
@@ -6316,6 +6347,7 @@ async function pxmlLoadFiles(files){
   if(inp) inp.value='';
   document.getElementById('pxmlDbCount').textContent=PXML_DB.length;
   pxmlRefreshDb();
+  pxmlAutoApply();
   // Ir a Base de datos automáticamente al terminar
   if(PXML_DB.length) pxmlTab('db');
 }
@@ -6498,10 +6530,12 @@ function pxmlSaveMap(dbIdx,field,val){
   PXML_DB[dbIdx].mapping[field]=val;
   const fixEl=document.getElementById(`pxmlFixed_${dbIdx}_${field}`);
   if(fixEl)fixEl.style.display=val==='__FIXED__'?'block':'none';
+  pxmlAutoApply();
 }
 function pxmlSaveFixedMap(dbIdx,field,val){
   if(!PXML_DB[dbIdx].mapping)PXML_DB[dbIdx].mapping={};
   PXML_DB[dbIdx].mapping[field+'_fixed']=val;
+  pxmlAutoApply();
 }
 function pxmlCopyMapping(fromIdx,toIdx){
   const src=PXML_DB[fromIdx];
@@ -6513,6 +6547,7 @@ function pxmlCopyMapping(fromIdx,toIdx){
   if(dst.mapping.c1==='__FIXED__') dst.mapping.c1='__ARCHIVO__';
   // Reconstruir la grilla para reflejar los valores copiados
   pxmlBuildMapGrid();
+  pxmlAutoApply();
 }
 function pxmlClearSearch(sel){
   // Limpiar el input de búsqueda anterior al select
@@ -6591,30 +6626,24 @@ function pxmlParseDate(s){
   if(!s)return null;
   const d=new Date(s);return isNaN(d)?null:d;
 }
-function pxmlApplyMappingUI(){
-  const btn=document.getElementById('btnPxmlApply');
-  const label=document.getElementById('pxmlApplyLabel');
-  const icon=document.getElementById('pxmlApplyIcon');
-  const status=document.getElementById('pxmlApplyStatus');
-  const n=PXML_DB.reduce((a,d)=>a+d.tasks.length,0);
-  btn.disabled=true;btn.style.opacity='.75';btn.style.cursor='wait';
-  label.textContent='Procesando '+n+' tareas…';
-  icon.classList.add('spinning-icon');
-  if(status)status.textContent='Aplicando mapeo y cargando a la tabla — esto puede tardar unos segundos con archivos grandes, no se ha colgado.';
-  // setTimeout(...,10) para que el navegador alcance a PINTAR el spinner/label antes de que
-  // el trabajo síncrono (potencialmente pesado con miles de tareas) bloquee el hilo principal.
-  setTimeout(()=>{
+// El mapeo se aplica solo (sin botón): cada cambio en el mapeo, o cada archivo cargado,
+// dispara un intento de auto-aplicar con un pequeño debounce. Si aún faltan campos
+// obligatorios simplemente no hace nada (sin alert) y lo vuelve a intentar en el próximo
+// cambio — así el usuario nunca "depende" de un clic, pero tampoco lo interrumpe mientras
+// sigue completando el mapeo.
+let _pxmlAutoApplyTimer=null;
+function pxmlAutoApply(){
+  clearTimeout(_pxmlAutoApplyTimer);
+  _pxmlAutoApplyTimer=setTimeout(()=>{
+    const status=document.getElementById('pxmlApplyStatus');
     let ok=false,msg='';
-    try{ok=pxmlApplyMapping();}
+    try{ok=pxmlApplyMapping(true);}
     catch(e){msg='❌ Error: '+(e.message||e);}
-    btn.disabled=false;btn.style.opacity='';btn.style.cursor='';
-    label.textContent='Aplicar y cargar a la tabla';
-    icon.classList.remove('spinning-icon');
-    if(status)status.textContent=msg||(ok?'✅ Datos cargados en la Tabla de Datos.':'Carga archivos .xml exportados desde Microsoft Project');
-  },10);
+    if(status)status.textContent=msg||(ok?'✅ Datos cargados automáticamente en la Tabla de Datos.':'Completa los campos obligatorios (Categoría 1, Categoría 2, Nombre de Tarea) para cargar automáticamente.');
+  },400);
 }
-function pxmlApplyMapping(){
-  if(!PXML_DB.length){alert('No hay datos cargados.');return false;}
+function pxmlApplyMapping(silent){
+  if(!PXML_DB.length){if(!silent)alert('No hay datos cargados.');return false;}
   // Validar que cada archivo tenga los campos requeridos mapeados
   for(let i=0;i<PXML_DB.length;i++){
     const db=PXML_DB[i];
@@ -6622,7 +6651,8 @@ function pxmlApplyMapping(){
     for(const f of PXML_AP_FIELDS.filter(f=>f.required)){
       const col=m[f.key]||'__NONE__';
       if(col==='__NONE__'||(col==='__FIXED__'&&!m[f.key+'_fixed'])){
-        alert(`Archivo [${i+1}] "${db.variantName||db.projectName}": el campo "${f.label}" es obligatorio.`);return false;
+        if(!silent)alert(`Archivo [${i+1}] "${db.variantName||db.projectName}": el campo "${f.label}" es obligatorio.`);
+        return false;
       }
     }
   }
@@ -6671,7 +6701,7 @@ function pxmlApplyMapping(){
       newTasks.push({id,escenario:_escxml,c1:t.c1||fileVariant,c2:t.c2||'General',tarea:t.tarea,iLB,fLB,iRP,fRP,av,hito,evento,crit,marca2:_m2xml,summary,_fromXml:true,_dbIdx:dbIdx});
     });
   });
-  if(!newTasks.length){alert(`No se generaron tareas. (${skipped} omitidas)`);return false;}
+  if(!newTasks.length){if(!silent)alert(`No se generaron tareas. (${skipped} omitidas)`);return false;}
   const existing=TASKS.filter(t=>!t._fromXml);
   TASKS=[...existing,...newTasks];
   newTasks.forEach(t=>{
@@ -6685,7 +6715,7 @@ function pxmlApplyMapping(){
   apRestoreExecConfigLocal();
   render();
   if(document.getElementById('editorModal').style.display==='flex')populateEditor();
-  closeProjectXmlModal();
+  if(!silent)closeProjectXmlModal();
   document.getElementById('status').textContent=`✅ ${newTasks.length} tareas de ${PXML_DB.length} archivo(s) importadas.${skipped?' ('+skipped+' omitidas)':''}`;
   return true;
 
