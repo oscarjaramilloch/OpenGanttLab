@@ -591,7 +591,6 @@ th,td{padding:0}
   <!-- ── EDICIÓN ── -->
   <div class="rb-group">
     <div class="rb-row">
-      <button class="btn-outline rb-act" id="btnEdit" style="display:none">Editar</button>
       <div style="position:relative;display:inline-block">
         <button class="rb-flat" id="btnEdicionMenu" onclick="toggleEdicionMenu(event)" title="Edición">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
@@ -5844,7 +5843,6 @@ document.getElementById('btnSavePres').addEventListener('click',saveShare);
 // Exportar via modal (btnPng y btnPrint removidos del toolbar)
 document.getElementById('btnRefresh').addEventListener('click',refreshFromFile);
 document.getElementById('btnFilter').addEventListener('click',openFilter);
-document.getElementById('btnEdit').addEventListener('click',openEditor);
 document.getElementById('btnDoc').addEventListener('click',()=>document.getElementById('docModal').style.display='flex');
 document.getElementById('btnPres').addEventListener('click',openPresentation);
 document.getElementById('btnFont').addEventListener('click',()=>{
