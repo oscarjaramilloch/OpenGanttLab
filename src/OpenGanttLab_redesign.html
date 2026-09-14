@@ -6441,6 +6441,16 @@ function pxmlAutoGuessMapping(db){
     const found=candidates.find(hasData);
     if(found)m[key]=found;
   };
+  // Busca un campo personalizado del XML cuyo alias coincida (sin distinguir mayúsculas/
+  // acentos exactos) con alguno de los nombres esperados — así "Especialidad Tarea" o
+  // "Marca Activity Plan" se auto-mapean aunque su FieldID interno varíe entre archivos.
+  const pickCustomByAlias=(key,aliasNames)=>{
+    if(m[key]&&m[key]!=='__NONE__')return;
+    const norm=s=>(s||'').trim().toLowerCase();
+    const wanted=aliasNames.map(norm);
+    const found=db.customCols.find(cc=>wanted.includes(norm(cc.alias))&&hasData(cc.id));
+    if(found)m[key]=found.id;
+  };
   pick('tarea',['Name']);
   pick('iRP',['Start']);
   pick('fRP',['Finish']);
@@ -6450,9 +6460,13 @@ function pxmlAutoGuessMapping(db){
   pick('clase',['Milestone']);
   pick('crit',['Critical']);
   pick('marca2',['marca2']);
-  // Categoría 1/2 no tienen equivalente estándar en el XML — usar la variante del archivo
-  // y un valor fijo "General" como punto de partida (el usuario puede refinarlo en Mapeo de columnas).
-  if(!m.c1||m.c1==='__NONE__')m.c1='__ARCHIVO__';
+  pickCustomByAlias('marca2',['Marca Activity Plan']);
+  pickCustomByAlias('c2',['Especialidad Tarea']);
+  // Escenario y Categoría 1 no tienen equivalente estándar en el XML — punto de partida
+  // "Valor fijo" en blanco, para que el usuario lo complete o lo deje según el archivo.
+  if(!m.escenario||m.escenario==='__NONE__'){m.escenario='__FIXED__';if(m.escenario_fixed===undefined)m.escenario_fixed='';}
+  if(!m.c1||m.c1==='__NONE__'){m.c1='__FIXED__';if(m.c1_fixed===undefined)m.c1_fixed='';}
+  // Categoría 2: si no se encontró "Especialidad Tarea" como campo personalizado, "General" fijo como respaldo.
   if(!m.c2||m.c2==='__NONE__'){m.c2='__FIXED__';m.c2_fixed='General';}
 }
 function pxmlGetVal(row,colId,fixedVal){
