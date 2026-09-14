@@ -413,18 +413,20 @@ th,td{padding:0}
   function closeDockPanels(){
     document.getElementById('editorModal').style.display='none';
     document.getElementById('presModal').style.display='none';
+    document.getElementById('configModal').style.display='none';
     showGanttArea(true);
     placeStatusbar('gantt');
   }
   function setActive(id){document.querySelectorAll('.nr-list .nr-item').forEach(function(b){b.classList.toggle('active',b.id===id);});}
   window.ogReturnToGantt=function(){setActive('navGantt');closeDockPanels();};
   document.getElementById('navGantt').addEventListener('click',function(){setActive('navGantt');closeDockPanels();document.getElementById('wrap').scrollIntoView({behavior:'smooth'});});
-  document.getElementById('navLdt').addEventListener('click',function(){setActive('navLdt');showGanttArea(false);document.getElementById('editorModal').style.display='none';document.getElementById('btnPres').click();placeStatusbar('pres');});
+  document.getElementById('navLdt').addEventListener('click',function(){setActive('navLdt');showGanttArea(false);document.getElementById('editorModal').style.display='none';document.getElementById('configModal').style.display='none';document.getElementById('btnPres').click();placeStatusbar('pres');});
   window.openDatosPanel=function(){
     setActive('navDatos');
     showGanttArea(false);
     placeStatusbar(null);
     document.getElementById('presModal').style.display='none';
+    document.getElementById('configModal').style.display='none';
     var hayDatos=typeof TASKS!=='undefined'&&TASKS.length;
     if(hayDatos&&typeof populateEditor==='function')populateEditor();
     else{var b=document.getElementById('editorBody');if(b)b.innerHTML='<tr><td colspan="13" style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Aún no hay datos cargados — usa <b>Cargar archivo</b> arriba (Excel o Project XML) para comenzar.</td></tr>';}
@@ -432,7 +434,15 @@ th,td{padding:0}
     if(typeof datosSwitchView==='function')datosSwitchView('table');
   };
   document.getElementById('navDatos').addEventListener('click',window.openDatosPanel);
-  document.getElementById('navConfig').addEventListener('click',function(){setActive('navConfig');closeDockPanels();document.getElementById('mainRibbon').scrollIntoView({behavior:'smooth'});document.getElementById('btnFont').click();});
+  window.openConfigPanel=function(){
+    setActive('navConfig');
+    showGanttArea(false);
+    placeStatusbar(null);
+    document.getElementById('editorModal').style.display='none';
+    document.getElementById('presModal').style.display='none';
+    document.getElementById('configModal').style.display='flex';
+  };
+  document.getElementById('navConfig').addEventListener('click',window.openConfigPanel);
   document.getElementById('navAyuda').addEventListener('click',function(){setActive('navAyuda');document.getElementById('btnDoc').click();});
 })();
 </script>
@@ -582,9 +592,6 @@ th,td{padding:0}
           </button>
         </div>
       </div>
-      <button class="btn-outline rb-act" id="btnFont" title="Config. columnas" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M9 10v10"/><path d="M15 10v10"/></svg>
-      </button>
     </div>
   </div>
 
@@ -998,34 +1005,61 @@ th,td{padding:0}
   </div>
 </div>
 
-<!-- Font Panel -->
-<div id="fontPanel" style="display:none;position:fixed;z-index:99997;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.2);padding:14px;width:275px">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-    <b style="font-size:12px">⚙ Configuración de fuente</b>
-    <button class="icon-x" onclick="document.getElementById('fontPanel').style.display='none'" title="Cerrar">✕</button>
+<!-- Configuración (pestaña propia, no ventana flotante) -->
+<div class="edModal dockPanel" id="configModal" style="display:none">
+  <div class="edPanel" style="position:relative">
+    <button class="icon-x" onclick="closeConfigPanel()" title="Cerrar" style="position:absolute;top:8px;right:10px;z-index:6">✕</button>
+    <header style="position:static">
+      <svg width="30" height="24" style="flex-shrink:0"><use href="#ogl-isotype"/></svg>
+      <div><h1>Configuración</h1><div class="sub">Comparador de Escenarios · Oscar Fernando Jaramillo Chamorro</div></div>
+    </header>
+    <div style="flex:1;overflow-y:auto;padding:24px 28px;background:var(--bg)">
+      <div style="max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px">
+        <h2 style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px">Fuente</h2>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:16px">Familia tipográfica y tamaños del Gantt y la Línea de Tiempo.</p>
+        <div style="margin-bottom:18px">
+          <label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Familia de fuente</label>
+          <select id="fontFamily" class="rb-sel" style="width:100%;max-width:260px;font-size:12px;padding:6px 8px">
+            <option value="'Segoe UI',Arial,sans-serif">Segoe UI</option>
+            <option value="Arial,sans-serif">Arial</option>
+            <option value="Calibri,sans-serif">Calibri</option>
+            <option value="'Times New Roman',serif">Times New Roman</option>
+            <option value="Georgia,serif">Georgia</option>
+            <option value="Verdana,sans-serif">Verdana</option>
+            <option value="'Courier New',monospace">Courier New</option>
+            <option value="Tahoma,sans-serif">Tahoma</option>
+          </select>
+        </div>
+        <label style="font-size:10.5px;font-weight:700;color:var(--muted);display:block;margin-bottom:8px;letter-spacing:.03em">TAMAÑO DE FUENTE POR ELEMENTO</label>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--grid)">
+            <span style="font-size:12px;color:var(--ink)">Fechas (barras/hitos)</span>
+            <span style="display:flex;align-items:center;gap:6px"><input type="number" id="fsDates" value="10" min="5" max="16" step="0.5" style="width:56px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px"><span style="font-size:11px;color:var(--muted)">px</span></span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--grid)">
+            <span style="font-size:12px;color:var(--ink)">Meses</span>
+            <span style="display:flex;align-items:center;gap:6px"><input type="number" id="fsMonths" value="10" min="5" max="16" step="0.5" style="width:56px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px"><span style="font-size:11px;color:var(--muted)">px</span></span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--grid)">
+            <span style="font-size:12px;color:var(--ink)">Años</span>
+            <span style="display:flex;align-items:center;gap:6px"><input type="number" id="fsYears" value="12" min="5" max="18" step="0.5" style="width:56px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px"><span style="font-size:11px;color:var(--muted)">px</span></span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--grid)">
+            <span style="font-size:12px;color:var(--ink)">Categoría 1</span>
+            <span style="display:flex;align-items:center;gap:6px"><input type="number" id="fsCat1" value="12" min="6" max="18" step="0.5" style="width:56px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px"><span style="font-size:11px;color:var(--muted)">px</span></span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--grid)">
+            <span style="font-size:12px;color:var(--ink)">Categoría 2</span>
+            <span style="display:flex;align-items:center;gap:6px"><input type="number" id="fsCat2" value="12" min="6" max="18" step="0.5" style="width:56px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px"><span style="font-size:11px;color:var(--muted)">px</span></span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0">
+            <span style="font-size:12px;color:var(--ink)">Nombre de Tarea</span>
+            <span style="display:flex;align-items:center;gap:6px"><input type="number" id="fsTasks" value="12" min="6" max="18" step="0.5" style="width:56px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px"><span style="font-size:11px;color:var(--muted)">px</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div style="margin-bottom:10px">
-    <label style="font-size:10px;font-weight:600;color:#666;display:block;margin-bottom:3px">Familia de fuente</label>
-    <select id="fontFamily" style="width:100%;padding:4px;font:inherit;border:1px solid #ccc;border-radius:4px">
-      <option value="'Segoe UI',Arial,sans-serif">Segoe UI</option>
-      <option value="Arial,sans-serif">Arial</option>
-      <option value="Calibri,sans-serif">Calibri</option>
-      <option value="'Times New Roman',serif">Times New Roman</option>
-      <option value="Georgia,serif">Georgia</option>
-      <option value="Verdana,sans-serif">Verdana</option>
-      <option value="'Courier New',monospace">Courier New</option>
-      <option value="Tahoma,sans-serif">Tahoma</option>
-    </select>
-  </div>
-  <table style="width:100%;font-size:11px;border-collapse:collapse">
-    <tr style="color:#999;font-size:9px;font-weight:600"><td>ELEMENTO</td><td style="text-align:right">TAMAÑO</td></tr>
-    <tr><td style="padding:4px 0">Fechas (barras/hitos)</td><td style="text-align:right"><input type="number" id="fsDates" value="10" min="5" max="16" step="0.5" style="width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px"> px</td></tr>
-    <tr><td style="padding:4px 0">Meses</td><td style="text-align:right"><input type="number" id="fsMonths" value="10" min="5" max="16" step="0.5" style="width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px"> px</td></tr>
-    <tr><td style="padding:4px 0">Años</td><td style="text-align:right"><input type="number" id="fsYears" value="12" min="5" max="18" step="0.5" style="width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px"> px</td></tr>
-    <tr><td style="padding:4px 0">Categoría 1</td><td style="text-align:right"><input type="number" id="fsCat1" value="12" min="6" max="18" step="0.5" style="width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px"> px</td></tr>
-    <tr><td style="padding:4px 0">Categoría 2</td><td style="text-align:right"><input type="number" id="fsCat2" value="12" min="6" max="18" step="0.5" style="width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px"> px</td></tr>
-    <tr><td style="padding:4px 0">Nombre de Tarea</td><td style="text-align:right"><input type="number" id="fsTasks" value="12" min="6" max="18" step="0.5" style="width:48px;text-align:center;border:1px solid #ccc;border-radius:3px;padding:2px"> px</td></tr>
-  </table>
 </div>
 
 <!-- Presentation Modal -->
@@ -2932,6 +2966,7 @@ function applyShiftBlock(){
 /* ═══ EDITOR ═══ */
 function openEditor(){if(!TASKS.length){alert('Primero carga datos.');return;}populateEditor();document.getElementById('editorModal').style.display='flex';}
 function closeEditor(){document.getElementById('editorModal').style.display='none';if(window.ogReturnToGantt)ogReturnToGantt();}
+function closeConfigPanel(){document.getElementById('configModal').style.display='none';if(window.ogReturnToGantt)ogReturnToGantt();}
 const ED_COLS=[
   {key:'escenario',label:'Escenario',type:'text'},{key:'c1',label:'Cat 1',type:'text'},{key:'c2',label:'Cat 2',type:'text'},{key:'tarea',label:'Nombre de Tarea',type:'text'},
   {key:'iLB',label:'Start LB',type:'date'},{key:'fLB',label:'End LB',type:'date'},{key:'av',label:'Av%',type:'number'},
@@ -3286,7 +3321,7 @@ async function saveShare(){
   const _dynBak={};
   _dynIds.forEach(id=>{const el=document.getElementById(id);if(el){_dynBak[id]=el.innerHTML;el.innerHTML='';}});
   // Ocultar paneles abiertos temporalmente
-  const _panelIds=['filterPanel','editorModal','presModal','colorPicker','fontPanel','reorderModal','bulkMoveModal'];
+  const _panelIds=['filterPanel','editorModal','presModal','configModal','colorPicker','reorderModal','bulkMoveModal'];
   const _panelBak={};
   _panelIds.forEach(id=>{const el=document.getElementById(id);if(el){_panelBak[id]=el.style.display;el.style.display='none';}});
   // Limpiar ap_embed antes de tomar el snapshot (se reemplazará de todas formas)
@@ -5845,13 +5880,6 @@ document.getElementById('btnRefresh').addEventListener('click',refreshFromFile);
 document.getElementById('btnFilter').addEventListener('click',openFilter);
 document.getElementById('btnDoc').addEventListener('click',()=>document.getElementById('docModal').style.display='flex');
 document.getElementById('btnPres').addEventListener('click',openPresentation);
-document.getElementById('btnFont').addEventListener('click',()=>{
-  const fp=document.getElementById('fontPanel');
-  fp.style.display=fp.style.display==='none'?'block':'none';
-  // Posición fija cerca del nav rail — este botón vive oculto (Config. columnas se
-  // dispara desde la pestaña Configuración), así que no hay un rect de botón visible que usar.
-  fp.style.left='var(--content-left)';fp.style.marginLeft='16px';fp.style.top=(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--hdr-h'))||56)+16+'px';
-});
 function applyFont(){
   const r=document.documentElement.style;
   r.setProperty('--ff',document.getElementById('fontFamily').value);
