@@ -4127,10 +4127,12 @@ function _presLayers(tasks, applyOffsets=true){
 // carriles por Cat2 para preservar agrupamiento visual en la vista normal), aquí se hace
 // first-fit PURO dentro de cada banda — solo por solape temporal, sin reservar carril por
 // Cat2 — para empaquetar lo más compacto posible (menos filas vacías).
-// A propósito NO admite posiciones fijadas (pinnedLayer/layerOffset): Vista RaP siempre
-// debe verse como el arreglo automático del momento en que se cargó el XML — arrastrar una
-// barra aquí es solo una vista previa temporal (se descarta al soltar), nunca se persiste.
-function _presLayersRaP(tasks){
+// El arrastre manual funciona igual que en la vista normal, pero las posiciones fijadas se
+// guardan en propiedades con prefijo "rap" (rapPinnedLayer/rapLayerOffset) DENTRO DEL MISMO
+// PRES_OPTS[key] — así, al desactivar Vista RaP, la vista normal nunca lee esas propiedades
+// y automáticamente vuelve a su propio arreglo (sin necesidad de "resetear" nada a mano);
+// el color/texto/etc. de cada barra sigue compartido entre ambas vistas.
+function _presLayersRaP(tasks,useLB){
   const c1earliest={};
   tasks.forEach(t=>{if(!c1earliest[t.c1]||+t.iLB<c1earliest[t.c1])c1earliest[t.c1]=+t.iLB;});
   const c1order=[...new Set([...tasks].sort((a,b)=>(c1earliest[a.c1]||0)-(c1earliest[b.c1]||0)).map(t=>t.c1))];
@@ -4140,16 +4142,39 @@ function _presLayersRaP(tasks){
   let baseLayer=0;
   c1order.forEach(c1=>{
     const group=(byC1.get(c1)||[]).slice().sort((a,b)=>+a.iLB-+b.iLB);
-    // First-fit puro (sin separar por Cat2, sin pines)
+    // Paso 1: first-fit puro (sin separar por Cat2)
     const ends=[];
-    let maxLy=-1;
-    group.forEach(t=>{
+    const items=group.map(t=>{
       const s=Math.min(+t.iLB,+t.iRP), e=Math.max(+t.fLB,+t.fRP);
       let ly=-1;
       for(let i=0;i<ends.length;i++){if(ends[i]<=s){ly=i;ends[i]=e;break;}}
       if(ly<0){ly=ends.length;ends.push(e);}else ends[ly]=e;
-      if(ly>maxLy)maxLy=ly;
-      result.push({t,ly:baseLayer+ly,baseLy:baseLayer+ly});
+      return{t,ly,baseLy:ly,s,e};
+    });
+    // Paso 2: aplicar rapPinnedLayer/rapLayerOffset (arrastre manual guardado en modo RaP)
+    // rapPinnedLayer se guarda como fila ABSOLUTA del gráfico (así se calcula en el mouseup
+    // del arrastre, sin conocer bandas) — se convierte aquí a fila relativa de la banda
+    // restando baseLayer (el inicio de ESTA banda, aún no incrementado en este punto).
+    items.forEach(item=>{
+      const k=(useLB?'LB|':'')+pkOf(item.t);
+      const opt=PRES_OPTS[k];if(!opt)return;
+      if(opt.rapPinnedLayer!==undefined)item.ly=Math.max(0,opt.rapPinnedLayer-baseLayer);
+      else if(opt.rapLayerOffset)item.ly=Math.max(0,item.baseLy+opt.rapLayerOffset);
+    });
+    // Paso 3: resolución de colisiones en cascada (solo temporal — sin separar por Cat2)
+    const isPinned=item=>{const k=(useLB?'LB|':'')+pkOf(item.t);return PRES_OPTS[k]&&PRES_OPTS[k].rapPinnedLayer!==undefined;};
+    const pinned=items.filter(isPinned).sort((a,b)=>a.ly-b.ly||a.s-b.s);
+    const free=items.filter(i=>!isPinned(i)).sort((a,b)=>a.ly-b.ly||a.s-b.s);
+    const occ={};
+    const occupy=(ly,s,e)=>{if(!occ[ly])occ[ly]=[];occ[ly].push({s,e});};
+    const conflicts=(ly,s,e)=>(occ[ly]||[]).some(r=>r.s<e&&r.e>s);
+    pinned.forEach(item=>occupy(item.ly,item.s,item.e));
+    free.forEach(item=>{let ly=item.ly;while(conflicts(ly,item.s,item.e))ly++;item.ly=ly;occupy(ly,item.s,item.e);});
+    let maxLy=-1;
+    items.forEach(item=>{
+      const ly=baseLayer+item.ly;
+      result.push({t:item.t,ly,baseLy:ly});
+      if(item.ly>maxLy)maxLy=item.ly;
     });
     bands.push({c1,startLy:baseLayer,rows:maxLy+1});
     baseLayer+=maxLy+1;
@@ -4166,7 +4191,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
   // fila cambia por completo con el agrupamiento.
   let rapBands=null;
   const layered=(groupByC1)
-    ? (()=>{const r=_presLayersRaP(tasks);rapBands=r.bands;return r.result;})()
+    ? (()=>{const r=_presLayersRaP(tasks,useLB);rapBands=r.bands;return r.result;})()
     : (layersOverride
       ? layersOverride.map(({t,baseLy})=>{
           const k=pkOf(t);
@@ -5393,9 +5418,6 @@ function _pdFindTask(key){
 // ── Mousedown en barra de LdT ──
 document.getElementById('presBody').addEventListener('mousedown',e=>{
   if(e.button!==0)return;
-  // Vista RaP siempre muestra el arreglo automático — no admite arrastre manual (ver
-  // _presLayersRaP), para que nunca quede una posición "pegada" que la desordene.
-  if(_presLastGroupByC1)return;
   const bar=e.target.closest('[data-pres-bar]');
   if(!bar)return;
   const svg=bar.closest('svg');if(!svg)return;
@@ -5468,7 +5490,7 @@ document.addEventListener('mouseup',e=>{
   // Suprimir el click post-mouseup para no abrir el menú
   document.addEventListener('click',ev=>ev.stopPropagation(),{once:true,capture:true});
   const delta=curLy-origLy;
-  const posProp='pinnedLayer'; // Vista RaP no permite iniciar arrastre (ver mousedown) — esto siempre es la vista normal
+  const posProp=_presLastGroupByC1?'rapPinnedLayer':'pinnedLayer';
   if(groupOrig){
     // Mover todas las barras de la multi-selección en bloque, mismo delta de filas
     Object.keys(groupOrig).forEach(k=>{
@@ -5621,11 +5643,15 @@ function presSetMitoPos(above){
 }
 function presLayerMove(dir){
   if(!_presBarKey)return;
-  if(_presLastGroupByC1)return; // Vista RaP no admite mover capas manualmente — siempre el arreglo automático
   _presSnap();if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={color:'#A5C867',showStart:false,showEnd:true};
   const opt=PRES_OPTS[_presBarKey];
-  if(opt.pinnedLayer!==undefined) opt.pinnedLayer=Math.max(0,opt.pinnedLayer+dir);
-  else opt.layerOffset=(opt.layerOffset||0)+dir;
+  if(_presLastGroupByC1){
+    if(opt.rapPinnedLayer!==undefined) opt.rapPinnedLayer=Math.max(0,opt.rapPinnedLayer+dir);
+    else opt.rapLayerOffset=(opt.rapLayerOffset||0)+dir;
+  } else {
+    if(opt.pinnedLayer!==undefined) opt.pinnedLayer=Math.max(0,opt.pinnedLayer+dir);
+    else opt.layerOffset=(opt.layerOffset||0)+dir;
+  }
   renderPres();
 }
 /* ═══ EJECUTIVO: ocultar/restaurar tareas (solo configuración visual, no toca TASKS) ═══ */
