@@ -1173,6 +1173,7 @@ th,td{padding:0}
       <label class="toggle"><span class="tg-label">Comparador</span><input type="checkbox" id="presShowLB" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Marca Activity</span><input type="checkbox" id="presShowMarca2" onchange="renderPres()"><span class="tg-track"></span></label>
+      <label class="toggle"><span class="tg-label">Ocultar Resumen</span><input type="checkbox" id="presHideSummary" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Leyenda</span><input type="checkbox" id="presShowLegend" checked onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()"><span class="tg-track"></span></label>
       <span id="execHiddenBtn" onclick="openExecHiddenModal()" style="display:none;cursor:pointer;font-size:10px;color:var(--accent-fg);text-decoration:underline;margin:0 4px">Tareas ocultas (0)</span>
@@ -4746,6 +4747,7 @@ function renderPres(){
   const yrSz=+document.getElementById('presYearSz').value||15;
   const showLBMode=document.getElementById('presShowLB').checked;
   const _presM2=document.getElementById('presShowMarca2')&&document.getElementById('presShowMarca2').checked;
+  const _presHideSummary=document.getElementById('presHideSummary')&&document.getElementById('presHideSummary').checked;
   const _presCrit=document.getElementById('presShowOnlyCrit')&&document.getElementById('presShowOnlyCrit').checked;
   const _presEscEl=document.getElementById('presFilterEsc');
   const _presEscVal=_presEscEl?_presEscEl.value:'';
@@ -4770,6 +4772,7 @@ function renderPres(){
   const all=TASKS.filter(t=>!PRES_HIDDEN_KEYS.has((t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea)
     &&(!_presM2||norm(t.marca2||'')==='si')
     &&(!_presCrit||t.crit)
+    &&(!_presHideSummary||!t.summary)
     &&(!_presEscVal||(t.escenario||'')===_presEscVal));
   if(!all.length){body.innerHTML='<p style="color:#999;text-align:center;padding:40px">No hay tareas.</p>';return;}
   let mn=all[0].iLB,mx=all[0].fLB;
