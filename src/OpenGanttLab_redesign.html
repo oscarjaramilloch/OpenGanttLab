@@ -2418,9 +2418,18 @@ function buildScale(k,mn,mx,pxMul){
 /* ═══ RENDER ═══ */
 let ESCENARIO_W=110, CAT1_W=90, CAT2_W=135, MARCA2_W=100, CAT3_W=168;
 
+// Registro de tooltips del Gantt: el HTML del tooltip (con <b>/<br>/<span> legítimos
+// mezclados con texto de usuario ya escapado por esc()) NO puede viajar por un atributo
+// data-tip="..." — el navegador decodifica las entidades HTML al parsear el atributo, así
+// que al leerlo de vuelta (el.dataset.tip) el escapado de esc() ya se perdió y un nombre de
+// tarea como "<img src=x onerror=...>" se vuelve HTML real al reinyectarlo con innerHTML.
+// En vez de eso, data-tip guarda solo un id corto y el HTML real vive aquí en memoria.
+let _tipRegistry={};let _tipSeq=0;
+function mkTip(html){const id='t'+(_tipSeq++);_tipRegistry[id]=html;return id;}
 function render(){
   const wrap=document.getElementById('wrap');
   if(!TASKS.length)return;
+  _tipRegistry={};_tipSeq=0;
   const mode=document.querySelector('input[name=mode]:checked').value;
   const showLB=document.getElementById('showLB').checked;
   const showDates=document.getElementById('showDates').checked;
@@ -2545,7 +2554,7 @@ function render(){
           if(t.hito){
             const xi=S.x(t.iLB);
             const dBorder=t.crit?`${critW}px solid #FF0000`:`1.5px solid ${barColor}`;
-            cnt+=`<div style="position:absolute;left:${xi}px;top:${RH/2}px;width:${diamSz}px;height:${diamSz}px;background:${barColor};border:${dBorder};transform:translate(-50%,-50%) rotate(45deg);border-radius:1px;z-index:3" data-tip="${tipLB}"></div>`;
+            cnt+=`<div style="position:absolute;left:${xi}px;top:${RH/2}px;width:${diamSz}px;height:${diamSz}px;background:${barColor};border:${dBorder};transform:translate(-50%,-50%) rotate(45deg);border-radius:1px;z-index:3" data-tip="${mkTip(tipLB)}"></div>`;
             if(showDates)cnt+=`<span class="bd-out" style="left:${xi+Math.round(10*fs)}px;top:${RH/2}px">${fmtD(t.iLB)}</span>`;
           } else if(t.evento){
             const xi=S.x(t.iLB);
@@ -2554,13 +2563,13 @@ function render(){
             const strokeCol=t.crit?'#FF0000':evColor;
             const strokeW=t.crit?critW:1.5;
             const tipEv=`<b>${esc(t.tarea)}</b><br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>▼ Evento: ${fmtD(t.iLB)}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}`;
-            cnt+=`<svg style="position:absolute;left:${xi-evSz/2}px;top:${RH/2-evSz*0.1}px;width:${evSz}px;height:${evSz}px;overflow:visible;z-index:3;cursor:default" data-tip="${tipEv}" data-evento-key="${esc(t.c1+'|'+t.c2+'|'+t.tarea)}"><polygon points="${evSz/2},${evSz} 0,0 ${evSz},0" fill="${evColor}" stroke="${strokeCol}" stroke-width="${strokeW}"/></svg>`;
+            cnt+=`<svg style="position:absolute;left:${xi-evSz/2}px;top:${RH/2-evSz*0.1}px;width:${evSz}px;height:${evSz}px;overflow:visible;z-index:3;cursor:default" data-tip="${mkTip(tipEv)}" data-evento-key="${esc(t.c1+'|'+t.c2+'|'+t.tarea)}"><polygon points="${evSz/2},${evSz} 0,0 ${evSz},0" fill="${evColor}" stroke="${strokeCol}" stroke-width="${strokeW}"/></svg>`;
             cnt+=`<span class="bd-out" style="left:${xi+Math.round(10*fs)}px;top:${RH/2}px">${fmtD(t.iLB)}</span>`;
           } else {
             const xiR=S.x(t.iRP),xfR=S.x(t.fRP),bwR=Math.max(xfR-xiR,3);
             if(showLB){
               const xi=S.x(t.iLB),xf=S.x(t.fLB),bw=Math.max(xf-xi,3);
-              cnt+=`<div class="lb-bar" style="left:${xi}px;width:${bw}px;top:${lbTop}px;height:${lbH}px" data-tip="${tipLB}"></div>`;
+              cnt+=`<div class="lb-bar" style="left:${xi}px;width:${bw}px;top:${lbTop}px;height:${lbH}px" data-tip="${mkTip(tipLB)}"></div>`;
               if(+t.iLB!==+t.iRP||+t.fLB!==+t.fRP){
                 if(showDates){cnt+=`<span class="bd-out" style="right:${(W-xi+3).toFixed(1)}px;top:${lbTop+lbH/2}px">${fmtD(t.iLB)}</span>`;
                 cnt+=`<span class="bd-out" style="left:${(xf+3).toFixed(1)}px;top:${lbTop+lbH/2}px">${fmtD(t.fLB)}</span>`;}
@@ -2568,7 +2577,7 @@ function render(){
             }
             const pw=mode==='con'?bwR*t.av/100:0;
             const critStyle=t.crit?`outline:${critW}px solid #FF0000;outline-offset:0;`:'';
-            cnt+=`<div class="rp-bar" style="left:${xiR}px;width:${bwR}px;top:${rpTop}px;height:${rpH}px;background:${barColor};${critStyle}" data-tip="${tipRP}">${pw>0?`<div style="position:absolute;inset:0;width:${pw}px;background:rgba(0,0,0,.22);border-radius:2px 0 0 2px;pointer-events:none"></div>`:''}</div>`;
+            cnt+=`<div class="rp-bar" style="left:${xiR}px;width:${bwR}px;top:${rpTop}px;height:${rpH}px;background:${barColor};${critStyle}" data-tip="${mkTip(tipRP)}">${pw>0?`<div style="position:absolute;inset:0;width:${pw}px;background:rgba(0,0,0,.22);border-radius:2px 0 0 2px;pointer-events:none"></div>`:''}</div>`;
             if(showDates){cnt+=`<span class="bd-out" style="right:${(W-xiR+3).toFixed(1)}px;top:${dateCY}px">${fmtD(t.iRP)}</span>`;
             cnt+=`<span class="bd-out" style="left:${(xfR+3).toFixed(1)}px;top:${dateCY}px">${fmtD(t.fRP)}</span>`;}
           }
@@ -2786,7 +2795,7 @@ function applyPickerColor(color){
 /* ═══ TOOLTIP ═══ */
 document.addEventListener('mouseover',e=>{
   const el=e.target.closest('[data-tip]');const tt=document.getElementById('ganttTip');
-  if(el){tt.innerHTML=el.dataset.tip;tt.style.display='block';}
+  if(el){tt.innerHTML=_tipRegistry[el.dataset.tip]||'';tt.style.display='block';}
   else if(!e.target.closest('#ganttTip'))tt.style.display='none';
 });
 document.addEventListener('mousemove',e=>{
