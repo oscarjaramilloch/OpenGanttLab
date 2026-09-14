@@ -1226,6 +1226,10 @@ th,td{padding:0}
         </div>
       </div>
 
+      <label class="toggle" id="presRapToggleWrap" title="Agrupa las barras por Categoría 1 (Fase de Maduración), con el color de Categoría 2. Solo disponible si el XML se mapeó con ese campo.">
+        <span class="tg-label">Vista RaP</span><input type="checkbox" id="presShowRaP" onchange="togglePresRaP()"><span class="tg-track"></span>
+      </label>
+
       <div style="position:relative;display:inline-block">
         <button class="rb-flat" id="btnPresEscenarioMenu" onclick="toggleDropMenu(event,'btnPresEscenarioMenu','presEscenarioMenuPanel','flex')" title="Escenario y títulos">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg>
@@ -2110,6 +2114,9 @@ function fillSplitTaskNames(list){
   }
 }
 function parseRows(rows){
+  // Excel no tiene el concepto "Fase de Maduración" del XML — "Vista RaP" (LdT) se
+  // deshabilita siempre que los datos vengan de un Excel.
+  _rapAvailable=false;if(typeof apUpdateRapAvailability==='function')apUpdateRapAvailability();
   let hr=0;for(let i=0;i<Math.min(rows.length,8);i++){if(rows[i]&&rows[i].some(c=>norm(c).includes('nombre de tarea'))){hr=i;break;}}
   const H=rows[hr];
   const col={id:findCol(H,['id']),escenario:findCol(H,['Escenario','escenario']),c1:findCol(H,['Categoría 1','Categoria 1']),c2:findCol(H,['Categoría 2','Categoria 2']),
@@ -2274,6 +2281,32 @@ function togglePresCritOptions(){
   const wrap=document.getElementById('presRutaCriticaMenuWrap');
   if(wrap)wrap.style.display=on?'inline-block':'none';
   if(!on)closeAllDropMenus();
+  renderPres();
+}
+/* ═══ VISTA RaP (LdT) — agrupa por Categoría 1 (Fase de Maduración) ═══
+   Solo válida cuando Categoría 1 viene del campo personalizado "Fase de Maduración" del
+   XML (ver pxmlApplyMapping/_faseMadCol) — un Excel, o un XML remapeado a otra columna,
+   no tiene ese significado, así que el toggle se deshabilita y se apaga solo. */
+let _rapAvailable=false;
+function apUpdateRapAvailability(){
+  const cb=document.getElementById('presShowRaP');
+  const wrap=document.getElementById('presRapToggleWrap');
+  if(!cb)return;
+  if(!_rapAvailable){
+    if(cb.checked){cb.checked=false;renderPres();}
+    cb.disabled=true;
+    if(wrap){wrap.style.opacity='.5';wrap.title='Vista RaP: solo disponible si Categoría 1 se mapeó desde el campo "Fase de Maduración" del XML (no disponible con Excel).';}
+  } else {
+    cb.disabled=false;
+    if(wrap){wrap.style.opacity='';wrap.title='Agrupa las barras por Categoría 1 (Fase de Maduración), con el color de Categoría 2.';}
+  }
+}
+function togglePresRaP(){
+  const cb=document.getElementById('presShowRaP');
+  if(cb&&cb.checked&&!_rapAvailable){
+    alert('Vista RaP no está disponible: Categoría 1 debe venir del campo "Fase de Maduración" del XML de Project (no funciona con datos de Excel, ni si Categoría 1 se remapeó a otra columna).');
+    cb.checked=false;return;
+  }
   renderPres();
 }
 let _presHoyCol='#FF0000';
@@ -3524,7 +3557,8 @@ async function saveShare(){
     fontFamily:document.getElementById('fontFamily').value,
     fontSizes:{dates:document.getElementById('fsDates').value,months:document.getElementById('fsMonths').value,years:document.getElementById('fsYears').value,cat1:document.getElementById('fsCat1').value,cat2:document.getElementById('fsCat2').value,tasks:document.getElementById('fsTasks').value},
     estName:document.getElementById('estName').value,estDate:document.getElementById('estDate').value,
-    presExecMode:document.getElementById('presShowExecutive').checked,presDateFmt:document.getElementById('presDateFmt').value,presExecHidden:[...PRES_EXEC_HIDDEN_KEYS]};
+    presExecMode:document.getElementById('presShowExecutive').checked,presDateFmt:document.getElementById('presDateFmt').value,presExecHidden:[...PRES_EXEC_HIDDEN_KEYS],
+    rapAvailable:_rapAvailable,presShowRaP:(document.getElementById('presShowRaP')||{checked:false}).checked};
   const safe=JSON.stringify(data).replace(/<\//g,'\\u003c/');
   // Limpiar contenido dinámico antes de serializar (reduce tamaño y evita HTML roto)
   const _dynIds=['wrap','scenarioList','filterList','legend','ganttTip','presBody'];
@@ -3623,6 +3657,9 @@ function loadEmbedded(){
   } else if(d.fontSize){const v=parseFloat(d.fontSize)||1;['fsDates','fsMonths','fsYears','fsCat1','fsCat2','fsTasks'].forEach(id=>{const el=document.getElementById(id);el.value=(parseFloat(el.value)*v).toFixed(1);});applyFont();}
   if(d.estName!=null)document.getElementById('estName').value=d.estName;
   if(d.estDate)document.getElementById('estDate').value=d.estDate;
+  _rapAvailable=!!d.rapAvailable;
+  const _rapCbEl=document.getElementById('presShowRaP');if(_rapCbEl)_rapCbEl.checked=_rapAvailable&&!!d.presShowRaP;
+  if(typeof apUpdateRapAvailability==='function')apUpdateRapAvailability();
   buildScenarioChecks();document.getElementById('status').textContent=`Datos incrustados — ${TASKS.length} actividades.`;render();return true;
 }
 
@@ -4050,22 +4087,54 @@ function _presLayers(tasks, applyOffsets=true){
 
   return result;
 }
+// Vista RaP: agrupa por Categoría 1 (bandas), y dentro de cada banda reutiliza el mismo
+// first-fit agrupado por Cat2 que ya usa _presLayers (así el color/orden dentro de la banda
+// se comporta igual que en la vista normal) — solo desplazado por la fila base de su banda.
+function _presLayersRaP(tasks){
+  const c1earliest={};
+  tasks.forEach(t=>{if(!c1earliest[t.c1]||+t.iLB<c1earliest[t.c1])c1earliest[t.c1]=+t.iLB;});
+  const c1order=[...new Set([...tasks].sort((a,b)=>(c1earliest[a.c1]||0)-(c1earliest[b.c1]||0)).map(t=>t.c1))];
+  const byC1=new Map();
+  tasks.forEach(t=>{const arr=byC1.get(t.c1);if(arr)arr.push(t);else byC1.set(t.c1,[t]);});
+  const result=[],bands=[];
+  let baseLayer=0;
+  c1order.forEach(c1=>{
+    const group=byC1.get(c1)||[];
+    const sub=_presLayers(group,false);
+    let maxLy=-1;
+    sub.forEach(item=>{
+      const ly=baseLayer+item.ly;
+      result.push({t:item.t,ly,baseLy:ly});
+      if(item.ly>maxLy)maxLy=item.ly;
+    });
+    const rows=maxLy+1;
+    bands.push({c1,startLy:baseLayer,rows});
+    baseLayer+=rows;
+  });
+  return{result,bands};
+}
 function _presSVG(all,S,TW,mn,mx,opts){
   // opts: {useLB, sectionTitle, barH, fsz, yrSz, showSeg, scaleKey, ff, layersOverride}
-  const {useLB,sectionTitle,barH,fsz,yrSz,showSeg,scaleKey,ff,layersOverride,showLegend,execMode}=opts;
+  const {useLB,sectionTitle,barH,fsz,yrSz,showSeg,scaleKey,ff,layersOverride,showLegend,execMode,groupByC1}=opts;
   const titleSize=opts.titleSize||(fsz+4),titleColor=opts.titleColor||'#2c3e50';
   const tasks=all.filter(t=>!t.hito&&!t.evento&&!isExecHidden(t)),milestones=all.filter(t=>t.hito),eventos=all.filter(t=>t.evento);
-  // Si hay layersOverride (capas base sin offset), aplicar offset independiente por sección
-  const layered=layersOverride
-    ? layersOverride.map(({t,baseLy})=>{
-        const k=pkOf(t);
-        const sKey=useLB?'LB|'+k:k;
-        const off=(PRES_OPTS[sKey]&&PRES_OPTS[sKey].layerOffset)||0;
-        return{t,ly:Math.max(0,baseLy+off)};
-      })
-    : _presLayers(tasks);
+  // Vista RaP: agrupa por Categoría 1 en bandas — desactiva layersOverride (piensa en filas
+  // absolutas ajenas a las bandas) y el offset manual por barra, ya que el sentido de la
+  // fila cambia por completo con el agrupamiento.
+  let rapBands=null;
+  const layered=(groupByC1)
+    ? (()=>{const r=_presLayersRaP(tasks);rapBands=r.bands;return r.result;})()
+    : (layersOverride
+      ? layersOverride.map(({t,baseLy})=>{
+          const k=pkOf(t);
+          const sKey=useLB?'LB|'+k:k;
+          const off=(PRES_OPTS[sKey]&&PRES_OPTS[sKey].layerOffset)||0;
+          return{t,ly:Math.max(0,baseLy+off)};
+        })
+      : _presLayers(tasks));
   const numLy=layered.length?Math.max(...layered.map(l=>l.ly))+1:0;
-  const ML=50,MR=80;
+  const RAP_LABEL_W=180;
+  const ML=50+(groupByC1?RAP_LABEL_W:0),MR=80;
   const titleH=sectionTitle?Math.max(28,Math.round(titleSize*1.7)):0;
   const yrH=Math.round(yrSz*1.8),segH=showSeg&&scaleKey!=='anios'?Math.round(yrSz*1.4):0;
   const ds0=+(document.getElementById('presDiamondSz')||{value:9}).value||9;
@@ -4134,6 +4203,25 @@ function _presSVG(all,S,TW,mn,mx,opts){
   </defs>`;
   const _msPerPx=TW>0?(+mx- +mn)/TW:0;
   let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" data-task-y0="${taskY0}" data-layer-h="${layerH}" data-ms-per-px="${_msPerPx}" data-ml="${ML}" data-use-lb="${useLB?1:0}" style="font-family:${ff};background:#fff">${patDefs}`;
+  // Vista RaP: caja + etiqueta por cada banda de Categoría 1 (color de separación gris —
+  // valor provisional, a validar). La etiqueta se parte en varias líneas por palabras si no
+  // cabe en el ancho reservado (RAP_LABEL_W).
+  if(groupByC1&&rapBands&&rapBands.length){
+    const bandGray='#9aa5b1';
+    rapBands.forEach(b=>{
+      const by0=taskY0+b.startLy*layerH, by1=taskY0+(b.startLy+b.rows)*layerH;
+      svg+=`<rect x="2" y="${by0}" width="${ML+TW+MR-4}" height="${by1-by0}" fill="none" stroke="${bandGray}" stroke-width="1.5"/>`;
+      const labelFsz=Math.max(fsz+2,13);
+      const words=String(b.c1||'').split(/\s+/).filter(Boolean);
+      const maxChars=Math.max(8,Math.floor((RAP_LABEL_W-24)/(labelFsz*0.55)));
+      const lines=[];let cur='';
+      words.forEach(w=>{const test=cur?cur+' '+w:w;if(test.length>maxChars&&cur){lines.push(cur);cur=w;}else cur=test;});
+      if(cur)lines.push(cur);
+      const lineH=labelFsz*1.25,lx=ML/2,cy0=(by0+by1)/2-(lines.length*lineH)/2+labelFsz*0.85;
+      svg+=`<text x="${lx}" y="${cy0}" text-anchor="middle" font-size="${labelFsz}" font-weight="700" fill="#334155">`+
+        lines.map((ln,li)=>`<tspan x="${lx}" dy="${li===0?0:lineH}">${ex(ln)}</tspan>`).join('')+`</text>`;
+    });
+  }
   // Título de sección
   if(sectionTitle) svg+=`<text x="${W/2}" y="${titleH-6}" text-anchor="middle" font-size="${titleSize}" font-weight="bold" fill="${titleColor}">${ex(sectionTitle)}</text>`;
   // Eje de años
@@ -4688,7 +4776,9 @@ function renderPres(){
   all.forEach(t=>{if(t.iLB<mn)mn=t.iLB;if(t.fLB>mx)mx=t.fLB;if(t.iRP<mn)mn=t.iRP;if(t.fRP>mx)mx=t.fRP;});
   const yrWidthMul=+(document.getElementById('presYearWMul')||{value:'1'}).value||1;
   const S=buildScale(scaleKey,mn,mx,yrWidthMul),TW=S.totalPx;
-  const opts={barH,fsz,yrSz,showSeg,scaleKey,ff,showLegend,execMode};
+  const _rapCb=document.getElementById('presShowRaP');
+  const groupByC1=!!(_rapCb&&_rapCb.checked&&_rapAvailable);
+  const opts={barH,fsz,yrSz,showSeg,scaleKey,ff,showLegend,execMode,groupByC1};
   let _presContentHtml;
   if(showLBMode){
     const sharedLayers=_presLayers(all.filter(t=>!t.hito&&!t.evento&&!isExecHidden(t)),false);
@@ -6533,6 +6623,16 @@ function pxmlApplyMapping(){
       }
     }
   }
+  // "Vista RaP" (LdT) solo tiene sentido si Categoría 1 realmente viene del campo
+  // personalizado "Fase de Maduración" del XML — si el usuario remapeó c1 a otra columna,
+  // agrupar por Cat1 ya no representa fases de maduración y la vista se deshabilita.
+  const _faseMadCol=db=>{
+    const cid=(db.mapping||{}).c1;if(!cid)return false;
+    const cc=db.customCols.find(c=>c.id===cid);
+    return !!(cc&&cc.alias&&cc.alias.trim().toLowerCase()==='fase de maduración');
+  };
+  _rapAvailable=PXML_DB.length>0&&PXML_DB.every(_faseMadCol);
+  apUpdateRapAvailability();
   const newTasks=[];let skipped=0;
   PXML_DB.forEach((db,dbIdx)=>{
     const fileVariant=db.variantName||db.projectName;
@@ -6617,6 +6717,7 @@ function exportProjectDbToExcel(){
   a.download='ProjectXML_DB_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
 apLoadPrefs();apApplyPrefs();
+apUpdateRapAvailability();
 const _apHadData=loadEmbedded();
 if(_apHadData&&AP_PREFS.defaultTab&&AP_PREFS.defaultTab!=='gantt'){
   const _apTabBtn=document.getElementById(AP_PREFS.defaultTab==='ldt'?'navLdt':AP_PREFS.defaultTab==='datos'?'navDatos':'');
