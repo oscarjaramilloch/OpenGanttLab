@@ -1,0 +1,11 @@
+# Copias de respaldo manuales — no son historial real, el historial ahora lo lleva git.
+backups/
+
+# Build exportado (RTM) — generado manualmente desde src/, no es fuente editable.
+dist/
+
+# Datos de trabajo del usuario (Excel/XML de proyectos reales) — no pertenecen al código fuente.
+data/
+
+# Configuración local de Claude Code (no compartida entre máquinas/usuarios).
+.claude/settings.local.json

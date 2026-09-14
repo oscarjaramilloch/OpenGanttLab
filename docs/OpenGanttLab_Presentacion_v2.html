@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<!--
+  OpenGanttLab — Presentación
+  Copyright (C) 2026 Oscar Fernando Jaramillo Chamorro
+  Licensed under the GNU General Public License v3.0 (GPLv3). See LICENSE file for details.
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenGanttLab — Escenarios</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#0D2137;--navy2:#0F2D4A;--cyan:#00D4B4;--cyan2:#00B89C;
+  --white:#F8FAFC;--muted:#8BA3B8;--accent2:#3B8BEB;--red:#E85D5D;--amber:#F5A623;
+  --font-d:'Sora',sans-serif;--font-b:'Inter',sans-serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--navy);color:var(--white);font-family:var(--font-b)}
+
+/* ── Slides ── */
+.deck{width:100vw;height:100vh;position:relative}
+.slide{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;transform:translateX(60px);
+  transition:opacity .45s cubic-bezier(.4,0,.2,1),transform .45s cubic-bezier(.4,0,.2,1);
+  overflow:hidden;
+}
+.slide.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.slide.exit{opacity:0;transform:translateX(-60px)}
+
+/* ── Nav ── */
+.nav{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:16px;z-index:100;
+  background:rgba(13,33,55,.8);backdrop-filter:blur(12px);
+  border:1px solid rgba(0,212,180,.2);border-radius:100px;padding:10px 20px;
+}
+.nav-btn{
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  font-size:18px;padding:4px 8px;border-radius:50%;transition:color .2s,background .2s;
+}
+.nav-btn:hover{color:var(--cyan);background:rgba(0,212,180,.1)}
+.dots{display:flex;gap:8px;align-items:center}
+.dot{
+  width:7px;height:7px;border-radius:50%;background:rgba(139,163,184,.35);
+  cursor:pointer;transition:all .25s;border:none;
+}
+.dot.active{background:var(--cyan);width:22px;border-radius:4px}
+.slide-count{font-family:var(--font-b);font-size:11px;color:var(--muted);min-width:36px;text-align:center}
+
+/* ── Progress bar ── */
+.progress{position:fixed;top:0;left:0;height:3px;background:var(--cyan);transition:width .4s ease;z-index:200}
+
+/* ── Typography ── */
+.eyebrow{font-family:var(--font-d);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
+.display{font-family:var(--font-d);font-weight:800;line-height:1.05;color:var(--white)}
+.lead{font-family:var(--font-b);font-weight:300;color:var(--muted);line-height:1.6}
+
+/* ── Slide 1: Hero ── */
+#s1{
+  background:linear-gradient(135deg,var(--navy) 0%,#0A1E30 60%,#061525 100%);
+  justify-content:center;align-items:center;text-align:center;padding:60px;
+}
+#s1 .hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(0,212,180,.35);border-radius:100px;
+  padding:6px 16px;margin-bottom:32px;font-size:12px;color:var(--cyan);
+  font-family:var(--font-d);font-weight:600;letter-spacing:.06em;
+}
+#s1 .display{font-size:clamp(40px,6vw,80px);margin-bottom:8px}
+#s1 .subtitle{font-family:var(--font-d);font-size:clamp(16px,2vw,24px);font-weight:300;color:var(--cyan);margin-bottom:24px;letter-spacing:.04em}
+#s1 .lead{font-size:clamp(13px,1.3vw,17px);max-width:560px;margin:0 auto 48px}
+#s1 .gantt-demo{width:100%;max-width:700px;margin:0 auto}
+
+/* Gantt SVG animado */
+.gantt-svg rect.bar{stroke-dasharray:400;stroke-dashoffset:400;animation:drawBar 1.2s ease forwards}
+@keyframes drawBar{to{stroke-dashoffset:0}}
+
+/* ── Slide 2: El problema ── */
+#s2{background:var(--navy);padding:80px 80px 80px;justify-content:center}
+#s2 .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:40px}
+.pain-card{
+  background:rgba(255,255,255,.04);border:1px solid rgba(139,163,184,.12);
+  border-radius:16px;padding:28px;position:relative;overflow:hidden;
+}
+.pain-card::before{content:'';position:absolute;inset:0;border-radius:16px;background:linear-gradient(135deg,rgba(232,93,93,.08),transparent);pointer-events:none}
+.pain-icon{font-size:28px;margin-bottom:16px;display:block}
+.pain-card h3{font-family:var(--font-d);font-size:15px;font-weight:600;margin-bottom:8px;color:var(--white)}
+.pain-card p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ── Slide 3: Qué es ── */
+#s3{
+  background:linear-gradient(135deg,#061525 0%,var(--navy) 100%);
+  padding:80px;justify-content:center;
+}
+#s3 .cols{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-top:40px}
+#s3 .feat-list{display:flex;flex-direction:column;gap:16px}
+.feat-item{display:flex;gap:14px;align-items:flex-start}
+.feat-dot{width:32px;height:32px;border-radius:8px;background:rgba(0,212,180,.12);border:1px solid rgba(0,212,180,.25);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;margin-top:2px}
+.feat-item h4{font-family:var(--font-d);font-size:14px;font-weight:600;margin-bottom:3px}
+.feat-item p{font-size:12px;color:var(--muted);line-height:1.5}
+.app-mockup{background:rgba(255,255,255,.04);border:1px solid rgba(139,163,184,.15);border-radius:16px;overflow:hidden}
+.mockup-bar{height:36px;background:rgba(255,255,255,.06);display:flex;align-items:center;padding:0 14px;gap:8px}
+.mockup-dot{width:8px;height:8px;border-radius:50%}
+.mockup-body{padding:16px}
+.mockup-row{height:12px;border-radius:3px;background:rgba(255,255,255,.08);margin-bottom:8px}
+
+/* ── Slide 4: Gantt ── */
+#s4{background:var(--navy2);padding:80px;justify-content:center}
+#s4 .feature-hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:36px}
+.tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-right:6px;margin-bottom:6px}
+.tag-cyan{background:rgba(0,212,180,.15);color:var(--cyan);border:1px solid rgba(0,212,180,.3)}
+.tag-blue{background:rgba(59,139,235,.15);color:var(--accent2);border:1px solid rgba(59,139,235,.3)}
+.tag-red{background:rgba(232,93,93,.15);color:var(--red);border:1px solid rgba(232,93,93,.3)}
+.tag-amber{background:rgba(245,166,35,.15);color:var(--amber);border:1px solid rgba(245,166,35,.3)}
+.check-list{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.check-item{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5}
+.check-item::before{content:'✓';color:var(--cyan);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ── Slide 5: LdT ── */
+#s5{background:linear-gradient(135deg,#061525 0%,#0A2040 100%);padding:80px;justify-content:center}
+#s5 .ldt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px}
+.ldt-card{background:rgba(255,255,255,.04);border:1px solid rgba(0,212,180,.12);border-radius:14px;padding:22px}
+.ldt-card h4{font-family:var(--font-d);font-size:13px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.ldt-card p{font-size:12px;color:var(--muted);line-height:1.55}
+
+/* ── Slide 6: XML ── */
+#s6{background:var(--navy);padding:80px;justify-content:center}
+#s6 .flow{display:flex;align-items:center;gap:0;margin-top:40px;justify-content:center;flex-wrap:wrap;gap:8px}
+.flow-box{background:rgba(255,255,255,.05);border:1px solid rgba(139,163,184,.15);border-radius:12px;padding:18px 22px;text-align:center;min-width:140px}
+.flow-box .ico{font-size:24px;margin-bottom:8px}
+.flow-box h4{font-family:var(--font-d);font-size:12px;font-weight:600;margin-bottom:4px}
+.flow-box p{font-size:11px;color:var(--muted)}
+.flow-arrow{color:var(--cyan);font-size:20px;margin:0 4px}
+#s6 .note{margin-top:28px;background:rgba(0,212,180,.07);border:1px solid rgba(0,212,180,.2);border-radius:10px;padding:14px 18px;font-size:12px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
+#s6 .note span{color:var(--cyan);font-weight:600;flex-shrink:0}
+
+/* ── Slide 7: Filtros ── */
+#s7{background:var(--navy2);padding:80px;justify-content:center}
+#s7 .filter-demo{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:36px}
+.filter-col h3{font-family:var(--font-d);font-size:16px;font-weight:600;margin-bottom:16px}
+.filter-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;font-size:11px;margin:3px;border:1px solid rgba(139,163,184,.2);background:rgba(255,255,255,.04);color:var(--white)}
+.filter-chip .ico{font-size:12px}
+
+/* ── Slide 8: Arquitectura ── */
+#s8{background:linear-gradient(135deg,#061525 0%,var(--navy) 100%);padding:80px;justify-content:center}
+#s8 .arch-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+.arch-card{background:rgba(255,255,255,.04);border:1px solid rgba(139,163,184,.1);border-radius:12px;padding:18px 14px;text-align:center}
+.arch-card .ico{font-size:26px;margin-bottom:10px}
+.arch-card h4{font-family:var(--font-d);font-size:12px;font-weight:600;margin-bottom:6px}
+.arch-card p{font-size:11px;color:var(--muted);line-height:1.5}
+#s8 .stat-row{display:flex;gap:24px;margin-top:28px;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center;padding:16px 24px;background:rgba(0,212,180,.06);border:1px solid rgba(0,212,180,.2);border-radius:12px}
+.stat .num{font-family:var(--font-d);font-size:32px;font-weight:800;color:var(--cyan)}
+.stat .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ── Slide 9: CTA ── */
+#s9{
+  background:linear-gradient(135deg,var(--navy) 0%,#061525 100%);
+  justify-content:center;align-items:center;text-align:center;padding:60px;
+}
+#s9 .display{font-size:clamp(32px,5vw,64px);margin-bottom:20px}
+#s9 .lead{max-width:500px;margin:0 auto 40px;font-size:clamp(13px,1.3vw,16px)}
+#s9 .cta-grid{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cta-pill{padding:12px 28px;border-radius:100px;font-family:var(--font-d);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.cta-primary{background:var(--cyan);color:var(--navy)}
+.cta-primary:hover{background:var(--cyan2);transform:translateY(-1px)}
+.cta-secondary{background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.25)}
+.cta-secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+#s9 .author{margin-top:48px;font-size:12px;color:var(--muted);font-family:var(--font-d)}
+
+/* ── Decorative ── */
+.glow{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+.content-z{position:relative;z-index:1}
+
+/* ── Keyboard hint ── */
+.kb-hint{position:fixed;top:20px;right:24px;font-size:10px;color:rgba(139,163,184,.5);font-family:var(--font-b);z-index:100}
+.kb-hint kbd{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:3px;padding:1px 5px;font-size:9px}
+
+.tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:100px;margin:2px}
+.tag-c{background:rgba(0,212,180,.13);color:var(--cyan);border:1px solid rgba(0,212,180,.28)}
+.tag-b{background:rgba(59,139,235,.13);color:var(--accent2);border:1px solid rgba(59,139,235,.28)}
+.tag-r{background:rgba(232,93,93,.13);color:var(--red);border:1px solid rgba(232,93,93,.28)}
+.tag-a{background:rgba(245,166,35,.13);color:var(--amber);border:1px solid rgba(245,166,35,.28)}
+.tag-p{background:rgba(167,139,235,.13);color:var(--purple);border:1px solid rgba(167,139,235,.28)}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(139,163,184,.12);border-radius:14px;padding:22px}
+.card-cyan{background:rgba(0,212,180,.05);border-color:rgba(0,212,180,.2)}
+.card-red{background:rgba(232,93,93,.05);border-color:rgba(232,93,93,.2)}
+.card-blue{background:rgba(59,139,235,.05);border-color:rgba(59,139,235,.2)}
+.check-item{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.5;margin-bottom:9px}
+.check-item::before{content:'✓';color:var(--cyan);font-weight:700;flex-shrink:0;margin-top:1px}
+.stat{text-align:center;padding:14px 20px;background:rgba(0,212,180,.06);border:1px solid rgba(0,212,180,.18);border-radius:12px}
+.stat .num{font-family:var(--font-d);font-size:30px;font-weight:800;color:var(--cyan)}
+.stat .lbl{font-size:10px;color:var(--muted);margin-top:2px}
+:root{--purple:#A78BEB}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="kb-hint"><kbd>←</kbd><kbd>→</kbd> navegar</div>
+
+<div class="deck" id="deck">
+
+<!-- ══ S1: HERO ══ -->
+<section class="slide active" id="s1">
+  <div class="glow" style="width:500px;height:500px;background:rgba(0,212,180,.07);top:-100px;left:-100px"></div>
+  <div class="glow" style="width:400px;height:400px;background:rgba(59,139,235,.06);bottom:-80px;right:-60px"></div>
+  <div class="content-z" style="display:flex;flex-direction:column;align-items:center">
+    <div class="hero-badge">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--cyan);display:inline-block"></span>
+      Herramienta de Planificación
+    </div>
+    <h1 class="display">OpenGanttLab</h1>
+    <div class="subtitle">Comparador de Escenarios</div>
+    <p class="lead">Visualiza, compara y presenta cronogramas de proyectos en un único archivo HTML autónomo — sin instalaciones, sin servidores.</p>
+    <!-- Gantt animado -->
+    <div class="gantt-demo">
+      <svg viewBox="0 0 680 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(139,163,184,.12)">
+        <!-- Encabezado -->
+        <rect x="0" y="0" width="680" height="30" fill="rgba(255,255,255,.06)"/>
+        <text x="10" y="20" font-size="9" fill="#8BA3B8" font-family="Inter">Categoría 1</text>
+        <text x="110" y="20" font-size="9" fill="#8BA3B8" font-family="Inter">Categoría 2</text>
+        <text x="230" y="20" font-size="9" fill="#8BA3B8" font-family="Inter">Nombre de Tarea</text>
+        <text x="400" y="20" font-size="9" fill="#8BA3B8" font-family="Inter">2024</text>
+        <text x="540" y="20" font-size="9" fill="#8BA3B8" font-family="Inter">2025</text>
+        <!-- Línea de estado -->
+        <line x1="480" y1="0" x2="480" y2="160" stroke="#E85D5D" stroke-width="1.5" stroke-dasharray="3,3" opacity=".6"/>
+        <!-- Filas -->
+        <g opacity=".9">
+          <rect x="0" y="30" width="100" height="32" fill="#0D2F4A"/>
+          <text x="8" y="50" font-size="8" fill="#00D4B4" font-weight="700" font-family="Inter">VARIANTE 1</text>
+          <rect x="100" y="30" width="120" height="32" fill="rgba(0,150,180,.12)"/>
+          <text x="108" y="50" font-size="8" fill="#8BA3B8" font-family="Inter">Ingeniería</text>
+          <rect x="220" y="34" width="300" height="12" rx="3" fill="#3B8BEB" opacity=".7"/>
+          <rect x="220" y="50" width="220" height="12" rx="3" fill="#3B8BEB" opacity=".4"/>
+        </g>
+        <g opacity=".9">
+          <rect x="0" y="62" width="100" height="32" fill="#0D2F4A"/>
+          <text x="8" y="82" font-size="8" fill="#00D4B4" font-weight="700" font-family="Inter">VARIANTE 2</text>
+          <rect x="100" y="62" width="120" height="32" fill="rgba(0,180,120,.12)"/>
+          <text x="108" y="82" font-size="8" fill="#8BA3B8" font-family="Inter">Construcción</text>
+          <rect x="260" y="66" width="280" height="12" rx="3" fill="#00D4B4" opacity=".6"/>
+          <rect x="300" y="82" width="180" height="12" rx="3" fill="#00D4B4" opacity=".35"/>
+        </g>
+        <g opacity=".9">
+          <rect x="0" y="94" width="100" height="32" fill="#0D2F4A"/>
+          <text x="8" y="114" font-size="8" fill="#F5A623" font-weight="700" font-family="Inter">VARIANTE 3</text>
+          <rect x="100" y="94" width="120" height="32" fill="rgba(245,166,35,.08)"/>
+          <text x="108" y="114" font-size="8" fill="#8BA3B8" font-family="Inter">Comisionamiento</text>
+          <rect x="360" y="98" width="240" height="12" rx="3" fill="#F5A623" opacity=".55"/>
+          <rect x="420" y="114" width="160" height="12" rx="3" fill="#F5A623" opacity=".3"/>
+          <!-- Hito ruta crítica -->
+          <polygon points="490,102 497,112 483,112" fill="#E85D5D" opacity=".9"/>
+        </g>
+        <g opacity=".9">
+          <rect x="0" y="126" width="100" height="32" fill="#0D2F4A"/>
+          <text x="8" y="146" font-size="8" fill="#A78BEB" font-weight="700" font-family="Inter">VARIANTE 4</text>
+          <rect x="100" y="126" width="120" height="32" fill="rgba(167,139,235,.1)"/>
+          <text x="108" y="146" font-size="8" fill="#8BA3B8" font-family="Inter">Pruebas</text>
+          <rect x="440" y="130" width="200" height="12" rx="3" fill="#A78BEB" opacity=".5"/>
+        </g>
+        <!-- Eje X -->
+        <line x1="220" y1="30" x2="220" y2="160" stroke="rgba(139,163,184,.12)" stroke-width="1"/>
+        <line x1="360" y1="30" x2="360" y2="160" stroke="rgba(139,163,184,.12)" stroke-width="1"/>
+        <line x1="500" y1="30" x2="500" y2="160" stroke="rgba(139,163,184,.12)" stroke-width="1"/>
+        <line x1="640" y1="30" x2="640" y2="160" stroke="rgba(139,163,184,.12)" stroke-width="1"/>
+      </svg>
+    </div>
+    <div style="margin-top:28px;text-align:center">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px">Autor:</div>
+      <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--white)">Oscar Fernando Jaramillo Chamorro</div>
+      <div style="font-size:11px;color:var(--cyan);margin-top:2px">Ingeniero en Automática Industrial</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:1px">Profesional Pleno Control Proyectos</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <span>📱 313 783 0032</span>
+        <span>✉️ oscar.jaramillo@outlook.com</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S2: EL PROBLEMA ══ -->
+<section class="slide" id="s2">
+  <div class="glow" style="width:400px;height:400px;background:rgba(232,93,93,.05);top:-60px;right:-60px"></div>
+  <div class="content-z" style="width:100%">
+    <div class="eyebrow">El desafío</div>
+    <h2 class="display" style="font-size:clamp(28px,4vw,52px)">Gestionar múltiples<br>escenarios es complejo</h2>
+    <div class="grid">
+      <div class="pain-card">
+        <span class="pain-icon">📊</span>
+        <h3>Herramientas fragmentadas</h3>
+        <p>Excel, MS Project y PowerPoint por separado generan inconsistencias y actualizaciones manuales que consumen horas.</p>
+      </div>
+      <div class="pain-card">
+        <span class="pain-icon">🔄</span>
+        <h3>Comparar escenarios es tedioso</h3>
+        <p>Ver Variante 1 vs Variante 2 vs Escenario Base requiere abrir múltiples archivos y hacer capturas de pantalla.</p>
+      </div>
+      <div class="pain-card">
+        <span class="pain-icon">📤</span>
+        <h3>Distribución difícil</h3>
+        <p>Compartir un Gantt actualizado implica enviar archivos pesados que el receptor necesita software específico para abrir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S3: QUÉ ES ══ -->
+<section class="slide" id="s3">
+  <div class="glow" style="width:350px;height:350px;background:rgba(0,212,180,.06);bottom:-80px;left:-60px"></div>
+  <div class="content-z" style="width:100%">
+    <div class="eyebrow">La solución</div>
+    <h2 class="display" style="font-size:clamp(26px,3.5vw,46px)">Un archivo HTML.<br>Todo incluido.</h2>
+    <div class="cols">
+      <div class="feat-list">
+        <div class="feat-item">
+          <div class="feat-dot">📁</div>
+          <div><h4>Archivo único autónomo</h4><p>Un solo .html con todos los datos embebidos. No requiere instalación ni conexión a internet.</p></div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-dot">🔀</div>
+          <div><h4>Comparación de escenarios</h4><p>Carga múltiples variantes desde Excel o Project XML y alterna entre ellas en tiempo real.</p></div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-dot">📐</div>
+          <div><h4>Gantt + Línea de Tiempo</h4><p>Vista de Gantt detallada para gestión y vista ejecutiva de Línea de Tiempo para presentaciones.</p></div>
+        </div>
+        <div class="feat-item">
+          <div class="feat-dot">🌐</div>
+          <div><h4>Compartible en 1 clic</h4><p>Exporta el HTML con datos embebidos. Cualquiera lo abre en Chrome sin software adicional.</p></div>
+        </div>
+      </div>
+      <div class="app-mockup">
+        <div class="mockup-bar">
+          <div class="mockup-dot" style="background:#E85D5D"></div>
+          <div class="mockup-dot" style="background:#F5A623"></div>
+          <div class="mockup-dot" style="background:#00D4B4"></div>
+          <div style="flex:1;height:12px;background:rgba(255,255,255,.06);border-radius:4px;margin-left:8px"></div>
+        </div>
+        <div class="mockup-body">
+          <div style="height:24px;background:rgba(0,212,180,.12);border-radius:6px;margin-bottom:10px;display:flex;align-items:center;padding:0 10px">
+            <div style="width:60px;height:6px;background:rgba(0,212,180,.4);border-radius:3px"></div>
+            <div style="width:40px;height:6px;background:rgba(139,163,184,.2);border-radius:3px;margin-left:10px"></div>
+            <div style="width:50px;height:6px;background:rgba(139,163,184,.2);border-radius:3px;margin-left:8px"></div>
+          </div>
+          <div class="mockup-row" style="width:90%"></div>
+          <div style="display:grid;grid-template-columns:80px 90px 1fr;gap:6px;margin-top:6px">
+            <div style="height:20px;background:rgba(0,45,80,.6);border-radius:4px"></div>
+            <div style="height:20px;background:rgba(0,120,160,.2);border-radius:4px"></div>
+            <div style="height:20px;background:rgba(59,139,235,.35);border-radius:4px"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:80px 90px 1fr;gap:6px;margin-top:6px">
+            <div style="height:20px;background:rgba(0,45,80,.6);border-radius:4px"></div>
+            <div style="height:20px;background:rgba(0,160,100,.15);border-radius:4px"></div>
+            <div style="height:20px;background:rgba(0,212,180,.3);border-radius:4px;margin-left:30px"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:80px 90px 1fr;gap:6px;margin-top:6px">
+            <div style="height:20px;background:rgba(0,45,80,.6);border-radius:4px"></div>
+            <div style="height:20px;background:rgba(245,166,35,.15);border-radius:4px"></div>
+            <div style="height:20px;background:rgba(245,166,35,.35);border-radius:4px;margin-left:60px"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:80px 90px 1fr;gap:6px;margin-top:6px">
+            <div style="height:20px;background:rgba(0,45,80,.6);border-radius:4px"></div>
+            <div style="height:20px;background:rgba(167,139,235,.15);border-radius:4px"></div>
+            <div style="height:20px;background:rgba(167,139,235,.3);border-radius:4px;margin-left:100px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S4: GANTT ══ -->
+<section class="slide" id="s4" style="background:var(--navy2);justify-content:center">
+  <div class="z1">
+    <div class="eyebrow">Módulo 1 — Gestión</div>
+    <h2 class="display" style="font-size:clamp(24px,3.5vw,44px);margin-bottom:16px">Vista Gantt</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start">
+      <div>
+        <div style="margin-bottom:14px">
+          <span class="tag tag-c">LB + R/P</span><span class="tag tag-b">Multi-proyecto</span>
+          <span class="tag tag-r">Ruta crítica</span><span class="tag tag-a">10 formatos fecha</span>
+        </div>
+        <div class="check-item">Columna <b style="color:var(--white)">Escenario</b> — agrupador superior con color propio y separador visual entre proyectos</div>
+        <div class="check-item">Columna <b style="color:var(--white)">Marca Activity</b> — checkbox de filtro para marcar tareas relevantes (Sí/No)</div>
+        <div class="check-item">Línea Base y Real/Proyectado con colores por categoría y avance real</div>
+        <div class="check-item">Filtros por columna (Escenario, Cat1, Cat2, Marca Activity, Tarea) con búsqueda en cascada</div>
+        <div class="check-item">Mostrar/Ocultar columnas con clic derecho en cualquier encabezado</div>
+        <div class="check-item">Fecha de estado con estilo, grosor y color de línea configurables</div>
+        <div class="check-item">Mostrar solo Ruta Crítica con borde ajustable en barras, hitos y eventos</div>
+        <div class="check-item">5 escalas temporales: Días · Semanas · Meses · Trimestres · Años</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card" style="padding:14px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:8px;font-family:var(--font-d);font-weight:600;letter-spacing:.07em;text-transform:uppercase">Jerarquía de columnas</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:10px">
+            <div style="background:#1e3a5f;color:#fff;border-radius:4px;padding:5px 9px">Escenario</div>
+            <span style="color:var(--cyan)">→</span>
+            <div style="background:#0f4c81;color:#fff;border-radius:4px;padding:5px 9px">Cat 1</div>
+            <span style="color:var(--cyan)">→</span>
+            <div style="background:#bdd7f0;color:#0D2137;border-radius:4px;padding:5px 9px">Cat 2</div>
+            <span style="color:var(--cyan)">→</span>
+            <div style="background:rgba(255,255,255,.08);border-radius:4px;padding:5px 9px">Marca Activity</div>
+            <span style="color:var(--cyan)">→</span>
+            <div style="background:rgba(255,255,255,.08);border-radius:4px;padding:5px 9px">Tarea</div>
+          </div>
+        </div>
+        <div class="card card-red" style="padding:14px;display:flex;gap:10px;align-items:center">
+          <span style="font-size:22px">⚠</span>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--red);font-family:var(--font-d);margin-bottom:3px">Ruta Crítica — Filtro y visualización</div>
+            <div style="font-size:11px;color:var(--muted)">Checkbox "Mostrar Ruta Crítica" filtra el Gantt. Borde rojo configurable en todas las representaciones visuales.</div>
+          </div>
+        </div>
+        <div class="card card-blue" style="padding:14px">
+          <div style="font-size:12px;font-weight:600;font-family:var(--font-d);margin-bottom:6px">Importación robusta</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.5">Excel (.xlsx) y Microsoft Project (.xml) — incluyendo Enterprise Custom Fields. Valores Sí/No de Marca Activity se normalizan automáticamente desde campos booleanos del XML.</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+          <div class="stat"><div class="num">5</div><div class="lbl">Escalas</div></div>
+          <div class="stat"><div class="num">10</div><div class="lbl">Formatos fecha</div></div>
+          <div class="stat"><div class="num">∞</div><div class="lbl">Proyectos</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S5: LÍNEA DE TIEMPO ══ -->
+<section class="slide" id="s5">
+  <div class="glow" style="width:400px;height:400px;background:rgba(0,212,180,.05);top:-80px;right:-80px"></div>
+  <div class="content-z" style="width:100%">
+    <div class="eyebrow">Módulo 2</div>
+    <h2 class="display" style="font-size:clamp(26px,3.5vw,46px)">Línea de Tiempo</h2>
+    <p class="lead" style="margin-top:8px;font-size:14px">Vista ejecutiva SVG interactiva para presentaciones a alta gerencia. Independiente del Gantt.</p>
+    <div class="ldt-grid">
+      <div class="ldt-card">
+        <h4>🎨 Personalización total</h4>
+        <p>Color, patrón de relleno, tamaño y posición del texto por cada barra. Colores de año independientes.</p>
+      </div>
+      <div class="ldt-card">
+        <h4>📐 Insertar elementos</h4>
+        <p>Cuadros de texto y formas libres (rectángulo, elipse, triángulo, línea, flecha) sobre el lienzo SVG.</p>
+      </div>
+      <div class="ldt-card">
+        <h4>↩ Deshacer / Rehacer</h4>
+        <p>Hasta 50 niveles de historial con Ctrl+Z / Ctrl+Y. Cubre colores, texto, posición y visibilidad.</p>
+      </div>
+      <div class="ldt-card">
+        <h4>📅 Fecha de estado</h4>
+        <p>Línea vertical configurable (estilo, grosor, color) independiente del Gantt, con toggle Mostrar.</p>
+      </div>
+      <div class="ldt-card">
+        <h4>🖼️ Exportar</h4>
+        <p>PNG de alta resolución o PDF listo para imprimir en formato horizontal.</p>
+      </div>
+      <div class="ldt-card">
+        <h4>🔍 Selección de tareas</h4>
+        <p>Filtro por Categoría 1 y 2 con activación por grupo. Las visibles en Gantt van a LdT automáticamente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S6: IMPORTACIÓN XML ══ -->
+<section class="slide" id="s6" style="background:var(--navy);justify-content:center">
+  <div class="z1">
+    <div class="eyebrow">Integración</div>
+    <h2 class="display" style="font-size:clamp(24px,3.5vw,44px);margin-bottom:6px">Microsoft Project XML</h2>
+    <p class="lead" style="font-size:13px;margin-bottom:22px">Importación completa incluyendo campos personalizados Enterprise y agrupadores de proyecto — lo que ninguna herramienta online resuelve bien.</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:20px;flex-wrap:wrap">
+      <div class="card" style="text-align:center;padding:14px 18px;min-width:120px"><div style="font-size:22px;margin-bottom:6px">📋</div><div style="font-size:11px;font-family:var(--font-d);font-weight:600">Archivo .xml</div><div style="font-size:10px;color:var(--muted)">MS Project export</div></div>
+      <div style="color:var(--cyan);font-size:18px">→</div>
+      <div class="card card-cyan" style="text-align:center;padding:14px 18px;min-width:120px"><div style="font-size:22px;margin-bottom:6px">🔗</div><div style="font-size:11px;font-family:var(--font-d);font-weight:600">Mapeo de campos</div><div style="font-size:10px;color:var(--muted)">Escenario, Cat1, Cat2, Marca Activity…</div></div>
+      <div style="color:var(--cyan);font-size:18px">→</div>
+      <div class="card" style="text-align:center;padding:14px 18px;min-width:120px"><div style="font-size:22px;margin-bottom:6px">⚙️</div><div style="font-size:11px;font-family:var(--font-d);font-weight:600">Campos empresa</div><div style="font-size:10px;color:var(--muted)">ExtendedAttribute +<br>EnterpriseExtended</div></div>
+      <div style="color:var(--cyan);font-size:18px">→</div>
+      <div class="card card-blue" style="text-align:center;padding:14px 18px;min-width:120px"><div style="font-size:22px;margin-bottom:6px">📊</div><div style="font-size:11px;font-family:var(--font-d);font-weight:600">Gantt automático</div><div style="font-size:10px;color:var(--muted)">Con escenarios y filtros</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div class="card card-cyan" style="padding:14px">
+        <div style="font-size:11px;color:var(--cyan);font-weight:600;font-family:var(--font-d);margin-bottom:6px">✓ Enterprise Custom Fields</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">Lee campos de Project Server como "Especialidad Tarea" o "Marca Activity" que otros exportadores ignoran.</div>
+      </div>
+      <div class="card" style="padding:14px">
+        <div style="font-size:11px;font-weight:600;font-family:var(--font-d);margin-bottom:6px">🔁 Normalización automática</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">Valores booleanos del XML (1/0) se convierten a Sí/No de forma consistente, listos para filtrar.</div>
+      </div>
+      <div class="card" style="padding:14px">
+        <div style="font-size:11px;font-weight:600;font-family:var(--font-d);margin-bottom:6px">🗂️ Multi-archivo + Actualizar</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.5">N archivos .xml como escenarios independientes. Excel y XML cargados a la vez: "Actualizar" refresca ambos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S7: FILTROS ══ -->
+<section class="slide" id="s7" style="background:var(--navy2);justify-content:center">
+  <div class="z1">
+    <div class="eyebrow">Capacidades de filtrado</div>
+    <h2 class="display" style="font-size:clamp(24px,3.5vw,44px);margin-bottom:20px">Tres niveles de filtrado</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px">
+      <div>
+        <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(0,212,180,.2)">① Filtros por encabezado</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px">Botón Filtrar en ribbon activa ▾ en Cat1, Cat2 y Nombre de Tarea. Panel con búsqueda y selección múltiple.</p>
+        <div class="card" style="padding:12px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:8px">Filtro activo en Cat2</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">
+            <span style="background:rgba(0,212,180,.12);color:var(--cyan);border:1px solid rgba(0,212,180,.25);border-radius:4px;padding:3px 8px;font-size:10px">☑ Obras</span>
+            <span style="background:rgba(255,255,255,.05);border:1px solid rgba(139,163,184,.15);border-radius:4px;padding:3px 8px;font-size:10px;color:var(--muted)">☐ Compras</span>
+            <span style="background:rgba(255,255,255,.05);border:1px solid rgba(139,163,184,.15);border-radius:4px;padding:3px 8px;font-size:10px;color:var(--muted)">☐ Entorno</span>
+          </div>
+        </div>
+        <div class="card card-blue" style="padding:10px;margin-top:8px;font-size:11px;color:var(--muted)">
+          ↺ Botón <b style="color:var(--white)">Borrar</b> en ribbon elimina todos los filtros en un clic
+        </div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(0,212,180,.2)">② Panel Seleccionar tareas</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px">Panel completo con filtros cruzados en cascada. Al seleccionar Cat2 se activan automáticamente todas sus tareas.</p>
+        <div class="card" style="padding:12px">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:7px">
+            <div style="font-size:10px;color:var(--muted);min-width:65px">Categoría 1:</div>
+            <div style="flex:1;height:20px;background:rgba(255,255,255,.05);border:1px solid rgba(139,163,184,.2);border-radius:3px;display:flex;align-items:center;padding:0 7px"><div style="font-size:10px">VARIANTE 2 ▾</div></div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="font-size:10px;color:var(--muted);min-width:65px">Categoría 2:</div>
+            <div style="flex:1;height:20px;background:rgba(0,212,180,.08);border:1px solid rgba(0,212,180,.22);border-radius:3px;display:flex;align-items:center;padding:0 7px"><div style="font-size:10px;color:var(--cyan)">Obras → auto-selecciona ✓</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(0,212,180,.2)">③ Selector de escenarios</div>
+        <p style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:12px">Dropdown desplegable con checkboxes por escenario. Clic en el swatch de color para cambiarlo. Estado: Todos / lista activa.</p>
+        <div class="card" style="padding:12px">
+          <div style="background:rgba(255,255,255,.05);border:1px solid rgba(139,163,184,.15);border-radius:4px;padding:5px 10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:11px"><span>VARIANTE 2, VARIANTE 3</span><span style="color:var(--muted)">▾</span></div>
+          <div style="font-size:10px;color:var(--muted)">Desplegado:</div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px">
+            <div style="display:flex;gap:6px;align-items:center;font-size:10px"><span style="width:10px;height:10px;border-radius:2px;background:#3B8BEB;display:inline-block"></span>☑ VARIANTE 1</div>
+            <div style="display:flex;gap:6px;align-items:center;font-size:10px;color:var(--cyan)"><span style="width:10px;height:10px;border-radius:2px;background:#00D4B4;display:inline-block"></span>☑ VARIANTE 2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S8: ARQUITECTURA ══ -->
+<section class="slide" id="s8" style="background:linear-gradient(135deg,#061525 0%,var(--navy) 100%);justify-content:center">
+  <div class="glow" style="width:500px;height:500px;background:rgba(0,212,180,.05);top:-80px;right:-80px"></div>
+  <div class="z1">
+    <div class="eyebrow">Resumen v2.0</div>
+    <h2 class="display" style="font-size:clamp(24px,3.5vw,44px);margin-bottom:20px">Todo lo que incluye</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+      <div>
+        <div style="font-size:11px;color:var(--cyan);font-weight:600;font-family:var(--font-d);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px">Gantt</div>
+        <div class="check-item">Columna Escenario — agrupador de proyecto con color propio</div>
+        <div class="check-item">Columna Marca Activity con filtro checkbox (Sí/No)</div>
+        <div class="check-item">Multi-escenario con selector dropdown y colores</div>
+        <div class="check-item">Línea Base + Real/Proyectado + Avance real</div>
+        <div class="check-item">Filtros por columna con búsqueda en cascada</div>
+        <div class="check-item">Fecha de estado configurable (estilo, grosor, color)</div>
+        <div class="check-item">Ruta crítica — filtro y visualización con borde</div>
+        <div class="check-item">Tooltip con colores de categoría y ⚠ en rojo</div>
+        <div class="check-item">10 formatos de fecha · 5 escalas temporales</div>
+        <div class="check-item">Insertar texto libre sobre el Gantt</div>
+        <div style="font-size:11px;color:var(--cyan);font-weight:600;font-family:var(--font-d);letter-spacing:.07em;text-transform:uppercase;margin:14px 0 10px">Importación</div>
+        <div class="check-item">Excel .xlsx con lector nativo (sin librerías)</div>
+        <div class="check-item">Project XML con Enterprise Custom Fields</div>
+        <div class="check-item">Normalización automática de valores booleanos (1/0 → Sí/No)</div>
+        <div class="check-item">Botón Actualizar funciona con Excel, XML o ambos a la vez</div>
+        <div class="check-item">Mapeo de campos guardado por archivo</div>
+        <div class="check-item">Selector inteligente con conteo de tareas</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--cyan);font-weight:600;font-family:var(--font-d);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px">Línea de Tiempo</div>
+        <div class="check-item">Personalización completa por barra e hito</div>
+        <div class="check-item">Texto ajustado o desbordante por barra</div>
+        <div class="check-item">Insertar formas libres (5 tipos)</div>
+        <div class="check-item">Deshacer / Rehacer 50 niveles</div>
+        <div class="check-item">Exportar PNG alta res / PDF horizontal</div>
+        <div class="check-item">Fecha de estado independiente del Gantt</div>
+        <div style="font-size:11px;color:var(--cyan);font-weight:600;font-family:var(--font-d);letter-spacing:.07em;text-transform:uppercase;margin:14px 0 10px">Distribución</div>
+        <div class="check-item">HTML compartible con datos embebidos</div>
+        <div class="check-item">Versión ofuscada (RC4) para distribución protegida</div>
+        <div class="check-item">Sin instalación · sin servidor · sin licencias</div>
+        <div class="check-item">Compatible Chrome / Edge 86+</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ S9: CTA ══ -->
+<section class="slide hero" id="s9" style="background:linear-gradient(140deg,var(--navy) 0%,#061525 100%)">
+  <div class="glow" style="width:700px;height:700px;background:rgba(0,212,180,.05);top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center">
+    <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(0,212,180,.28);border-radius:100px;padding:6px 16px;margin-bottom:24px;font-size:11px;color:var(--cyan);font-family:var(--font-d);font-weight:600;letter-spacing:.07em">
+      OpenGanttLab · v2.0 RTM
+    </div>
+    <h2 class="display" style="font-size:clamp(36px,6vw,72px);margin-bottom:16px">Listo para usar.</h2>
+    <p class="lead" style="max-width:480px;margin:0 auto 36px;font-size:clamp(13px,1.3vw,16px)">Un solo archivo HTML. Todos tus escenarios. Sin complicaciones, sin dependencias, sin licencias.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
+      <button style="padding:13px 30px;border-radius:100px;font-family:var(--font-d);font-size:13px;font-weight:600;cursor:pointer;border:none;background:var(--cyan);color:var(--navy);transition:all .2s" onmouseover="this.style.background='#00B89C'" onmouseout="this.style.background='#00D4B4'">📊 Abrir OpenGanttLab</button>
+      <button style="padding:13px 28px;border-radius:100px;font-family:var(--font-d);font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--white);border:1px solid rgba(255,255,255,.22);transition:all .2s" onmouseover="this.style.borderColor='#00D4B4';this.style.color='#00D4B4'" onmouseout="this.style.borderColor='rgba(255,255,255,.22)';this.style.color='var(--white)'">📄 Ver documentación</button>
+    </div>
+    <div style="margin-top:52px;display:flex;gap:32px;flex-wrap:wrap;justify-content:center">
+      <div class="stat"><div class="num">0</div><div class="lbl">Instalaciones</div></div>
+      <div class="stat"><div class="num">2</div><div class="lbl">Módulos</div></div>
+      <div class="stat"><div class="num">50</div><div class="lbl">Niveles deshacer</div></div>
+      <div class="stat"><div class="num">∞</div><div class="lbl">Escenarios</div></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- .deck -->
+
+<!-- Nav -->
+<nav class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)">‹</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn" onclick="go(1)">›</button>
+  <span class="slide-count" id="count"></span>
+</nav>
+
+<script>
+const slides=document.querySelectorAll('.slide');
+const dotsEl=document.getElementById('dots');
+const countEl=document.getElementById('count');
+const progressEl=document.getElementById('progress');
+let cur=0;
+
+// Build dots
+slides.forEach((_,i)=>{
+  const d=document.createElement('button');
+  d.className='dot'+(i===0?' active':'');
+  d.onclick=()=>goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function update(){
+  slides.forEach((s,i)=>{
+    s.classList.remove('active','exit');
+    if(i===cur) s.classList.add('active');
+  });
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+  countEl.textContent=`${cur+1}/${slides.length}`;
+  progressEl.style.width=`${((cur+1)/slides.length)*100}%`;
+}
+
+function go(dir){goTo(cur+dir)}
+function goTo(n){
+  if(n<0||n>=slides.length)return;
+  if(n!==cur){slides[cur].classList.add('exit');}
+  cur=n;
+  update();
+}
+
+update();
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown') go(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp') go(-1);
+  if(e.key==='Home') goTo(0);
+  if(e.key==='End') goTo(slides.length-1);
+});
+
+// Touch/swipe
+let tx=0;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>40) go(dx<0?1:-1);
+},{passive:true});
+</script>
+</body>
+</html>

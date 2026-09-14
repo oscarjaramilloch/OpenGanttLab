@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1200" height="360" viewBox="0 0 1200 360"
+     role="img" aria-labelledby="title desc">
+  <title id="title">Open Gantt Lab — logo principal</title>
+  <desc id="desc">Logotipo vectorial con tres barras de cronograma, un diamante de hito y el texto Open Gantt Lab.</desc>
+
+  <defs>
+    <style>
+      .wordmark {
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        font-weight: 750;
+        letter-spacing: -2px;
+      }
+      .tagline {
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        font-weight: 500;
+        letter-spacing: 3px;
+      }
+    </style>
+  </defs>
+
+  <!-- Isotipo -->
+  <g id="isotipo" transform="translate(52 55)">
+    <!-- Gantt bars -->
+    <rect id="bar-blue" x="0" y="0" width="250" height="48" rx="7" fill="#2563EB"/>
+    <rect id="bar-green" x="34" y="76" width="150" height="48" rx="7" fill="#16A34A"/>
+    <rect id="bar-orange" x="72" y="152" width="178" height="48" rx="7" fill="#F59E0B"/>
+
+    <!-- Timeline and milestone -->
+    <line id="timeline" x1="280" y1="-8" x2="280" y2="208"
+          stroke="#0F2D5B" stroke-width="5"/>
+    <polygon id="milestone" points="280,58 316,94 280,130 244,94"
+             fill="#0F2D5B"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g id="wordmark">
+    <text x="410" y="150" font-size="92" class="wordmark" fill="#0F2D5B">Open</text>
+    <text x="410" y="244" font-size="92" class="wordmark" fill="#2563EB">Gantt</text>
+    <text x="735" y="244" font-size="92" class="wordmark" fill="#0F2D5B">Lab</text>
+    <text x="413" y="294" font-size="20" class="tagline" fill="#0F2D5B">
+      PLAN · ANALYZE · COMPARE · ACHIEVE
+    </text>
+  </g>
+</svg>
