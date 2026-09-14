@@ -2308,6 +2308,12 @@ function togglePresRaP(){
     alert('Vista RaP no está disponible: Categoría 1 debe venir del campo "Fase de Maduración" del XML de Project (no funciona con datos de Excel, ni si Categoría 1 se remapeó a otra columna).');
     cb.checked=false;return;
   }
+  if(!cb||!cb.checked){
+    // Al desactivar Vista RaP, la vista normal vuelve siempre al arreglo automático del
+    // primer renderizado — se descarta cualquier posición manual (de ambas vistas) en vez
+    // de intentar preservarla.
+    Object.values(PRES_OPTS).forEach(opt=>{delete opt.pinnedLayer;delete opt.layerOffset;delete opt.rapPinnedLayer;delete opt.rapLayerOffset;});
+  }
   renderPres();
 }
 let _presHoyCol='#FF0000';
