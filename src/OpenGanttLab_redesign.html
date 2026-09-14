@@ -2285,6 +2285,10 @@ function togglePresCritOptions(){
    XML (ver pxmlApplyMapping/_faseMadCol) — un Excel, o un XML remapeado a otra columna,
    no tiene ese significado, así que el toggle se deshabilita y se apaga solo. */
 let _rapAvailable=false;
+// true si el último renderPres() fue con Vista RaP activa — usado por el arrastre manual
+// (mouseup) y el botón de capa ▲▼ para guardar la posición en rapPinnedLayer/rapLayerOffset
+// en vez de pinnedLayer/layerOffset, sin mezclar el layout de ambas vistas.
+let _presLastGroupByC1=false;
 function apUpdateRapAvailability(){
   const cb=document.getElementById('presShowRaP');
   const wrap=document.getElementById('presRapToggleWrap');
@@ -4119,10 +4123,16 @@ function _presLayers(tasks, applyOffsets=true){
 
   return result;
 }
-// Vista RaP: agrupa por Categoría 1 (bandas), y dentro de cada banda reutiliza el mismo
-// first-fit agrupado por Cat2 que ya usa _presLayers (así el color/orden dentro de la banda
-// se comporta igual que en la vista normal) — solo desplazado por la fila base de su banda.
-function _presLayersRaP(tasks){
+// Vista RaP: agrupa por Categoría 1 (bandas). A diferencia de _presLayers (que separa
+// carriles por Cat2 para preservar agrupamiento visual en la vista normal), aquí se hace
+// first-fit PURO dentro de cada banda — solo por solape temporal, sin reservar carril por
+// Cat2 — para empaquetar lo más compacto posible (menos filas vacías).
+// El arrastre manual funciona igual que en la vista normal, pero las posiciones fijadas se
+// guardan en propiedades con prefijo "rap" (rapPinnedLayer/rapLayerOffset) DENTRO DEL MISMO
+// PRES_OPTS[key] — así, al desactivar Vista RaP, la vista normal nunca lee esas propiedades
+// y automáticamente vuelve a su propio arreglo (sin necesidad de "resetear" nada a mano);
+// el color/texto/etc. de cada barra sigue compartido entre ambas vistas.
+function _presLayersRaP(tasks,useLB){
   const c1earliest={};
   tasks.forEach(t=>{if(!c1earliest[t.c1]||+t.iLB<c1earliest[t.c1])c1earliest[t.c1]=+t.iLB;});
   const c1order=[...new Set([...tasks].sort((a,b)=>(c1earliest[a.c1]||0)-(c1earliest[b.c1]||0)).map(t=>t.c1))];
@@ -4131,17 +4141,43 @@ function _presLayersRaP(tasks){
   const result=[],bands=[];
   let baseLayer=0;
   c1order.forEach(c1=>{
-    const group=byC1.get(c1)||[];
-    const sub=_presLayers(group,false);
+    const group=(byC1.get(c1)||[]).slice().sort((a,b)=>+a.iLB-+b.iLB);
+    // Paso 1: first-fit puro (sin separar por Cat2)
+    const ends=[];
+    const items=group.map(t=>{
+      const s=Math.min(+t.iLB,+t.iRP), e=Math.max(+t.fLB,+t.fRP);
+      let ly=-1;
+      for(let i=0;i<ends.length;i++){if(ends[i]<=s){ly=i;ends[i]=e;break;}}
+      if(ly<0){ly=ends.length;ends.push(e);}else ends[ly]=e;
+      return{t,ly,baseLy:ly,s,e};
+    });
+    // Paso 2: aplicar rapPinnedLayer/rapLayerOffset (arrastre manual guardado en modo RaP)
+    // rapPinnedLayer se guarda como fila ABSOLUTA del gráfico (así se calcula en el mouseup
+    // del arrastre, sin conocer bandas) — se convierte aquí a fila relativa de la banda
+    // restando baseLayer (el inicio de ESTA banda, aún no incrementado en este punto).
+    items.forEach(item=>{
+      const k=(useLB?'LB|':'')+pkOf(item.t);
+      const opt=PRES_OPTS[k];if(!opt)return;
+      if(opt.rapPinnedLayer!==undefined)item.ly=Math.max(0,opt.rapPinnedLayer-baseLayer);
+      else if(opt.rapLayerOffset)item.ly=Math.max(0,item.baseLy+opt.rapLayerOffset);
+    });
+    // Paso 3: resolución de colisiones en cascada (solo temporal — sin separar por Cat2)
+    const isPinned=item=>{const k=(useLB?'LB|':'')+pkOf(item.t);return PRES_OPTS[k]&&PRES_OPTS[k].rapPinnedLayer!==undefined;};
+    const pinned=items.filter(isPinned).sort((a,b)=>a.ly-b.ly||a.s-b.s);
+    const free=items.filter(i=>!isPinned(i)).sort((a,b)=>a.ly-b.ly||a.s-b.s);
+    const occ={};
+    const occupy=(ly,s,e)=>{if(!occ[ly])occ[ly]=[];occ[ly].push({s,e});};
+    const conflicts=(ly,s,e)=>(occ[ly]||[]).some(r=>r.s<e&&r.e>s);
+    pinned.forEach(item=>occupy(item.ly,item.s,item.e));
+    free.forEach(item=>{let ly=item.ly;while(conflicts(ly,item.s,item.e))ly++;item.ly=ly;occupy(ly,item.s,item.e);});
     let maxLy=-1;
-    sub.forEach(item=>{
+    items.forEach(item=>{
       const ly=baseLayer+item.ly;
       result.push({t:item.t,ly,baseLy:ly});
       if(item.ly>maxLy)maxLy=item.ly;
     });
-    const rows=maxLy+1;
-    bands.push({c1,startLy:baseLayer,rows});
-    baseLayer+=rows;
+    bands.push({c1,startLy:baseLayer,rows:maxLy+1});
+    baseLayer+=maxLy+1;
   });
   return{result,bands};
 }
@@ -4155,7 +4191,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
   // fila cambia por completo con el agrupamiento.
   let rapBands=null;
   const layered=(groupByC1)
-    ? (()=>{const r=_presLayersRaP(tasks);rapBands=r.bands;return r.result;})()
+    ? (()=>{const r=_presLayersRaP(tasks,useLB);rapBands=r.bands;return r.result;})()
     : (layersOverride
       ? layersOverride.map(({t,baseLy})=>{
           const k=pkOf(t);
@@ -4812,6 +4848,7 @@ function renderPres(){
   const S=buildScale(scaleKey,mn,mx,yrWidthMul),TW=S.totalPx;
   const _rapCb=document.getElementById('presShowRaP');
   const groupByC1=!!(_rapCb&&_rapCb.checked&&_rapAvailable);
+  _presLastGroupByC1=groupByC1;
   const opts={barH,fsz,yrSz,showSeg,scaleKey,ff,showLegend,execMode,groupByC1};
   let _presContentHtml;
   if(showLBMode){
@@ -5453,16 +5490,17 @@ document.addEventListener('mouseup',e=>{
   // Suprimir el click post-mouseup para no abrir el menú
   document.addEventListener('click',ev=>ev.stopPropagation(),{once:true,capture:true});
   const delta=curLy-origLy;
+  const posProp=_presLastGroupByC1?'rapPinnedLayer':'pinnedLayer';
   if(groupOrig){
     // Mover todas las barras de la multi-selección en bloque, mismo delta de filas
     Object.keys(groupOrig).forEach(k=>{
       if(!PRES_OPTS[k])PRES_OPTS[k]={};
-      PRES_OPTS[k].pinnedLayer=Math.max(0,groupOrig[k]+delta);
+      PRES_OPTS[k][posProp]=Math.max(0,groupOrig[k]+delta);
     });
   } else {
     // Fijar la barra en la fila deseada y resolver colisiones
     if(!PRES_OPTS[key])PRES_OPTS[key]={};
-    PRES_OPTS[key].pinnedLayer=curLy;
+    PRES_OPTS[key][posProp]=curLy;
   }
   _presSnap();
   renderPres();
@@ -5471,7 +5509,7 @@ document.addEventListener('mouseup',e=>{
 // Elimina todos los offsets manuales de fila y desplazamientos de fecha para volver al layout automático
 function presResetLayout(){
   if(!confirm('¿Resetear posiciones manuales de barras al layout automático?'))return;
-  Object.values(PRES_OPTS).forEach(opt=>{delete opt.layerOffset;delete opt.pinnedLayer;delete opt.presDateShift;});
+  Object.values(PRES_OPTS).forEach(opt=>{delete opt.layerOffset;delete opt.pinnedLayer;delete opt.rapLayerOffset;delete opt.rapPinnedLayer;delete opt.presDateShift;});
   _presSnap();renderPres();
 }
 
@@ -5607,8 +5645,13 @@ function presLayerMove(dir){
   if(!_presBarKey)return;
   _presSnap();if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={color:'#A5C867',showStart:false,showEnd:true};
   const opt=PRES_OPTS[_presBarKey];
-  if(opt.pinnedLayer!==undefined) opt.pinnedLayer=Math.max(0,opt.pinnedLayer+dir);
-  else opt.layerOffset=(opt.layerOffset||0)+dir;
+  if(_presLastGroupByC1){
+    if(opt.rapPinnedLayer!==undefined) opt.rapPinnedLayer=Math.max(0,opt.rapPinnedLayer+dir);
+    else opt.rapLayerOffset=(opt.rapLayerOffset||0)+dir;
+  } else {
+    if(opt.pinnedLayer!==undefined) opt.pinnedLayer=Math.max(0,opt.pinnedLayer+dir);
+    else opt.layerOffset=(opt.layerOffset||0)+dir;
+  }
   renderPres();
 }
 /* ═══ EJECUTIVO: ocultar/restaurar tareas (solo configuración visual, no toca TASKS) ═══ */
