@@ -22,6 +22,14 @@
 :root{ --bg:#f6f8fa; --panel:#fff; --ink:#172b3a; --muted:#5a6b78; --line:#d7dee4; --grid:#eef1f4; --red:#FF0000; --head:#eef2f5; --ff:Inter,-apple-system,'Segoe UI',Arial,sans-serif; --fs-dates:10px; --fs-months:10px; --fs-years:12px; --fs-cat1:12px; --fs-cat2:12px; --fs-tasks:12px;
   --navy:var(--ogl-navy); --navy-fg:#e7eef4; --navy-border:#1c3c66; --accent:var(--ogl-blue); --accent-fg:var(--ogl-navy); --sel:#e1e7f0;
   --sn-w-exp:252px; --sn-w-col:64px; --content-left:252px; --hdr-h:56px; }
+/* Tema oscuro — ver Configuración. Solo redefine los tokens de :root; el contenido de
+   usuario dentro del Gantt/LdT (colores de barras, formas, textos) no se ve afectado. */
+html[data-theme="dark"]{
+  --bg:#12181f; --panel:#1a222c; --ink:#e7edf3; --muted:#9aa8b5; --line:#2c3843; --grid:#232d38; --head:#212b36;
+  --navy-fg:#e7eef4; --sel:#233043;
+}
+html[data-theme="dark"] .edTable thead th{background:#212b36}
+html[data-theme="dark"] .rb-menu-panel,html[data-theme="dark"] #colorPicker,html[data-theme="dark"] #edFilterPanel,html[data-theme="dark"] #hdrFilterPanel{background:var(--panel);color:var(--ink)}
 *{box-sizing:border-box;margin:0;padding:0}
 .pres-sel{stroke:#1a6fa0 !important;stroke-width:3px !important;stroke-dasharray:4,2 !important;filter:drop-shadow(0 0 2px rgba(26,111,160,.7))}
 body{font-family:var(--ff);font-size:12px;color:var(--ink);background:var(--bg);height:100vh;overflow:hidden}
@@ -330,6 +338,8 @@ th,td{padding:0}
 </div>
 <!-- Si hay datos embebidos, ocultar splash inmediatamente -->
 <script>if((document.getElementById('ap_embed')||{}).textContent&&document.getElementById('ap_embed').textContent.trim())document.getElementById('splashModal').style.display='none';</script>
+<!-- Aplicar tema guardado lo antes posible (antes del primer paint) para evitar parpadeo -->
+<script>try{var _apT=JSON.parse(localStorage.getItem('ap_prefs_v1')||'{}').theme;if(_apT==='dark')document.documentElement.dataset.theme='dark';}catch(e){}</script>
 
 <nav class="navrail" id="navrail">
   <div class="nr-brand">
@@ -441,6 +451,7 @@ th,td{padding:0}
     document.getElementById('editorModal').style.display='none';
     document.getElementById('presModal').style.display='none';
     document.getElementById('configModal').style.display='flex';
+    if(window.apRenderConfigUI)window.apRenderConfigUI();
   };
   document.getElementById('navConfig').addEventListener('click',window.openConfigPanel);
   document.getElementById('navAyuda').addEventListener('click',function(){setActive('navAyuda');document.getElementById('btnDoc').click();});
@@ -1057,6 +1068,80 @@ th,td{padding:0}
             <span style="display:flex;align-items:center;gap:6px"><input type="number" id="fsTasks" value="12" min="6" max="18" step="0.5" style="width:56px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px"><span style="font-size:11px;color:var(--muted)">px</span></span>
           </div>
         </div>
+      </div>
+
+      <!-- Apariencia -->
+      <div style="max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:16px">
+        <h2 style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px">Apariencia</h2>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:16px">Preferencias de este navegador — no viajan con "Compartir".</p>
+        <label class="toggle" style="margin-bottom:16px"><span class="tg-label">Tema oscuro</span><input type="checkbox" id="apTheme" onchange="AP_PREFS.theme=this.checked?'dark':'light';apSavePrefs();apApplyPrefs();"><span class="tg-track"></span></label>
+        <div>
+          <label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Pestaña de inicio</label>
+          <select id="apDefaultTab" class="rb-sel" style="width:100%;max-width:220px;font-size:12px;padding:6px 8px" onchange="AP_PREFS.defaultTab=this.value;apSavePrefs();">
+            <option value="gantt">Diagrama de Gantt</option>
+            <option value="ldt">Línea de Tiempo</option>
+            <option value="datos">Datos</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Identidad y recordatorios -->
+      <div style="max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:16px">
+        <h2 style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:16px">Identidad y recordatorios</h2>
+        <div style="margin-bottom:16px">
+          <label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Firma mostrada en cada pestaña</label>
+          <input type="text" id="apSignature" class="rb-sel" style="width:100%;max-width:320px;font-size:12px;padding:6px 8px" oninput="AP_PREFS.userSignature=this.value;apSavePrefs();apApplySignature();">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Avisar si hay cambios sin compartir, cada (minutos, 0 = desactivado)</label>
+          <input type="number" id="apReminder" min="0" max="180" step="1" style="width:80px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px" onchange="AP_PREFS.reminderMinutes=+this.value||0;apSavePrefs();apSetupReminder();">
+        </div>
+      </div>
+
+      <!-- Datos y métricas -->
+      <div style="max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:16px">
+        <h2 style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:16px">Datos y métricas</h2>
+        <div style="margin-bottom:16px">
+          <label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Avance en tooltips del Gantt</label>
+          <select id="apAvanceUnidad" class="rb-sel" style="width:100%;max-width:280px;font-size:12px;padding:6px 8px" onchange="AP_PREFS.avanceUnidad=this.value;apSavePrefs();">
+            <option value="pct">Solo porcentaje</option>
+            <option value="dias">Porcentaje + días restantes/vencidos</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Ancho de borde por defecto — Ruta Crítica</label>
+          <span style="display:flex;align-items:center;gap:6px"><input type="number" id="apCritWidth" min="0.5" max="8" step="0.5" style="width:70px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px" onchange="AP_PREFS.critWidth=+this.value||2.5;apSavePrefs();apApplyPrefs();"><span style="font-size:11px;color:var(--muted)">px — aplica al abrir el Gantt/LdT; el control de cada vista lo puede ajustar puntualmente</span></span>
+        </div>
+      </div>
+
+      <!-- Paleta de colores por defecto -->
+      <div style="max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:16px">
+        <h2 style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px">Paleta de colores por defecto</h2>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:14px">Color inicial asignado a cada nuevo valor de Categoría 1, Categoría 2 o Escenario al importar datos. Cambiarla no recolorea lo ya importado — usa el clic sobre cada barra/celda para eso.</p>
+        <div style="margin-bottom:12px">
+          <label style="font-size:10.5px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px">CATEGORÍA 1</label>
+          <div id="apPalC1" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
+        <div style="margin-bottom:12px">
+          <label style="font-size:10.5px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px">CATEGORÍA 2</label>
+          <div id="apPalC2" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
+        <div>
+          <label style="font-size:10.5px;font-weight:700;color:var(--muted);display:block;margin-bottom:6px">ESCENARIO</label>
+          <div id="apPalEsc" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
+      </div>
+
+      <!-- Editor de Datos -->
+      <div style="max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:16px">
+        <h2 style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px">Editor de Datos</h2>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:14px">Columnas visibles por defecto en la Tabla de Datos (se puede volver a mostrar cualquiera desde ahí).</p>
+        <div id="apEditorCols" style="display:flex;flex-direction:column;gap:2px"></div>
+      </div>
+
+      <!-- Restablecer -->
+      <div style="max-width:480px;margin-top:16px;margin-bottom:8px">
+        <button onclick="if(confirm('¿Restablecer toda la configuración a los valores de fábrica? Esto no afecta los datos del proyecto.'))apResetPrefs();" style="font-size:12px;padding:8px 16px;border:1px solid #c0392b;border-radius:6px;background:#fff;color:#c0392b;cursor:pointer;font-weight:600">Restablecer configuración</button>
       </div>
     </div>
   </div>
@@ -2586,7 +2671,9 @@ function render(){
         // dibujar TODAS las instancias (misma fila, distintas posiciones X)
         tg.insts.forEach(t=>{
           const _c1col=SCEN_COLOR[t.c1]||'#444';const _c2col=CAT2_COLOR[t.c2]||'#666';const tipLB=`<b>${esc(t.tarea)}</b><br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📐 LB: ${fmtD(t.iLB)} → ${fmtD(t.fLB)}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}`;
-          const tipRP=`<b>${esc(t.tarea)}</b><br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📊 R/P: ${fmtD(t.iRP)} → ${fmtD(t.fRP)}<br>Avance: ${t.av}%${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}`;
+          const _diasRest=Math.round((+t.fRP-Date.now())/86400000);
+          const _avTxt=AP_PREFS.avanceUnidad==='dias'?`Avance: ${t.av}% · ${_diasRest>0?`faltan ${_diasRest} día${_diasRest===1?'':'s'}`:_diasRest===0?'vence hoy':`vencida hace ${-_diasRest} día${_diasRest===-1?'':'s'}`}`:`Avance: ${t.av}%`;
+          const tipRP=`<b>${esc(t.tarea)}</b><br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📊 R/P: ${fmtD(t.iRP)} → ${fmtD(t.fRP)}<br>${_avTxt}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}`;
           if(t.hito){
             const xi=S.x(t.iLB);
             const dBorder=t.crit?`${critW}px solid #FF0000`:`1.5px solid ${barColor}`;
@@ -3298,12 +3385,116 @@ function updateDirtyIndicator(){
   document.querySelectorAll('.dirty-dot').forEach(el=>{el.style.display=_dirty?'inline-block':'none';});
   document.querySelectorAll('.dirty-save-btn').forEach(el=>{el.title=_dirty?'Compartir (hay cambios sin guardar)':'Compartir';});
 }
-document.addEventListener('input',markDirty,true);
-document.addEventListener('change',markDirty,true);
+document.addEventListener('input',e=>{if(!e.target.closest('#configModal'))markDirty();},true);
+document.addEventListener('change',e=>{if(!e.target.closest('#configModal'))markDirty();},true);
 window.addEventListener('beforeunload',e=>{
   if(!_dirty)return;
   e.preventDefault();e.returnValue='';return '';
 });
+
+/* ═══ PREFERENCIAS DEL VISOR (Configuración) ═══
+   A diferencia de los datos del proyecto (que viajan con "Compartir"), estas son
+   preferencias personales de quien abre el archivo en ESTE navegador: tema, pestaña de
+   inicio, firma, paleta de colores por defecto, etc. Se guardan en localStorage y NO
+   marcan _dirty ni se incluyen en el HTML exportado por "Compartir". */
+const AP_PREFS_KEY='ap_prefs_v1';
+const AP_PREFS_DEFAULT={
+  theme:'light',defaultTab:'gantt',userSignature:'Oscar Fernando Jaramillo Chamorro',
+  reminderMinutes:0,avanceUnidad:'pct',critColor:'#FF0000',critWidth:2.5,
+  palette:null,cat2Palette:null,escPalette:null,editorHiddenCols:[]
+};
+let AP_PREFS=Object.assign({},AP_PREFS_DEFAULT);
+function apLoadPrefs(){
+  try{const raw=localStorage.getItem(AP_PREFS_KEY);if(raw)AP_PREFS=Object.assign({},AP_PREFS_DEFAULT,JSON.parse(raw));}
+  catch(e){/* localStorage no disponible o dato corrupto: seguir con valores por defecto */}
+}
+function apSavePrefs(){
+  try{localStorage.setItem(AP_PREFS_KEY,JSON.stringify(AP_PREFS));}catch(e){/* privado/bloqueado: preferencia no persiste, pero la sesión actual sigue funcionando */}
+}
+function apResetPrefs(){
+  try{localStorage.removeItem(AP_PREFS_KEY);}catch(e){}
+  location.reload();
+}
+function apApplySignature(){
+  const name=AP_PREFS.userSignature||AP_PREFS_DEFAULT.userSignature;
+  document.querySelectorAll('header .sub').forEach(el=>{el.textContent='Comparador de Escenarios · '+name;});
+}
+function apApplyPalettes(){
+  if(Array.isArray(AP_PREFS.palette))AP_PREFS.palette.forEach((c,i)=>{if(c&&PALETTE[i])PALETTE[i]=c;});
+  if(Array.isArray(AP_PREFS.cat2Palette))AP_PREFS.cat2Palette.forEach((c,i)=>{if(c&&CAT2_PALETTE[i])CAT2_PALETTE[i]=c;});
+  if(Array.isArray(AP_PREFS.escPalette))AP_PREFS.escPalette.forEach((c,i)=>{if(c&&ESC_PALETTE[i])ESC_PALETTE[i]=c;});
+}
+function apApplyEditorColVis(){
+  let st=document.getElementById('edColVisStyle');
+  if(!st){st=document.createElement('style');st.id='edColVisStyle';document.head.appendChild(st);}
+  const hidden=AP_PREFS.editorHiddenCols||[];
+  st.textContent=hidden.map(key=>{
+    const idx=ED_COLS.findIndex(c=>c.key===key);if(idx<0)return'';
+    const n=idx+1; // nth-child es 1-based; el orden de ED_COLS coincide con colgroup y con los <td> de cada fila
+    return `#edTableHeadRow th:nth-child(${n}),#editorBody td:nth-child(${n}){display:none}`;
+  }).join('\n');
+}
+let _apToastTimer=null;
+function apToast(msg){
+  const t=document.getElementById('apToast');if(!t)return;
+  t.textContent=msg;t.style.display='block';
+  clearTimeout(_apToastTimer);
+  _apToastTimer=setTimeout(()=>{t.style.display='none';},6000);
+}
+let _apReminderInterval=null;
+function apSetupReminder(){
+  if(_apReminderInterval)clearInterval(_apReminderInterval);
+  const mins=+AP_PREFS.reminderMinutes||0;
+  if(mins<=0)return;
+  _apReminderInterval=setInterval(()=>{if(_dirty)apToast('Tienes cambios sin compartir. Usa "Compartir" para no perderlos.');},mins*60000);
+}
+function apApplyPrefs(){
+  document.documentElement.dataset.theme=AP_PREFS.theme==='dark'?'dark':'light';
+  apApplySignature();
+  apApplyPalettes();
+  apApplyEditorColVis();
+  apSetupReminder();
+  const cw=document.getElementById('critBorderW');if(cw)cw.value=AP_PREFS.critWidth;
+  const pcw=document.getElementById('presCritW');if(pcw)pcw.value=AP_PREFS.critWidth;
+  apRenderConfigUI();
+}
+function _apSwatchRow(containerId,arr,prefKey){
+  const box=document.getElementById(containerId);if(!box)return;
+  box.innerHTML=arr.map((c,i)=>`<input type="color" value="${c}" data-i="${i}" style="width:26px;height:26px;border:1px solid var(--line);border-radius:5px;padding:0;cursor:pointer">`).join('');
+  box.querySelectorAll('input[type=color]').forEach(inp=>{
+    inp.addEventListener('input',()=>{
+      const i=+inp.dataset.i;arr[i]=inp.value;
+      AP_PREFS[prefKey]=arr.slice();apSavePrefs();
+    });
+  });
+}
+function apRenderConfigUI(){
+  const th=document.getElementById('apTheme');if(th)th.checked=AP_PREFS.theme==='dark';
+  const dt=document.getElementById('apDefaultTab');if(dt)dt.value=AP_PREFS.defaultTab;
+  const sg=document.getElementById('apSignature');if(sg)sg.value=AP_PREFS.userSignature;
+  const rm=document.getElementById('apReminder');if(rm)rm.value=AP_PREFS.reminderMinutes;
+  const au=document.getElementById('apAvanceUnidad');if(au)au.value=AP_PREFS.avanceUnidad;
+  const cwi=document.getElementById('apCritWidth');if(cwi)cwi.value=AP_PREFS.critWidth;
+  if(typeof PALETTE!=='undefined'){
+    _apSwatchRow('apPalC1',PALETTE,'palette');
+    _apSwatchRow('apPalC2',CAT2_PALETTE,'cat2Palette');
+    _apSwatchRow('apPalEsc',ESC_PALETTE,'escPalette');
+  }
+  const ecBox=document.getElementById('apEditorCols');
+  if(ecBox&&typeof ED_COLS!=='undefined'){
+    const hidden=new Set(AP_PREFS.editorHiddenCols||[]);
+    ecBox.innerHTML=ED_COLS.map(c=>`<label style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;color:var(--ink);cursor:pointer"><input type="checkbox" data-col="${c.key}" ${hidden.has(c.key)?'':'checked'}> ${esc(c.label)}</label>`).join('');
+    ecBox.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+      cb.addEventListener('change',()=>{
+        const key=cb.dataset.col;
+        const set=new Set(AP_PREFS.editorHiddenCols||[]);
+        if(cb.checked)set.delete(key);else set.add(key);
+        AP_PREFS.editorHiddenCols=[...set];
+        apSavePrefs();apApplyEditorColVis();
+      });
+    });
+  }
+}
 async function saveShare(){
   if(!TASKS.length){alert('Primero carga datos.');return;}
   const data={tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false})),
@@ -6389,7 +6580,12 @@ function exportProjectDbToExcel(){
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
   a.download='ProjectXML_DB_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
 }
-loadEmbedded();
+apLoadPrefs();apApplyPrefs();
+const _apHadData=loadEmbedded();
+if(_apHadData&&AP_PREFS.defaultTab&&AP_PREFS.defaultTab!=='gantt'){
+  const _apTabBtn=document.getElementById(AP_PREFS.defaultTab==='ldt'?'navLdt':AP_PREFS.defaultTab==='datos'?'navDatos':'');
+  if(_apTabBtn)setTimeout(()=>_apTabBtn.click(),0);
+}
 setTimeout(updateEstDateDisplay,0);
 // Sincronizar label HOY con scroll horizontal
 document.querySelector('.wrap')&&document.querySelector('.wrap').addEventListener('scroll',updateTodayLabel);
@@ -6945,5 +7141,6 @@ document.addEventListener('keydown',e=>{
   <div id="colMenuList" style="padding:4px 0"></div>
 </div>
 <div id="ganttTip"></div>
+<div id="apToast" style="display:none;position:fixed;right:18px;bottom:18px;z-index:400000;background:#1f2937;color:#fff;padding:10px 16px;border-radius:8px;font-size:12px;box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:280px"></div>
 </div><!-- /.appMain -->
 </body>
