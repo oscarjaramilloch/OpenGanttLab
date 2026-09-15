@@ -29,6 +29,7 @@ html[data-theme="dark"]{
   --navy-fg:#e7eef4; --sel:#233043;
 }
 html[data-theme="dark"] .edTable thead th{background:#212b36}
+html[data-theme="dark"] .ed-thead-gap{background:var(--panel)}
 html[data-theme="dark"] .rb-menu-panel,html[data-theme="dark"] #colorPicker,html[data-theme="dark"] #edFilterPanel{background:var(--panel);color:var(--ink)}
 *{box-sizing:border-box;margin:0;padding:0}
 .pres-sel{stroke:#1a6fa0 !important;stroke-width:3px !important;stroke-dasharray:4,2 !important;filter:drop-shadow(0 0 2px rgba(26,111,160,.7))}
@@ -252,9 +253,14 @@ th,td{padding:0}
 .edBody{overflow:auto;flex:1;padding:0 14px 14px}
 .edTableCard{border:1px solid var(--line);border-radius:10px;background:#fff;min-width:fit-content}
 .edTable{border-collapse:separate;border-spacing:0;font-family:'Clarity City',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;min-width:100%;white-space:nowrap;table-layout:fixed}
-.edTable thead th{position:sticky;top:0;background:#eef2f5;color:var(--ink);padding:10px 8px;text-align:center;font-size:12px;font-weight:700;z-index:2;border-bottom:1px solid var(--line);overflow:hidden;text-overflow:ellipsis}
-.edTable thead th:first-child{border-top-left-radius:10px}
-.edTable thead th:last-child{border-top-right-radius:10px}
+.edTable thead th{position:sticky;top:14px;background:#eef2f5;color:var(--ink);padding:10px 8px;text-align:center;font-size:12px;font-weight:700;z-index:2;border-bottom:1px solid var(--line);overflow:hidden;text-overflow:ellipsis}
+#edTableHeadRow th:first-child{border-top-left-radius:10px}
+#edTableHeadRow th:last-child{border-top-right-radius:10px}
+/* Franja en blanco entre la barra de pestañas (Tabla de Datos/Gestión de XML) y los
+   encabezados de columna: va PEGADA (sticky) justo encima del encabezado, con su propio
+   fondo opaco, para que el texto de las filas nunca se asome ahí al hacer scroll (a
+   diferencia de usar padding-top en el contenedor, que sí deja ver contenido debajo). */
+.ed-thead-gap{position:sticky;top:0;height:14px;padding:0;border:none;background:#fff;z-index:3}
 .edTable tbody tr:last-child td:first-child{border-bottom-left-radius:10px}
 .edTable tbody tr:last-child td:last-child{border-bottom-right-radius:10px}
 .edTable thead th:not(:last-child),.edTable tbody td:not(:last-child){border-right:1px solid rgba(215,222,228,.55)}
@@ -870,6 +876,7 @@ th,td{padding:0}
     </div>
     <div class="edBody" id="datosTablePane">
       <div class="edTableCard">
+      <div class="ed-thead-gap"></div>
       <table class="edTable" id="edTable">
         <colgroup id="edColgroup">
           <col data-col="escenario"><col data-col="c1"><col data-col="c2"><col data-col="tarea">
