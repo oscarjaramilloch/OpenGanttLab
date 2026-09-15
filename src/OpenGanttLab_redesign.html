@@ -4230,17 +4230,24 @@ function _presSVG(all,S,TW,mn,mx,opts){
   </defs>`;
   const _msPerPx=TW>0?(+mx- +mn)/TW:0;
   let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" data-task-y0="${taskY0}" data-layer-h="${layerH}" data-ms-per-px="${_msPerPx}" data-ml="${ML}" data-use-lb="${useLB?1:0}" style="font-family:${ff};background:#fff">${patDefs}`;
-  // Vista RaP: caja + etiqueta por cada banda de Categoría 1 (color de separación gris —
-  // valor provisional, a validar). La etiqueta se parte en varias líneas por palabras si no
-  // cabe en el ancho reservado (RAP_LABEL_W).
+  // Vista RaP: banda pintada por Categoría 1 (como un diagrama de carriles) — la columna
+  // de la etiqueta va sólida con el color de esa Categoría 1 (texto blanco) y el área de
+  // tareas va con un tono claro del mismo color, para distinguir cada banda de un vistazo.
   if(groupByC1&&rapBands&&rapBands.length){
     const bandGray='#9aa5b1';
+    const lighten=(hex,amt)=>{
+      try{
+        const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+        const mix=c=>Math.round(c+(255-c)*amt);
+        return '#'+[mix(r),mix(g),mix(b)].map(v=>v.toString(16).padStart(2,'0')).join('');
+      }catch(e){return hex;}
+    };
     rapBands.forEach(b=>{
       const by0=taskY0+b.startLy*layerH, by1=taskY0+(b.startLy+b.rows)*layerH;
       const c1col=SCEN_COLOR[b.c1]||'#334155';
-      svg+=`<rect x="2" y="${by0}" width="${ML+TW+MR-4}" height="${by1-by0}" fill="none" stroke="${bandGray}" stroke-width="1.5"/>`;
-      // Divisor vertical entre la columna de nombres de Categoría 1 y el Gantt
-      svg+=`<line x1="${ML}" y1="${by0}" x2="${ML}" y2="${by1}" stroke="${bandGray}" stroke-width="1.5"/>`;
+      const c1light=lighten(c1col,0.85);
+      svg+=`<rect x="2" y="${by0}" width="${ML-2}" height="${by1-by0}" fill="${c1col}" stroke="${bandGray}" stroke-width="1.5"/>`;
+      svg+=`<rect x="${ML}" y="${by0}" width="${TW+MR-2}" height="${by1-by0}" fill="${c1light}" stroke="${bandGray}" stroke-width="1.5"/>`;
       const labelFsz=Math.max(fsz+2,13);
       const words=String(b.c1||'').split(/\s+/).filter(Boolean);
       const maxChars=Math.max(8,Math.floor((RAP_LABEL_W-24)/(labelFsz*0.55)));
@@ -4248,7 +4255,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       words.forEach(w=>{const test=cur?cur+' '+w:w;if(test.length>maxChars&&cur){lines.push(cur);cur=w;}else cur=test;});
       if(cur)lines.push(cur);
       const lineH=labelFsz*1.25,lx=ML/2,cy0=(by0+by1)/2-(lines.length*lineH)/2+labelFsz*0.85;
-      svg+=`<text x="${lx}" y="${cy0}" text-anchor="middle" font-size="${labelFsz}" font-weight="700" fill="${c1col}">`+
+      svg+=`<text x="${lx}" y="${cy0}" text-anchor="middle" font-size="${labelFsz}" font-weight="700" fill="#fff">`+
         lines.map((ln,li)=>`<tspan x="${lx}" dy="${li===0?0:lineH}">${ex(ln)}</tspan>`).join('')+`</text>`;
     });
   }
