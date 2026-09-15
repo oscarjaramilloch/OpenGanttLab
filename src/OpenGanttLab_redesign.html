@@ -1165,16 +1165,16 @@ th,td{padding:0}
       <label class="toggle"><span class="tg-label">Comparador</span><input type="checkbox" id="presShowLB" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Marca Activity</span><input type="checkbox" id="presShowMarca2" onchange="renderPres()"><span class="tg-track"></span></label>
-      <label class="toggle"><span class="tg-label">Ocultar Resumen</span><input type="checkbox" id="presHideSummary" onchange="renderPres()"><span class="tg-track"></span></label>
-      <label class="toggle"><span class="tg-label">Leyenda</span><input type="checkbox" id="presShowLegend" checked onchange="renderPres()"><span class="tg-track"></span></label>
+      <label class="toggle"><span class="tg-label">Ocultar Resumen</span><input type="checkbox" id="presHideSummary" checked onchange="renderPres()"><span class="tg-track"></span></label>
+      <label class="toggle"><span class="tg-label">Leyenda</span><input type="checkbox" id="presShowLegend" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()"><span class="tg-track"></span></label>
       <span id="execHiddenBtn" onclick="openExecHiddenModal()" style="display:none;cursor:pointer;font-size:10px;color:var(--accent-fg);text-decoration:underline;margin:0 4px">Tareas ocultas (0)</span>
 
       <label class="toggle"><span class="tg-label">Mostrar fechas</span><input type="checkbox" id="presShowDates" checked onchange="renderPres()"><span class="tg-track"></span></label>
 
       <div class="rb-inline-opt">
-        <label class="toggle"><span class="tg-label">Fecha de estado</span><input type="checkbox" id="presShowHoy" checked onchange="togglePresHoy()"><span class="tg-track"></span></label>
-        <div style="position:relative;display:inline-block" id="presFechaEstadoMenuWrap">
+        <label class="toggle"><span class="tg-label">Fecha de estado</span><input type="checkbox" id="presShowHoy" onchange="togglePresHoy()"><span class="tg-track"></span></label>
+        <div style="position:relative;display:none" id="presFechaEstadoMenuWrap">
           <button class="rb-flat" id="btnPresFechaEstadoMenu" onclick="toggleDropMenu(event,'btnPresFechaEstadoMenu','presFechaEstadoMenuPanel')" title="Fecha de estado">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg>
             <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:2px"><path d="m6 9 6 6 6-6"/></svg>
