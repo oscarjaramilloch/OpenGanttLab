@@ -29,7 +29,7 @@ html[data-theme="dark"]{
   --navy-fg:#e7eef4; --sel:#233043;
 }
 html[data-theme="dark"] .edTable thead th{background:#212b36}
-html[data-theme="dark"] .rb-menu-panel,html[data-theme="dark"] #colorPicker,html[data-theme="dark"] #edFilterPanel,html[data-theme="dark"] #hdrFilterPanel{background:var(--panel);color:var(--ink)}
+html[data-theme="dark"] .rb-menu-panel,html[data-theme="dark"] #colorPicker,html[data-theme="dark"] #edFilterPanel{background:var(--panel);color:var(--ink)}
 *{box-sizing:border-box;margin:0;padding:0}
 .pres-sel{stroke:#1a6fa0 !important;stroke-width:3px !important;stroke-dasharray:4,2 !important;filter:drop-shadow(0 0 2px rgba(26,111,160,.7))}
 body{font-family:var(--ff);font-size:12px;color:var(--ink);background:var(--bg);height:100vh;overflow:hidden}
@@ -228,8 +228,6 @@ th,td{padding:0}
 .cp-sw:hover{transform:scale(1.25);border-color:#333;z-index:1;position:relative}
 #cpCustomRow{display:flex;align-items:center;gap:8px;border-top:1px solid #eee;padding-top:8px}
 /* ── Tooltip ── */
-#hdrFilterPanel *{background-color:inherit}
-#hdrFilterPanel label{background:#fff!important}
 #ganttTip{position:fixed;z-index:99998;background:#fff;color:#333;padding:8px 12px;
   border-radius:6px;font-size:11px;pointer-events:none;display:none;max-width:280px;line-height:1.6;
   box-shadow:0 3px 14px rgba(0,0,0,.18);border:1px solid #ddd}
@@ -482,7 +480,7 @@ th,td{padding:0}
       <label class="toggle"><span class="tg-label">Avance real</span><input type="checkbox" id="showPct" onchange="togglePct()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Línea Base</span><input type="checkbox" id="showLB"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Marca Activity</span><input type="checkbox" id="showMarca2" onchange="render()"><span class="tg-track"></span></label>
-      <label class="toggle"><span class="tg-label">Ocultar Resumen</span><input type="checkbox" id="hideSummary" onchange="render()"><span class="tg-track"></span></label>
+      <label class="toggle"><span class="tg-label">Resumen</span><input type="checkbox" id="hideSummary" onchange="render()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Fechas</span><input type="checkbox" id="showDates" checked onchange="render()"><span class="tg-track"></span></label>
 
       <input type="radio" name="mode" value="con" checked style="display:none">
@@ -1166,12 +1164,12 @@ th,td{padding:0}
       <label class="toggle"><span class="tg-label">Comparador</span><input type="checkbox" id="presShowLB" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Marca Activity</span><input type="checkbox" id="presShowMarca2" onchange="renderPres()"><span class="tg-track"></span></label>
-      <label class="toggle"><span class="tg-label">Ocultar Resumen</span><input type="checkbox" id="presHideSummary" checked onchange="renderPres()"><span class="tg-track"></span></label>
+      <label class="toggle"><span class="tg-label">Resumen</span><input type="checkbox" id="presHideSummary" checked onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Leyenda</span><input type="checkbox" id="presShowLegend" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()"><span class="tg-track"></span></label>
       <span id="execHiddenBtn" onclick="openExecHiddenModal()" style="display:none;cursor:pointer;font-size:10px;color:var(--accent-fg);text-decoration:underline;margin:0 4px">Tareas ocultas (0)</span>
 
-      <label class="toggle"><span class="tg-label">Mostrar fechas</span><input type="checkbox" id="presShowDates" checked onchange="renderPres()"><span class="tg-track"></span></label>
+      <label class="toggle"><span class="tg-label">Fechas</span><input type="checkbox" id="presShowDates" checked onchange="renderPres()"><span class="tg-track"></span></label>
 
       <div class="rb-inline-opt">
         <label class="toggle"><span class="tg-label">Fecha de estado</span><input type="checkbox" id="presShowHoy" onchange="togglePresHoy()"><span class="tg-track"></span></label>
@@ -2033,7 +2031,7 @@ async function refreshFromFile(){
     document.getElementById('btnPresRefresh').style.display='flex';const _pnf=document.getElementById('btnPresNoFile');if(_pnf)_pnf.style.display='none';
     document.getElementById('btnGanttRefresh').style.display='flex';const _gnf=document.getElementById('btnGanttNoFile');if(_gnf)_gnf.style.display='none';
     const _bse=document.getElementById('btnSaveToExcel');if(_bse)_bse.style.display='flex';
-    render();if(Object.keys(_hdrFilterValues||{}).length)applyHdrFilter();if(document.getElementById('editorModal').style.display==='flex')populateEditor();}
+    render();if(Object.keys(_ganttFilters||{}).length)applyGanttFilters();if(document.getElementById('editorModal').style.display==='flex')populateEditor();}
   catch(e){document.getElementById('status').textContent='Error: '+(e.message||e);}
 }
 async function presRefreshExcel(){
@@ -2380,98 +2378,38 @@ function toggleHdrFilterBtns(){
   if(wrap) wrap.classList.toggle('hdr-filters-on',_hdrFiltersOn);
   const btn=document.getElementById('btnHdrFilter');
   if(btn) btn.classList.toggle('active',_hdrFiltersOn);
-  if(!_hdrFiltersOn) document.getElementById('hdrFilterPanel').style.display='none';
+  if(!_hdrFiltersOn){const p=document.getElementById('edFilterPanel');if(p)p.style.display='none';}
 }
-let _hdrFilterCol=null;
-let _hdrFilterValues={}; // {c1:{val:true/false}, c2:{...}, c3:{...}}
 
-function openHdrFilter(e,col){
-  e.stopPropagation();
-  _hdrFilterCol=col;
-  const panel=document.getElementById('hdrFilterPanel');
-  const list=document.getElementById('hdrFilterList');
-  // Obtener valores únicos filtrando por filtros activos de otras columnas
-  const field=col==='c1'?'c1':col==='c2'?'c2':col==='m2'?'marca2':col==='esc'?'escenario':'tarea';
-  const filtered=TASKS.filter(t=>{
-    if(col!=='c1'&&_hdrFilterValues.c1&&_hdrFilterValues.c1[t.c1]===false)return false;
-    if(col!=='c2'&&_hdrFilterValues.c2&&_hdrFilterValues.c2[t.c2]===false)return false;
-    if(col!=='c3'&&_hdrFilterValues.c3&&_hdrFilterValues.c3[t.tarea]===false)return false;
-    if(col!=='m2'&&_hdrFilterValues.m2&&_hdrFilterValues.m2[t.marca2||'']===false)return false;
-    if(col!=='esc'&&_hdrFilterValues.esc&&_hdrFilterValues.esc[t.escenario||'']===false)return false;
-    return true;
+// Filtro de columnas del Gantt: mismo panel/estilo que el de Editor de Datos (edf*, ver
+// edfOpenFilter/edfAccept) — _edf.source distingue el origen ('gantt' vs 'editor' por
+// defecto) para saber de dónde sacar los valores y dónde aplicar la selección.
+let _ganttFilters={}; // {col: string[] de valores permitidos} — ausente = sin filtro
+const GANTT_FIELD_BY_COL={esc:'escenario',c1:'c1',c2:'c2',c3:'tarea',m2:'marca2'};
+function _ganttColVal(t,col){
+  const k=GANTT_FIELD_BY_COL[col];
+  return (t[k]||'')+'';
+}
+function applyGanttFilters(){
+  TASKS.forEach(t=>{
+    const k=(t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea;
+    const ok=Object.keys(_ganttFilters).every(c=>{
+      const sel=_ganttFilters[c];if(!sel)return true;
+      return sel.includes(_ganttColVal(t,c));
+    });
+    if(ok)HIDDEN_KEYS.delete(k);else HIDDEN_KEYS.add(k);
   });
-  const vals=[...new Set(filtered.map(t=>t[field]||'').filter(v=>v!==''))].sort();
-  if(!_hdrFilterValues[col]){
-    _hdrFilterValues[col]={};
-    vals.forEach(v=>_hdrFilterValues[col][v]=true);
-  }
-  const cur=_hdrFilterValues[col];
-  list.innerHTML=vals.map(v=>`<label style="display:flex;align-items:center;gap:6px;padding:3px 4px;font-size:10px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px">` +
-    `<input type="checkbox" data-hfv="${v.replace(/"/g,'&quot;')}" ${cur[v]!==false?'checked':''} style="flex-shrink:0">` +
-    `<span style="overflow:hidden;text-overflow:ellipsis">${esc(v)}</span></label>`).join('');
-  document.getElementById('hdrFilterSearch').value='';
-  panel.dataset.mode='gantt';
-  // Posicionar
-  const r=e.target.getBoundingClientRect();
-  panel.style.display='flex';
-  panel.style.left=Math.min(r.left,innerWidth-210)+'px';
-  panel.style.top=(r.bottom+2)+'px';
+  render();
 }
 function clearHdrFilters(){
-  _hdrFilterValues={};
+  _ganttFilters={};
   HIDDEN_KEYS.clear();
   document.querySelectorAll('.hdr-filter-btn').forEach(btn=>{
     btn.style.background='';btn.style.color='#3b6ea5';
   });
-  document.getElementById('hdrFilterPanel').style.display='none';
+  const p=document.getElementById('edFilterPanel');if(p)p.style.display='none';
   render();
 }
-function hdrFilterSearch(q){
-  document.querySelectorAll('#hdrFilterList label').forEach(lab=>{
-    const txt=lab.textContent.toLowerCase();
-    lab.style.display=txt.includes(q.toLowerCase())?'':'none';
-  });
-}
-function hdrFilterCheckAll(v){
-  document.querySelectorAll('#hdrFilterList input[type=checkbox]').forEach(cb=>{
-    if(cb.closest('label').style.display!=='none') cb.checked=v;
-  });
-}
-function applyHdrFilter(){
-  if(!_hdrFilterCol)return;
-  const col=_hdrFilterCol;
-  const field=col==='c1'?'c1':col==='c2'?'c2':'tarea';
-  _hdrFilterValues[col]={};
-  document.querySelectorAll('#hdrFilterList input[type=checkbox]').forEach(cb=>{
-    _hdrFilterValues[col][cb.dataset.hfv]=cb.checked;
-  });
-  // Aplicar intersección de TODOS los filtros activos
-  TASKS.forEach(t=>{
-    const k=(t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea;
-    const c1ok=!_hdrFilterValues.c1||_hdrFilterValues.c1[t.c1]!==false;
-    const c2ok=!_hdrFilterValues.c2||_hdrFilterValues.c2[t.c2]!==false;
-    const c3ok=!_hdrFilterValues.c3||_hdrFilterValues.c3[t.tarea]!==false;
-    const m2ok=!_hdrFilterValues.m2||_hdrFilterValues.m2[t.marca2||'']!==false;
-    const escok=!_hdrFilterValues.esc||_hdrFilterValues.esc[t.escenario||'']!==false;
-    if(c1ok&&c2ok&&c3ok&&m2ok&&escok) HIDDEN_KEYS.delete(k); else HIDDEN_KEYS.add(k);
-  });
-  // Actualizar botón visual si hay filtro activo
-  document.querySelectorAll('.hdr-filter-btn').forEach(btn=>{
-    const c=btn.dataset.hcol;
-    const f=_hdrFilterValues[c];
-    const hasFilter=f&&Object.values(f).some(v=>!v);
-    btn.style.background=hasFilter?'#3b6ea5':'';
-    btn.style.color=hasFilter?'#fff':'#3b6ea5';
-  });
-  document.getElementById('hdrFilterPanel').style.display='none';
-  render();
-}
-// Cerrar al clic fuera
-document.addEventListener('click',e=>{
-  const p=document.getElementById('hdrFilterPanel');
-  if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('.hdr-filter-btn'))
-    p.style.display='none';
-});
 
 /* ── Mostrar/Ocultar columnas (clic derecho en header) ── */
 const _COL_DEFS=[
@@ -2769,11 +2707,11 @@ function render(){
   const minors=S.minor.map(m=>m.lbl?`<div class="mo" style="left:${m.x}px;width:${m.w}px;top:${hasSuper?yH*2:yH}px;height:${yH}px;line-height:${yH}px"${m.tip?` title="${esc(m.tip)}"`:''}>${m.lbl}</div>`:'').join('');
   const estHdr=(estX!=null&&SHOW_HOY)?`<div class="tl" id="todayLine" style="left:${estX}px"></div>`:'';
 
-  const hEsc=_colVis.esc?`<th class="hcat1 hcat-esc" style="left:0;width:${ESCENARIO_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'esc');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Escenario<span class="hdr-filter-btn" data-hcol="esc" onclick="openHdrFilter(event,'esc')" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:1px 3px;border-radius:2px;border:1px solid #3b6ea5;user-select:none">▾</span><div class="col-resize" data-col="esc"></div></div></th>`:'';
-  const hC1=_colVis.c1?`<th class="hcat1" style="left:${lC1}px;width:${CAT1_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c1');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 1<span class="hdr-filter-btn" data-hcol="c1" onclick="openHdrFilter(event,'c1')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:1px 3px;border-radius:2px;border:1px solid #3b6ea5;user-select:none">▾</span><div class="col-resize" data-col="c1"></div></div></th>`:'';
-  const hC2=_colVis.c2?`<th class="hcat2" style="left:${lC2}px;width:${CAT2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 2<span class="hdr-filter-btn" data-hcol="c2" onclick="openHdrFilter(event,'c2')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:1px 3px;border-radius:2px;border:1px solid #3b6ea5;user-select:none">▾</span><div class="col-resize" data-col="c2"></div></div></th>`:'';
-  const hM2=_colVis.m2?`<th class="hcat2 hcat-m2" style="left:${lM2}px;width:${MARCA2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'m2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Marca Activity<span class="hdr-filter-btn" data-hcol="m2" onclick="openHdrFilter(event,'m2')" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:1px 3px;border-radius:2px;border:1px solid #3b6ea5;user-select:none">▾</span><div class="col-resize" data-col="m2"></div></div></th>`:'';
-  const hC3=_colVis.c3?`<th class="hcat3" style="left:${lC3}px;width:${CAT3_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c3');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Nombre de Tarea<span class="hdr-filter-btn" data-hcol="c3" onclick="openHdrFilter(event,'c3')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:1px 3px;border-radius:2px;border:1px solid #3b6ea5;user-select:none">▾</span><div class="col-resize" data-col="c3"></div></div></th>`:'';
+  const hEsc=_colVis.esc?`<th class="hcat1 hcat-esc" style="left:0;width:${ESCENARIO_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'esc');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Escenario<span class="hdr-filter-btn" data-hcol="esc" onclick="edfOpenFilter(event,'esc','Escenario','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="esc"></div></div></th>`:'';
+  const hC1=_colVis.c1?`<th class="hcat1" style="left:${lC1}px;width:${CAT1_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c1');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 1<span class="hdr-filter-btn" data-hcol="c1" onclick="edfOpenFilter(event,'c1','Categoría 1','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c1"></div></div></th>`:'';
+  const hC2=_colVis.c2?`<th class="hcat2" style="left:${lC2}px;width:${CAT2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 2<span class="hdr-filter-btn" data-hcol="c2" onclick="edfOpenFilter(event,'c2','Categoría 2','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c2"></div></div></th>`:'';
+  const hM2=_colVis.m2?`<th class="hcat2 hcat-m2" style="left:${lM2}px;width:${MARCA2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'m2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Marca Activity<span class="hdr-filter-btn" data-hcol="m2" onclick="edfOpenFilter(event,'m2','Marca Activity','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="m2"></div></div></th>`:'';
+  const hC3=_colVis.c3?`<th class="hcat3" style="left:${lC3}px;width:${CAT3_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c3');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Nombre de Tarea<span class="hdr-filter-btn" data-hcol="c3" onclick="edfOpenFilter(event,'c3','Nombre de Tarea','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c3"></div></div></th>`:'';
   const totalTableW=lC3+wC3+W;
   wrap.innerHTML=`<table><thead><tr>`+
     hEsc+hC1+hC2+hM2+hC3+
@@ -3146,18 +3084,30 @@ function edfVisibleValues(){
   if(q)vals=vals.filter(v=>edfLabel(v).toLowerCase().includes(q));
   return vals;
 }
-function edfOpenFilter(e,col,label,type){
+function edfOpenFilter(e,col,label,type,source){
   e.stopPropagation();
-  _edf={col,label,type,values:[],pending:new Set(),search:'',showCond:false,tree:new Set()};
-  const rows=[...document.getElementById('editorBody').children].filter(r=>r._f);
-  const passesOther=r=>Object.keys(_edFilters).every(c=>{
-    if(c===col)return true;
-    const sel=_edFilters[c];if(!sel)return true;
-    return sel.includes(_edColVal(r,c));
-  });
-  _edf.values=[...new Set(rows.filter(passesOther).map(r=>_edColVal(r,col)))];
-  const curSel=_edFilters[col];
-  _edf.pending=new Set(curSel&&curSel.length?curSel:_edf.values);
+  source=source||'editor';
+  _edf={col,label,type,source,values:[],pending:new Set(),search:'',showCond:false,tree:new Set()};
+  if(source==='gantt'){
+    const passesOther=t=>Object.keys(_ganttFilters).every(c=>{
+      if(c===col)return true;
+      const sel=_ganttFilters[c];if(!sel)return true;
+      return sel.includes(_ganttColVal(t,c));
+    });
+    _edf.values=[...new Set(TASKS.filter(passesOther).map(t=>_ganttColVal(t,col)))];
+    const curSel=_ganttFilters[col];
+    _edf.pending=new Set(curSel&&curSel.length?curSel:_edf.values);
+  } else {
+    const rows=[...document.getElementById('editorBody').children].filter(r=>r._f);
+    const passesOther=r=>Object.keys(_edFilters).every(c=>{
+      if(c===col)return true;
+      const sel=_edFilters[c];if(!sel)return true;
+      return sel.includes(_edColVal(r,c));
+    });
+    _edf.values=[...new Set(rows.filter(passesOther).map(r=>_edColVal(r,col)))];
+    const curSel=_edFilters[col];
+    _edf.pending=new Set(curSel&&curSel.length?curSel:_edf.values);
+  }
   document.getElementById('edfTitle').textContent='Filtrar — '+label;
   document.getElementById('edfSearch').value='';
   edfRenderCondUI();
@@ -3265,11 +3215,13 @@ function edfAccept(){
   const searchActive=_edf.search.trim().length>0;
   let finalSel=[..._edf.pending];
   if(searchActive)finalSel=finalSel.filter(v=>visible.includes(v));
-  if(finalSel.length===_edf.values.length)delete _edFilters[_edf.col];
-  else _edFilters[_edf.col]=finalSel;
-  edfApplyToRows();
-  document.querySelectorAll('.ed-filter-btn').forEach(btn=>{
-    const c=btn.dataset.hcol,active=!!_edFilters[c];
+  const isGantt=_edf.source==='gantt';
+  const store=isGantt?_ganttFilters:_edFilters;
+  if(finalSel.length===_edf.values.length)delete store[_edf.col];
+  else store[_edf.col]=finalSel;
+  if(isGantt)applyGanttFilters();else edfApplyToRows();
+  document.querySelectorAll(isGantt?'.hdr-filter-btn':'.ed-filter-btn').forEach(btn=>{
+    const c=btn.dataset.hcol,active=!!store[c];
     btn.style.background=active?'#3b6ea5':'';
     btn.style.color=active?'#fff':'#3b6ea5';
   });
@@ -3284,7 +3236,7 @@ function edfApplyToRows(){
 }
 document.addEventListener('click',e=>{
   const p=document.getElementById('edFilterPanel');
-  if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('.ed-filter-btn'))p.style.display='none';
+  if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('.ed-filter-btn')&&!e.target.closest('.hdr-filter-btn'))p.style.display='none';
 });
 function populateEditor(){
   buildEditorHead();
@@ -7306,20 +7258,6 @@ document.addEventListener('keydown',e=>{
       <button onclick="document.getElementById('shiftBlockModal').style.display='none'" style="padding:6px 18px;border:1px solid #ccc;border-radius:5px;cursor:pointer;background:#f5f5f5">Cancelar</button>
       <button onclick="applyShiftBlock()" style="padding:6px 18px;border:none;border-radius:5px;cursor:pointer;background:#1a6fa0;color:#fff;font-weight:600">Aplicar</button>
     </div>
-  </div>
-</div>
-<div id="hdrFilterPanel" style="display:none;position:fixed;z-index:99999;background:#ffffff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,.35);min-width:200px;flex-direction:column;max-height:340px;opacity:1">
-  <div style="padding:8px 8px 6px;flex-shrink:0;border-bottom:1px solid #eee">
-    <div style="display:flex;gap:4px">
-      <input id="hdrFilterSearch" type="text" placeholder="Buscar..." style="flex:1;font-size:10px;padding:3px 6px;border:1px solid #ccc;border-radius:3px" oninput="hdrFilterSearch(this.value)">
-      <button onclick="hdrFilterCheckAll(true)" style="font-size:10px;padding:2px 5px;border:1px solid #ccc;border-radius:3px;cursor:pointer" title="Todos">☑</button>
-      <button onclick="hdrFilterCheckAll(false)" style="font-size:10px;padding:2px 5px;border:1px solid #ccc;border-radius:3px;cursor:pointer" title="Ninguno">☐</button>
-    </div>
-  </div>
-  <div id="hdrFilterList" style="overflow-y:auto;flex:1;background:#ffffff"></div>
-  <div style="display:flex;gap:6px;padding:6px 8px;justify-content:flex-end;flex-shrink:0;border-top:1px solid #eee">
-    <button onclick="applyHdrFilter()" style="font-size:10px;padding:3px 10px;border:none;border-radius:3px;background:#3b6ea5;color:#fff;cursor:pointer">Aplicar</button>
-    <button onclick="document.getElementById('hdrFilterPanel').style.display='none'" style="font-size:10px;padding:3px 8px;border:1px solid #ccc;border-radius:3px;cursor:pointer">Cerrar</button>
   </div>
 </div>
 <div id="edFilterPanel" onmousedown="event.stopPropagation()" onclick="event.stopPropagation()" style="display:none;position:fixed;z-index:100000;background:#fff;border:1px solid #d8dee3;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.18);width:288px;max-height:420px;flex-direction:column;font-family:'Clarity City',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
