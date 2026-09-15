@@ -145,7 +145,8 @@ th,td{padding:0}
 .c1:hover{filter:brightness(.95)}
 .c2{position:sticky;z-index:12;font-weight:600;font-size:var(--fs-cat2);text-align:center;vertical-align:middle;border-right:1px solid rgba(0,0,0,.12);border-top:1px solid var(--line);padding:2px 4px;word-break:break-word;cursor:pointer}
 .c2:hover::after{content:' 🎨';font-size:9px;opacity:.7}
-.c3{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c3{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden}
+.c3 .c3-txt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-overflow:ellipsis;white-space:normal;word-break:break-word;line-height:1.15}
 .cc{background:#fff;border-top:1px solid var(--grid);padding:0}
 /* separadores entre categorías */
 
@@ -2596,7 +2597,10 @@ function render(){
   const fsTask=parseFloat(document.getElementById('fsTasks').value)||12;
   const fsYear=parseFloat(document.getElementById('fsYears').value)||12;
   const fs=fsTask/10; // escala relativa para barras/filas
-  const RH=Math.max(24,Math.round(28*fs));
+  // 34 (antes 28): deja espacio para que "Nombre de Tarea" (.c3) pueda partirse en 2 líneas
+  // cuando la columna se angosta (ver .c3 -webkit-line-clamp) sin desalinear las barras, que
+  // se posicionan asumiendo esta altura de fila fija.
+  const RH=Math.max(24,Math.round(34*fs));
   const yH=Math.max(16,Math.round(21*(fsYear/10)));
   const _onlyCrit=document.getElementById('showOnlyCrit')&&document.getElementById('showOnlyCrit').checked;
   const _showM2=document.getElementById('showMarca2')&&document.getElementById('showMarca2').checked;
@@ -2747,7 +2751,7 @@ function render(){
         const c1td=(emitC1&&_colVis.c1)?`<td class="c1" data-cat1="${esc(c1)}" rowspan="${g1._c1Rows}" style="width:${CAT1_W}px;min-width:${CAT1_W}px;left:${lC1}px;background:${c1bg};color:${c1fg}" title="Clic: cambiar color">${esc(c1)}</td>`:'';
         const c2td=(emitC2&&_colVis.c2)?`<td class="c2" data-cat2="${esc(c2)}" rowspan="${g2._tg.length}" style="left:${lC2}px;width:${CAT2_W}px;min-width:${CAT2_W}px;background:${c2bg};color:${c2fg}" title="Clic: cambiar color barras">${esc(c2)}</td>`:'';
         const m2td=_colVis.m2?`<td class="c2 marca2col" style="left:${lM2}px;width:${MARCA2_W}px;min-width:${MARCA2_W}px;text-align:center;font-size:10px;background:#fff;">${esc(tg.marca2||"")}</td>`:'';
-        const c3td=_colVis.c3?`<td class="c3" style="left:${lC3}px;width:${CAT3_W}px;min-width:${CAT3_W}px" title="${esc(tg.name)}">${esc(tg.name)}</td>`:'';
+        const c3td=_colVis.c3?`<td class="c3" style="left:${lC3}px;width:${CAT3_W}px;min-width:${CAT3_W}px" title="${esc(tg.name)}"><div class="c3-txt">${esc(tg.name)}</div></td>`:'';
         if(emitC1&&!firstC1) trCls=' class="sep-c1"';
         body+=`<tr${trCls}>${esctd}${c1td}${c2td}${m2td}${c3td}`+
       `<td class="cc" style="width:${W}px;min-width:${W}px"><div class="br" style="width:${W}px;height:${RH}px${glBg}">${tlHtml}${gl}${cnt}</div></td></tr>`;
