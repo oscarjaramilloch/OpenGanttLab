@@ -461,7 +461,7 @@ th,td{padding:0}
 <div class="appMain">
 <header id="ganttHeader">
   <svg width="30" height="24" style="flex-shrink:0"><use href="#ogl-isotype"/></svg>
-  <div><h1>Diagrama de Gantt</h1><div class="sub">Comparador de Escenarios · Oscar Fernando Jaramillo Chamorro</div></div>
+  <div><h1>Diagrama de Gantt</h1><div class="sub">Comparador de Escenarios</div></div>
 </header>
 
 <div class="toolbar" id="mainRibbon">
@@ -799,7 +799,7 @@ th,td{padding:0}
     <button class="icon-x" onclick="closeEditor()" title="Cerrar" style="position:absolute;top:8px;right:10px;z-index:6">✕</button>
     <header style="position:static">
       <svg width="30" height="24" style="flex-shrink:0"><use href="#ogl-isotype"/></svg>
-      <div><h1>Editor de Datos</h1><div class="sub">Comparador de Escenarios · Oscar Fernando Jaramillo Chamorro</div></div>
+      <div><h1>Editor de Datos</h1><div class="sub">Comparador de Escenarios</div></div>
     </header>
     <div class="edHead">
       <div class="edFileActions">
@@ -1018,7 +1018,7 @@ th,td{padding:0}
     <button class="icon-x" onclick="closeConfigPanel()" title="Cerrar" style="position:absolute;top:8px;right:10px;z-index:6">✕</button>
     <header style="position:static">
       <svg width="30" height="24" style="flex-shrink:0"><use href="#ogl-isotype"/></svg>
-      <div><h1>Configuración</h1><div class="sub">Comparador de Escenarios · Oscar Fernando Jaramillo Chamorro</div></div>
+      <div><h1>Configuración</h1><div class="sub">Comparador de Escenarios</div></div>
     </header>
     <div style="flex:1;overflow-y:auto;padding:24px 28px;background:var(--bg)">
       <div style="max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px">
@@ -1081,13 +1081,9 @@ th,td{padding:0}
         </div>
       </div>
 
-      <!-- Identidad y recordatorios -->
+      <!-- Recordatorios -->
       <div style="max-width:480px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:16px">
-        <h2 style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:16px">Identidad y recordatorios</h2>
-        <div style="margin-bottom:16px">
-          <label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Firma mostrada en cada pestaña</label>
-          <input type="text" id="apSignature" class="rb-sel" style="width:100%;max-width:320px;font-size:12px;padding:6px 8px" oninput="AP_PREFS.userSignature=this.value;apSavePrefs();apApplySignature();">
-        </div>
+        <h2 style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:16px">Recordatorios</h2>
         <div>
           <label style="font-size:11px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Avisar si hay cambios sin compartir, cada (minutos, 0 = desactivado)</label>
           <input type="number" id="apReminder" min="0" max="180" step="1" style="width:80px;text-align:center;border:1px solid var(--line);border-radius:5px;padding:4px;font:inherit;font-size:12px" onchange="AP_PREFS.reminderMinutes=+this.value||0;apSavePrefs();apSetupReminder();">
@@ -1149,7 +1145,7 @@ th,td{padding:0}
     <button class="icon-x" onclick="ogReturnToGantt()" title="Cerrar y volver al Gantt" style="position:absolute;top:8px;right:10px;z-index:6">✕</button>
     <header style="position:static">
       <svg width="30" height="24" style="flex-shrink:0"><use href="#ogl-isotype"/></svg>
-      <div><h1>Diagrama Ejecutivo - Línea de Tiempo</h1><div class="sub">Comparador de Escenarios · Oscar Fernando Jaramillo Chamorro</div></div>
+      <div><h1>Diagrama Ejecutivo - Línea de Tiempo</h1><div class="sub">Comparador de Escenarios</div></div>
     </header>
     <!-- Ribbon plano: fila continua de toggles/botones, sin labels de grupo ni divisores -->
     <div style="flex-shrink:0;zoom:normal;display:flex;flex-wrap:wrap;align-items:center;gap:6px;background:var(--bg);border-bottom:1px solid var(--line);min-height:52px;max-height:38vh;overflow-y:auto;padding:4px 14px;box-sizing:border-box">
@@ -3457,11 +3453,11 @@ window.addEventListener('beforeunload',e=>{
 /* ═══ PREFERENCIAS DEL VISOR (Configuración) ═══
    A diferencia de los datos del proyecto (que viajan con "Compartir"), estas son
    preferencias personales de quien abre el archivo en ESTE navegador: tema, pestaña de
-   inicio, firma, paleta de colores por defecto, etc. Se guardan en localStorage y NO
-   marcan _dirty ni se incluyen en el HTML exportado por "Compartir". */
+   inicio, paleta de colores por defecto, etc. Se guardan en localStorage y NO marcan
+   _dirty ni se incluyen en el HTML exportado por "Compartir". */
 const AP_PREFS_KEY='ap_prefs_v1';
 const AP_PREFS_DEFAULT={
-  theme:'light',defaultTab:'gantt',userSignature:'Oscar Fernando Jaramillo Chamorro',
+  theme:'light',defaultTab:'gantt',
   reminderMinutes:0,avanceUnidad:'pct',critColor:'#FF0000',critWidth:2.5,
   palette:null,cat2Palette:null,escPalette:null,editorHiddenCols:[]
 };
@@ -3476,10 +3472,6 @@ function apSavePrefs(){
 function apResetPrefs(){
   try{localStorage.removeItem(AP_PREFS_KEY);}catch(e){}
   location.reload();
-}
-function apApplySignature(){
-  const name=AP_PREFS.userSignature||AP_PREFS_DEFAULT.userSignature;
-  document.querySelectorAll('header .sub').forEach(el=>{el.textContent='Comparador de Escenarios · '+name;});
 }
 function apApplyPalettes(){
   if(Array.isArray(AP_PREFS.palette))AP_PREFS.palette.forEach((c,i)=>{if(c&&PALETTE[i])PALETTE[i]=c;});
@@ -3512,7 +3504,6 @@ function apSetupReminder(){
 }
 function apApplyPrefs(){
   document.documentElement.dataset.theme=AP_PREFS.theme==='dark'?'dark':'light';
-  apApplySignature();
   apApplyPalettes();
   apApplyEditorColVis();
   apSetupReminder();
@@ -3533,7 +3524,6 @@ function _apSwatchRow(containerId,arr,prefKey){
 function apRenderConfigUI(){
   const th=document.getElementById('apTheme');if(th)th.checked=AP_PREFS.theme==='dark';
   const dt=document.getElementById('apDefaultTab');if(dt)dt.value=AP_PREFS.defaultTab;
-  const sg=document.getElementById('apSignature');if(sg)sg.value=AP_PREFS.userSignature;
   const rm=document.getElementById('apReminder');if(rm)rm.value=AP_PREFS.reminderMinutes;
   const au=document.getElementById('apAvanceUnidad');if(au)au.value=AP_PREFS.avanceUnidad;
   const cwi=document.getElementById('apCritWidth');if(cwi)cwi.value=AP_PREFS.critWidth;
