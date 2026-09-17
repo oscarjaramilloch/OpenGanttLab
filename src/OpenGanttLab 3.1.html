@@ -4631,21 +4631,34 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const lx=ML/2,cy=(by0+by1)/2;
       const availH=Math.max(0,(by1-by0)-10);
       const charW=labelFsz*0.62;
-      let labelTxt=(c1Opt.label!==undefined&&c1Opt.label!=='')?c1Opt.label:String(b.c1||'');
-      if(labelTxt.length*charW>availH){
-        const maxChars=Math.max(1,Math.floor(availH/charW)-1);
-        labelTxt=labelTxt.slice(0,maxChars)+'…';
-      }
+      const labelRaw=(c1Opt.label!==undefined&&c1Opt.label!=='')?c1Opt.label:String(b.c1||'');
+      // Saltos de línea (Enter en el textarea del menú) → columnas verticales una junto a la
+      // otra dentro del texto rotado (mismo truco que un <text> rotado con varios <tspan>: lo
+      // que antes de rotar es "línea 2 debajo de la línea 1" queda, tras rotar -90°, como
+      // "columna 2 al lado de la columna 1"). Cada línea se trunca por separado al alto
+      // disponible de la banda, igual que antes con una sola línea.
+      const labelLines=labelRaw.split(/\r?\n/).map(l=>{
+        let t=l.trim();
+        if(t.length*charW>availH){
+          const maxChars=Math.max(1,Math.floor(availH/charW)-1);
+          t=t.slice(0,maxChars)+'…';
+        }
+        return t;
+      }).filter(Boolean);
+      if(!labelLines.length)labelLines.push('');
       const labelFill=c1Opt._textManual?c1Opt.textColor:c1col;
       const labelWeight=c1Opt.textBold===false?'400':'700';
       const labelStyle=c1Opt.textItalic?'italic':'normal';
       const labelDeco=c1Opt.textUnder?'underline':'none';
+      const colGap=labelFsz*1.2;
+      const firstDy=-(labelLines.length-1)*colGap/2;
+      const tspans=labelLines.map((ln,i)=>`<tspan x="${lx}" dy="${i===0?firstDy:colGap}">${ex(ln)}</tspan>`).join('');
       // Asa de arrastre: columna de la etiqueta de Categoría 1 → reordenar la banda completa
       // verticalmente (antes del texto, que va encima con pointer-events:none para no robarle
       // el arrastre al hacer clic justo sobre las letras) — el doble clic sobre esta misma
       // asa abre el menú de edición de texto.
       svg+=`<rect x="2" y="${by0}" width="${ML-5}" height="${by1-by0}" fill="transparent" data-rap-reorder="1" data-c1="${ex(String(b.c1||''))}" style="cursor:move"/>`;
-      svg+=`<text x="${lx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${labelFsz}" font-weight="${labelWeight}" font-style="${labelStyle}" text-decoration="${labelDeco}" fill="${labelFill}" transform="rotate(-90 ${lx} ${cy})" pointer-events="none">${ex(labelTxt)}</text>`;
+      svg+=`<text x="${lx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${labelFsz}" font-weight="${labelWeight}" font-style="${labelStyle}" text-decoration="${labelDeco}" fill="${labelFill}" transform="rotate(-90 ${lx} ${cy})" pointer-events="none">${tspans}</text>`;
       // Asa de arrastre: borde inferior de la banda → ajustar su alto (filas) manualmente
       svg+=`<rect x="2" y="${by1-3}" width="${ML+TW+MR-4}" height="6" fill="transparent" data-rap-resize="h" data-c1="${ex(String(b.c1||''))}" data-rows="${b.rows}" style="cursor:ns-resize"/>`;
     });
