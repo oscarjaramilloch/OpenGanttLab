@@ -1,17 +1,67 @@
 <!DOCTYPE html>
 <!--
-  Redirección de la URL fija de GitHub Pages hacia la última versión del
-  archivo (nombre versionado en src/). Al subir una nueva versión, solo hay
-  que actualizar el href de abajo — la URL pública (ej.
-  https://<usuario>.github.io/OpenGanttLab/) no cambia nunca.
+  Página de descarga para GitHub Pages: URL pública fija que trae el HTML
+  con fetch() y lo entrega como descarga (evita el problema de que
+  raw.githubusercontent.com sirve los .html como text/plain). Al subir una
+  nueva versión, solo hay que actualizar SOURCE_PATH — la URL pública no
+  cambia.
 -->
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=src/OpenGanttLab%203.1.html">
-  <title>OpenGanttLab</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenGanttLab — Descargar</title>
+<style>
+  :root{--bg:#f6f8fa;--panel:#fff;--ink:#172b3a;--muted:#5a6b78;--line:#d7dee4;--blue:#2563eb;--navy:#0f2d5b}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#12181f;--panel:#1a222c;--ink:#e7edf4;--muted:#9aa8b5;--line:#2c3843}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 'Segoe UI',Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:36px;max-width:420px;width:100%;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  h1{font-size:19px;margin:0 0 6px}
+  p{color:var(--muted);font-size:13px;margin:0 0 22px}
+  #status{font-size:12px;color:var(--muted);margin-top:14px;min-height:16px}
+  a.btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 22px;border-radius:8px;transition:opacity .15s}
+  a.btn:hover{opacity:.9}
+  a.btn[aria-disabled="true"]{opacity:.5;pointer-events:none}
+</style>
 </head>
 <body>
-  <p>Redirigiendo a <a href="src/OpenGanttLab%203.1.html">OpenGanttLab</a>…</p>
+  <div class="card">
+    <h1>OpenGanttLab</h1>
+    <p>Plataforma abierta para planificación, análisis y visualización de cronogramas</p>
+    <a class="btn" id="dl" href="#" aria-disabled="true">⬇ Preparando descarga…</a>
+    <div id="status">Obteniendo la última versión…</div>
+  </div>
+<script>
+// Ruta versionada del archivo fuente (única línea a actualizar al subir una nueva versión).
+const SOURCE_PATH = 'src/OpenGanttLab 3.1.html';
+const DOWNLOAD_NAME = 'OpenGanttLab.html';
+
+const btn = document.getElementById('dl');
+const status = document.getElementById('status');
+
+fetch(SOURCE_PATH)
+  .then(r => { if(!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+  .then(html => {
+    const blob = new Blob([html], {type: 'text/html'});
+    const url = URL.createObjectURL(blob);
+    btn.href = url;
+    btn.download = DOWNLOAD_NAME;
+    btn.removeAttribute('aria-disabled');
+    btn.textContent = '⬇ Descargar OpenGanttLab.html';
+    status.textContent = 'Listo — guárdalo y ábrelo con doble clic.';
+    // Intento de descarga automática (funciona en la mayoría de navegadores al
+    // ser la única descarga de la carga de la página); el botón siempre queda
+    // visible como respaldo si el navegador la bloquea.
+    try{ btn.click(); }catch(e){}
+  })
+  .catch(err => {
+    status.textContent = 'No se pudo obtener el archivo automáticamente. Usa el link directo: ';
+    btn.href = SOURCE_PATH;
+    btn.removeAttribute('download');
+    btn.removeAttribute('aria-disabled');
+    btn.textContent = 'Abrir ' + DOWNLOAD_NAME;
+  });
+</script>
 </body>
 </html>
