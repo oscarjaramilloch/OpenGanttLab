@@ -4479,9 +4479,22 @@ function _presSVG(all,S,TW,mn,mx,opts){
   let rapBands=null;
   const _rapLayerH=execMode?Math.max(barH+10,+(document.getElementById('presDiamondSz')||{value:9}).value*2+fsz+Math.max(6,fsz-2)+16):barH+10;
   const _rapLabelFsz=Math.max(fsz+2,13);
+  // Texto/tamaño de la etiqueta de Categoría 1 con su override aplicado (ver PRES_OPTS
+  // "RAPC1|"+c1) — usado tanto para el alto mínimo de la banda como para el ancho mínimo de
+  // la columna, así el rectángulo se autoajusta cuando se edita el nombre o el tamaño desde
+  // el menú, en vez de quedarse con las medidas del texto original.
+  const _rapLabelInfo=c1=>{
+    const o=PRES_OPTS['RAPC1|'+c1]||{};
+    const fsz2=o.fontSize||_rapLabelFsz;
+    const raw=(o.label!==undefined&&o.label!=='')?o.label:String(c1||'');
+    const lines=raw.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+    return{lines:lines.length?lines:[''],fontSize:fsz2};
+  };
   const _rapMinRows=c1=>{
     if(RAP_BAND_ROWS_OVERRIDE[c1]!==undefined)return RAP_BAND_ROWS_OVERRIDE[c1];
-    return Math.max(1,Math.ceil((String(c1||'').length*_rapLabelFsz*0.62+16)/_rapLayerH));
+    const{lines,fontSize}=_rapLabelInfo(c1);
+    const longest=Math.max(...lines.map(l=>l.length),1);
+    return Math.max(1,Math.ceil((longest*fontSize*0.62+16)/_rapLayerH));
   };
   const layered=(groupByC1)
     ? (()=>{const r=_presLayersRaP(tasks,useLB,_rapMinRows);rapBands=r.bands;return r.result;})()
@@ -4494,7 +4507,20 @@ function _presSVG(all,S,TW,mn,mx,opts){
         })
       : _presLayers(tasks));
   const numLy=layered.length?Math.max(...layered.map(l=>l.ly))+1:0;
-  const RAP_LABEL_W=groupByC1?RAP_LABEL_W_USER:32;
+  // Ancho mínimo de la columna de etiquetas: la más ancha de todas (más líneas o fuente más
+  // grande necesita más columnas lado a lado) — RAP_LABEL_W_USER (arrastre manual del borde)
+  // solo puede agrandarlo más, nunca lo deja por debajo de lo que el texto necesita.
+  const _rapAutoLabelW=(()=>{
+    if(!groupByC1)return 32;
+    let maxW=24;
+    [...new Set(tasks.map(t=>t.c1))].forEach(c1=>{
+      const{lines,fontSize}=_rapLabelInfo(c1);
+      const w=Math.ceil(lines.length*fontSize*1.2)+8;
+      if(w>maxW)maxW=w;
+    });
+    return maxW;
+  })();
+  const RAP_LABEL_W=groupByC1?Math.max(RAP_LABEL_W_USER,_rapAutoLabelW):32;
   // Margen extra manual (controles del ribbon) — declarado antes de ML/MR porque el margen
   // izquierdo/derecho debe sumarse directamente a esos anchos, no solo al lienzo total.
   const _extraTop=+(document.getElementById('presExtraTop')||{value:0}).value||0;
