@@ -2484,7 +2484,7 @@ function pickPresHoyColor(){
   const sw=document.getElementById('presHoyColor');
   const r=sw.getBoundingClientRect();
   const cp=document.getElementById('colorPicker');
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 }
 function applyPresHoyStyle(){
   const col=_presHoyCol||'#FF0000';
@@ -2498,7 +2498,7 @@ function pickPresTitleColor(swatchId){
   const sw=document.getElementById(swatchId);
   const r=sw.getBoundingClientRect();
   const cp=document.getElementById('colorPicker');
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 }
 let _hoyLineCol='#FF0000';
 let _hoyTextCol='#FF0000';
@@ -2508,7 +2508,7 @@ function pickHoyColor(){
   const sw=document.getElementById('hoyLineColor');
   const r=sw.getBoundingClientRect();
   const cp=document.getElementById('colorPicker');
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 }
 function applyHoyStyle(){
   const w=parseFloat(document.getElementById('hoyW').value)||2;
@@ -3015,7 +3015,7 @@ function showColorPicker(type,name,el){
   document.getElementById('cpLabel').textContent=label+(type==='evento'?name.split('|')[2]:name);
   cp.style.display='block';
   cp.style.left=Math.min(r.left,window.innerWidth-250)+'px';
-  cp.style.top=Math.min(r.bottom+4,window.innerHeight-230)+'px';
+  cp.style.top=Math.min(r.bottom+4,window.innerHeight-(cp.offsetHeight||300))+'px';
 }
 function closeColorPicker(){document.getElementById('colorPicker').style.display='none';}
 function applyPickerColor(color){
@@ -5601,7 +5601,7 @@ document.getElementById('pbmSwatch').addEventListener('click',e=>{
   _cpTarget={type:cpType,name:_presBarKey};
   document.getElementById('cpLabel').textContent=_presBarKey.split('|').slice(-1)[0];
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 // swatch de color de TEXTO
 document.getElementById('pbmTextSwatch').addEventListener('click',e=>{
@@ -5609,7 +5609,7 @@ document.getElementById('pbmTextSwatch').addEventListener('click',e=>{
   _cpTarget={type:'prestextcolor',name:_presBarKey};
   document.getElementById('cpLabel').textContent='Color texto: '+(_presBarKey.startsWith('RAPC1|')?_presBarKey.slice(6):_presBarKey.split('|')[2]);
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.getElementById('pbmTextReset').addEventListener('click',()=>{
   if(!_presBarKey||!PRES_OPTS[_presBarKey])return;
@@ -6191,7 +6191,7 @@ function presPickLineColor(){
   document.getElementById('cpLabel').textContent='Color línea hito';
   cp.style.display='block';
   cp.style.left=Math.min(r.left,window.innerWidth-250)+'px';
-  cp.style.top=Math.min(r.bottom+4,window.innerHeight-230)+'px';
+  cp.style.top=Math.min(r.bottom+4,window.innerHeight-(cp.offsetHeight||300))+'px';
 }
 function presSetMitoPos(above){
   if(!_presBarKey)return;
@@ -6360,14 +6360,14 @@ document.getElementById('pymBgSwatch').addEventListener('click',e=>{
   _cpTarget={type:'presyearbg',name:_presYearKey};
   document.getElementById('cpLabel').textContent='Fondo año '+_presYearKey;
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.getElementById('pymFgSwatch').addEventListener('click',e=>{
   e.stopPropagation();if(!_presYearKey)return;
   _cpTarget={type:'presyearfg',name:_presYearKey};
   document.getElementById('cpLabel').textContent='Fuente año '+_presYearKey;
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.addEventListener('click',e=>{
   const pym=document.getElementById('presYearMenu');
@@ -6378,7 +6378,7 @@ document.getElementById('pbmMitoSwatchInner').addEventListener('click',e=>{
   _cpTarget={type:'presbar',name:_presBarKey};
   document.getElementById('cpLabel').textContent=_presBarKey.split('|').slice(-1)[0];
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 // Sincronizar tamaño símbolo hito ↔ toolbar
 function syncDiamondSz(val){
@@ -6614,14 +6614,14 @@ document.getElementById('pshFillSwatch').addEventListener('click',e=>{
   _cpTarget={type:'pshcolor',name:'fill'};
   document.getElementById('cpLabel').textContent='Color de relleno';
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.getElementById('pshStrokeSwatch').addEventListener('click',e=>{
   e.stopPropagation();
   _cpTarget={type:'pshcolor',name:'stroke'};
   document.getElementById('cpLabel').textContent='Color de borde';
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.addEventListener('click',e=>{
   const m=document.getElementById('presShapeMenu');
@@ -6695,21 +6695,21 @@ document.getElementById('ptbColorSwatch').addEventListener('click',e=>{
   _cpTarget={type:'ptbcolor',name:'color'};
   document.getElementById('cpLabel').textContent='Color de texto';
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.getElementById('ptbBgSwatch').addEventListener('click',e=>{
   e.stopPropagation();
   _cpTarget={type:'ptbcolor',name:'bg'};
   document.getElementById('cpLabel').textContent='Color de fondo';
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.getElementById('ptbBorderSwatch').addEventListener('click',e=>{
   e.stopPropagation();
   _cpTarget={type:'ptbcolor',name:'border'};
   document.getElementById('cpLabel').textContent='Color de borde';
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 
 // Barra altura
@@ -7548,19 +7548,19 @@ document.getElementById('gtbColorSwatch').addEventListener('click',e=>{
   e.stopPropagation();_cpTarget={type:'gtbcolor',name:'color'};
   document.getElementById('cpLabel').textContent='Color de texto';
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.getElementById('gtbBgSwatch').addEventListener('click',e=>{
   e.stopPropagation();_cpTarget={type:'gtbcolor',name:'bg'};
   document.getElementById('cpLabel').textContent='Color de fondo';
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 document.getElementById('gtbBorderSwatch').addEventListener('click',e=>{
   e.stopPropagation();_cpTarget={type:'gtbcolor',name:'border'};
   document.getElementById('cpLabel').textContent='Color de borde';
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
-  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-230)+'px';
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
 // Cerrar presFilterPanel y presTextBoxMenu al hacer clic fuera
 document.addEventListener('click',e=>{
