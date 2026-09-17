@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 512 512"
+     width="512"
+     height="512"
+     role="img"
+     aria-labelledby="title desc">
+  <title id="title">Línea de Tiempo — OpenGanttLab</title>
+  <desc id="desc">Icono de una línea de tiempo Gantt con barras de actividades, un hito y un reloj de seguimiento.</desc>
+
+  <defs>
+    <linearGradient id="tileGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EAF3FF"/>
+    </linearGradient>
+    <linearGradient id="blueBar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1597FF"/>
+      <stop offset="100%" stop-color="#1674E8"/>
+    </linearGradient>
+    <linearGradient id="tealBar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6CE4D2"/>
+      <stop offset="100%" stop-color="#18C6BD"/>
+    </linearGradient>
+    <linearGradient id="lightBlueBar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#B8DFFF"/>
+      <stop offset="100%" stop-color="#75B7F3"/>
+    </linearGradient>
+    <linearGradient id="clockRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#218CFF"/>
+      <stop offset="100%" stop-color="#0758D7"/>
+    </linearGradient>
+    <filter id="shadowLarge" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#76A9E8" flood-opacity="0.20"/>
+    </filter>
+    <filter id="shadowSmall" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#5C91D5" flood-opacity="0.20"/>
+    </filter>
+    <filter id="softBlur">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+  </defs>
+
+  <rect x="38" y="38" width="436" height="436" rx="92"
+        fill="url(#tileGradient)"
+        stroke="#E2EEFC"
+        stroke-width="3"
+        filter="url(#shadowLarge)"/>
+
+  <ellipse cx="260" cy="405" rx="165" ry="30"
+           fill="#A8CFFF" opacity="0.16" filter="url(#softBlur)"/>
+
+  <rect x="104" y="142" width="304" height="270" rx="38"
+        fill="#FFFFFF"
+        stroke="#F4F8FE"
+        stroke-width="3"
+        filter="url(#shadowSmall)"/>
+
+  <g stroke="#EAF2FC" stroke-width="9" stroke-linecap="round">
+    <line x1="165" y1="170" x2="165" y2="375"/>
+    <line x1="230" y1="170" x2="230" y2="375"/>
+    <line x1="296" y1="170" x2="296" y2="375"/>
+    <line x1="361" y1="170" x2="361" y2="375"/>
+  </g>
+
+  <rect x="122" y="188" width="190" height="38" rx="19" fill="url(#blueBar)"/>
+  <rect x="148" y="250" width="168" height="38" rx="19" fill="url(#tealBar)"/>
+  <rect x="185" y="312" width="126" height="38" rx="19" fill="url(#lightBlueBar)"/>
+
+  <rect x="348" y="180" width="16" height="104" rx="8" fill="#B7D9FF"/>
+  <circle cx="356" cy="212" r="24" fill="url(#blueBar)" stroke="#FFFFFF" stroke-width="7"/>
+
+  <g filter="url(#shadowSmall)">
+    <circle cx="355" cy="353" r="88" fill="url(#clockRing)"/>
+    <circle cx="355" cy="353" r="67" fill="#F9FCFF" stroke="#EAF3FF" stroke-width="3"/>
+  </g>
+
+  <g stroke="#B9D4F4" stroke-width="4" stroke-linecap="round">
+    <line x1="355" y1="295" x2="355" y2="304"/>
+    <line x1="355" y1="402" x2="355" y2="411"/>
+    <line x1="297" y1="353" x2="306" y2="353"/>
+    <line x1="404" y1="353" x2="413" y2="353"/>
+  </g>
+
+  <circle cx="355" cy="353" r="9" fill="#0F2D5B"/>
+  <path d="M355 353 V318" fill="none" stroke="#0F2D5B" stroke-width="13" stroke-linecap="round"/>
+  <path d="M355 353 H384" fill="none" stroke="#0F2D5B" stroke-width="13" stroke-linecap="round"/>
+</svg>
