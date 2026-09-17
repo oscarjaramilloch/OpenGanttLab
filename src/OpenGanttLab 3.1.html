@@ -2442,7 +2442,7 @@ let _presLastGroupByC1=false;
 // _presRapDrag más abajo): ancho de la columna de nombres de Categoría 1 (px) y filas
 // mínimas por banda (clave = nombre de Categoría 1) — nunca reduce por debajo de lo que
 // las tareas de esa banda necesitan (ver _rapMinRows en _presSVG).
-let RAP_LABEL_W_USER=24;
+let RAP_LABEL_W_USER=0; // 0 = sin ajuste manual: usa el ancho mínimo autoajustado al texto (ver _rapAutoLabelW)
 let RAP_BAND_ROWS_OVERRIDE={};
 // Orden vertical manual de las bandas de Categoría 1 en Vista RaP (clave = nombre de
 // Categoría 1 → posición). Se arrastra la banda completa igual que se arrastra su alto (ver
@@ -4512,10 +4512,10 @@ function _presSVG(all,S,TW,mn,mx,opts){
   // solo puede agrandarlo más, nunca lo deja por debajo de lo que el texto necesita.
   const _rapAutoLabelW=(()=>{
     if(!groupByC1)return 32;
-    let maxW=24;
+    let maxW=10;
     [...new Set(tasks.map(t=>t.c1))].forEach(c1=>{
       const{lines,fontSize}=_rapLabelInfo(c1);
-      const w=Math.ceil(lines.length*fontSize*1.2)+8;
+      const w=Math.ceil(lines.length*fontSize*1.05)+4;
       if(w>maxW)maxW=w;
     });
     return maxW;
@@ -4676,7 +4676,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const labelWeight=c1Opt.textBold===false?'400':'700';
       const labelStyle=c1Opt.textItalic?'italic':'normal';
       const labelDeco=c1Opt.textUnder?'underline':'none';
-      const colGap=labelFsz*1.2;
+      const colGap=labelFsz*1.05;
       const firstDy=-(labelLines.length-1)*colGap/2;
       const tspans=labelLines.map((ln,i)=>`<tspan x="${lx}" dy="${i===0?firstDy:colGap}">${ex(ln)}</tspan>`).join('');
       // Asa de arrastre: columna de la etiqueta de Categoría 1 → reordenar la banda completa
