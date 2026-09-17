@@ -1086,6 +1086,11 @@ th,td{padding:0}
     <span id="cpLabel"></span>
     <button id="cpClose" class="icon-x" onclick="closeColorPicker()" title="Cerrar">✕</button>
   </div>
+  <div style="font-size:9px;color:#888;margin-bottom:2px">Estándar:</div>
+  <div id="cpStandardRow" style="display:flex;gap:2px;margin-bottom:6px;flex-wrap:wrap"></div>
+  <div style="font-size:9px;color:#888;margin-bottom:2px">Recientes:</div>
+  <div id="cpRecentRow" style="display:flex;gap:2px;margin-bottom:8px;flex-wrap:wrap"></div>
+  <div style="font-size:9px;color:#888;margin-bottom:2px">Otros colores:</div>
   <div id="cpGrid"></div>
   <div id="cpCustomRow">
     <span style="font-size:10px;color:#666">Personalizado:</span>
@@ -2986,11 +2991,20 @@ const CP=[
   '#E0F7FA','#80DEEA','#26C6DA','#00ACC1','#00838F','#26A69A','#80CBC4','#4DB6AC','#00796B','#004D40',
   '#FBE9E7','#FFAB91','#FF7043','#E64A19','#BF360C','#FF5722','#FF8A65','#FFCCBC','#FF6D00','#DD2C00',
 ];
+// Colores estándar de Office (fila "Estándar" del picker de PowerPoint/Excel) y colores
+// recientes fijos (hex exactos del picker de Office proporcionados por el usuario) —
+// se muestran como filas propias arriba de la grilla general.
+const CP_STANDARD=['#C00000','#FF0000','#FFC000','#FFFF00','#92D050','#00B050','#00B0F0','#0070C0','#002060','#7030A0'];
+const CP_RECENT=['#00323F','#04CF74','#08A338','#0ED5E7','#00B8EE','#00684D','#09FF54','#0B7277','#3C357B'];
 let _cpTarget=null;
 (()=>{
   const g=document.getElementById('cpGrid');
   g.innerHTML='';
   CP.forEach(c=>{const sw=document.createElement('div');sw.className='cp-sw';sw.style.background=c;sw.title=c;sw.onclick=()=>applyPickerColor(c);g.appendChild(sw);});
+  const std=document.getElementById('cpStandardRow');
+  CP_STANDARD.forEach(c=>{const sw=document.createElement('div');sw.className='cp-sw';sw.style.background=c;sw.title=c;sw.onclick=()=>applyPickerColor(c);std.appendChild(sw);});
+  const rec=document.getElementById('cpRecentRow');
+  CP_RECENT.forEach(c=>{const sw=document.createElement('div');sw.className='cp-sw';sw.style.background=c;sw.title=c;sw.onclick=()=>applyPickerColor(c);rec.appendChild(sw);});
   document.getElementById('cpCustom').addEventListener('change',e=>applyPickerColor(e.target.value));
   document.addEventListener('click',e=>{const cp=document.getElementById('colorPicker');if(cp.style.display!=='none'&&!cp.contains(e.target)&&!e.target.closest('.c1')&&!e.target.closest('.c2')&&!e.target.closest('.swatch')&&!e.target.closest('[data-pres-year]')&&!e.target.closest('[data-pres-year-lb]')&&!e.target.closest('[data-pres-bar]')&&!e.target.closest('[data-pres-mito]')&&!e.target.closest('[data-pres-evento]')&&!e.target.closest('[data-evento-key]')&&!e.target.closest('#presBarMenu')&&!e.target.closest('#presYearMenu')&&!e.target.closest('#hoyLineColor'))cp.style.display='none';});
 })();
