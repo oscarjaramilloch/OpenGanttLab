@@ -442,6 +442,7 @@ th,td{padding:0}
     if(window.ogSbSyncAll)window.ogSbSyncAll();
   }
   function closeDockPanels(){
+    if(window.flushEditorRender)flushEditorRender();
     document.getElementById('editorModal').style.display='none';
     document.getElementById('presModal').style.display='none';
     document.getElementById('configModal').style.display='none';
@@ -451,7 +452,7 @@ th,td{padding:0}
   function setActive(id){document.querySelectorAll('.nr-list .nr-item').forEach(function(b){b.classList.toggle('active',b.id===id);});}
   window.ogReturnToGantt=function(){setActive('navGantt');closeDockPanels();};
   document.getElementById('navGantt').addEventListener('click',function(){setActive('navGantt');closeDockPanels();document.getElementById('wrap').scrollIntoView({behavior:'smooth'});});
-  document.getElementById('navLdt').addEventListener('click',function(){setActive('navLdt');showGanttArea(false);document.getElementById('editorModal').style.display='none';document.getElementById('configModal').style.display='none';document.getElementById('btnPres').click();placeStatusbar('pres');});
+  document.getElementById('navLdt').addEventListener('click',function(){if(window.flushEditorRender)flushEditorRender();setActive('navLdt');showGanttArea(false);document.getElementById('editorModal').style.display='none';document.getElementById('configModal').style.display='none';document.getElementById('btnPres').click();placeStatusbar('pres');});
   window.openDatosPanel=function(){
     setActive('navDatos');
     showGanttArea(false);
@@ -459,13 +460,14 @@ th,td{padding:0}
     document.getElementById('presModal').style.display='none';
     document.getElementById('configModal').style.display='none';
     var hayDatos=typeof TASKS!=='undefined'&&TASKS.length;
-    if(hayDatos&&typeof populateEditor==='function')populateEditor();
-    else{var b=document.getElementById('editorBody');if(b)b.innerHTML='<tr><td colspan="14" style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Aún no hay datos cargados — usa <b>Cargar archivo</b> arriba (Excel o Project XML) para comenzar.</td></tr>';}
+    // Con datos, datosSwitchView('table') (abajo) ya llama populateEditor(): no duplicarlo.
+    if(!hayDatos){var b=document.getElementById('editorBody');if(b)b.innerHTML='<tr><td colspan="14" style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Aún no hay datos cargados — usa <b>Cargar archivo</b> arriba (Excel o Project XML) para comenzar.</td></tr>';}
     document.getElementById('editorModal').style.display='flex';
     if(typeof datosSwitchView==='function')datosSwitchView('table');
   };
   document.getElementById('navDatos').addEventListener('click',window.openDatosPanel);
   window.openConfigPanel=function(){
+    if(window.flushEditorRender)flushEditorRender();
     setActive('navConfig');
     showGanttArea(false);
     placeStatusbar(null);
@@ -3478,7 +3480,12 @@ function populateEditor(){
   const frag=document.createDocumentFragment();
   TASKS.forEach(t=>frag.appendChild(makeEditorRow(t)));
   b.appendChild(frag);
-  b.querySelectorAll('textarea.etar').forEach(_etarAutoGrow);
+  // Autoajuste en 2 pasadas (escribir todo, luego leer todo): hacerlo fila por fila fuerza un
+  // reflow de la tabla completa por cada textarea (muy lento con cientos de tareas).
+  const _tas=b.querySelectorAll('textarea.etar');
+  _tas.forEach(el=>{el.style.height='auto';});
+  const _hs=[..._tas].map(el=>el.scrollHeight);
+  _tas.forEach((el,i)=>{el.style.height=_hs[i]+'px';});
   document.getElementById('dl1').innerHTML=[...new Set(TASKS.map(t=>t.c1))].map(s=>`<option value="${esc(s)}">`).join('');
   document.getElementById('dl2').innerHTML=[...new Set(TASKS.map(t=>t.c2))].map(s=>`<option value="${esc(s)}">`).join('');
   _updateDatosStats();
@@ -3554,8 +3561,15 @@ function applyEditorChanges(silent){
   SCENARIOS=[...new Set(TASKS.map(t=>t.c1))].filter(Boolean);SCEN_ON={};SCEN_COLOR={};
   SCENARIOS.forEach((s,i)=>{SCEN_ON[s]=(s in prevOn)?prevOn[s]:true;SCEN_COLOR[s]=PALETTE[i%PALETTE.length];});
   const c2s=[...new Set(TASKS.map(t=>t.c2))];CAT2_COLOR={};c2s.forEach((c,i)=>CAT2_COLOR[c]=CAT2_PALETTE[i%CAT2_PALETTE.length]);
-  buildScenarioChecks();render();document.getElementById('status').textContent=`✓ Guardado automático — ${TASKS.length} actividades.`;_updateDatosStats();
+  // Con la Tabla de Datos abierta el Gantt/LdT están ocultos: repintarlos en cada edición es
+  // trabajo perdido (crítico con cientos de tareas). Se difiere hasta salir de la tabla.
+  const ed=document.getElementById('editorModal');
+  if(ed&&ed.style.display==='flex')_editorRenderPending=true;
+  else{_editorRenderPending=false;buildScenarioChecks();render();}
+  document.getElementById('status').textContent=`✓ Guardado automático — ${TASKS.length} actividades.`;_updateDatosStats();
 }
+let _editorRenderPending=false;
+function flushEditorRender(){if(!_editorRenderPending)return;_editorRenderPending=false;buildScenarioChecks();render();}
 
 /* ═══ ESCRITOR .XLSX ═══ */
 const _CRCT=(()=>{const t=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=c&1?(0xEDB88320^(c>>>1)):(c>>>1);t[i]=c;}return t;})();
@@ -7124,12 +7138,15 @@ async function pxmlLoadFiles(files){
     if(!file.name.toLowerCase().endsWith('.xml')){log.textContent+=`⚠ ${file.name}: no es XML\n`;continue;}
     log.textContent+=`Cargando ${file.name}…\n`;
     try{
-      const text=await file.text();
-      const parser=new DOMParser();
-      const doc=parser.parseFromString(text,'text/xml');
-      const err=doc.querySelector('parsererror');
-      if(err){log.textContent+=`❌ Error al parsear ${file.name}\n`;continue;}
-      const result=pxmlParseDoc(doc,file.name);
+      if(file.size>3145728){log.textContent+=`  Archivo grande (${(file.size/1048576).toFixed(1)} MB): puede tardar unos segundos…\n`;await new Promise(r=>setTimeout(r,30));}
+      let text=await file.text();
+      let doc=new DOMParser().parseFromString(text,'text/xml');
+      text=null;
+      if(doc.getElementsByTagName('parsererror')[0]){log.textContent+=`❌ Error al parsear ${file.name}\n`;continue;}
+      const base=log.textContent;
+      const result=await pxmlParseDoc(doc,file.name,(d,t)=>{log.textContent=base+`  Procesando tareas ${d}/${t}…\n`;});
+      doc=null;
+      log.textContent=base;
       pxmlAutoGuessMapping(result);
       // Verificar si ya existe, reemplazar; si no, agregar
       const idx=PXML_DB.findIndex(d=>d.fileName===file.name);
@@ -7147,66 +7164,67 @@ async function pxmlLoadFiles(files){
   // Ir a Base de datos automáticamente al terminar
   if(PXML_DB.length) pxmlTab('db');
 }
-function pxmlParseDoc(doc,fileName){
-  const q=(el,tag)=>el.querySelector(tag)||{textContent:''};
-  const qAll=(el,tag)=>[...el.querySelectorAll(tag)];
-  const projectName=q(doc,'Name').textContent||fileName;
+async function pxmlParseDoc(doc,fileName,onProgress){
+  const kids=el=>el?[...el.children]:[];
+  const ch=(el,name)=>kids(el).find(c=>c.localName===name);
+  const txt=(el,name)=>{const c=ch(el,name);return c?c.textContent.trim():'';};
+  const root=doc.documentElement;
+  const projectName=txt(root,'Name')||fileName;
 
-  // 1. Construir diccionario FieldID→{alias,fname} desde ExtendedAttributes globales
-  //    (solo los hijos directos del elemento ExtendedAttributes, no los de Task)
+  // 1. Diccionario FieldID→{id,label} desde ExtendedAttributes globales
   const fidMap={};
   const customCols=[];
-  const eaRoot=doc.querySelector('ExtendedAttributes');
-  if(eaRoot){
-    [...eaRoot.children].forEach(ea=>{
-      const fid=q(ea,'FieldID').textContent.trim();
-      const fname=q(ea,'FieldName').textContent.trim();
-      const alias=q(ea,'Alias').textContent.trim();
-      if(fid&&fname){
-        const label=alias||fname;
-        const id='_c_'+fid;
-        fidMap[fid]={id,label};
-        if(!customCols.find(c=>c.id===id))
-          customCols.push({id,fid,fname,alias:label});
-      }
-    });
-  }
+  kids(ch(root,'ExtendedAttributes')).forEach(ea=>{
+    const fid=txt(ea,'FieldID'),fname=txt(ea,'FieldName'),alias=txt(ea,'Alias');
+    if(fid&&fname){
+      const label=alias||fname,id='_c_'+fid;
+      fidMap[fid]={id,label};
+      if(!customCols.find(c=>c.id===id)) customCols.push({id,fid,fname,alias:label});
+    }
+  });
 
-  // 2. Leer tareas: ExtendedAttribute de cada tarea por FieldID→Value
+  // 2. Tareas: un solo recorrido de hijos directos (evita querySelector por campo)
+  const STD=['Name','WBS','OutlineLevel','OutlineNumber','Start','Finish','ActualStart','ActualFinish',
+    'PercentComplete','Milestone','Critical','Summary','Active','StatusManager'];
   const tasks=[];
-  qAll(doc,'Task').forEach(t=>{
-    const get=tag=>t.querySelector(tag)?t.querySelector(tag).textContent.trim():'';
-    const bls=[...t.querySelectorAll('Baseline')];
-    const bl0=bls.find(b=>(b.querySelector('Number')||{textContent:'-1'}).textContent==='0');
-    const b0start=bl0?(bl0.querySelector('Start')||{textContent:''}).textContent:'';
-    const b0finish=bl0?(bl0.querySelector('Finish')||{textContent:''}).textContent:'';
-    const row={
-      Name:get('Name'),WBS:get('WBS'),OutlineLevel:get('OutlineLevel'),
-      OutlineNumber:get('OutlineNumber'),Start:get('Start'),Finish:get('Finish'),
-      ActualStart:get('ActualStart'),ActualFinish:get('ActualFinish'),
-      PercentComplete:get('PercentComplete'),Milestone:get('Milestone'),
-      Critical:get('Critical'),Summary:get('Summary'),Active:get('Active'),
-      StatusManager:get('StatusManager'),b0Start:b0start,b0Finish:b0finish,
-      _source:fileName
-    };
-    // Leer campos personalizados estándar: <ExtendedAttribute> hijo directo de la tarea
-    t.querySelectorAll(':scope > ExtendedAttribute').forEach(ea=>{
-      const fid=q(ea,'FieldID').textContent.trim();
-      const val=q(ea,'Value').textContent.trim();
+  const taskEls=kids(ch(root,'Tasks')).filter(t=>t.localName==='Task');
+  const total=taskEls.length;
+  let last=performance.now();
+  for(let i=0;i<total;i++){
+    const t=taskEls[i];
+    const f={},ext=[],eext=[];
+    let bl0=null;
+    for(const c of t.children){
+      const n=c.localName;
+      if(n==='ExtendedAttribute') ext.push(c);
+      else if(n==='EnterpriseExtendedAttribute') eext.push(c);
+      else if(n==='Baseline'){ if(!bl0&&txt(c,'Number')==='0') bl0=c; }
+      else if(!(n in f)) f[n]=c.textContent.trim();
+    }
+    const row={};
+    STD.forEach(k=>row[k]=f[k]||'');
+    row.b0Start=bl0?txt(bl0,'Start'):'';
+    row.b0Finish=bl0?txt(bl0,'Finish'):'';
+    row._source=fileName;
+    ext.forEach(ea=>{
+      const fid=txt(ea,'FieldID'),val=txt(ea,'Value');
       if(fid&&fidMap[fid]) row[fidMap[fid].id]=val;
     });
-    // Leer Enterprise Custom Fields: <EnterpriseExtendedAttribute> con <FieldID> y <Value>
-    t.querySelectorAll(':scope > EnterpriseExtendedAttribute').forEach(eea=>{
-      const fid=q(eea,'FieldID').textContent.trim();
-      const val=q(eea,'Value').textContent.trim();
+    eext.forEach(ea=>{
+      const fid=txt(ea,'FieldID'),val=txt(ea,'Value');
       if(fid&&val&&fidMap[fid]) row[fidMap[fid].id]=val;
     });
-    // Rellenar con vacío los campos que no aparecen en esta tarea
     customCols.forEach(cc=>{ if(!(cc.id in row)) row[cc.id]=''; });
     if(row.Name) tasks.push(row);
-  });
-  // Contar tareas con datos por campo y ordenar
-  customCols.forEach(cc=>{ cc.count=tasks.filter(r=>r[cc.id]&&r[cc.id].trim()).length; });
+    if(onProgress&&performance.now()-last>80){
+      onProgress(i+1,total);
+      await new Promise(r=>setTimeout(r));
+      last=performance.now();
+    }
+  }
+  const cnt={};
+  tasks.forEach(r=>customCols.forEach(cc=>{ if(r[cc.id]) cnt[cc.id]=(cnt[cc.id]||0)+1; }));
+  customCols.forEach(cc=>{ cc.count=cnt[cc.id]||0; });
   customCols.sort((a,b)=>b.count-a.count||(a.alias.localeCompare(b.alias,'es')));
   return{fileName,projectName,tasks,customCols,loaded:new Date().toLocaleString()};
 }
