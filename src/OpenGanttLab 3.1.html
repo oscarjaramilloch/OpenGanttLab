@@ -1777,22 +1777,19 @@ th,td{padding:0}
         </div>
         <div id="pbmMitoDatePosWrap" style="display:none;align-items:center;gap:5px;font-size:10px">
           <span class="pop-unit" style="min-width:40px">Posición:</span>
-          <input type="hidden" id="pbmMitoDatePosSel" value="bot-out">
+          <input type="hidden" id="pbmMitoDatePosSel" value="bottom">
           <div class="pbm-seg" role="group" aria-label="Posición de fecha del hito">
-            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="top-out" onclick="presMitoDatePos('top-out')" title="Encima del diamante">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="7" y1="4" x2="17" y2="4"/><rect x="4" y="7" width="16" height="10" rx="1"/></svg>
+            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="top" onclick="presMitoDatePos('top')" title="Arriba">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
             </button>
-            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="top-in" onclick="presMitoDatePos('top-in')" title="Dentro, arriba">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="9.5" x2="17" y2="9.5"/></svg>
+            <button type="button" class="pbm-seg-btn active" data-pbm-mito-date-pos="bottom" onclick="presMitoDatePos('bottom')" title="Abajo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m5 12 7 7 7-7"/></svg>
             </button>
-            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="center" onclick="presMitoDatePos('center')" title="Centro">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="left" onclick="presMitoDatePos('left')" title="Izquierda">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 5-7 7 7 7"/></svg>
             </button>
-            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="bot-in" onclick="presMitoDatePos('bot-in')" title="Dentro, abajo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="14.5" x2="17" y2="14.5"/></svg>
-            </button>
-            <button type="button" class="pbm-seg-btn active" data-pbm-mito-date-pos="bot-out" onclick="presMitoDatePos('bot-out')" title="Debajo del diamante">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="20" x2="17" y2="20"/></svg>
+            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="right" onclick="presMitoDatePos('right')" title="Derecha">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
           </div>
         </div>
@@ -4961,18 +4958,18 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const mOpt=PRES_OPTS[mitoLbKey];
     const mShowDate=mOpt.miShowDate===true||(presShowDates&&mOpt.miShowDate!==false);
     const mDateIndep=mOpt.miDateAlign==='out';
-    const mDatePos=mOpt.miDatePos||'bot-out';
+    const mDatePos=mOpt.miDatePos||'bottom';
     const mitoDateAt=(dY,defaultY)=>{
       if(!mShowDate)return'';
-      let yy=defaultY,fill=col;
+      let xx=mx2,yy=defaultY,anchor='middle';
       if(mDateIndep){
-        if(mDatePos==='top-out')yy=dY-ds-2;
-        else if(mDatePos==='top-in'){yy=dY-ds+mDateSz+2;fill=luma(col)<128?'#fff':'#222';}
-        else if(mDatePos==='center'){yy=dY+mDateSz*0.35;fill=luma(col)<128?'#fff':'#222';}
-        else if(mDatePos==='bot-in'){yy=dY+ds-2;fill=luma(col)<128?'#fff':'#222';}
+        // arriba / abajo / izquierda / derecha del diamante (valores antiguos: top-* → arriba, resto → abajo)
+        if(mDatePos==='top'||mDatePos==='top-out'||mDatePos==='top-in')yy=dY-ds-2;
+        else if(mDatePos==='left'){xx=mx2-ds-4;yy=dY+mDateSz*0.35;anchor='end';}
+        else if(mDatePos==='right'){xx=mx2+ds+4;yy=dY+mDateSz*0.35;anchor='start';}
         else yy=dY+ds+mDateSz+2;
       }
-      return`<text x="${mx2}" y="${yy}" text-anchor="middle" font-size="${mDateSz}" fill="${fill}" pointer-events="none">${fD(m.iLB)}</text>`;
+      return`<text x="${xx}" y="${yy}" text-anchor="${anchor}" font-size="${mDateSz}" fill="${col}" pointer-events="none">${fD(m.iLB)}</text>`;
     };
     if(above){
       const dY_raw=Math.max(ds+mfsz*2+12+(mitoLines.length-1)*mitoLineH,axisY0-60)-mitoYOff;
@@ -5610,7 +5607,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     {
       const _gD=(document.getElementById('presShowDates')||{checked:false}).checked;
       const _ds=document.getElementById('pbmMitoDS');if(_ds)_ds.checked=opt.miShowDate===true||(_gD&&opt.miShowDate!==false);
-      const _al=opt.miDateAlign||'in',_po=opt.miDatePos||'bot-out';
+      const _al=opt.miDateAlign||'in',_po=({'top-out':'top','top-in':'top'})[opt.miDatePos]||(['top','bottom','left','right'].includes(opt.miDatePos)?opt.miDatePos:'bottom');
       _pbmSyncSeg('pbmMitoDateAlignSel','pbm-mito-date-align',_al);
       _pbmSyncSeg('pbmMitoDatePosSel','pbm-mito-date-pos',_po);
       const _pw=document.getElementById('pbmMitoDatePosWrap');if(_pw)_pw.style.display=_al==='out'?'flex':'none';
