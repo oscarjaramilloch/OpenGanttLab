@@ -1753,6 +1753,49 @@ th,td{padding:0}
       </div>
       </div>
     </div>
+    <!-- Fechas del hito: mostrar, alinear (vinculada al nombre / independiente) y posición -->
+    <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:4px">
+      <button type="button" class="pop-label" onclick="pbmToggleSection('pbmMitoDateBody',this)" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:0;cursor:pointer;font:inherit">
+        <span>Fechas</span>
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .15s;transform:rotate(180deg)"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div id="pbmMitoDateBody" style="display:flex;flex-direction:column;gap:4px">
+        <label class="toggle" style="padding:0"><span class="tg-label" style="font-size:10px">Fecha</span><input type="checkbox" id="pbmMitoDS" onchange="presSetMitoShowDate(this.checked)"><span class="tg-track"></span></label>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px">
+          <span class="pop-unit" style="min-width:40px">Alinear:</span>
+          <input type="hidden" id="pbmMitoDateAlignSel" value="in">
+          <div class="pbm-seg" role="group" aria-label="Alinear fecha del hito">
+            <button type="button" class="pbm-seg-btn active" data-pbm-mito-date-align="in" onclick="presMitoDateAlign('in')" title="Junto al nombre">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
+            </button>
+            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-align="out" onclick="presMitoDateAlign('out')" title="Independiente (usa Posición)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="8" y="7" width="10" height="10" rx="1"/><line x1="2" y1="12" x2="6" y2="12"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="pbmMitoDatePosWrap" style="display:none;align-items:center;gap:5px;font-size:10px">
+          <span class="pop-unit" style="min-width:40px">Posición:</span>
+          <input type="hidden" id="pbmMitoDatePosSel" value="bot-out">
+          <div class="pbm-seg" role="group" aria-label="Posición de fecha del hito">
+            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="top-out" onclick="presMitoDatePos('top-out')" title="Encima del diamante">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="7" y1="4" x2="17" y2="4"/><rect x="4" y="7" width="16" height="10" rx="1"/></svg>
+            </button>
+            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="top-in" onclick="presMitoDatePos('top-in')" title="Dentro, arriba">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="9.5" x2="17" y2="9.5"/></svg>
+            </button>
+            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="center" onclick="presMitoDatePos('center')" title="Centro">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+            </button>
+            <button type="button" class="pbm-seg-btn" data-pbm-mito-date-pos="bot-in" onclick="presMitoDatePos('bot-in')" title="Dentro, abajo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="14.5" x2="17" y2="14.5"/></svg>
+            </button>
+            <button type="button" class="pbm-seg-btn active" data-pbm-mito-date-pos="bot-out" onclick="presMitoDatePos('bot-out')" title="Debajo del diamante">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="20" x2="17" y2="20"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Fondo propio del hito (usa pbmSwatch compartido pero aquí está contextualizado) -->
     <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:4px">
       <button type="button" class="pop-label" onclick="pbmToggleSection('pbmMitoFondoBody',this)" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:0;cursor:pointer;font:inherit">
@@ -4896,6 +4939,27 @@ function _presSVG(all,S,TW,mn,mx,opts){
       for(let i=1;i<lines.length;i++)s+=`<tspan x="${x}" dy="${mitoLineH}">${lines[i]}</tspan>`;
       return s+'</text>';
     };
+    // Fecha del hito: "Fecha" (miShowDate) puede forzar mostrar/ocultar independiente del toggle
+    // global; "Alinear" = "in" (por defecto) la deja pegada al nombre como siempre, "out" la hace
+    // independiente del nombre y usa "Posición" (miDatePos) relativa al alto del diamante —
+    // encima/debajo de la punta, o dentro (donde el color del texto contrasta con el relleno).
+    const mDateSz=Math.max(7,mfsz-1);
+    const mOpt=PRES_OPTS[mitoLbKey];
+    const mShowDate=mOpt.miShowDate===true||(presShowDates&&mOpt.miShowDate!==false);
+    const mDateIndep=mOpt.miDateAlign==='out';
+    const mDatePos=mOpt.miDatePos||'bot-out';
+    const mitoDateAt=(dY,defaultY)=>{
+      if(!mShowDate)return'';
+      let yy=defaultY,fill=col;
+      if(mDateIndep){
+        if(mDatePos==='top-out')yy=dY-ds-2;
+        else if(mDatePos==='top-in'){yy=dY-ds+mDateSz+2;fill=luma(col)<128?'#fff':'#222';}
+        else if(mDatePos==='center'){yy=dY+mDateSz*0.35;fill=luma(col)<128?'#fff':'#222';}
+        else if(mDatePos==='bot-in'){yy=dY+ds-2;fill=luma(col)<128?'#fff':'#222';}
+        else yy=dY+ds+mDateSz+2;
+      }
+      return`<text x="${mx2}" y="${yy}" text-anchor="middle" font-size="${mDateSz}" fill="${fill}" pointer-events="none">${fD(m.iLB)}</text>`;
+    };
     if(above){
       const dY_raw=Math.max(ds+mfsz*2+12+(mitoLines.length-1)*mitoLineH,axisY0-60)-mitoYOff;
       // Si el diamante caería dentro o bajo la barra del eje, empujarlo completamente debajo
@@ -4907,16 +4971,16 @@ function _presSVG(all,S,TW,mn,mx,opts){
       svg+=`<polygon points="${mx2},${dY-ds} ${mx2+ds},${dY} ${mx2},${dY+ds} ${mx2-ds},${dY}" fill="${col}" stroke="${col}" stroke-width="1.5"${mitoAttrs}/>`;
       if(_aboveAxis){
         svg+=mitoML(mitoLines,mx2,dY-ds-(mitoLines.length-1)*mitoLineH-mfsz-2);
-        if(presShowDates) svg+=`<text x="${mx2}" y="${dY-ds-2}" text-anchor="middle" font-size="${Math.max(7,mfsz-1)}" fill="${col}" pointer-events="none">${fD(m.iLB)}</text>`;
+        svg+=mitoDateAt(dY,dY-ds-2);
       } else {
         svg+=mitoML(mitoLines,mx2,dY+ds+mfsz+2);
-        if(presShowDates) svg+=`<text x="${mx2}" y="${dY+ds+mfsz+2+(mitoLines.length)*mitoLineH}" text-anchor="middle" font-size="${Math.max(7,mfsz-1)}" fill="${col}" pointer-events="none">${fD(m.iLB)}</text>`;
+        svg+=mitoDateAt(dY,dY+ds+mfsz+2+(mitoLines.length)*mitoLineH);
       }
     } else {
       const dY=miBotStart+ds+mfsz*2+16+mitoYOff;
       svg+=`<polygon points="${mx2},${dY-ds} ${mx2+ds},${dY} ${mx2},${dY+ds} ${mx2-ds},${dY}" fill="${col}" stroke="${col}" stroke-width="1.5"${mitoAttrs}/>`;
       svg+=mitoML(mitoLines,mx2,dY+ds+mfsz+2);
-      if(presShowDates) svg+=`<text x="${mx2}" y="${dY+ds+mfsz+2+(mitoLines.length)*mitoLineH}" text-anchor="middle" font-size="${Math.max(7,mfsz-1)}" fill="${col}" pointer-events="none">${fD(m.iLB)}</text>`;
+      svg+=mitoDateAt(dY,dY+ds+mfsz+2+(mitoLines.length)*mitoLineH);
     }
   });
 
@@ -5528,6 +5592,15 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pbmClase').style.background=CAT2_COLOR[_miParts[1]]||'#555';
     // Hito tiene swatch propio dentro de pbmMitoRow — ocultar pbmFondoRow
     document.getElementById('pbmMitoSwatchInner').style.background=opt.color;
+    // Sección "Fechas" del hito: estado actual de mostrar / alinear / posición
+    {
+      const _gD=(document.getElementById('presShowDates')||{checked:false}).checked;
+      const _ds=document.getElementById('pbmMitoDS');if(_ds)_ds.checked=opt.miShowDate===true||(_gD&&opt.miShowDate!==false);
+      const _al=opt.miDateAlign||'in',_po=opt.miDatePos||'bot-out';
+      _pbmSyncSeg('pbmMitoDateAlignSel','pbm-mito-date-align',_al);
+      _pbmSyncSeg('pbmMitoDatePosSel','pbm-mito-date-pos',_po);
+      const _pw=document.getElementById('pbmMitoDatePosWrap');if(_pw)_pw.style.display=_al==='out'?'flex':'none';
+    }
     document.getElementById('pbmFondoRow').style.display='none';
     document.getElementById('pbmPatternRow').style.display='none';
     document.getElementById('pbmDateRow').style.display='none';
@@ -6172,6 +6245,30 @@ function presDatePos(pos){
   if(!_presSelKeys().length)return;
   _presSnap();_presApplyAll(opt=>{opt.datePos=pos;});
   _pbmSyncSeg('pbmDatePosSel','pbm-date-pos',pos);
+  renderPres();
+}
+// Fechas del hito (menú de hitos): mostrar/ocultar, alinear (in=junto al nombre, out=independiente)
+// y posición vertical relativa al diamante (solo aplica con Alinear=out).
+function presSetMitoShowDate(checked){
+  if(!_presBarKey)return;
+  _presSnap();if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={};
+  const globalOn=(document.getElementById('presShowDates')||{checked:false}).checked;
+  PRES_OPTS[_presBarKey].miShowDate=checked?(globalOn?undefined:true):false;
+  renderPres();
+}
+function presMitoDateAlign(align){
+  if(!_presBarKey)return;
+  _presSnap();if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={};
+  PRES_OPTS[_presBarKey].miDateAlign=align;
+  _pbmSyncSeg('pbmMitoDateAlignSel','pbm-mito-date-align',align);
+  const w=document.getElementById('pbmMitoDatePosWrap');if(w)w.style.display=align==='out'?'flex':'none';
+  renderPres();
+}
+function presMitoDatePos(pos){
+  if(!_presBarKey)return;
+  _presSnap();if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={};
+  PRES_OPTS[_presBarKey].miDatePos=pos;
+  _pbmSyncSeg('pbmMitoDatePosSel','pbm-mito-date-pos',pos);
   renderPres();
 }
 function presSetPattern(pat){
