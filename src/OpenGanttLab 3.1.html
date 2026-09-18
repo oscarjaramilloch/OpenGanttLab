@@ -288,12 +288,18 @@ th,td{padding:0}
 .edTable input[type=date]{font:inherit;font-size:11.5px;text-align:center;border:none;background:transparent;padding:2px 3px;outline:none}
 .edTable select{font:inherit;font-size:12px;text-align:center;border:none;background:transparent;padding:2px;cursor:pointer}
 .edTable tr:hover td{background:#f6f9ff}
+.edVirt tbody tr.ed-r{height:36px}
+.edVirt textarea.etar{height:22px}
+.edVirt tbody td:nth-child(4){position:relative}
+.edVirt textarea.etar:focus{position:absolute;left:4px;right:4px;width:auto;z-index:4;box-shadow:0 0 0 1.5px var(--accent),0 4px 12px rgba(0,0,0,.18)}
+#editorBody tr.ed-sp td{display:table-cell!important;padding:0!important;border:none!important}
 .edel{background:none;border:none;cursor:pointer;opacity:.5;font-size:13px;padding:1px 4px}
 .edel:hover{opacity:1}
 
 /* resize handles en columnas */
 .col-resize{position:absolute;right:-2px;top:0;bottom:0;width:5px;cursor:col-resize;z-index:30;background:transparent}
 .col-resize:hover{background:rgba(59,110,165,.3)}
+.edTable thead th>.col-resize{right:0;width:8px}
 
 /* ═══ Filtro de columna — Editor de Datos ═══ */
 .edf-chk{display:flex;align-items:center;gap:8px;padding:3px 2px;font-size:12px;color:#28323c;cursor:pointer;white-space:nowrap}
@@ -3287,7 +3293,7 @@ const EDF_FUNNEL='<svg width="12" height="12" viewBox="0 0 24 24" fill="currentC
 let _edFiltersOn=true;
 function buildEditorHead(){
   const tr=document.getElementById('edTableHeadRow');if(!tr||tr.children.length)return;
-  tr.innerHTML=ED_COLS.map(c=>`<th data-col="${c.key}"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.label)}<span class="ed-filter-btn" data-hcol="${c.key}" onclick="edfOpenFilter(event,'${c.key}','${esc(c.label)}','${c.type}')" title="Filtrar" style="display:${_edFiltersOn?'inline-flex':'none'};align-items:center;justify-content:center;cursor:pointer;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="${c.key}"></div></div></th>`).join('')+'<th></th>';
+  tr.innerHTML=ED_COLS.map(c=>`<th data-col="${c.key}"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.label)}<span class="ed-filter-btn" data-hcol="${c.key}" onclick="edfOpenFilter(event,'${c.key}','${esc(c.label)}','${c.type}')" title="Filtrar" style="display:${_edFiltersOn?'inline-flex':'none'};align-items:center;justify-content:center;cursor:pointer;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span></div><div class="col-resize" data-col="${c.key}"></div></th>`).join('')+'<th></th>';
 }
 function toggleEdFilters(){
   _edFiltersOn=!_edFiltersOn;
@@ -3306,7 +3312,7 @@ function clearEdFilters(){
 }
 function toggleEdFiltroMenu(e){toggleDropMenu(e,'btnEdFiltroMenu','edFiltroMenuPanel');}
 function closeEdFiltroMenu(){const p=document.getElementById('edFiltroMenuPanel');if(p)p.style.display='none';}
-function _edColVal(tr,col){const f=tr._f,k=ED_FIELD_BY_COL[col];if(!f||!k||!f[k])return'';return f[k].value||'';}
+function _edColVal(m,col){const k=ED_FIELD_BY_COL[col];return(m&&k&&m[k])||'';}
 
 /* ═══ Panel de filtro por columna (Editor de Datos) — réplica del ColumnFilter de la webapp ═══ */
 const EDF_COND={
@@ -3342,7 +3348,7 @@ function edfOpenFilter(e,col,label,type,source){
     const curSel=_ganttFilters[col];
     _edf.pending=new Set(curSel&&curSel.length?curSel:_edf.values);
   } else {
-    const rows=[...document.getElementById('editorBody').children].filter(r=>r._f);
+    const rows=_edRows;
     const passesOther=r=>Object.keys(_edFilters).every(c=>{
       if(c===col)return true;
       const sel=_edFilters[c];if(!sel)return true;
@@ -3471,61 +3477,144 @@ function edfAccept(){
   });
   edfClose();
 }
-function edfApplyToRows(){
-  [...document.getElementById('editorBody').children].forEach(r=>{
-    if(!r._f)return;
-    const ok=Object.keys(_edFilters).every(c=>{const sel=_edFilters[c];if(!sel)return true;return sel.includes(_edColVal(r,c));});
-    r.style.display=ok?'':'none';
-  });
-}
+function edfApplyToRows(){_edVis=_edFiltered();if(_edVirt)document.getElementById('datosTablePane').scrollTop=0;edRender(true);}
 document.addEventListener('click',e=>{
   const p=document.getElementById('edFilterPanel');
   if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('.ed-filter-btn')&&!e.target.closest('.hdr-filter-btn'))p.style.display='none';
 });
+/* ═══ Tabla de Datos: modelo en memoria + ventana virtual ═══
+   Las filas viven como objetos planos (_edRows). Con >= ED_VIRT_MIN filas solo se crea en el DOM
+   la porción visible (+ margen) entre dos filas espaciadoras; con menos, se pintan todas como antes. */
+const ED_VIRT_MIN=250,ED_OVERSCAN=15;
+const ED_CLS_KEY={eesc:'esc',ec1:'c1',ec2:'c2',etar:'tar',eilb:'ilb',eflb:'flb',eav:'av',eirp:'irp',efrp:'frp',etipo:'tipo',ecrit:'crit',em2:'m2',eresumen:'resumen'};
+let _edRows=[],_edVis=[],_edShown=[],_edVirt=false,_edWin=[0,0],_edRH=36,_edRaf=0,_edSpT=null,_edSpB=null;
+function _edModel(t){
+  const dv=d=>(d instanceof Date&&!isNaN(d))?isoLocal(d):'',s=v=>v==null?'':String(v);
+  return{esc:s(t.escenario),c1:s(t.c1),c2:s(t.c2),tar:s(t.tarea),ilb:dv(t.iLB),flb:dv(t.fLB),av:s(t.av),irp:dv(t.iRP),frp:dv(t.fRP),
+    tipo:t.hito?'HITO':t.evento?'EVENTO':'TAREA',crit:t.crit?'si':'no',m2:s(t.marca2),resumen:t.summary?'si':'no'};
+}
+function _edFiltered(){
+  const ks=Object.keys(_edFilters).filter(c=>_edFilters[c]);
+  return ks.length?_edRows.filter(m=>ks.every(c=>_edFilters[c].includes(_edColVal(m,c)))):_edRows.slice();
+}
+function _edSpacer(){const tr=document.createElement('tr');tr.className='ed-sp';tr.innerHTML='<td colspan="14"></td>';return tr;}
+function edRender(full){
+  const b=document.getElementById('editorBody'),sc=document.getElementById('datosTablePane');
+  const n=_edVis.length;
+  let from=0,to=n;
+  if(_edVirt){
+    const vh=sc.clientHeight||800;
+    const off=Math.max(0,sc.getBoundingClientRect().top-b.getBoundingClientRect().top);
+    let need0=Math.floor(off/_edRH),need1=Math.ceil((off+vh)/_edRH);
+    // tras filtrar/borrar puede quedar el scroll más abajo del nuevo contenido: acotar la ventana al final
+    const span=need1-need0;if(need0>n-span){need0=Math.max(0,n-span);need1=n;}
+    const m=Math.floor(ED_OVERSCAN/3);
+    if(!full&&(_edWin[0]===0||need0>=_edWin[0]+m)&&(_edWin[1]===n||need1<=_edWin[1]-m))return;
+    from=Math.max(0,need0-ED_OVERSCAN);to=Math.min(n,need1+ED_OVERSCAN);
+    if(to<from)to=from;
+  }
+  const [of,ot]=_edWin;
+  const overlap=!full&&_edVirt&&_edShown.length&&from<ot&&to>of;
+  if(!overlap){
+    _edShown.forEach(m=>{m._tr=null;});
+    b.textContent='';
+    if(_edVirt){if(!_edSpT){_edSpT=_edSpacer();_edSpB=_edSpacer();}b.appendChild(_edSpT);}
+    const frag=document.createDocumentFragment();
+    for(let i=from;i<to;i++){const m=_edVis[i];m._tr=makeEditorRow(m);frag.appendChild(m._tr);}
+    b.appendChild(frag);
+    if(_edVirt)b.appendChild(_edSpB);
+    _edShown=_edVis.slice(from,to);
+    if(!_edVirt){
+      // Autoajuste en 2 pasadas (escribir todo, luego leer todo): hacerlo fila por fila fuerza un
+      // reflow de la tabla completa por cada textarea (muy lento con cientos de tareas).
+      const tas=b.querySelectorAll('textarea.etar');
+      tas.forEach(el=>{el.style.height='auto';});
+      const hs=[...tas].map(el=>el.scrollHeight);
+      tas.forEach((el,i)=>{el.style.height=hs[i]+'px';});
+    }
+  }else{
+    for(let i=of;i<Math.min(from,ot);i++){const m=_edVis[i];if(m._tr){m._tr.remove();m._tr=null;}}
+    for(let i=Math.max(to,of);i<ot;i++){const m=_edVis[i];if(m._tr){m._tr.remove();m._tr=null;}}
+    const ref=_edVis[Math.max(of,from)]._tr;
+    for(let i=from;i<Math.min(of,to);i++){const m=_edVis[i];m._tr=makeEditorRow(m);b.insertBefore(m._tr,ref);}
+    for(let i=Math.max(ot,from);i<to;i++){const m=_edVis[i];m._tr=makeEditorRow(m);b.insertBefore(m._tr,_edSpB);}
+    _edShown=_edVis.slice(from,to);
+  }
+  _edWin=[from,to];
+  if(_edVirt){
+    const r0=_edShown.length&&_edShown[0]._tr;
+    if(r0){const h=r0.getBoundingClientRect().height;if(h>8&&Math.abs(h-_edRH)>.5)_edRH=h;}
+    _edSpT.firstChild.style.height=(from*_edRH)+'px';
+    _edSpB.firstChild.style.height=((n-to)*_edRH)+'px';
+  }
+}
 function populateEditor(){
   buildEditorHead();
-  const b=document.getElementById('editorBody');b.innerHTML='';
-  const frag=document.createDocumentFragment();
-  TASKS.forEach(t=>frag.appendChild(makeEditorRow(t)));
-  b.appendChild(frag);
-  // Autoajuste en 2 pasadas (escribir todo, luego leer todo): hacerlo fila por fila fuerza un
-  // reflow de la tabla completa por cada textarea (muy lento con cientos de tareas).
-  const _tas=b.querySelectorAll('textarea.etar');
-  _tas.forEach(el=>{el.style.height='auto';});
-  const _hs=[..._tas].map(el=>el.scrollHeight);
-  _tas.forEach((el,i)=>{el.style.height=_hs[i]+'px';});
+  _edRows=TASKS.map(_edModel);
+  _edVirt=_edRows.length>=ED_VIRT_MIN;
+  document.getElementById('edTable').classList.toggle('edVirt',_edVirt);
+  _edVis=_edFiltered();_edWin=[0,0];_edShown=[];
+  edRender(true);
   document.getElementById('dl1').innerHTML=[...new Set(TASKS.map(t=>t.c1))].map(s=>`<option value="${esc(s)}">`).join('');
   document.getElementById('dl2').innerHTML=[...new Set(TASKS.map(t=>t.c2))].map(s=>`<option value="${esc(s)}">`).join('');
   _updateDatosStats();
 }
+document.getElementById('datosTablePane').addEventListener('scroll',()=>{
+  if(!_edVirt||_edRaf)return;
+  _edRaf=requestAnimationFrame(()=>{_edRaf=0;edRender(false);});
+},{passive:true});
 function _updateDatosStats(){
   const el=document.getElementById('datosSbStats');if(!el)return;
   if(!TASKS.length){el.textContent='— Sin datos —';return;}
   const nEsc=new Set(TASKS.map(t=>t.escenario||'')).size;
   el.textContent=`${TASKS.length} actividades · ${nEsc} escenario${nEsc===1?'':'s'}`;
 }
-function makeEditorRow(t){
-  const tr=document.createElement('tr');const dv=d=>(d instanceof Date&&!isNaN(d))?isoLocal(d):'';
-  tr.innerHTML=`<td><input type="text" class="eesc" value="${esc(t.escenario||"")}" style="min-width:80px"></td>`+`<td><input type="text" class="ec1" value="${esc(t.c1)}" list="dl1" style="min-width:80px"></td>`+
-    `<td><input type="text" class="ec2" value="${esc(t.c2)}" list="dl2" style="min-width:80px"></td>`+
-    `<td><textarea class="etar" rows="1" style="min-width:150px">${esc(t.tarea)}</textarea></td>`+
-    `<td><input type="date" class="eilb" value="${dv(t.iLB)}"></td><td><input type="date" class="eflb" value="${dv(t.fLB)}"></td>`+
-    `<td><input type="number" class="eav" value="${t.av}" min="0" max="100" style="width:46px"></td>`+
-    `<td><input type="date" class="eirp" value="${dv(t.iRP)}"></td><td><input type="date" class="efrp" value="${dv(t.fRP)}"></td>`+
-    `<td><select class="etipo"><option value="TAREA"${!t.hito&&!t.evento?' selected':''}>TAREA</option><option value="HITO"${t.hito?' selected':''}>HITO</option><option value="EVENTO"${t.evento?' selected':''}>EVENTO</option></select></td>`+
-    `<td><select class="ecrit"><option value="no"${!t.crit?' selected':''}>no</option><option value="si"${t.crit?' selected':''}>si</option></select></td>`+
-    `<td><input type="text" class="em2" value="${esc(t.marca2||"")}" style="min-width:60px"></td>`+
-    `<td><select class="eresumen"><option value="no"${!t.summary?' selected':''}>no</option><option value="si"${t.summary?' selected':''}>si</option></select></td>`+
+function makeEditorRow(m){
+  const tr=document.createElement('tr');tr.className='ed-r';tr._m=m;
+  const sel=(cls,opts,cur)=>`<select class="${cls}">`+opts.map(o=>`<option value="${o}"${o===cur?' selected':''}>${o}</option>`).join('')+`</select>`;
+  tr.innerHTML=`<td><input type="text" class="eesc" value="${esc(m.esc)}" style="min-width:80px"></td>`+`<td><input type="text" class="ec1" value="${esc(m.c1)}" list="dl1" style="min-width:80px"></td>`+
+    `<td><input type="text" class="ec2" value="${esc(m.c2)}" list="dl2" style="min-width:80px"></td>`+
+    `<td><textarea class="etar" rows="1" style="min-width:150px">${esc(m.tar)}</textarea></td>`+
+    `<td><input type="date" class="eilb" value="${m.ilb}"></td><td><input type="date" class="eflb" value="${m.flb}"></td>`+
+    `<td><input type="number" class="eav" value="${esc(m.av)}" min="0" max="100" style="width:46px"></td>`+
+    `<td><input type="date" class="eirp" value="${m.irp}"></td><td><input type="date" class="efrp" value="${m.frp}"></td>`+
+    `<td>${sel('etipo',['TAREA','HITO','EVENTO'],m.tipo)}</td>`+
+    `<td>${sel('ecrit',['no','si'],m.crit)}</td>`+
+    `<td><input type="text" class="em2" value="${esc(m.m2)}" style="min-width:60px"></td>`+
+    `<td>${sel('eresumen',['no','si'],m.resumen)}</td>`+
     `<td><button class="edel" title="Eliminar fila"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button></td>`;
-  tr.querySelector('.edel').addEventListener('click',()=>{markDirty();tr.remove();applyEditorChanges(true);});
-  // Cachea las referencias de campo en la propia fila: evita 12 querySelector(clase) por fila
-  // en cada autoguardado (applyEditorChanges), costoso con miles de filas (ej. import XML grande).
-  tr._f={esc:tr.querySelector('.eesc'),c1:tr.querySelector('.ec1'),c2:tr.querySelector('.ec2'),tar:tr.querySelector('.etar'),
-    ilb:tr.querySelector('.eilb'),flb:tr.querySelector('.eflb'),av:tr.querySelector('.eav'),
-    irp:tr.querySelector('.eirp'),frp:tr.querySelector('.efrp'),tipo:tr.querySelector('.etipo'),crit:tr.querySelector('.ecrit'),m2:tr.querySelector('.em2'),resumen:tr.querySelector('.eresumen')};
   return tr;
 }
-function addEditorRow(){markDirty();document.getElementById('editorBody').appendChild(makeEditorRow({escenario:'',c1:'',c2:'',tarea:'',iLB:new Date(),fLB:new Date(),av:0,iRP:new Date(),fRP:new Date(),hito:false,evento:false,crit:false,marca2:'',summary:false}));}
+function addEditorRow(){
+  markDirty();
+  const m=_edModel({escenario:'',c1:'',c2:'',tarea:'',iLB:new Date(),fLB:new Date(),av:0,iRP:new Date(),fRP:new Date(),hito:false,evento:false,crit:false,marca2:'',summary:false});
+  _edRows.push(m);_edVis.push(m);
+  const sc=document.getElementById('datosTablePane');
+  edRender(true);
+  sc.scrollTop=sc.scrollHeight;
+  if(_edVirt)edRender(true);
+}
+// Delegación de eventos: cada control escribe su valor en el modelo de su fila (las filas fuera
+// de la ventana visible no existen en el DOM, así que el modelo es la fuente de verdad).
+(function(){
+  const b=document.getElementById('editorBody');
+  const sync=e=>{
+    const el=e.target,tr=el.closest&&el.closest('tr');if(!tr||!tr._m)return;
+    for(const c of el.classList){if(ED_CLS_KEY[c]){tr._m[ED_CLS_KEY[c]]=el.value;break;}}
+  };
+  b.addEventListener('input',sync);b.addEventListener('change',sync);
+  b.addEventListener('click',e=>{
+    const bt=e.target.closest&&e.target.closest('.edel');if(!bt)return;
+    const tr=bt.closest('tr');if(!tr||!tr._m)return;
+    markDirty();
+    const i=_edRows.indexOf(tr._m);if(i>=0)_edRows.splice(i,1);
+    _edVis=_edFiltered();edRender(true);
+    applyEditorChanges(true);
+  });
+  // Con la tabla virtualizada el nombre se ve en 1 línea; al editarlo se expande como capa flotante
+  b.addEventListener('focusin',e=>{if(_edVirt&&e.target.classList&&e.target.classList.contains('etar'))_etarAutoGrow(e.target);});
+  b.addEventListener('focusout',e=>{if(_edVirt&&e.target.classList&&e.target.classList.contains('etar'))e.target.style.height='';});
+})();
 // Nombre de Tarea (textarea): Enter confirma (sin salto de línea), Shift+Enter inserta salto de
 // línea. Además autoajusta el alto al contenido para que las líneas nuevas queden visibles.
 function _etarAutoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
@@ -3592,15 +3681,13 @@ function edResetToXml(){
   _edUndo.push(_edClone(TASKS));_edRedo=[];_edApply(_edXmlSnap);
 }
 function applyEditorChanges(silent){
-  const rows=document.getElementById('editorBody').children;
   const nt=[];
-  for(let i=0;i<rows.length;i++){
-    const f=rows[i]._f;if(!f)continue;
-    const g=el=>el.value.trim(),d=el=>{const v=el.value;return v?parseLocal(v):null;};
+  const g=v=>String(v==null?'':v).trim(),d=v=>v?parseLocal(v):null;
+  for(const f of _edRows){
     const iLB=d(f.ilb)||new Date(),fLB=d(f.flb)||new Date();
     const tarea=g(f.tar)||'(sin nombre)';
     if(tarea==='(sin nombre)')continue;
-    nt.push({escenario:g(f.esc),c1:g(f.c1),c2:g(f.c2),tarea,iLB,fLB,av:Math.max(0,Math.min(100,+g(f.av)||0)),iRP:d(f.irp)||iLB,fRP:d(f.frp)||fLB,hito:f.tipo.value==='HITO',evento:f.tipo.value==='EVENTO',crit:f.crit.value==='si',marca2:g(f.m2),summary:f.resumen&&f.resumen.value==='si'});
+    nt.push({escenario:g(f.esc),c1:g(f.c1),c2:g(f.c2),tarea,iLB,fLB,av:Math.max(0,Math.min(100,+g(f.av)||0)),iRP:d(f.irp)||iLB,fRP:d(f.frp)||fLB,hito:f.tipo==='HITO',evento:f.tipo==='EVENTO',crit:f.crit==='si',marca2:g(f.m2),summary:f.resumen==='si'});
   }
   if(!nt.length){if(!silent)alert('No hay tareas válidas.');return;}
   if(_edSig(TASKS)!==_edSig(nt)){_edUndo.push(_edClone(TASKS));if(_edUndo.length>100)_edUndo.shift();_edRedo=[];}
@@ -3730,7 +3817,7 @@ const AP_PREFS_KEY='ap_prefs_v1';
 const AP_PREFS_DEFAULT={
   theme:'light',defaultTab:'gantt',
   reminderMinutes:0,avanceUnidad:'pct',critColor:'#FF0000',critWidth:2.5,
-  palette:null,cat2Palette:null,escPalette:null,editorHiddenCols:[]
+  palette:null,cat2Palette:null,escPalette:null,editorHiddenCols:[],editorColWidths:{}
 };
 let AP_PREFS=Object.assign({},AP_PREFS_DEFAULT);
 function apLoadPrefs(){
@@ -6223,29 +6310,49 @@ function presResetColors(){
   renderPres();
 }
 
-/* ═══ REDIMENSIONAR COLUMNAS — Tabla de Datos (editor) ═══ */
+/* ═══ REDIMENSIONAR COLUMNAS — Tabla de Datos (editor) ═══
+   Al empezar a arrastrar se "congelan" los anchos actuales de todas las columnas visibles y se fija el
+   ancho total de la tabla (suma de columnas), así cada columna cambia sola sin repartir el espacio
+   entre las demás. Los anchos se guardan en AP_PREFS.editorColWidths (este navegador) y se aplican
+   al cargar (el <colgroup> no se reconstruye al repoblar la tabla). */
 (function(){
   const table=document.getElementById('edTable');if(!table)return;
   const colgroup=document.getElementById('edColgroup');
-  let _dragging=null,_startX=0,_startW=0,_th=null;
+  const totalW=()=>[...colgroup.querySelectorAll('col')].reduce((a,c)=>a+(parseFloat(c.style.width)||0),0);
+  const applyTotal=()=>{const t=totalW();if(t>0)table.style.width=t+'px';};
+  (function applySaved(){
+    const w=AP_PREFS.editorColWidths||{};let any=false;
+    Object.keys(w).forEach(k=>{const c=colgroup.querySelector(`col[data-col="${k}"]`);if(c){c.style.width=w[k]+'px';any=true;}});
+    if(any)applyTotal();
+  })();
+  let _dragging=null,_startX=0,_startW=0;
   table.addEventListener('mousedown',e=>{
     const h=e.target.closest('.col-resize');if(!h)return;
-    e.preventDefault();
+    e.preventDefault();e.stopPropagation();
+    table.querySelectorAll('thead th[data-col]').forEach(th=>{
+      const c=colgroup.querySelector(`col[data-col="${th.dataset.col}"]`);
+      const r=th.getBoundingClientRect().width;
+      if(c&&r>0)c.style.width=Math.round(r)+'px';
+    });
+    applyTotal();
     const col=h.dataset.col;
-    _th=table.querySelector(`th[data-col="${col}"]`);
+    const c=colgroup.querySelector(`col[data-col="${col}"]`);
     _startX=e.clientX;
-    _startW=_th?_th.getBoundingClientRect().width:100;
+    _startW=parseFloat(c&&c.style.width)||100;
     _dragging=col;
-    document.body.style.cursor='col-resize';
+    document.body.style.cursor='col-resize';document.body.style.userSelect='none';
   });
   document.addEventListener('mousemove',e=>{
     if(!_dragging)return;
-    const diff=e.clientX-_startX,nw=Math.max(40,Math.round(_startW+diff));
+    const nw=Math.max(40,Math.round(_startW+e.clientX-_startX));
     const colEl=colgroup.querySelector(`col[data-col="${_dragging}"]`);
-    if(colEl)colEl.style.width=nw+'px';
+    if(colEl){colEl.style.width=nw+'px';applyTotal();}
   });
   document.addEventListener('mouseup',()=>{
-    if(_dragging){_dragging=null;_th=null;document.body.style.cursor='';}
+    if(!_dragging)return;
+    _dragging=null;document.body.style.cursor='';document.body.style.userSelect='';
+    const w={};colgroup.querySelectorAll('col[data-col]').forEach(c=>{const v=parseFloat(c.style.width);if(v>0)w[c.dataset.col]=v;});
+    AP_PREFS.editorColWidths=w;apSavePrefs();
   });
 })();
 
@@ -7133,8 +7240,10 @@ const PXML_STD_COLS = [
   {id:'Critical',         label:'Ruta Crítica (Critical)'},
   {id:'Summary',          label:'Resumen (Summary)'},
   {id:'StatusManager',    label:'Responsable (StatusManager)'},
-  {id:'b0Start',          label:'Baseline 0 — Start'},
-  {id:'b0Finish',         label:'Baseline 0 — Finish'},
+  {id:'lbActual',         label:'LB actual (nº de línea base vigente)'},
+  {id:'lbActualStart',    label:'LB actual — Comienzo'},
+  {id:'lbActualFinish',   label:'LB actual — Fin'},
+  ...Array.from({length:11},(_,k)=>[{id:'b'+k+'Start',label:'Línea base '+k+' — Comienzo'},{id:'b'+k+'Finish',label:'Línea base '+k+' — Fin'}]).flat(),
   {id:'escenario',       label:'Escenario'},
   {id:'marca2',          label:'Marca Activity'},
   {id:'__FIXED__',        label:'Valor fijo (escribir)'},
@@ -7189,15 +7298,12 @@ async function pxmlLoadFiles(files){
     if(!file.name.toLowerCase().endsWith('.xml')){log.textContent+=`⚠ ${file.name}: no es XML\n`;continue;}
     log.textContent+=`Cargando ${file.name}…\n`;
     try{
-      if(file.size>3145728){log.textContent+=`  Archivo grande (${(file.size/1048576).toFixed(1)} MB): puede tardar unos segundos…\n`;await new Promise(r=>setTimeout(r,30));}
-      let text=await file.text();
-      let doc=new DOMParser().parseFromString(text,'text/xml');
-      text=null;
-      if(doc.getElementsByTagName('parsererror')[0]){log.textContent+=`❌ Error al parsear ${file.name}\n`;continue;}
       const base=log.textContent;
-      const result=await pxmlParseDoc(doc,file.name,(d,t)=>{log.textContent=base+`  Procesando tareas ${d}/${t}…\n`;});
-      doc=null;
-      log.textContent=base;
+      const result=await pxmlParseFile(file,(pct,n)=>{log.textContent=base+`  Leyendo ${pct}% · ${n} tareas…
+`;});
+      log.textContent=base+`  Línea base actual: ${result.currentBaseline} (${result.baselineWhy}${result.baselineDate?' '+result.baselineDate:''})
+`+(result.skipped?`  ⚠ ${result.skipped} bloque(s) de tareas con XML inválido omitidos
+`:'');
       pxmlAutoGuessMapping(result);
       // Verificar si ya existe, reemplazar; si no, agregar
       const idx=PXML_DB.findIndex(d=>d.fileName===file.name);
@@ -7215,69 +7321,136 @@ async function pxmlLoadFiles(files){
   // Ir a Base de datos automáticamente al terminar
   if(PXML_DB.length) pxmlTab('db');
 }
-async function pxmlParseDoc(doc,fileName,onProgress){
+// Lee el XML en streaming (trozos de ~64 KB) sin cargarlo entero ni construir un DOM gigante:
+// solo se conserva el nombre del proyecto, los campos personalizados globales y cada <Task>
+// (sin TimephasedData). Assignments/Resources/Calendars y todo lo posterior a </Tasks> se
+// descartan, así que la memoria depende del nº de tareas, no del tamaño del archivo.
+async function pxmlParseFile(file,onProgress){
+  let enc='utf-8';
+  try{
+    const head=new TextDecoder('latin1').decode(await file.slice(0,300).arrayBuffer());
+    const m=/<\?xml[^>]*encoding=["']([\w.-]+)["']/i.exec(head);
+    if(m){try{new TextDecoder(m[1]);enc=m[1];}catch(e){}}
+  }catch(e){}
+  const dec=new TextDecoder(enc);
+  const reader=file.stream().getReader();
+  const parseFrag=s=>new DOMParser().parseFromString('<r>'+s+'</r>','text/xml');
+  const perr=d=>d.getElementsByTagName('parsererror')[0];
   const kids=el=>el?[...el.children]:[];
   const ch=(el,name)=>kids(el).find(c=>c.localName===name);
   const txt=(el,name)=>{const c=ch(el,name);return c?c.textContent.trim():'';};
-  const root=doc.documentElement;
-  const projectName=txt(root,'Name')||fileName;
 
-  // 1. Diccionario FieldID→{id,label} desde ExtendedAttributes globales
-  const fidMap={};
-  const customCols=[];
-  kids(ch(root,'ExtendedAttributes')).forEach(ea=>{
-    const fid=txt(ea,'FieldID'),fname=txt(ea,'FieldName'),alias=txt(ea,'Alias');
-    if(fid&&fname){
-      const label=alias||fname,id='_c_'+fid;
-      fidMap[fid]={id,label};
-      if(!customCols.find(c=>c.id===id)) customCols.push({id,fid,fname,alias:label});
-    }
-  });
-
-  // 2. Tareas: un solo recorrido de hijos directos (evita querySelector por campo)
+  let buf='',state='head',projectName='',eaXml='',eaFrom=-1,gotTasks=false,curLB='0',lbSet=false;
+  const fidMap={},customCols=[],tasks=[];
+  let batch=[],read=0,nTasks=0,skipped=0;
   const STD=['Name','WBS','OutlineLevel','OutlineNumber','Start','Finish','ActualStart','ActualFinish',
     'PercentComplete','Milestone','Critical','Summary','Active','StatusManager'];
-  const tasks=[];
-  const taskEls=kids(ch(root,'Tasks')).filter(t=>t.localName==='Task');
-  const total=taskEls.length;
-  let last=performance.now();
-  for(let i=0;i<total;i++){
-    const t=taskEls[i];
-    const f={},ext=[],eext=[];
-    let bl0=null;
-    for(const c of t.children){
-      const n=c.localName;
-      if(n==='ExtendedAttribute') ext.push(c);
-      else if(n==='EnterpriseExtendedAttribute') eext.push(c);
-      else if(n==='Baseline'){ if(!bl0&&txt(c,'Number')==='0') bl0=c; }
-      else if(!(n in f)) f[n]=c.textContent.trim();
-    }
-    const row={};
-    STD.forEach(k=>row[k]=f[k]||'');
-    row.b0Start=bl0?txt(bl0,'Start'):'';
-    row.b0Finish=bl0?txt(bl0,'Finish'):'';
-    row._source=fileName;
-    ext.forEach(ea=>{
-      const fid=txt(ea,'FieldID'),val=txt(ea,'Value');
-      if(fid&&fidMap[fid]) row[fidMap[fid].id]=val;
+
+  const buildCols=()=>{
+    if(!eaXml)return;
+    const d=parseFrag(eaXml);if(perr(d))return;
+    kids(d.documentElement.firstElementChild).forEach(ea=>{
+      const fid=txt(ea,'FieldID'),fname=txt(ea,'FieldName'),alias=txt(ea,'Alias');
+      if(fid&&fname){
+        const label=alias||fname,id='_c_'+fid;
+        fidMap[fid]={id,label};
+        if(!customCols.find(c=>c.id===id)) customCols.push({id,fid,fname,alias:label});
+      }
     });
-    eext.forEach(ea=>{
-      const fid=txt(ea,'FieldID'),val=txt(ea,'Value');
-      if(fid&&val&&fidMap[fid]) row[fidMap[fid].id]=val;
-    });
-    customCols.forEach(cc=>{ if(!(cc.id in row)) row[cc.id]=''; });
-    if(row.Name) tasks.push(row);
-    if(onProgress&&performance.now()-last>80){
-      onProgress(i+1,total);
-      await new Promise(r=>setTimeout(r));
-      last=performance.now();
+  };
+  const flush=()=>{
+    if(!batch.length)return;
+    const d=parseFrag(batch.join(''));batch=[];
+    if(perr(d)){skipped++;return;}
+    for(const t of d.documentElement.children){
+      const f={},ext=[],eext=[];const bls={};
+      for(const c of t.children){
+        const n=c.localName;
+        if(n==='ExtendedAttribute') ext.push(c);
+        else if(n==='EnterpriseExtendedAttribute') eext.push(c);
+        else if(n==='Baseline'){ bls[txt(c,'Number')]=c; }
+        else if(!(n in f)) f[n]=c.textContent.trim();
+      }
+      const row={};
+      STD.forEach(k=>row[k]=f[k]||'');
+      // Comienzo/Fin de cada línea base 0-10 (sin asignaciones ni time phasing) + cuál es la actual
+      for(let k=0;k<=10;k++){const b=bls[k];row['b'+k+'Start']=b?txt(b,'Start'):'';row['b'+k+'Finish']=b?txt(b,'Finish'):'';}
+      row._source=file.name;
+      ext.forEach(ea=>{const fid=txt(ea,'FieldID'),val=txt(ea,'Value');if(fid&&fidMap[fid])row[fidMap[fid].id]=val;});
+      eext.forEach(ea=>{const fid=txt(ea,'FieldID'),val=txt(ea,'Value');if(fid&&val&&fidMap[fid])row[fidMap[fid].id]=val;});
+      customCols.forEach(cc=>{ if(!(cc.id in row)) row[cc.id]=''; });
+      if(row.Name) tasks.push(row);
     }
+  };
+
+  let done=false;
+  while(!done){
+    const {value,done:eof}=await reader.read();
+    if(value){read+=value.length;buf+=dec.decode(value,{stream:true});}
+    else if(eof) buf+=dec.decode();
+    let pos=0;
+    if(state==='head'){
+      if(!projectName){
+        const m=/<Name>([\s\S]*?)<\/Name>/.exec(buf);
+        if(m){const d=parseFrag(m[0]);if(!perr(d))projectName=d.documentElement.textContent.trim();}
+      }
+      const ti=buf.indexOf('<Tasks>');
+      const lim=ti>=0?ti:buf.length;
+      // Respaldo de la LB actual: la que el proyecto usa para valor ganado (<BaselineForEarnedValue>); si falta, Project asume la 0
+      if(!lbSet){const m=/<BaselineForEarnedValue>(\d+)<\/BaselineForEarnedValue>/.exec(buf);if(m&&m.index<lim){curLB=m[1];lbSet=true;}}
+      if(!eaXml){
+        const i=buf.indexOf('<ExtendedAttributes>');
+        if(i>=0&&i<lim){
+          const j=buf.indexOf('</ExtendedAttributes>',i);
+          if(j>=0&&j<lim){eaXml=buf.slice(i,j+21);buildCols();eaFrom=-1;}
+          else eaFrom=i;
+        }
+      }
+      if(ti>=0){state='tasks';gotTasks=true;pos=ti+7;}
+      else{
+        // conservar solo lo necesario para poder seguir buscando marcadores partidos entre trozos
+        let keep=buf.length-40;
+        if(eaFrom>=0)keep=Math.min(keep,eaFrom);
+        if(!projectName)keep=0;
+        if(keep>0)buf=buf.slice(keep);
+        if(eaFrom>=0)eaFrom=0;
+      }
+    }
+    if(state==='tasks'){
+      for(;;){
+        const s=buf.indexOf('<Task>',pos);
+        const e=buf.indexOf('</Tasks>',pos);
+        if(e>=0&&(s<0||e<s)){done=true;pos=buf.length;break;}
+        if(s<0)break;
+        const te=buf.indexOf('</Task>',s);
+        if(te<0)break;
+        batch.push(buf.slice(s,te+7).replace(/<TimephasedData>[\s\S]*?<\/TimephasedData>/g,''));
+        nTasks++;pos=te+7;
+      }
+      if(batch.length>=300||done)flush();
+      buf=buf.slice(Math.max(0,pos===buf.length?pos:pos));
+      if(!done&&buf.length>0&&buf.indexOf('<Task>')<0)buf=buf.slice(-10);
+    }
+    if(eof)done=true;
+    if(onProgress)onProgress(Math.min(100,Math.round(read/Math.max(1,file.size)*100)),nTasks);
+    if(done&&!eof)try{await reader.cancel();}catch(e){}
   }
+  flush();
+  if(!gotTasks) throw new Error('no parece un XML de Microsoft Project (no se encontró <Tasks>)');
+  // Línea base ACTUAL = la de fecha de guardado más reciente (campos "Baseline N saveddate"); si el
+  // proyecto no los trae, la que usa para valor ganado (<BaselineForEarnedValue>, o la 0 por defecto).
+  let lbWhy='valor ganado',lbDate='',best='';
+  customCols.forEach(cc=>{
+    const m=/^Baseline(\d+)saveddate$/i.exec((cc.fname||'').replace(/\s+/g,''));if(!m)return;
+    let mx='';for(const r of tasks){const v=r[cc.id];if(v&&/^\d{4}-\d{2}-\d{2}/.test(v)&&v>mx)mx=v;}
+    if(mx&&mx>best){best=mx;curLB=m[1];lbWhy='fecha de guardado más reciente';lbDate=mx.slice(0,10);}
+  });
+  tasks.forEach(r=>{r.lbActual=curLB;r.lbActualStart=r['b'+curLB+'Start']||'';r.lbActualFinish=r['b'+curLB+'Finish']||'';});
   const cnt={};
   tasks.forEach(r=>customCols.forEach(cc=>{ if(r[cc.id]) cnt[cc.id]=(cnt[cc.id]||0)+1; }));
   customCols.forEach(cc=>{ cc.count=cnt[cc.id]||0; });
   customCols.sort((a,b)=>b.count-a.count||(a.alias.localeCompare(b.alias,'es')));
-  return{fileName,projectName,tasks,customCols,loaded:new Date().toLocaleString()};
+  return{fileName:file.name,projectName:projectName||file.name,tasks,customCols,loaded:new Date().toLocaleString(),skipped,currentBaseline:curLB,baselineWhy:lbWhy,baselineDate:lbDate};
 }
 function pxmlFieldIdToTag(fidStr){
   // Convierte FieldID decimal a tag hexadecimal que usa Project en el XML
@@ -7308,7 +7481,7 @@ function pxmlRefreshDb(){
             style="flex:1;font:inherit;font-size:12px;font-weight:600;padding:2px 6px;border:1px solid #cdd2d8;border-radius:4px;color:#1a3a6b"
             title="Nombre que se usará como Categoría 1 en el Gantt">
         </div>
-        <div style="font-size:10px;color:#888">${esc(db.fileName)} · ${db.tasks.length} tareas · ${db.customCols.length} campos custom · ${db.loaded}</div>
+        <div style="font-size:10px;color:#888">${esc(db.fileName)} · ${db.tasks.length} tareas · LB actual: <b>${db.currentBaseline!==undefined?db.currentBaseline:'—'}</b>${db.baselineDate?' (guardada '+db.baselineDate+')':''} · ${db.customCols.length} campos custom · ${db.loaded}</div>
       </div>
       <button onclick="pxmlRemove(${i})" style="font-size:10px;padding:2px 8px;border:1px solid #f99;border-radius:3px;background:#fff5f5;color:#c00;cursor:pointer;flex-shrink:0">🗑</button>
     </div>`).join('');
@@ -7466,8 +7639,8 @@ function pxmlAutoGuessMapping(db){
   pick('iRP',['Start']);
   pick('fRP',['Finish']);
   pick('av',['PercentComplete']);
-  pick('iLB',['BaselineStart','b0Start']);
-  pick('fLB',['BaselineFinish','b0Finish']);
+  pick('iLB',['lbActualStart','BaselineStart','b0Start']);
+  pick('fLB',['lbActualFinish','BaselineFinish','b0Finish']);
   pick('clase',['Milestone']);
   pick('crit',['Critical']);
   pick('summary',['Summary']);
@@ -7595,10 +7768,10 @@ function pxmlResetMapping(){
 function pxmlBuildPreview(){
   if(!PXML_DB.length){document.getElementById('pxmlPreviewInfo').textContent='No hay datos cargados.';document.getElementById('pxmlPreviewTable').innerHTML='';return;}
   const allRows=PXML_DB.flatMap(db=>db.tasks.slice(0,5).map(t=>({...t,_file:db.fileName})));
-  const stdCols=['Name','WBS','OutlineLevel','Start','Finish','PercentComplete','Milestone','Critical','b0Start','b0Finish'];
+  const stdCols=['Name','WBS','OutlineLevel','Start','Finish','PercentComplete','Milestone','Critical','lbActual','lbActualStart','lbActualFinish','b0Start','b0Finish'];
   const customIds=[...new Set(PXML_ALL_COLS.map(c=>c.id))].slice(0,6);
   const cols=[...stdCols,...customIds];
-  const colLabels={Name:'Nombre',WBS:'EDT',OutlineLevel:'Nivel',Start:'Inicio',Finish:'Fin',PercentComplete:'% Compl.',Milestone:'Hito',Critical:'Crítica',b0Start:'LB Inicio',b0Finish:'LB Fin'};
+  const colLabels={Name:'Nombre',WBS:'EDT',OutlineLevel:'Nivel',Start:'Inicio',Finish:'Fin',PercentComplete:'% Compl.',Milestone:'Hito',Critical:'Crítica',b0Start:'LB0 Inicio',b0Finish:'LB0 Fin',lbActual:'LB actual',lbActualStart:'LB actual Inicio',lbActualFinish:'LB actual Fin'};
   PXML_ALL_COLS.forEach(c=>{colLabels[c.id]=c.alias;});
   document.getElementById('pxmlPreviewInfo').textContent=`Mostrando primeras 5 tareas de cada archivo (${PXML_DB.length} archivo(s), total ${PXML_DB.reduce((a,b)=>a+b.tasks.length,0)} tareas).`;
   const hdrs=cols.map(c=>`<th style="background:#1a5fb4;color:#fff;padding:5px 8px;font-size:10px;white-space:nowrap;text-align:left">${colLabels[c]||c}</th>`).join('');
