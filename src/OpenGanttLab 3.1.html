@@ -4529,7 +4529,10 @@ function _presSVG(all,S,TW,mn,mx,opts){
     let maxW=6;
     [...new Set(tasks.map(t=>t.c1))].forEach(c1=>{
       const{lines,fontSize}=_rapLabelInfo(c1);
-      const w=Math.ceil(lines.length*fontSize*0.85)+2;
+      // Una sola línea: ancho ceñido al texto (mínimo posible). Con salto de línea, cada
+      // columna extra necesita más separación (colGap, igual que en el render) para no verse
+      // apretada entre sí — por eso no comparten el mismo multiplicador.
+      const w=lines.length<=1?Math.ceil(fontSize*0.85)+2:Math.ceil(lines.length*fontSize*1.15)+2;
       if(w>maxW)maxW=w;
     });
     return maxW;
@@ -4690,7 +4693,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const labelWeight=c1Opt.textBold===false?'400':'700';
       const labelStyle=c1Opt.textItalic?'italic':'normal';
       const labelDeco=c1Opt.textUnder?'underline':'none';
-      const colGap=labelFsz*0.85;
+      const colGap=labelFsz*1.15;
       const firstDy=-(labelLines.length-1)*colGap/2;
       const tspans=labelLines.map((ln,i)=>`<tspan x="${lx}" dy="${i===0?firstDy:colGap}">${ex(ln)}</tspan>`).join('');
       // Asa de arrastre: columna de la etiqueta de Categoría 1 → reordenar la banda completa
