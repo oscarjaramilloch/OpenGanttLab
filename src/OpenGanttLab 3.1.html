@@ -874,6 +874,15 @@ th,td{padding:0}
     </header>
     <div class="edHead">
       <div class="edFileActions">
+      <button class="rb-flat" id="btnEdUndo" onclick="edUndo()" disabled title="Deshacer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+      </button>
+      <button class="rb-flat" id="btnEdRedo" onclick="edRedo()" disabled title="Rehacer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+      </button>
+      <button class="rb-flat" id="btnEdResetXml" onclick="edResetToXml()" disabled title="Restaurar los datos originales del XML (descarta los cambios manuales)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+      </button>
         <div style="position:relative;display:inline-block">
           <button class="rb-flat" id="btnLink" onclick="datosLoadFile()" title="Cargar archivo (Excel o Project XML — detecta la extensión)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4"/><path d="m7 14 5-5 5 5"/><path d="M12 9v12"/></svg>
@@ -926,15 +935,6 @@ th,td{padding:0}
         </button>
       </div>
       <div style="flex:1"></div>
-      <button class="rb-flat" id="btnEdUndo" onclick="edUndo()" disabled title="Deshacer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
-      </button>
-      <button class="rb-flat" id="btnEdRedo" onclick="edRedo()" disabled title="Rehacer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
-      </button>
-      <button class="rb-flat" id="btnEdResetXml" onclick="edResetToXml()" disabled title="Restaurar los datos originales del XML (descarta los cambios manuales)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-      </button>
       <button class="rb-flat" id="btnAddRow" onclick="addEditorRow()" title="Agregar fila">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
