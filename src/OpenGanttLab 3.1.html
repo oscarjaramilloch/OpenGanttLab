@@ -161,6 +161,8 @@ th,td{padding:0}
 .c2{position:sticky;z-index:12;font-weight:600;font-size:var(--fs-cat2);text-align:center;vertical-align:middle;border-right:1px solid rgba(0,0,0,.12);border-top:1px solid var(--line);padding:2px 4px;word-break:break-word;cursor:pointer}
 .c2:hover::after{content:' 🎨';font-size:9px;opacity:.7}
 .c3{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden}
+.hxc{position:sticky;top:0;z-index:25;background:var(--head);border-bottom:2px solid var(--line);border-right:1px solid var(--line);color:var(--muted);font-weight:700;text-align:center;vertical-align:middle;font-size:var(--fs-cat2)}
+.xc{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);text-align:center;border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .c3 .c3-txt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-overflow:ellipsis;white-space:normal;word-break:break-word;line-height:1.15}
 .cc{background:#fff;border-top:1px solid var(--grid);padding:0}
 /* separadores entre categorías */
@@ -317,7 +319,7 @@ th,td{padding:0}
 @media print{
   .toolbar,.group,#status,.legend,.fab,.edModal{display:none!important}
   .wrap{max-height:none;border:none;margin:0;overflow:visible}
-  .c1,.c2,.c3,.hcat1,.hcat2,.hcat3,.hchart{position:static!important}
+  .c1,.c2,.c3,.xc,.hxc,.hcat1,.hcat2,.hcat3,.hchart{position:static!important}
 }
 .sep-c1 td{border-top:1px solid #c8cdd5!important}
 </style>
@@ -2613,7 +2615,48 @@ let _ganttFilters={}; // {col: string[] de valores permitidos} — ausente = sin
 const GANTT_FIELD_BY_COL={esc:'escenario',c1:'c1',c2:'c2',c3:'tarea',m2:'marca2'};
 function _ganttColVal(t,col){
   const k=GANTT_FIELD_BY_COL[col];
+  if(!k)return _ganttExtVal(t,col);
   return (t[k]||'')+'';
+}
+/* Columnas de la Tabla de Datos que el Gantt puede agregar (clic derecho en un encabezado). Van ocultas
+   por defecto, después de "Nombre de Tarea"; incluyen las columnas extra de los mapeos personalizados. */
+const GANTT_EXT_DEFS=[
+  {id:'iLB',label:'Start LB',type:'date',w:86},{id:'fLB',label:'End LB',type:'date',w:86},
+  {id:'av',label:'Av%',type:'number',w:58},
+  {id:'iRP',label:'Start R/P',type:'date',w:86},{id:'fRP',label:'End R/P',type:'date',w:86},
+  {id:'clase',label:'Clase',type:'text',w:72},{id:'crit',label:'Ruta Crítica',type:'text',w:84},
+  {id:'summary',label:'Resumen',type:'text',w:72}
+];
+let _extW={};
+const _ganttXTypeCache={tasks:null,n:-1,map:{}};
+function _ganttXType(key){
+  const c=_ganttXTypeCache;
+  if(c.tasks!==TASKS||c.n!==PXML_CUSTOM.length){c.tasks=TASKS;c.n=PXML_CUSTOM.length;c.map={};}
+  if(!(key in c.map)){
+    let any=false,ok=true;
+    for(const t of TASKS){const v=t.extra&&t.extra[key];if(!v)continue;any=true;if(!/^\d{4}-\d{2}-\d{2}$/.test(v)){ok=false;break;}}
+    c.map[key]=any&&ok?'date':'text';
+  }
+  return c.map[key];
+}
+function _ganttExtDefs(){
+  return [...GANTT_EXT_DEFS,...PXML_CUSTOM.map(c=>({id:'x:'+c.key,label:c.label||c.key,type:_ganttXType(c.key),w:100}))];
+}
+function _ganttExtW(d){return _extW[d.id]||d.w;}
+function _ganttExtVal(t,id){
+  switch(id){
+    case 'iLB':case 'fLB':case 'iRP':case 'fRP':return(t[id] instanceof Date&&!isNaN(t[id]))?isoLocal(t[id]):'';
+    case 'av':return String(t.av==null?'':t.av);
+    case 'clase':return t.hito?'Hito':t.evento?'Evento':'Tarea';
+    case 'crit':return t.crit?'Sí':'No';
+    case 'summary':return t.summary?'Sí':'No';
+  }
+  return id.startsWith('x:')?String((t.extra&&t.extra[id.slice(2)])||''):'';
+}
+function _ganttExtText(t,d){
+  const v=_ganttExtVal(t,d.id);
+  if(d.type==='date'){const dt=v?parseLocal(v):null;return dt&&!isNaN(dt)?String(dt.getDate()).padStart(2,'0')+'/'+String(dt.getMonth()+1).padStart(2,'0')+'/'+dt.getFullYear():'';} // dd/mm/aaaa (fmtD es el formato corto de las barras)
+  return d.id==='av'&&v!==''?v+'%':v;
 }
 function applyGanttFilters(){
   TASKS.forEach(t=>{
@@ -2650,15 +2693,19 @@ function openColMenu(e,col){
   const menu=document.getElementById('colMenu');
   const list=document.getElementById('colMenuList');
   if(!menu||!list)return;
-  list.innerHTML=_COL_DEFS.map(d=>`
+  const item=d=>`
     <label style="display:flex;gap:8px;align-items:center;padding:5px 14px;cursor:pointer;font-size:11px" onmouseenter="this.style.background='#f5f7fa'" onmouseleave="this.style.background=''">
       <input type="checkbox" ${_colVis[d.id]?'checked':''} onchange="toggleColVisibility('${d.id}',this.checked)">
-      <span>${d.label}</span>
-    </label>`).join('');
+      <span>${esc(d.label)}</span>
+    </label>`;
+  list.innerHTML=_COL_DEFS.map(item).join('')+
+    `<div style="font-size:10px;font-weight:700;color:var(--muted);padding:6px 14px 4px;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:2px">Columnas de la Tabla de Datos</div>`+
+    _ganttExtDefs().map(item).join('');
+  menu.style.maxHeight='70vh';menu.style.overflowY='auto';
   document.body.appendChild(menu);
   menu.style.display='block';
   menu.style.left=Math.min(e.clientX,innerWidth-200)+'px';
-  menu.style.top=Math.min(e.clientY+4,innerHeight-180)+'px';
+  menu.style.top=Math.max(8,Math.min(e.clientY+4,innerHeight-Math.min(menu.offsetHeight||300,innerHeight*.7)-8))+'px';
 }
 function toggleColVisibility(colId,visible){
   _colVis[colId]=visible;
@@ -2770,6 +2817,10 @@ function render(){
   const _showSummary=document.getElementById('showSummary')&&document.getElementById('showSummary').checked;
   const wEsc=_colVis.esc?ESCENARIO_W:0, wC1=_colVis.c1?CAT1_W:0, wC2=_colVis.c2?CAT2_W:0, wM2=_colVis.m2?MARCA2_W:0, wC3=_colVis.c3?CAT3_W:0;
   const lC1=wEsc, lC2=wEsc+wC1, lM2=wEsc+wC1+wC2, lC3=wEsc+wC1+wC2+wM2;
+  // columnas extra (de la Tabla de Datos) elegidas con clic derecho: a continuación de "Nombre de Tarea"
+  let _xl=lC3+wC3;
+  const xcols=_ganttExtDefs().filter(d=>_colVis[d.id]).map(d=>{const w=_ganttExtW(d),c={d,w,left:_xl};_xl+=w;return c;});
+  const wX=_xl-(lC3+wC3);
   // Si Resumen=Sí Y Marca Activity=Sí, esa tarea nunca se oculta por "Ocultar Resumen"
   const vis=TASKS.filter(t=>SCEN_ON[t.c1]&&!HIDDEN_KEYS.has((t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea)&&(!_onlyCrit||t.crit)&&(!_showM2||norm(t.marca2||'')==='si')&&(_showSummary||!t.summary||norm(t.marca2||'')==='si'));
   if(!vis.length){wrap.innerHTML='<div class="empty">No hay actividades visibles. Revisa escenarios o filtros.</div>';document.getElementById('legend').innerHTML='';document.getElementById('btnToday').style.display='none';updateStatusbar(vis);return;}
@@ -2865,9 +2916,9 @@ function render(){
     const escFg=textContrast(escBg);
     if(!firstC1 && lastEscenario!==null && lastEscenario!==curEsc){
       const colSpan=4;
-      body+=`<tr><td colspan="5" style="height:1px;background:#6b7a99;padding:0;line-height:0"></td><td class="cc" style="background:#6b7a99;padding:0;width:${W}px"></td></tr>`+
-             `<tr><td colspan="5" style="height:3px;background:#fff;padding:0;line-height:0"></td><td class="cc" style="background:#fff;padding:0;width:${W}px"></td></tr>`+
-             `<tr><td colspan="5" style="height:1px;background:#6b7a99;padding:0;line-height:0"></td><td class="cc" style="background:#6b7a99;padding:0;width:${W}px"></td></tr>`;
+      body+=`<tr><td colspan="${5+xcols.length}" style="height:1px;background:#6b7a99;padding:0;line-height:0"></td><td class="cc" style="background:#6b7a99;padding:0;width:${W}px"></td></tr>`+
+             `<tr><td colspan="${5+xcols.length}" style="height:3px;background:#fff;padding:0;line-height:0"></td><td class="cc" style="background:#fff;padding:0;width:${W}px"></td></tr>`+
+             `<tr><td colspan="${5+xcols.length}" style="height:1px;background:#6b7a99;padding:0;line-height:0"></td><td class="cc" style="background:#6b7a99;padding:0;width:${W}px"></td></tr>`;
     }
     lastEscenario=curEsc;
     let emitC1=true,c2idx=0;
@@ -2924,8 +2975,9 @@ function render(){
         const c2td=(emitC2&&_colVis.c2)?`<td class="c2" data-cat2="${esc(c2)}" rowspan="${g2._tg.length}" style="left:${lC2}px;width:${CAT2_W}px;min-width:${CAT2_W}px;background:${c2bg};color:${c2fg}" title="Clic: cambiar color barras">${esc(c2)}</td>`:'';
         const m2td=_colVis.m2?`<td class="c2 marca2col" style="left:${lM2}px;width:${MARCA2_W}px;min-width:${MARCA2_W}px;text-align:center;font-size:10px;background:#fff;">${esc(tg.marca2||"")}</td>`:'';
         const c3td=_colVis.c3?`<td class="c3" style="left:${lC3}px;width:${CAT3_W}px;min-width:${CAT3_W}px" title="${esc(tg.name)}"><div class="c3-txt">${esc(tg.name)}</div></td>`:'';
+        const xtds=xcols.map(c=>{const tx=_ganttExtText(tg.insts[0],c.d);return `<td class="xc" style="left:${c.left}px;width:${c.w}px;min-width:${c.w}px" title="${esc(tx)}">${esc(tx)}</td>`;}).join('');
         if(emitC1&&!firstC1) trCls=' class="sep-c1"';
-        body+=`<tr${trCls}>${esctd}${c1td}${c2td}${m2td}${c3td}`+
+        body+=`<tr${trCls}>${esctd}${c1td}${c2td}${m2td}${c3td}${xtds}`+
       `<td class="cc" style="width:${W}px;min-width:${W}px"><div class="br" style="width:${W}px;height:${RH}px${glBg}">${tlHtml}${gl}${cnt}</div></td></tr>`;
         emitC1=false;emitC2=false;
       });
@@ -2946,9 +2998,10 @@ function render(){
   const hC2=_colVis.c2?`<th class="hcat2" style="left:${lC2}px;width:${CAT2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 2<span class="hdr-filter-btn" data-hcol="c2" onclick="edfOpenFilter(event,'c2','Categoría 2','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c2"></div></div></th>`:'';
   const hM2=_colVis.m2?`<th class="hcat2 hcat-m2" style="left:${lM2}px;width:${MARCA2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'m2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Marca Activity<span class="hdr-filter-btn" data-hcol="m2" onclick="edfOpenFilter(event,'m2','Marca Activity','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="m2"></div></div></th>`:'';
   const hC3=_colVis.c3?`<th class="hcat3" style="left:${lC3}px;width:${CAT3_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c3');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Nombre de Tarea<span class="hdr-filter-btn" data-hcol="c3" onclick="edfOpenFilter(event,'c3','Nombre de Tarea','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c3"></div></div></th>`:'';
-  const totalTableW=lC3+wC3+W;
+  const hX=xcols.map(c=>`<th class="hxc" style="left:${c.left}px;width:${c.w}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'${c.d.id}');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.d.label)}<span class="hdr-filter-btn" data-hcol="${c.d.id}" onclick="edfOpenFilter(event,'${c.d.id}','${esc(c.d.label)}','${c.d.type}','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="ext:${c.d.id}"></div></div></th>`).join('');
+  const totalTableW=lC3+wC3+wX+W;
   wrap.innerHTML=`<table><thead><tr>`+
-    hEsc+hC1+hC2+hM2+hC3+
+    hEsc+hC1+hC2+hM2+hC3+hX+
     `<th class="hchart" style="width:${W}px;min-width:${W}px"><div style="position:relative;width:${W}px;height:${HH}px;overflow:visible">${supers}${majors}${minors}${estHdr}</div></th>`+
     `</tr></thead><tbody>${body}</tbody></table>`+
     `<div id="hScrollBar" style="position:sticky;left:0;bottom:0;height:14px;overflow-x:auto;overflow-y:hidden;background:#eee;border-top:1px solid #ccc;z-index:30" onscroll="var w=document.getElementById('wrap');if(w&&w.scrollLeft!==this.scrollLeft)w.scrollLeft=this.scrollLeft"><div style="width:${totalTableW}px;height:1px"></div></div>`;
@@ -3353,6 +3406,7 @@ function edfVisibleValues(){
   return vals;
 }
 function edfOpenFilter(e,col,label,type,source){
+  if(col.startsWith('x:')&&source!=='gantt')type=_edXType[col.slice(2)]||'text';
   e.stopPropagation();
   source=source||'editor';
   _edf={col,label,type,source,values:[],pending:new Set(),search:'',showCond:false,tree:new Set()};
@@ -3566,8 +3620,19 @@ function edRender(full){
     _edSpB.firstChild.style.height=((n-to)*_edRH)+'px';
   }
 }
+// Tipo de cada columna extra: 'date' si todos sus valores no vacíos son fechas AAAA-MM-DD; si no, 'text'.
+let _edXType={};
+function _edCalcXTypes(){
+  _edXType={};
+  PXML_CUSTOM.forEach(c=>{
+    let any=false,ok=true;
+    for(const t of TASKS){const v=t.extra&&t.extra[c.key];if(!v)continue;any=true;if(!/^\d{4}-\d{2}-\d{2}$/.test(v)){ok=false;break;}}
+    _edXType[c.key]=any&&ok?'date':'text';
+  });
+}
 function populateEditor(){
   buildEditorHead();
+  _edCalcXTypes();
   _edRows=TASKS.map(_edModel);
   _edVirt=_edRows.length>=ED_VIRT_MIN;
   document.getElementById('edTable').classList.toggle('edVirt',_edVirt);
@@ -3600,7 +3665,7 @@ function makeEditorRow(m){
     `<td>${sel('ecrit',['no','si'],m.crit)}</td>`+
     `<td><input type="text" class="em2" value="${esc(m.m2)}" style="min-width:60px"></td>`+
     `<td>${sel('eresumen',['no','si'],m.resumen)}</td>`+
-    PXML_CUSTOM.map(c=>`<td><input type="text" class="eext" data-x="${esc(c.key)}" value="${esc((m.x&&m.x[c.key])||'')}" style="min-width:80px"></td>`).join('')+
+    PXML_CUSTOM.map(c=>`<td><input type="${_edXType[c.key]==='date'?'date':'text'}" class="eext" data-x="${esc(c.key)}" value="${esc((m.x&&m.x[c.key])||'')}" style="min-width:80px"></td>`).join('')+
     `<td><button class="edel" title="Eliminar fila"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button></td>`;
   return tr;
 }
@@ -6385,7 +6450,7 @@ function presResetColors(){
     e.preventDefault();
     const col=h.dataset.col;
     _startX=e.clientX;
-    _startW=col==='esc'?ESCENARIO_W:col==='c1'?CAT1_W:col==='c2'?CAT2_W:col==='m2'?MARCA2_W:CAT3_W;
+    _startW=col.startsWith('ext:')?_ganttExtW(_ganttExtDefs().find(d=>d.id===col.slice(4))||{id:col.slice(4),w:90}):col==='esc'?ESCENARIO_W:col==='c1'?CAT1_W:col==='c2'?CAT2_W:col==='m2'?MARCA2_W:CAT3_W;
     _dragging=col;
     document.body.style.cursor='col-resize';
   });
@@ -6393,7 +6458,7 @@ function presResetColors(){
   document.addEventListener('mousemove',e=>{
     if(!_dragging)return;
     const diff=e.clientX-_startX,nw=Math.max(40,_startW+diff);
-    if(_dragging==='esc')ESCENARIO_W=nw;else if(_dragging==='c1')CAT1_W=nw;else if(_dragging==='c2')CAT2_W=nw;else if(_dragging==='m2')MARCA2_W=nw;else CAT3_W=nw;
+    if(_dragging.startsWith('ext:'))_extW[_dragging.slice(4)]=nw;else if(_dragging==='esc')ESCENARIO_W=nw;else if(_dragging==='c1')CAT1_W=nw;else if(_dragging==='c2')CAT2_W=nw;else if(_dragging==='m2')MARCA2_W=nw;else CAT3_W=nw;
     if(_resizeRAF)return;
     _resizeRAF=requestAnimationFrame(()=>{_resizeRAF=null;render();});
   });
@@ -7541,7 +7606,7 @@ function pxmlBuildMapGrid(){
       const val=db.mapping[f.key]||'__NONE__';
       const fixedVal=db.mapping[f.key+'_fixed']||'';
       return `<div style="display:flex;flex-direction:column;gap:3px">
-        ${f.custom?`<div style="display:flex;gap:4px;align-items:center"><input type="text" value="${esc(f.label)}" placeholder="Nombre de la columna" oninput="pxmlRenameCustom('${f.key}',this.value)" style="flex:1;min-width:0;font:inherit;font-size:10px;font-weight:600;color:#1a5fb4;padding:2px 5px;border:1px solid #9db8e0;border-radius:3px"><button onclick="pxmlRemoveCustom('${f.key}')" title="Quitar este mapeo personalizado" style="font-size:11px;line-height:1;padding:2px 6px;border:1px solid #d9a0a0;border-radius:3px;background:#fff;color:#a33;cursor:pointer">✕</button></div>`:`<label style="font-size:10px;font-weight:600;color:${f.required?'#c00':'#555'}">${f.label}</label>`}
+        ${f.custom?`<div style="display:flex;gap:4px;align-items:center"><input type="text" value="${esc(f.label)}" placeholder="Nombre de la columna" oninput="pxmlRenameCustom('${f.key}',this.value)" style="flex:1;min-width:0;font:inherit;font-size:10px;font-weight:600;color:#1a5fb4;padding:2px 5px;border:1px solid #9db8e0;border-radius:3px"><button onclick="pxmlRemoveCustom('${f.key}')" title="Quitar este mapeo personalizado" class="edel" style="display:inline-flex;align-items:center;padding:3px 5px;border:1px solid #cdd2d8;border-radius:3px;background:#fff">${PXML_TRASH_SVG}</button></div>`:`<label style="font-size:10px;font-weight:600;color:${f.required?'#c00':'#555'}">${f.label}</label>`}
         <div style="font-size:9px;color:#bbb">${f.hint}</div>
         <input type="search" placeholder="🔍 Buscar columna…" autocomplete="off"
           oninput="pxmlFilterOpts(this,'pxmlMap_${i}_${f.key}')"
@@ -7586,6 +7651,15 @@ function pxmlBuildMapGrid(){
     });
   });
 }
+// Valor de una columna extra: las fechas/fecha-hora ISO del XML (2018-12-19T07:00:00) se guardan
+// como fecha AAAA-MM-DD (sin hora) para que la columna sea de tipo fecha; otro texto queda igual.
+function pxmlFmtExtra(v){
+  v=String(v==null?'':v);
+  const m=/^(\d{4})-(\d{2})-(\d{2})(?:T\d{2}:\d{2}(?::\d{2})?)?$/.exec(v.trim());
+  return m?`${m[1]}-${m[2]}-${m[3]}`:v;
+}
+// Mismo ícono de eliminar (papelera outline) que la Tabla de Datos
+const PXML_TRASH_SVG='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>';
 function pxmlAddCustom(){
   const key='x'+(++_pxmlCustomSeq);
   PXML_CUSTOM.push({key,label:'Mapeo '+_pxmlCustomSeq});
@@ -7599,12 +7673,15 @@ function pxmlRemoveCustom(key){
   PXML_CUSTOM=PXML_CUSTOM.filter(x=>x.key!==key);
   PXML_DB.forEach(db=>{if(db.mapping){delete db.mapping[key];delete db.mapping[key+'_fixed'];}});
   TASKS.forEach(t=>{if(t.extra){delete t.extra[key];}});
+  delete _colVis['x:'+key];delete _ganttFilters['x:'+key];delete _extW['x:'+key];
+  if(TASKS.length)applyGanttFilters(); // recalcula filas ocultas por filtros y repinta
   pxmlBuildMapGrid();edSyncExtraCols();
   if(document.getElementById('editorModal').style.display==='flex'&&TASKS.length)populateEditor();
 }
 function pxmlRenameCustom(key,val){
   const c=PXML_CUSTOM.find(x=>x.key===key);if(!c)return;
   c.label=val;edSyncExtraCols();
+  if(_colVis['x:'+key]&&TASKS.length)render(); // columna visible en el Gantt: actualizar su título
 }
 function pxmlSaveMap(dbIdx,field,val){
   if(!PXML_DB[dbIdx].mapping)PXML_DB[dbIdx].mapping={};
@@ -7785,7 +7862,7 @@ function pxmlApplyMapping(silent){
         extra={};
         PXML_CUSTOM.forEach(c=>{
           const col=m[c.key]||'__NONE__';
-          extra[c.key]=String(col==='__ARCHIVO__'?fileVariant:pxmlGetVal(row,col,m[c.key+'_fixed']||'')||'');
+          extra[c.key]=pxmlFmtExtra(col==='__ARCHIVO__'?fileVariant:pxmlGetVal(row,col,m[c.key+'_fixed']||''));
         });
       }
       newTasks.push({id,escenario:_escxml,c1:t.c1,c2:t.c2,tarea:t.tarea,iLB,fLB,iRP,fRP,av,hito,evento,crit,marca2:_m2xml,summary,extra,_fromXml:true,_dbIdx:dbIdx});
