@@ -504,7 +504,7 @@ th,td{padding:0}
       <label class="toggle"><span class="tg-label">Avance real</span><input type="checkbox" id="showPct" onchange="togglePct()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Línea Base</span><input type="checkbox" id="showLB"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Marca Activity</span><input type="checkbox" id="showMarca2" onchange="render()"><span class="tg-track"></span></label>
-      <label class="toggle"><span class="tg-label">Resumen</span><input type="checkbox" id="hideSummary" onchange="render()"><span class="tg-track"></span></label>
+      <label class="toggle"><span class="tg-label">Resumen</span><input type="checkbox" id="showSummary" onchange="render()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Fechas</span><input type="checkbox" id="showDates" checked onchange="render()"><span class="tg-track"></span></label>
 
       <input type="radio" name="mode" value="con" checked style="display:none">
@@ -1242,7 +1242,7 @@ th,td{padding:0}
       <label class="toggle"><span class="tg-label">Comparador</span><input type="checkbox" id="presShowLB" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Marca Activity</span><input type="checkbox" id="presShowMarca2" onchange="renderPres()"><span class="tg-track"></span></label>
-      <label class="toggle"><span class="tg-label">Resumen</span><input type="checkbox" id="presHideSummary" checked onchange="renderPres()"><span class="tg-track"></span></label>
+      <label class="toggle"><span class="tg-label">Resumen</span><input type="checkbox" id="presShowSummary" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Leyenda</span><input type="checkbox" id="presShowLegend" onchange="renderPres()"><span class="tg-track"></span></label>
       <label class="toggle"><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()"><span class="tg-track"></span></label>
       <button id="execHiddenBtn" class="rb-flat" onclick="openExecHiddenModal()" style="display:none;position:relative" title="Tareas ocultas (0)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span id="execHiddenCount" style="display:none;position:absolute;top:0;right:0;min-width:14px;height:14px;padding:0 3px;border-radius:7px;background:#e8622c;border:1.5px solid var(--panel);color:#fff;font-size:9px;font-weight:700;line-height:11px;text-align:center"></span></button>
@@ -2761,11 +2761,11 @@ function render(){
   const yH=Math.max(16,Math.round(21*(fsYear/10)));
   const _onlyCrit=document.getElementById('showOnlyCrit')&&document.getElementById('showOnlyCrit').checked;
   const _showM2=document.getElementById('showMarca2')&&document.getElementById('showMarca2').checked;
-  const _hideSummary=document.getElementById('hideSummary')&&document.getElementById('hideSummary').checked;
+  const _showSummary=document.getElementById('showSummary')&&document.getElementById('showSummary').checked;
   const wEsc=_colVis.esc?ESCENARIO_W:0, wC1=_colVis.c1?CAT1_W:0, wC2=_colVis.c2?CAT2_W:0, wM2=_colVis.m2?MARCA2_W:0, wC3=_colVis.c3?CAT3_W:0;
   const lC1=wEsc, lC2=wEsc+wC1, lM2=wEsc+wC1+wC2, lC3=wEsc+wC1+wC2+wM2;
   // Si Resumen=Sí Y Marca Activity=Sí, esa tarea nunca se oculta por "Ocultar Resumen"
-  const vis=TASKS.filter(t=>SCEN_ON[t.c1]&&!HIDDEN_KEYS.has((t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea)&&(!_onlyCrit||t.crit)&&(!_showM2||norm(t.marca2||'')==='si')&&(!_hideSummary||!t.summary||norm(t.marca2||'')==='si'));
+  const vis=TASKS.filter(t=>SCEN_ON[t.c1]&&!HIDDEN_KEYS.has((t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea)&&(!_onlyCrit||t.crit)&&(!_showM2||norm(t.marca2||'')==='si')&&(_showSummary||!t.summary||norm(t.marca2||'')==='si'));
   if(!vis.length){wrap.innerHTML='<div class="empty">No hay actividades visibles. Revisa escenarios o filtros.</div>';document.getElementById('legend').innerHTML='';document.getElementById('btnToday').style.display='none';updateStatusbar(vis);return;}
   let mn=vis[0].iLB,mx=vis[0].fLB;
   vis.forEach(t=>{const a=t.iLB<t.iRP?t.iLB:t.iRP,b=t.fLB>t.fRP?t.fLB:t.fRP;if(a<mn)mn=a;if(b>mx)mx=b;});
@@ -3840,7 +3840,7 @@ function _buildShareBlob(){
     presShowLB:(document.getElementById('presShowLB')||{checked:false}).checked,
     presShowSeg:(document.getElementById('presShowSeg')||{checked:false}).checked,
     presShowMarca2:(document.getElementById('presShowMarca2')||{checked:false}).checked,
-    presHideSummary:(document.getElementById('presHideSummary')||{checked:true}).checked,
+    presShowSummary:(document.getElementById('presShowSummary')||{checked:false}).checked,showSummary:(document.getElementById('showSummary')||{checked:false}).checked,
     presShowLegend:(document.getElementById('presShowLegend')||{checked:false}).checked,
     presShowHitos:(document.getElementById('presShowHitos')||{checked:false}).checked,
     presShowHoy:(document.getElementById('presShowHoy')||{checked:false}).checked,
@@ -4029,7 +4029,9 @@ function loadEmbedded(){
   _setChk('presShowLB',d.presShowLB);
   _setChk('presShowSeg',d.presShowSeg);
   _setChk('presShowMarca2',d.presShowMarca2);
-  _setChk('presHideSummary',d.presHideSummary);
+  // Resumen: encendido = mostrar (archivos viejos guardaban lo inverso en presHideSummary)
+  _setChk('presShowSummary',d.presShowSummary!=null?d.presShowSummary:(d.presHideSummary!=null?!d.presHideSummary:null));
+  _setChk('showSummary',d.showSummary);
   _setChk('presShowLegend',d.presShowLegend);
   _setChk('presShowHitos',d.presShowHitos);
   _setChk('presShowHoy',d.presShowHoy);
@@ -5367,7 +5369,7 @@ function renderPres(){
   const yrSz=+document.getElementById('presYearSz').value||15;
   const showLBMode=document.getElementById('presShowLB').checked;
   const _presM2=document.getElementById('presShowMarca2')&&document.getElementById('presShowMarca2').checked;
-  const _presHideSummary=document.getElementById('presHideSummary')&&document.getElementById('presHideSummary').checked;
+  const _presShowSummary=document.getElementById('presShowSummary')&&document.getElementById('presShowSummary').checked;
   const _presCrit=document.getElementById('presShowOnlyCrit')&&document.getElementById('presShowOnlyCrit').checked;
   const _presEscEl=document.getElementById('presFilterEsc');
   const _presEscVal=_presEscEl?_presEscEl.value:'';
@@ -5394,7 +5396,7 @@ function renderPres(){
   const all=TASKS.filter(t=>!PRES_HIDDEN_KEYS.has((t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea)
     &&(!_presM2||norm(t.marca2||'')==='si')
     &&(!_presCrit||t.crit)
-    &&(!_presHideSummary||!t.summary||norm(t.marca2||'')==='si')
+    &&(_presShowSummary||!t.summary||norm(t.marca2||'')==='si')
     &&(!_presEscVal||(t.escenario||'')===_presEscVal));
   if(!all.length){body.innerHTML='<p style="color:#999;text-align:center;padding:40px">No hay tareas.</p>';return;}
   // El rango de fechas del eje se calcula solo con lo que realmente se dibuja: una tarea
