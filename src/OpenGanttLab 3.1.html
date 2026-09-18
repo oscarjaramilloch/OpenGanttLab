@@ -913,6 +913,9 @@ th,td{padding:0}
         <button class="rb-flat" onclick="downloadXlsx()" title="Descargar .xlsx">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
         </button>
+        <button class="rb-flat" id="btnAddRow" onclick="addEditorRow()" title="Agregar fila">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
         <div style="position:relative;display:inline-block">
           <button class="rb-flat" id="btnEdFiltroMenu" onclick="toggleEdFiltroMenu(event)" title="Filtro">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
@@ -935,9 +938,6 @@ th,td{padding:0}
         </button>
       </div>
       <div style="flex:1"></div>
-      <button class="rb-flat" id="btnAddRow" onclick="addEditorRow()" title="Agregar fila">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      </button>
     </div>
     <div style="display:flex;border-bottom:1px solid var(--line);background:var(--bg);flex-shrink:0;padding-bottom:14px">
       <button class="pxml-tab active" id="datosViewTabTable" onclick="datosSwitchView('table')">
