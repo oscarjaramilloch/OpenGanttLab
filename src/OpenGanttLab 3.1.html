@@ -926,6 +926,15 @@ th,td{padding:0}
         </button>
       </div>
       <div style="flex:1"></div>
+      <button class="rb-flat" id="btnEdUndo" onclick="edUndo()" disabled title="Deshacer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+      </button>
+      <button class="rb-flat" id="btnEdRedo" onclick="edRedo()" disabled title="Rehacer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+      </button>
+      <button class="rb-flat" id="btnEdResetXml" onclick="edResetToXml()" disabled title="Restaurar los datos originales del XML (descarta los cambios manuales)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+      </button>
       <button class="rb-flat" id="btnAddRow" onclick="addEditorRow()" title="Agregar fila">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
@@ -2311,6 +2320,8 @@ function fillSplitTaskNames(list){
   }
 }
 function parseRows(rows){
+  // Datos nuevos (Excel): el historial y el punto de restauración del XML anteriores ya no aplican.
+  _edUndo=[];_edRedo=[];_edXmlSnap=null;if(typeof _edUpdateBtns==='function')_edUpdateBtns();
   // "Vista C1" (LdT) agrupa por Categoría 1 sin importar el origen de los datos (Excel o XML).
   _rapAvailable=true;if(typeof apUpdateRapAvailability==='function')apUpdateRapAvailability();
   let hr=0;for(let i=0;i<Math.min(rows.length,8);i++){if(rows[i]&&rows[i].some(c=>norm(c).includes('nombre de tarea'))){hr=i;break;}}
@@ -3542,6 +3553,44 @@ document.getElementById('editorBody').addEventListener('change',()=>{
   clearTimeout(_editorAutosaveTimer);
   applyEditorChanges(true);
 });
+/* ═══ Historial de la Tabla de Datos: deshacer / rehacer / restaurar al XML ═══
+   Cada cambio confirmado (applyEditorChanges) guarda antes una copia de TASKS. _edXmlSnap es la
+   copia de TASKS justo después de importar el XML (solo en esta sesión: no viaja con "Compartir"). */
+let _edUndo=[],_edRedo=[],_edXmlSnap=null;
+const _edClone=list=>list.map(t=>{const o={};for(const k in t)o[k]=t[k] instanceof Date?new Date(+t[k]):t[k];return o;});
+const _edSig=list=>{const d=x=>x instanceof Date&&!isNaN(x)?isoLocal(x):'';return JSON.stringify(list.map(t=>[t.escenario||'',t.c1,t.c2,t.tarea,d(t.iLB),d(t.fLB),+t.av||0,d(t.iRP),d(t.fRP),!!t.hito,!!t.evento,!!t.crit,t.marca2||'',!!t.summary]));};
+function _edUpdateBtns(){
+  const set=(id,dis)=>{const b=document.getElementById(id);if(b)b.disabled=dis;};
+  set('btnEdUndo',!_edUndo.length);set('btnEdRedo',!_edRedo.length);
+  set('btnEdResetXml',!_edXmlSnap||_edSig(TASKS)===_edSig(_edXmlSnap));
+}
+function _edApply(list){
+  TASKS=_edClone(list);
+  SCENARIOS=[...new Set(TASKS.map(t=>t.c1))].filter(Boolean);
+  const prevOn=Object.assign({},SCEN_ON);SCEN_ON={};
+  SCENARIOS.forEach((s,i)=>{SCEN_ON[s]=(s in prevOn)?prevOn[s]:true;if(!SCEN_COLOR[s])SCEN_COLOR[s]=PALETTE[i%PALETTE.length];});
+  [...new Set(TASKS.map(t=>t.c2))].forEach(c=>{if(!CAT2_COLOR[c])CAT2_COLOR[c]=CAT2_PALETTE[Object.keys(CAT2_COLOR).length%CAT2_PALETTE.length];});
+  assignDupSeq(TASKS);
+  populateEditor();
+  _editorRenderPending=true;
+  markDirty();_edUpdateBtns();
+}
+function _edFlush(){clearTimeout(_editorAutosaveTimer);applyEditorChanges(true);}
+function edUndo(){
+  _edFlush();if(!_edUndo.length)return;
+  _edRedo.push(_edClone(TASKS));_edApply(_edUndo.pop());
+}
+function edRedo(){
+  _edFlush();if(!_edRedo.length)return;
+  _edUndo.push(_edClone(TASKS));_edApply(_edRedo.pop());
+}
+function edResetToXml(){
+  if(!_edXmlSnap)return;
+  _edFlush();
+  if(_edSig(TASKS)===_edSig(_edXmlSnap))return;
+  if(!confirm('¿Restaurar los datos originales del XML? Se descartan los cambios manuales de la tabla (puedes deshacerlo).'))return;
+  _edUndo.push(_edClone(TASKS));_edRedo=[];_edApply(_edXmlSnap);
+}
 function applyEditorChanges(silent){
   const rows=document.getElementById('editorBody').children;
   const nt=[];
@@ -3554,6 +3603,7 @@ function applyEditorChanges(silent){
     nt.push({escenario:g(f.esc),c1:g(f.c1),c2:g(f.c2),tarea,iLB,fLB,av:Math.max(0,Math.min(100,+g(f.av)||0)),iRP:d(f.irp)||iLB,fRP:d(f.frp)||fLB,hito:f.tipo.value==='HITO',evento:f.tipo.value==='EVENTO',crit:f.crit.value==='si',marca2:g(f.m2),summary:f.resumen&&f.resumen.value==='si'});
   }
   if(!nt.length){if(!silent)alert('No hay tareas válidas.');return;}
+  if(_edSig(TASKS)!==_edSig(nt)){_edUndo.push(_edClone(TASKS));if(_edUndo.length>100)_edUndo.shift();_edRedo=[];}
   TASKS=nt;const prevOn=Object.assign({},SCEN_ON);
   SCENARIOS=[...new Set(TASKS.map(t=>t.c1))].filter(Boolean);SCEN_ON={};SCEN_COLOR={};
   SCENARIOS.forEach((s,i)=>{SCEN_ON[s]=(s in prevOn)?prevOn[s]:true;SCEN_COLOR[s]=PALETTE[i%PALETTE.length];});
@@ -3564,6 +3614,7 @@ function applyEditorChanges(silent){
   if(ed&&ed.style.display==='flex')_editorRenderPending=true;
   else{_editorRenderPending=false;buildScenarioChecks();render();}
   document.getElementById('status').textContent=`✓ Guardado automático — ${TASKS.length} actividades.`;_updateDatosStats();
+  _edUpdateBtns();
 }
 let _editorRenderPending=false;
 function flushEditorRender(){if(!_editorRenderPending)return;_editorRenderPending=false;buildScenarioChecks();render();}
@@ -3914,6 +3965,7 @@ function loadEmbedded(){
   TASKS=d.tasks.map(t=>({id:t.id||null,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:parseLocal(t.iLB),fLB:parseLocal(t.fLB),iRP:parseLocal(t.iRP),fRP:parseLocal(t.fRP),av:t.av,hito:t.hito,evento:!!t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false}));
   fillSplitTaskNames(TASKS);
   assignDupSeq(TASKS);
+  _edUndo=[];_edRedo=[];_edXmlSnap=null;
   SCENARIOS=(d.scenarios||[]).slice();SCEN_ON=Object.assign({},d.on||{});SCEN_COLOR=Object.assign({},d.color||{});if(d.escColor)ESC_COLOR=Object.assign({},d.escColor);
   CAT2_COLOR=Object.assign({},d.cat2color||{});EVENTO_COLOR=Object.assign({},d.eventocolor||{});
   // Garantizar color para cada valor único de c1, c2 y escenario que no tenga color asignado
@@ -7524,6 +7576,8 @@ function pxmlApplyMapping(silent){
   });
   fillSplitTaskNames(TASKS);
   assignDupSeq(TASKS);
+  // Punto de restauración de la Tabla de Datos (botón "Restaurar XML") y historial nuevo.
+  _edXmlSnap=_edClone(TASKS);_edUndo=[];_edRedo=[];_edUpdateBtns();
   apRestoreExecConfigLocal();
   render();
   if(document.getElementById('editorModal').style.display==='flex')populateEditor();
