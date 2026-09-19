@@ -7757,13 +7757,13 @@ function pxmlRenameCustom(key,val){
   c.label=val;edSyncExtraCols();
   if(_colVis['x:'+key]&&TASKS.length)render(); // columna visible en el Gantt: actualizar su título
 }
-// Nombre de la carga (variante). Si Categoría 1 está en "Valor fijo", nombre y valor fijo son lo mismo y se mantienen iguales.
+// Nombre de la carga. Si Escenario (el agrupador) está en "Valor fijo", nombre y valor fijo son lo mismo y se mantienen iguales.
 function pxmlRenameDb(i,val){
   const db=PXML_DB[i];if(!db)return;
   db.variantName=val;
-  if(db.mapping&&db.mapping.c1==='__FIXED__'){
-    db.mapping.c1_fixed=val;
-    const f=document.getElementById(`pxmlFixed_${i}_c1`);if(f&&f!==document.activeElement)f.value=val;
+  if(db.mapping&&db.mapping.escenario==='__FIXED__'){
+    db.mapping.escenario_fixed=val;
+    const f=document.getElementById(`pxmlFixed_${i}_escenario`);if(f&&f!==document.activeElement)f.value=val;
   }
   const n=document.getElementById(`pxmlName_${i}`);if(n&&n!==document.activeElement)n.value=val;
   pxmlAutoApply();
@@ -7773,18 +7773,18 @@ function pxmlSaveMap(dbIdx,field,val){
   PXML_DB[dbIdx].mapping[field]=val;
   const fixEl=document.getElementById(`pxmlFixed_${dbIdx}_${field}`);
   if(fixEl)fixEl.style.display=val==='__FIXED__'?'block':'none';
-  // Categoría 1 = Valor fijo: la carga se renombra con ese valor
-  if(field==='c1'&&val==='__FIXED__'){
-    const fx=((fixEl&&fixEl.value)||PXML_DB[dbIdx].mapping.c1_fixed||'').trim();
-    if(fx){PXML_DB[dbIdx].variantName=fx;PXML_DB[dbIdx].mapping.c1_fixed=fx;const n=document.getElementById(`pxmlName_${dbIdx}`);if(n)n.value=fx;}
+  // Escenario = Valor fijo: la carga se renombra con ese valor
+  if(field==='escenario'&&val==='__FIXED__'){
+    const fx=((fixEl&&fixEl.value)||PXML_DB[dbIdx].mapping.escenario_fixed||'').trim();
+    if(fx){PXML_DB[dbIdx].variantName=fx;PXML_DB[dbIdx].mapping.escenario_fixed=fx;const n=document.getElementById(`pxmlName_${dbIdx}`);if(n)n.value=fx;}
   }
   pxmlAutoApply();
 }
 function pxmlSaveFixedMap(dbIdx,field,val){
   if(!PXML_DB[dbIdx].mapping)PXML_DB[dbIdx].mapping={};
   PXML_DB[dbIdx].mapping[field+'_fixed']=val;
-  // Categoría 1 = Valor fijo: la carga se renombra con ese valor
-  if(field==='c1'&&PXML_DB[dbIdx].mapping.c1==='__FIXED__'&&val.trim()){
+  // Escenario = Valor fijo: la carga se renombra con ese valor
+  if(field==='escenario'&&PXML_DB[dbIdx].mapping.escenario==='__FIXED__'&&val.trim()){
     PXML_DB[dbIdx].variantName=val.trim();
     const n=document.getElementById(`pxmlName_${dbIdx}`);if(n)n.value=val.trim();
   }
