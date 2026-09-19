@@ -23,6 +23,11 @@
   a.btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:12px 22px;border-radius:8px;transition:opacity .15s}
   a.btn:hover{opacity:.9}
   a.btn[aria-disabled="true"]{opacity:.5;pointer-events:none}
+  .credits{margin-top:26px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.7}
+  .credits strong{color:var(--ink);font-weight:600}
+  .credits a{color:var(--blue);text-decoration:none}
+  .credits a:hover{text-decoration:underline}
+  .credits .sep{margin:0 6px;opacity:.6}
 </style>
 </head>
 <body>
@@ -31,6 +36,11 @@
     <p>Plataforma abierta para planificación, análisis y visualización de cronogramas</p>
     <a class="btn" id="dl" href="#" aria-disabled="true">⬇ Preparando descarga…</a>
     <div id="status">Obteniendo la última versión…</div>
+    <div class="credits">
+      Creado por <strong>Oscar Fernando Jaramillo Chamorro</strong><br>
+      Software libre · GNU GPLv3 · © 2026<br>
+      <a href="https://github.com/oscarjaramilloch/OpenGanttLab" target="_blank" rel="noopener">Código fuente</a><span class="sep">·</span><a href="mailto:oscar.jaramillo@outlook.com">Contacto</a>
+    </div>
   </div>
 <script>
 // Ruta versionada del archivo fuente (única línea a actualizar al subir una nueva versión).
