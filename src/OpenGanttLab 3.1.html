@@ -2701,17 +2701,20 @@ function openColMenu(e,col){
   list.innerHTML=_COL_DEFS.map(item).join('')+
     `<div style="font-size:10px;font-weight:700;color:var(--muted);padding:6px 14px 4px;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:2px">Columnas de la Tabla de Datos</div>`+
     _ganttExtDefs().map(item).join('');
+  // Ajustar texto: solo ícono (outline), primero en las opciones; activo = 2 líneas, inactivo = una línea con "…"
   const _w2=AP_PREFS.ganttWrap2!==false;
-  const opt=(v,txt)=>`<label style="display:flex;gap:8px;align-items:center;padding:5px 14px;cursor:pointer;font-size:11px" onmouseenter="this.style.background='#f5f7fa'" onmouseleave="this.style.background=''"><input type="radio" name="ganttWrap" ${_w2===v?'checked':''} onchange="setGanttWrap(${v})"><span>${txt}</span></label>`;
-  list.innerHTML+=`<div style="font-size:10px;font-weight:700;color:var(--muted);padding:6px 14px 4px;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:2px">Texto largo</div>`+
-    opt(true,'Ajustar texto (2 líneas)')+opt(false,'Una línea (con “…”)');
+  list.innerHTML=`<div style="padding:2px 14px 6px;border-bottom:1px solid #eee;margin-bottom:2px"><button type="button" id="ganttWrapBtn" class="${_w2?'active':''}" onclick="setGanttWrap(!(AP_PREFS.ganttWrap2!==false))" title="Ajustar texto (2 líneas) / una línea con “…”" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:28px;border:1px solid ${_w2?'#3b6ea5':'#cdd2d8'};border-radius:5px;background:${_w2?'#ddeeff':'#fff'};color:${_w2?'#3b6ea5':'#5b6673'};cursor:pointer;padding:0"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><path d="M3 12h15a3 3 0 1 1 0 6h-4"/><polyline points="16 16 14 18 16 20"/><line x1="3" y1="18" x2="10" y2="18"/></svg></button></div>`+list.innerHTML;
   menu.style.maxHeight='70vh';menu.style.overflowY='auto';
   document.body.appendChild(menu);
   menu.style.display='block';
   menu.style.left=Math.min(e.clientX,innerWidth-200)+'px';
   menu.style.top=Math.max(8,Math.min(e.clientY+4,innerHeight-Math.min(menu.offsetHeight||300,innerHeight*.7)-8))+'px';
 }
-function setGanttWrap(two){AP_PREFS.ganttWrap2=!!two;apSavePrefs();render();}
+function setGanttWrap(two){
+  AP_PREFS.ganttWrap2=!!two;apSavePrefs();render();
+  const b=document.getElementById('ganttWrapBtn');
+  if(b){b.classList.toggle('active',!!two);b.style.background=two?'#ddeeff':'#fff';b.style.borderColor=two?'#3b6ea5':'#cdd2d8';b.style.color=two?'#3b6ea5':'#5b6673';}
+}
 function toggleColVisibility(colId,visible){
   _colVis[colId]=visible;
   render();
