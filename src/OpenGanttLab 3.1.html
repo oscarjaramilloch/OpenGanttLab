@@ -8335,42 +8335,52 @@ document.addEventListener('keydown',e=>{
     </div>
     <div style="overflow-y:auto;padding:24px 28px;font-family:'Segoe UI',Arial,sans-serif;font-size:13px;line-height:1.6;color:#333">
       <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px;margin-top:0">&#191;Qu&eacute; es OpenGanttLab?</h2>
-      <p>Herramienta standalone (HTML &uacute;nico, sin internet) para visualizar y comparar cronogramas de proyectos. Lee archivos Excel (.xlsx) con m&uacute;ltiples escenarios y genera un Gantt interactivo y una l&iacute;nea de tiempo de presentaci&oacute;n.</p>
+      <p>Herramienta standalone (HTML único, sin internet) para visualizar y comparar cronogramas de proyectos. Lee archivos Excel (.xlsx) con múltiples escenarios o archivos XML de Microsoft Project (incluso de más de 1 GB) y genera un Gantt interactivo, una tabla de datos editable y una línea de tiempo de presentación.</p>
       <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Formato del Excel de entrada</h2>
       <p>Columnas requeridas (en orden): <b>id</b>, <b>Categor&iacute;a 1</b> (escenario), <b>Categor&iacute;a 2</b> (fase), <b>Nombre de Tarea</b>, <b>Start LB</b>, <b>End LB</b>, <b>Avance %</b> (0-100 &oacute; 0.0-1.0), <b>Start R/P</b>, <b>End R/P</b>, <b>Clase</b> ("Hito" o "Tarea"), <b>Ruta Cr&iacute;tica</b> ("Si"/"No").</p>
-      <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Ribbon — Archivo</h2>
-      <ul style="padding-left:18px;margin-bottom:12px">
-        <li><b>Importar Excel:</b> Carga un .xlsx con cronogramas. Vincula el archivo para guardar cambios (Chrome/Edge 86+).</li>
-        <li><b>Actualizar:</b> Recarga el Excel vinculado con los &uacute;ltimos cambios.</li>
-        <li><b>Importar Project XML:</b> Importa archivos .xml de Microsoft Project con mapeo de campos personalizable.</li>
-        <li><b>Compartir:</b> Genera HTML aut&oacute;nomo con datos embebidos (sin necesidad del Excel).</li>
-        <li><b>Exportar:</b> Exporta el Gantt como PNG, PDF o PPTX.</li>
+      <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Navegación</h2><ul style="padding-left:18px;margin-bottom:12px">
+        <li>El <b>riel izquierdo</b> tiene cinco secciones: <b>Comparador de Escenarios</b> (Gantt), <b>Línea de Tiempo</b>, <b>Datos</b>, <b>Configuración</b> y <b>Ayuda</b>. El botón «« / Colapsar lo reduce a solo íconos.</li>
+        <li>Cada sección tiene su propia barra de herramientas arriba. Los interruptores (toggles) se activan con un clic; los íconos con «˅» abren un menú.</li>
       </ul>
-      <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Ribbon — Vista</h2>
-      <ul style="padding-left:18px;margin-bottom:12px">
-        <li><b>Visualizaci&oacute;n:</b> Checkbox Porcentaje (muestra avance en barras), Línea base.</li>
-        <li><b>Escenarios:</b> Desplegable con checkboxes para activar/desactivar escenarios. Clic en el color para cambiarlo.</li>
-        <li><b>Escala / Formato fecha:</b> Define la resoluci&oacute;n del eje temporal y el formato de las fechas mostradas.</li>
-        <li><b>Fecha de estado:</b> Selector de fecha, checkbox Mostrar, color, estilo y grosor de la l&iacute;nea vertical.</li>
-        <li><b>Ruta cr&iacute;tica — Borde:</b> Grosor del borde rojo en hitos, barras y eventos de ruta cr&iacute;tica.</li>
-        <li><b>Seleccionar tareas:</b> Filtra tareas y categor&iacute;as visibles.</li>
-        <li><b>Ir a hoy:</b> Desplaza el Gantt a la fecha de estado.</li>
-        <li><b>Config. columnas:</b> Ajusta tama&ntilde;os de fuente y ancho de columnas Cat1, Cat2 y Nombre de Tarea.</li>
+<h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Comparador de Escenarios (Gantt)</h2><ul style="padding-left:18px;margin-bottom:12px">
+        <li><b>Interruptores:</b> Avance real (relleno de avance en las barras), Línea Base, Marca Activity, Resumen (mostrar las tareas resumen), Fechas (fechas junto a las barras), Fecha de estado y Ruta Crítica (borde rojo).</li>
+        <li><b>Actualizar:</b> recarga el Excel vinculado con los últimos cambios.</li>
+        <li><b>Orden de tareas:</b> Cronológico u Original (orden del archivo) dentro de cada Categoría 2.</li>
+        <li><b>Filtro:</b> activa/desactiva los filtros por columna (ícono de embudo en cada encabezado) y «Borrar» los quita todos.</li>
+        <li><b>Selección de tareas:</b> elige qué tareas y categorías se ven.</li>
+        <li><b>Edición:</b> Insertar texto libre, Mover en bloque las fechas de un grupo y Reordenar grupos.</li>
+        <li><b>Fuente:</b> familia y tamaños del Gantt y de la Línea de Tiempo.</li>
+        <li><b>Compartir:</b> genera un HTML autónomo con los datos embebidos (sin necesidad del Excel/XML).</li>
+        <li><b>Interacción:</b> clic en Categoría 1/Categoría 2/Escenario cambia su color; el cursor sobre una barra o hito muestra fechas LB, R/P, avance y ruta crítica; el borde derecho de un encabezado se arrastra para cambiar el ancho de la columna.</li>
       </ul>
-      <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Ribbon — Edici&oacute;n</h2>
-      <ul style="padding-left:18px;margin-bottom:12px">
-        <li><b>Editar:</b> Tabla editable con todas las tareas; guarda en el Excel vinculado.</li>
-        <li><b>Insertar texto:</b> A&ntilde;ade un cuadro de texto libre sobre el Gantt (arrastrable, con formato).</li>
+<h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Gantt — columnas (clic derecho en un encabezado)</h2><ul style="padding-left:18px;margin-bottom:12px">
+        <li><b>Mostrar / Ocultar:</b> una sola lista con todas las columnas de la Tabla de Datos: Escenario, Categoría 1, Categoría 2, Marca Activity, Nombre de Tarea, Start LB, End LB, Avance Real, Start R/P, End R/P, Clase, Ruta Crítica, Resumen y las columnas personalizadas que se creen en el mapeo de XML. Las de la izquierda están visibles por defecto; las demás, ocultas.</li>
+        <li>Las columnas que se agregan quedan fijas a la izquierda, a continuación de «Nombre de Tarea», con su propio botón de filtro y ancho ajustable arrastrando el borde. Las fechas se muestran como dd/mm/aaaa.</li>
+        <li><b>Ajustar texto (ícono al inicio del menú):</b> se aplica <b>a la columna</b> donde hiciste clic derecho. Activo = el texto se ajusta a 2 líneas; inactivo = una sola línea que termina en «…» si no cabe. La preferencia se guarda por columna.</li>
+        <li><b>Altura de fila automática:</b> cada fila mide el mínimo necesario para mostrar su texto (1 o 2 líneas según lo que realmente ocupe en el ancho de la columna) y sus barras o hitos. Las barras (LB y R/P) y los hitos miden 12 px y quedan centrados verticalmente.</li>
       </ul>
-      <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Gantt — Interacci&oacute;n</h2>
-      <ul style="padding-left:18px;margin-bottom:12px">
-        <li>Clic en <b>Cat1</b>: cambia el color del encabezado de escenario.</li>
-        <li>Clic en <b>Cat2</b>: cambia el color del grupo y sus barras R/P.</li>
-        <li><b>Tooltip:</b> Pasa el cursor sobre una barra o hito para ver fechas LB, R/P, avance y ruta cr&iacute;tica.</li>
-        <li><b>Redimensionar columnas:</b> Arrastra el borde derecho de Cat1, Cat2 o Nombre de Tarea.</li>
-        <li><b>Ruta cr&iacute;tica:</b> Borde configurable en hitos, barras R/P y eventos.</li>
+<h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Datos — Tabla de Datos</h2><ul style="padding-left:18px;margin-bottom:12px">
+        <li><b>Barra de herramientas:</b> Restaurar los datos originales del XML, Deshacer / Rehacer, Cargar archivo (Excel o Project XML; detecta la extensión), Más opciones de carga (incluye Descargar plantilla), Guardar cambios en el Excel vinculado, Descargar .xlsx, Agregar fila, Filtro y Compartir.</li>
+        <li><b>Columnas:</b> Escenario, Categoría 1, Categoría 2, Nombre de Tarea, Start LB, End LB, <b>Avance Real</b>, Start R/P, End R/P, Clase, Ruta Crítica, Marca Activity y Resumen, más las columnas personalizadas del mapeo de XML (al final). El ancho de cada columna se ajusta arrastrando el borde del encabezado.</li>
+        <li><b>Edición y autoguardado:</b> los cambios se aplican solos. Con la tabla abierta el Gantt y la Línea de Tiempo no se repintan en cada tecla: se actualizan al salir de la tabla. Deshacer y Rehacer están en la barra de herramientas.</li>
+        <li><b>Tablas grandes:</b> desde 250 filas solo se dibujan las visibles (más un margen), por lo que se mantiene fluida con miles de tareas. En ese modo el nombre de la tarea se ve en una línea y se expande al editarlo.</li>
+        <li><b>Columnas personalizadas de fecha:</b> si todo su contenido son fechas, la columna es de tipo fecha (selector de calendario y filtro por año, mes y día).</li>
       </ul>
-      <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">L&iacute;nea de Tiempo — Vista ejecutiva</h2>
+<h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Datos — Gestión de XML (Microsoft Project)</h2><ul style="padding-left:18px;margin-bottom:12px">
+        <li><b>Cargar XML:</b> arrastra o elige uno o varios archivos .xml. El archivo se lee por partes (streaming), por lo que soporta XML de más de 1 GB: solo se conserva el proyecto, los campos personalizados, cada tarea y las líneas base; se descartan asignaciones, recursos, calendarios y el time phasing. Una barra de avance muestra el porcentaje leído.</li>
+        <li><b>Líneas base 0–10:</b> por cada tarea se guarda el Comienzo y el Fin de las 11 líneas base. La <b>línea base actual</b> es la de fecha de guardado más reciente (campos «Baseline N saveddate»); si el proyecto no los trae, la marcada para valor ganado, o la 0. Se muestra como «LB actual: N» en Base de datos y en las columnas «LB actual / Inicio / Fin». El mapeo automático de Start LB / End LB usa la línea base actual.</li>
+        <li><b>Base de datos:</b> lista de archivos cargados. El nombre (variante) es editable; los íconos permiten <b>Duplicar escenario</b> (copia la carga con su propio mapeo para probar otro sin volver a leer el archivo) y <b>Eliminar escenario</b> (quita también sus tareas de la tabla; pide confirmación).</li>
+        <li><b>Mapeo de columnas:</b> cada archivo tiene su propio mapeo independiente (buscador de columna, «Variante del archivo» o «Valor fijo»). Si <b>Escenario</b> está en «Valor fijo», la carga se renombra con ese valor y viceversa. El campo de valor fijo crece con el texto. «Copiar al [n]» copia el mapeo al siguiente archivo.</li>
+        <li><b>Mapeo personalizado (ícono «+»):</b> crea una columna extra con nombre editable en la Tabla de Datos y en el Gantt (clic derecho). Solo dura la sesión: no viaja con Compartir ni se exporta a Excel.</li>
+        <li><b>Vista previa</b> muestra las primeras tareas con el mapeo aplicado, y <b>Exportar</b> descarga toda la base como CSV (incluye las líneas base 0–10).</li>
+      </ul>
+<h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Configuración</h2><ul style="padding-left:18px;margin-bottom:12px">
+        <li><b>Apariencia:</b> tema oscuro y pestaña de inicio.</li>
+        <li><b>Recordatorios:</b> aviso de cambios sin compartir cada N minutos (0 = desactivado).</li>
+        <li><b>Datos y métricas:</b> avance en tooltips del Gantt (porcentaje o días), ancho de borde de la Ruta Crítica y paleta de colores por defecto (Categoría 1, Categoría 2 y Escenario).</li>
+        <li><b>Editor de Datos:</b> qué columnas se ven en la Tabla de Datos.</li>
+      </ul>
+<h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">L&iacute;nea de Tiempo — Vista ejecutiva</h2>
       <ul style="padding-left:18px;margin-bottom:12px">
         <li><b>Escala:</b> A&ntilde;os, Trimestres, Meses o Semanas. El eje se recorta autom&aacute;ticamente al rango real de fechas de las tareas (sin per&iacute;odos vac&iacute;os al inicio o al final).</li>
         <li><b>Formato fecha:</b> 11 formatos disponibles (mm/aa, dd/mm/aa, dd/mm/aaaa, etc.). Se aplica al Gantt y a la L&iacute;nea de Tiempo mediante el mismo selector global.</li>
@@ -8398,6 +8408,24 @@ document.addEventListener('keydown',e=>{
       <!-- ── HISTORIAL DE CAMBIOS ── -->
       <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px;margin-top:28px">&#128196; Historial de cambios</h2>
       <div style="display:flex;flex-direction:column;gap:14px">
+
+        <div style="border:1px solid #e0e7ef;border-radius:7px;overflow:hidden">
+          <div style="background:#2c7a7b;color:#fff;padding:7px 14px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:10px">
+            <span style="background:rgba(255,255,255,.2);border-radius:3px;padding:1px 8px">v3.1.1</span>
+            <span>2026-09-18</span>
+            <span style="font-weight:400;font-size:11px;opacity:.85">XML grandes, líneas base, columnas del Gantt por clic derecho y gestión de cargas</span>
+          </div>
+          <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
+            <li><b>Project XML — Lectura en streaming:</b> ya no carga el archivo completo ni construye un DOM gigante; procesa por partes y solo conserva proyecto, campos personalizados, tareas y líneas base (sin asignaciones ni time phasing). Un XML de 1.7 GB se lee en unos 35–80 s con memoria acotada. Barra de avance de carga.</li>
+            <li><b>Líneas base 0–10 y «LB actual»:</b> Comienzo/Fin de cada línea base por tarea; la LB actual es la de fecha de guardado más reciente. Columnas «LB actual / Inicio / Fin» y mapeo automático de Start/End LB con la LB actual.</li>
+            <li><b>Tabla de Datos:</b> ventana virtual desde 250 filas (miles de tareas sin lentitud), repintado diferido del Gantt/LdT mientras se edita, sin doble carga al abrir, «Av%» renombrado a <b>Avance Real</b>, columnas de fecha personalizadas con calendario y filtro, deshacer/rehacer/restaurar XML, anchos de columna ajustables y botón Agregar fila.</li>
+            <li><b>Gestión de XML:</b> mapeos personalizados por archivo (ícono «+»), <b>Duplicar</b> y <b>Eliminar escenario</b> (con confirmación y limpieza de sus tareas), nombre de la carga editable, Escenario = «Valor fijo» renombra la carga, campo de valor fijo autoajustable, íconos (lupa, papelera, copiar) con el estilo plano de la app.</li>
+            <li><b>Gantt — Columnas por clic derecho:</b> menú único con todas las columnas de la Tabla de Datos (incluidas las personalizadas), con filtro y ancho ajustable; «Ajustar texto» por columna (2 líneas o una línea con «…»).</li>
+            <li><b>Gantt — Altura de fila automática:</b> cada fila mide el mínimo para su texto y sus barras/hitos; barras y hitos de 12 px centrados; se ocultaron los divisores del margen en blanco antes del gráfico.</li>
+            <li><b>Resumen:</b> el toggle ahora es «mostrar» (Gantt y LdT) y viene apagado por defecto. <b>Hitos:</b> menú «Fechas» en el panel de edición (mostrar, alinear, posición arriba/abajo/izquierda/derecha del rombo).</li>
+            <li><b>Vista C1:</b> el ancho mínimo autoajustado de la columna de etiquetas se redujo y hay más espacio cuando la etiqueta tiene salto de línea. <b>Selector de color:</b> filas «Estándar» y «Recientes» (paleta Office) sin cortarse abajo.</li>
+          </ul>
+        </div>
 
         <div style="border:1px solid #e0e7ef;border-radius:7px;overflow:hidden">
           <div style="background:#c0392b;color:#fff;padding:7px 14px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:10px">
