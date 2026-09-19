@@ -7665,11 +7665,11 @@ function pxmlBuildMapGrid(){
       const val=db.mapping[f.key]||'__NONE__';
       const fixedVal=db.mapping[f.key+'_fixed']||'';
       return `<div style="display:flex;flex-direction:column;gap:3px">
-        ${f.custom?`<div style="display:flex;gap:4px;align-items:center"><input type="text" value="${esc(f.label)}" placeholder="Nombre de la columna" oninput="pxmlRenameCustom('${f.key}',this.value)" style="flex:1;min-width:0;font:inherit;font-size:10px;font-weight:600;color:#1a5fb4;padding:2px 5px;border:1px solid #9db8e0;border-radius:3px"><button onclick="pxmlRemoveCustom('${f.key}')" title="Quitar este mapeo personalizado" class="edel" style="display:inline-flex;align-items:center;padding:3px 5px;border:1px solid #cdd2d8;border-radius:3px;background:#fff">${PXML_TRASH_SVG}</button></div>`:`<label style="font-size:10px;font-weight:600;color:${f.required?'#c00':'#555'}">${f.label}</label>`}
+        ${f.custom?`<div style="display:flex;gap:4px;align-items:center"><input type="text" value="${esc(f.label)}" placeholder="Nombre de la columna" oninput="pxmlRenameCustom('${f.key}',this.value)" style="flex:1;min-width:0;font:inherit;font-size:10px;font-weight:600;color:#1a5fb4;padding:2px 5px;border:1px solid #9db8e0;border-radius:3px"><button onclick="pxmlRemoveCustom('${f.key}')" title="Quitar este mapeo personalizado" class="rb-flat" style="padding:.4rem .5rem">${PXML_TRASH_SVG}</button></div>`:`<label style="font-size:10px;font-weight:600;color:${f.required?'#c00':'#555'}">${f.label}</label>`}
         <div style="font-size:9px;color:#bbb">${f.hint}</div>
-        <input type="search" placeholder="🔍 Buscar columna…" autocomplete="off"
+        <div style="position:relative"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:6px;top:50%;transform:translateY(-50%);color:#8a97a3;pointer-events:none"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="search" placeholder="Buscar columna…" autocomplete="off"
           oninput="pxmlFilterOpts(this,'pxmlMap_${i}_${f.key}')"
-          style="font:inherit;font-size:9px;padding:2px 5px;border:1px solid #cdd2d8;border-radius:3px 3px 0 0;border-bottom:none;background:#fafafa;outline:none">
+          style="width:100%;box-sizing:border-box;font:inherit;font-size:9px;padding:2px 5px 2px 22px;border:1px solid #cdd2d8;border-radius:3px 3px 0 0;border-bottom:none;background:#fafafa;outline:none"></div>
         <select id="pxmlMap_${i}_${f.key}" onchange="pxmlSaveMap(${i},'${f.key}',this.value);pxmlClearSearch(this)"
           size="1"
           style="font:inherit;font-size:10px;padding:3px 5px;border:1px solid #cdd2d8;border-radius:0 0 3px 3px;margin-top:0">
@@ -7814,7 +7814,8 @@ function pxmlCopyMapping(fromIdx,toIdx){
 }
 function pxmlClearSearch(sel){
   // Limpiar el input de búsqueda anterior al select
-  const inp=sel.previousElementSibling;
+  let inp=sel.previousElementSibling;
+  if(inp&&inp.tagName==='DIV')inp=inp.querySelector('input[type=search]'); // el buscador va envuelto con su ícono
   if(inp&&inp.type==='search'){
     inp.value='';
     // Mostrar todas las opciones y colapsar
