@@ -163,7 +163,7 @@ th,td{padding:0}
 .c3{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden}
 .hxc{position:sticky;top:0;z-index:25;background:var(--head);border-bottom:2px solid var(--line);border-right:1px solid var(--line);color:var(--muted);font-weight:700;text-align:center;vertical-align:middle;font-size:var(--fs-cat2)}
 .xc{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);text-align:center;border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.c3 .c3-txt,.xc .c3-txt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--c3-lines,2);overflow:hidden;text-overflow:ellipsis;white-space:normal;word-break:break-word;line-height:1.15}
+.c3-txt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--c3-lines,2);overflow:hidden;text-overflow:ellipsis;white-space:normal;word-break:break-word;line-height:1.15}
 .cc{background:#fff;border-top:1px solid var(--grid);padding:0}
 /* separadores entre categorías */
 
@@ -2701,19 +2701,32 @@ function openColMenu(e,col){
   list.innerHTML=_COL_DEFS.map(item).join('')+
     `<div style="font-size:10px;font-weight:700;color:var(--muted);padding:6px 14px 4px;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:2px">Columnas de la Tabla de Datos</div>`+
     _ganttExtDefs().map(item).join('');
-  // Ajustar texto: solo ícono (outline), primero en las opciones; activo = 2 líneas, inactivo = una línea con "…"
-  const _w2=AP_PREFS.ganttWrap2!==false;
-  list.innerHTML=`<div style="padding:2px 14px 6px;border-bottom:1px solid #eee;margin-bottom:2px"><button type="button" id="ganttWrapBtn" class="${_w2?'active':''}" onclick="setGanttWrap(!(AP_PREFS.ganttWrap2!==false))" title="Ajustar texto (2 líneas) / una línea con “…”" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:28px;border:1px solid ${_w2?'#3b6ea5':'#cdd2d8'};border-radius:5px;background:${_w2?'#ddeeff':'#fff'};color:${_w2?'#3b6ea5':'#5b6673'};cursor:pointer;padding:0"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><path d="M3 12h15a3 3 0 1 1 0 6h-4"/><polyline points="16 16 14 18 16 20"/><line x1="3" y1="18" x2="10" y2="18"/></svg></button></div>`+list.innerHTML;
+  // Ajustar texto: solo ícono (outline), primero en las opciones y POR COLUMNA (la del encabezado clicado);
+  // activo = ajustado (2 líneas), inactivo = una línea con "…"
+  const _wOn=_wrapOn(col);
+  const _wLbl=(([..._COL_DEFS,..._ganttExtDefs()].find(d=>d.id===col))||{}).label||'';
+  list.innerHTML=`<div style="padding:2px 14px 6px;border-bottom:1px solid #eee;margin-bottom:2px"><button type="button" id="ganttWrapBtn" onclick="setGanttWrapCol('${esc(col)}')" title="Ajustar texto — ${esc(_wLbl)}" style="${_wrapBtnStyle(_wOn)}"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><path d="M3 12h15a3 3 0 1 1 0 6h-4"/><polyline points="16 16 14 18 16 20"/><line x1="3" y1="18" x2="10" y2="18"/></svg></button><span style="font-size:10px;color:var(--muted);margin-left:8px">${esc(_wLbl)}</span></div>`+list.innerHTML;
   menu.style.maxHeight='70vh';menu.style.overflowY='auto';
   document.body.appendChild(menu);
   menu.style.display='block';
   menu.style.left=Math.min(e.clientX,innerWidth-200)+'px';
   menu.style.top=Math.max(8,Math.min(e.clientY+4,innerHeight-Math.min(menu.offsetHeight||300,innerHeight*.7)-8))+'px';
 }
-function setGanttWrap(two){
-  AP_PREFS.ganttWrap2=!!two;apSavePrefs();render();
-  const b=document.getElementById('ganttWrapBtn');
-  if(b){b.classList.toggle('active',!!two);b.style.background=two?'#ddeeff':'#fff';b.style.borderColor=two?'#3b6ea5':'#cdd2d8';b.style.color=two?'#3b6ea5':'#5b6673';}
+// Ajuste de texto POR COLUMNA. Por defecto se ajustan (2 líneas) Escenario/Cat1/Cat2/Nombre de Tarea; Marca Activity y las
+// columnas extra (datos cortos) van en una línea con "…". Se guarda en AP_PREFS.ganttWrapCols {colId:boolean}.
+const GANTT_WRAP_DEFAULT={esc:true,c1:true,c2:true,c3:true};
+function _wrapOn(id){
+  const m=AP_PREFS.ganttWrapCols;
+  if(m&&id in m)return !!m[id];
+  if(!m&&AP_PREFS.ganttWrap2===false&&id==='c3')return false; // preferencia global anterior
+  return GANTT_WRAP_DEFAULT[id]===true;
+}
+const _wrapBtnStyle=on=>`display:inline-flex;align-items:center;justify-content:center;width:30px;height:28px;border:1px solid ${on?'#3b6ea5':'#cdd2d8'};border-radius:5px;background:${on?'#ddeeff':'#fff'};color:${on?'#3b6ea5':'#5b6673'};cursor:pointer;padding:0`;
+function _cellTxt(id,html){return _wrapOn(id)?html:`<div class="c3-txt" style="-webkit-line-clamp:1">${html}</div>`;}
+function setGanttWrapCol(id){
+  const m=AP_PREFS.ganttWrapCols=Object.assign({},AP_PREFS.ganttWrapCols||{});
+  m[id]=!_wrapOn(id);apSavePrefs();render();
+  const b=document.getElementById('ganttWrapBtn');if(b)b.style.cssText=_wrapBtnStyle(m[id]);
 }
 function toggleColVisibility(colId,visible){
   _colVis[colId]=visible;
@@ -2818,11 +2831,24 @@ function render(){
   // 34 (antes 28): deja espacio para que "Nombre de Tarea" (.c3) pueda partirse en 2 líneas
   // cuando la columna se angosta (ver .c3 -webkit-line-clamp) sin desalinear las barras, que
   // se posicionan asumiendo esta altura de fila fija.
-  // Texto largo (clic derecho en un encabezado): 2 líneas -> fila de 34*fs px; 1 línea (con "…") -> fila más baja de 27*fs px
-  // (las barras LB/R-P ocupan hasta ~25*fs, por eso no baja de ahí).
-  const _wrap2=AP_PREFS.ganttWrap2!==false;
-  wrap.style.setProperty('--c3-lines',_wrap2?2:1);
-  const RH=_wrap2?Math.max(24,Math.round(34*fs)):Math.max(22,Math.round(27*fs));
+  // Altura de fila AUTOAJUSTADA (por fila): el mínimo que muestra el texto (1 o 2 líneas según lo que realmente ocupe en
+  // cada columna con "ajustar texto") y las barras/hitos. Barras LB+R/P llegan a ~25*fs; solo R/P ~22*fs; hitos ~15*fs.
+  const _fam=getComputedStyle(document.body).fontFamily,_cv=document.createElement('canvas').getContext('2d');
+  const _lines=(text,w,px)=>{ // nº de líneas (tope 2 = line-clamp) que ocupa el texto en un ancho w, simulando el ajuste por palabras
+    text=String(text||'');if(!text||w<=0)return 1;
+    _cv.font=`${px}px ${_fam}`;
+    const sp=_cv.measureText(' ').width;let n=1,cur=0;
+    for(const wd of text.split(/\s+/)){
+      const ww=_cv.measureText(wd).width;
+      if(ww>w){n+=Math.ceil(ww/w)-(cur>0?0:1);cur=ww%w||w;}
+      else if(cur===0)cur=ww;
+      else if(cur+sp+ww<=w)cur+=sp+ww;
+      else{n++;cur=ww;}
+      if(n>=2)return 2;
+    }
+    return n;
+  };
+  const _barsMin=showLB?27*fs:14*fs+6,_hitoMin=16*fs;
   const yH=Math.max(16,Math.round(21*(fsYear/10)));
   const _onlyCrit=document.getElementById('showOnlyCrit')&&document.getElementById('showOnlyCrit').checked;
   const _showM2=document.getElementById('showMarca2')&&document.getElementById('showMarca2').checked;
@@ -2940,10 +2966,20 @@ function render(){
       let emitC2=true;
       g2._tg.forEach(tg=>{
         let cnt='';
+        const _xtx=xcols.map(c=>_ganttExtText(tg.insts[0],c.d));
+        let _txtH=0;
+        const _th=(l,px)=>{_txtH=Math.max(_txtH,l*1.15*px+5);};
+        if(_colVis.c3)_th(_wrapOn('c3')?_lines(tg.name,CAT3_W-12,fsTask):1,fsTask);
+        if(_colVis.m2)_th(_wrapOn('m2')&&tg.marca2?_lines(tg.marca2,MARCA2_W-12,10):1,10);
+        xcols.forEach((c,i)=>_th(_wrapOn(c.d.id)?_lines(_xtx[i],c.w-12,fsTask):1,fsTask));
+        const _onlyMarks=tg.insts.every(t=>t.hito||t.evento);
+        const RH=Math.max(18,Math.round(Math.max(_txtH,_onlyMarks?_hitoMin:_barsMin)));
         const diamSz=Math.round(11*fs);
-        const lbTop=Math.round(3*fs),lbH=Math.round(10*fs);
-        const rpTop=showLB?Math.round(15*fs):Math.round(8*fs);
+        // barras centradas verticalmente en la fila (sobra espacio cuando el texto ocupa 2 líneas)
+        const _bo=Math.max(0,Math.round((RH-_barsMin)/2));
+        const lbH=Math.round(10*fs),lbTop=Math.round(3*fs)+_bo;
         const rpH=showLB?Math.round(10*fs):Math.round(14*fs);
+        const rpTop=showLB?Math.round(15*fs)+_bo:Math.max(0,Math.round((RH-rpH)/2));
         const dateCY=rpTop+rpH/2;
         // dibujar TODAS las instancias (misma fila, distintas posiciones X)
         tg.insts.forEach(t=>{
@@ -2983,12 +3019,12 @@ function render(){
           }
         });
         let trCls='';
-        const esctd=(emitC1&&_colVis.esc)?`<td class="c1 esccol" data-esc="${esc(curEsc)}" rowspan="${g1._c1Rows}" style="width:${ESCENARIO_W}px;min-width:${ESCENARIO_W}px;left:0;background:${escBg};color:${escFg};cursor:pointer" title="Clic: cambiar color">${esc(curEsc)}</td>`:'';
-        const c1td=(emitC1&&_colVis.c1)?`<td class="c1" data-cat1="${esc(c1)}" rowspan="${g1._c1Rows}" style="width:${CAT1_W}px;min-width:${CAT1_W}px;left:${lC1}px;background:${c1bg};color:${c1fg}" title="Clic: cambiar color">${esc(c1)}</td>`:'';
-        const c2td=(emitC2&&_colVis.c2)?`<td class="c2" data-cat2="${esc(c2)}" rowspan="${g2._tg.length}" style="left:${lC2}px;width:${CAT2_W}px;min-width:${CAT2_W}px;background:${c2bg};color:${c2fg}" title="Clic: cambiar color barras">${esc(c2)}</td>`:'';
-        const m2td=_colVis.m2?`<td class="c2 marca2col" style="left:${lM2}px;width:${MARCA2_W}px;min-width:${MARCA2_W}px;text-align:center;font-size:10px;background:#fff;">${esc(tg.marca2||"")}</td>`:'';
-        const c3td=_colVis.c3?`<td class="c3" style="left:${lC3}px;width:${CAT3_W}px;min-width:${CAT3_W}px" title="${esc(tg.name)}"><div class="c3-txt">${esc(tg.name)}</div></td>`:'';
-        const xtds=xcols.map(c=>{const tx=_ganttExtText(tg.insts[0],c.d);return `<td class="xc" style="left:${c.left}px;width:${c.w}px;min-width:${c.w}px" title="${esc(tx)}"><div class="c3-txt">${esc(tx)}</div></td>`;}).join('');
+        const esctd=(emitC1&&_colVis.esc)?`<td class="c1 esccol" data-esc="${esc(curEsc)}" rowspan="${g1._c1Rows}" style="width:${ESCENARIO_W}px;min-width:${ESCENARIO_W}px;left:0;background:${escBg};color:${escFg};cursor:pointer" title="Clic: cambiar color">${_cellTxt('esc',esc(curEsc))}</td>`:'';
+        const c1td=(emitC1&&_colVis.c1)?`<td class="c1" data-cat1="${esc(c1)}" rowspan="${g1._c1Rows}" style="width:${CAT1_W}px;min-width:${CAT1_W}px;left:${lC1}px;background:${c1bg};color:${c1fg}" title="Clic: cambiar color">${_cellTxt('c1',esc(c1))}</td>`:'';
+        const c2td=(emitC2&&_colVis.c2)?`<td class="c2" data-cat2="${esc(c2)}" rowspan="${g2._tg.length}" style="left:${lC2}px;width:${CAT2_W}px;min-width:${CAT2_W}px;background:${c2bg};color:${c2fg}" title="Clic: cambiar color barras">${_cellTxt('c2',esc(c2))}</td>`:'';
+        const m2td=_colVis.m2?`<td class="c2 marca2col" style="left:${lM2}px;width:${MARCA2_W}px;min-width:${MARCA2_W}px;text-align:center;font-size:10px;background:#fff;">${_cellTxt('m2',esc(tg.marca2||""))}</td>`:'';
+        const c3td=_colVis.c3?`<td class="c3" style="left:${lC3}px;width:${CAT3_W}px;min-width:${CAT3_W}px" title="${esc(tg.name)}"><div class="c3-txt"${_wrapOn('c3')?'':' style="-webkit-line-clamp:1"'}>${esc(tg.name)}</div></td>`:'';
+        const xtds=xcols.map((c,i)=>{const tx=_xtx[i];return `<td class="xc" style="left:${c.left}px;width:${c.w}px;min-width:${c.w}px" title="${esc(tx)}"><div class="c3-txt">${esc(tx)}</div></td>`;}).join('');
         if(emitC1&&!firstC1) trCls=' class="sep-c1"';
         body+=`<tr${trCls}>${esctd}${c1td}${c2td}${m2td}${c3td}${xtds}`+
       `<td class="cc" style="width:${W}px;min-width:${W}px"><div class="br" style="width:${W}px;height:${RH}px${glBg}">${tlHtml}${gl}${cnt}</div></td></tr>`;
@@ -3915,7 +3951,7 @@ const AP_PREFS_KEY='ap_prefs_v1';
 const AP_PREFS_DEFAULT={
   theme:'light',defaultTab:'gantt',
   reminderMinutes:0,avanceUnidad:'pct',critColor:'#FF0000',critWidth:2.5,
-  palette:null,cat2Palette:null,escPalette:null,editorHiddenCols:[],editorColWidths:{},ganttWrap2:true
+  palette:null,cat2Palette:null,escPalette:null,editorHiddenCols:[],editorColWidths:{},ganttWrapCols:null
 };
 let AP_PREFS=Object.assign({},AP_PREFS_DEFAULT);
 function apLoadPrefs(){
