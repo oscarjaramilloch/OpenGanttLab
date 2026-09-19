@@ -2832,7 +2832,7 @@ function render(){
   // cuando la columna se angosta (ver .c3 -webkit-line-clamp) sin desalinear las barras, que
   // se posicionan asumiendo esta altura de fila fija.
   // Altura de fila AUTOAJUSTADA (por fila): el mínimo que muestra el texto (1 o 2 líneas según lo que realmente ocupe en
-  // cada columna con "ajustar texto") y las barras/hitos. Barras LB+R/P llegan a ~25*fs; solo R/P ~22*fs; hitos ~15*fs.
+  // cada columna con "ajustar texto") y las barras/hitos. Barras LB+R/P llegan a ~25*fs; solo R/P = 13 px fijos; hitos ~15*fs.
   const _fam=getComputedStyle(document.body).fontFamily,_cv=document.createElement('canvas').getContext('2d');
   const _lines=(text,w,px)=>{ // nº de líneas (tope 2 = line-clamp) que ocupa el texto en un ancho w, simulando el ajuste por palabras
     text=String(text||'');if(!text||w<=0)return 1;
@@ -2848,7 +2848,8 @@ function render(){
     }
     return n;
   };
-  const _barsMin=showLB?27*fs:14*fs+6,_hitoMin=16*fs;
+  const BAR_H_NOLB=13; // alto fijo (px) de la barra R/P cuando no se muestra la línea base
+  const _barsMin=showLB?27*fs:BAR_H_NOLB+6,_hitoMin=16*fs;
   const yH=Math.max(16,Math.round(21*(fsYear/10)));
   const _onlyCrit=document.getElementById('showOnlyCrit')&&document.getElementById('showOnlyCrit').checked;
   const _showM2=document.getElementById('showMarca2')&&document.getElementById('showMarca2').checked;
@@ -2978,7 +2979,7 @@ function render(){
         // barras centradas verticalmente en la fila (sobra espacio cuando el texto ocupa 2 líneas)
         const _bo=Math.max(0,Math.round((RH-_barsMin)/2));
         const lbH=Math.round(10*fs),lbTop=Math.round(3*fs)+_bo;
-        const rpH=showLB?Math.round(10*fs):Math.round(14*fs);
+        const rpH=showLB?Math.round(10*fs):BAR_H_NOLB;
         const rpTop=showLB?Math.round(15*fs)+_bo:Math.max(0,Math.round((RH-rpH)/2));
         const dateCY=rpTop+rpH/2;
         // dibujar TODAS las instancias (misma fila, distintas posiciones X)
