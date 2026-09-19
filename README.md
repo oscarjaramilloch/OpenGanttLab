@@ -13,7 +13,12 @@ Herramienta HTML standalone para comparar escenarios de plan de actividades, con
 - `index.html` — página de descarga para GitHub Pages; `SOURCE_PATH` apunta a la versión vigente.
 - La **Ayuda** dentro de la aplicación (sección «Ayuda») documenta la interfaz y trae el historial de cambios por versión.
 
-## Novedades recientes (v3.1.1 · 2026-09-18)
+## Novedades recientes (v3.1.2 · 2026-09-19)
+
+- **Dependencias en el Gantt:** predecesoras y sucesoras en el formato de Project (`12FC+2 días;15CC`), desde el XML o desde el Excel (columnas «Predecesoras» / «Sucesoras»). Interruptor «Dependencias» con flechas FC/CC/FF/CF, resaltado de la cadena al hacer clic en una barra y avisos de conflictos de fechas, predecesoras inexistentes y ciclos.
+- **Ayuda:** nuevo Manual de usuario (pestañas Manual / Referencia / Historial); el PDF descargable es el manual.
+
+### v3.1.1 · 2026-09-18
 
 - **Project XML grandes:** lectura por partes (streaming) — un XML de 1.7 GB se procesa con memoria acotada; solo se conserva el proyecto, los campos personalizados, las tareas y las líneas base 0–10 (sin asignaciones ni time phasing). Incluye barra de avance y «LB actual» (la de fecha de guardado más reciente).
 - **Tabla de Datos:** ventana virtual desde 250 filas, repintado diferido del Gantt, «Avance Real», columnas personalizadas de fecha y deshacer/rehacer/restaurar XML.
