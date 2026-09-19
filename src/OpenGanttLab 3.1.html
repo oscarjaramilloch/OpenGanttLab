@@ -163,7 +163,7 @@ th,td{padding:0}
 .c3{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden}
 .hxc{position:sticky;top:0;z-index:25;background:var(--head);border-bottom:2px solid var(--line);border-right:1px solid var(--line);color:var(--muted);font-weight:700;text-align:center;vertical-align:middle;font-size:var(--fs-cat2)}
 .xc{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);text-align:center;border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.c3 .c3-txt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-overflow:ellipsis;white-space:normal;word-break:break-word;line-height:1.15}
+.c3 .c3-txt,.xc .c3-txt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--c3-lines,2);overflow:hidden;text-overflow:ellipsis;white-space:normal;word-break:break-word;line-height:1.15}
 .cc{background:#fff;border-top:1px solid var(--grid);padding:0}
 /* separadores entre categorías */
 
@@ -2701,12 +2701,17 @@ function openColMenu(e,col){
   list.innerHTML=_COL_DEFS.map(item).join('')+
     `<div style="font-size:10px;font-weight:700;color:var(--muted);padding:6px 14px 4px;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:2px">Columnas de la Tabla de Datos</div>`+
     _ganttExtDefs().map(item).join('');
+  const _w2=AP_PREFS.ganttWrap2!==false;
+  const opt=(v,txt)=>`<label style="display:flex;gap:8px;align-items:center;padding:5px 14px;cursor:pointer;font-size:11px" onmouseenter="this.style.background='#f5f7fa'" onmouseleave="this.style.background=''"><input type="radio" name="ganttWrap" ${_w2===v?'checked':''} onchange="setGanttWrap(${v})"><span>${txt}</span></label>`;
+  list.innerHTML+=`<div style="font-size:10px;font-weight:700;color:var(--muted);padding:6px 14px 4px;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:2px">Texto largo</div>`+
+    opt(true,'Ajustar texto (2 líneas)')+opt(false,'Una línea (con “…”)');
   menu.style.maxHeight='70vh';menu.style.overflowY='auto';
   document.body.appendChild(menu);
   menu.style.display='block';
   menu.style.left=Math.min(e.clientX,innerWidth-200)+'px';
   menu.style.top=Math.max(8,Math.min(e.clientY+4,innerHeight-Math.min(menu.offsetHeight||300,innerHeight*.7)-8))+'px';
 }
+function setGanttWrap(two){AP_PREFS.ganttWrap2=!!two;apSavePrefs();render();}
 function toggleColVisibility(colId,visible){
   _colVis[colId]=visible;
   render();
@@ -2810,7 +2815,11 @@ function render(){
   // 34 (antes 28): deja espacio para que "Nombre de Tarea" (.c3) pueda partirse en 2 líneas
   // cuando la columna se angosta (ver .c3 -webkit-line-clamp) sin desalinear las barras, que
   // se posicionan asumiendo esta altura de fila fija.
-  const RH=Math.max(24,Math.round(34*fs));
+  // Texto largo (clic derecho en un encabezado): 2 líneas -> fila de 34*fs px; 1 línea (con "…") -> fila más baja de 27*fs px
+  // (las barras LB/R-P ocupan hasta ~25*fs, por eso no baja de ahí).
+  const _wrap2=AP_PREFS.ganttWrap2!==false;
+  wrap.style.setProperty('--c3-lines',_wrap2?2:1);
+  const RH=_wrap2?Math.max(24,Math.round(34*fs)):Math.max(22,Math.round(27*fs));
   const yH=Math.max(16,Math.round(21*(fsYear/10)));
   const _onlyCrit=document.getElementById('showOnlyCrit')&&document.getElementById('showOnlyCrit').checked;
   const _showM2=document.getElementById('showMarca2')&&document.getElementById('showMarca2').checked;
@@ -2976,7 +2985,7 @@ function render(){
         const c2td=(emitC2&&_colVis.c2)?`<td class="c2" data-cat2="${esc(c2)}" rowspan="${g2._tg.length}" style="left:${lC2}px;width:${CAT2_W}px;min-width:${CAT2_W}px;background:${c2bg};color:${c2fg}" title="Clic: cambiar color barras">${esc(c2)}</td>`:'';
         const m2td=_colVis.m2?`<td class="c2 marca2col" style="left:${lM2}px;width:${MARCA2_W}px;min-width:${MARCA2_W}px;text-align:center;font-size:10px;background:#fff;">${esc(tg.marca2||"")}</td>`:'';
         const c3td=_colVis.c3?`<td class="c3" style="left:${lC3}px;width:${CAT3_W}px;min-width:${CAT3_W}px" title="${esc(tg.name)}"><div class="c3-txt">${esc(tg.name)}</div></td>`:'';
-        const xtds=xcols.map(c=>{const tx=_ganttExtText(tg.insts[0],c.d);return `<td class="xc" style="left:${c.left}px;width:${c.w}px;min-width:${c.w}px" title="${esc(tx)}">${esc(tx)}</td>`;}).join('');
+        const xtds=xcols.map(c=>{const tx=_ganttExtText(tg.insts[0],c.d);return `<td class="xc" style="left:${c.left}px;width:${c.w}px;min-width:${c.w}px" title="${esc(tx)}"><div class="c3-txt">${esc(tx)}</div></td>`;}).join('');
         if(emitC1&&!firstC1) trCls=' class="sep-c1"';
         body+=`<tr${trCls}>${esctd}${c1td}${c2td}${m2td}${c3td}${xtds}`+
       `<td class="cc" style="width:${W}px;min-width:${W}px"><div class="br" style="width:${W}px;height:${RH}px${glBg}">${tlHtml}${gl}${cnt}</div></td></tr>`;
@@ -3903,7 +3912,7 @@ const AP_PREFS_KEY='ap_prefs_v1';
 const AP_PREFS_DEFAULT={
   theme:'light',defaultTab:'gantt',
   reminderMinutes:0,avanceUnidad:'pct',critColor:'#FF0000',critWidth:2.5,
-  palette:null,cat2Palette:null,escPalette:null,editorHiddenCols:[],editorColWidths:{}
+  palette:null,cat2Palette:null,escPalette:null,editorHiddenCols:[],editorColWidths:{},ganttWrap2:true
 };
 let AP_PREFS=Object.assign({},AP_PREFS_DEFAULT);
 function apLoadPrefs(){
