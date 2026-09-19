@@ -2147,27 +2147,47 @@ th,td{padding:0}
 </div>
 
 <!-- Panel de filtro de Línea de Tiempo -->
-<div id="presFilterPanel" style="display:none;position:fixed;z-index:100005;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:0;width:340px;max-height:75vh;flex-direction:column">
-  <div style="display:flex;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);gap:6px">
+<div id="presFilterPanel" style="display:none;position:fixed;z-index:100005;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:0;width:420px;max-width:96vw;max-height:80vh;flex-direction:column">
+  <div style="display:flex;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);gap:6px;flex-shrink:0">
     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <span style="font-weight:700;font-size:12px;color:var(--ink);flex:1">Filtrar tareas</span>
+    <span style="font-weight:700;font-size:12px;color:var(--ink);flex:1">Seleccionar escenarios y tareas</span>
     <button onclick="presFilterCheckAll(true)" class="rb-flat" style="font-size:10px;padding:.3rem .55rem" title="Marcar todas">Todas</button>
     <button onclick="presFilterCheckAll(false)" class="rb-flat" style="font-size:10px;padding:.3rem .55rem" title="Desmarcar todas">Ninguna</button>
     <button onclick="presFilterReset()" class="rb-flat" style="padding:.3rem" title="Restablecer">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
     </button>
-    <button class="icon-x" onclick="document.getElementById('presFilterPanel').style.display='none'" title="Cerrar">
+    <button class="icon-x" onclick="presFilterClose()" title="Cerrar">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
-  <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px">
-    <span style="font-size:10.5px;color:var(--muted);font-weight:600">Cat 2</span>
-    <select id="presFilterCat2" onchange="presFilterPopulate()" class="rb-sel" style="flex:1;font-size:10.5px">
+  <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;position:relative;flex-shrink:0">
+    <span style="font-size:10.5px;color:var(--muted);font-weight:600">Escenarios</span>
+    <button id="presFilterScenDropBtn" onclick="togglePresFilterScenDrop(event)" class="rb-sel" style="flex:1;font-size:10.5px;text-align:left;display:flex;align-items:center;justify-content:space-between;cursor:pointer;max-width:none">
+      <span id="presFilterScenDropLabel">— sin datos —</span>
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div id="presFilterScenDropPanel" class="rb-menu-panel" data-menu-btn="presFilterScenDropBtn" style="display:none;position:fixed;z-index:100010;background:var(--panel);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(11,34,57,.15);padding:4px 0;max-height:260px;overflow-y:auto;min-width:220px">
+      <div id="presFilterScenChecks"></div>
+    </div>
+  </div>
+  <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex-shrink:0">
+    <span style="font-size:10.5px;color:var(--muted);font-weight:600">Cat 1</span>
+    <select id="presFilterCat" onchange="presFilterPopulate()" class="rb-sel" style="flex:1;font-size:10.5px;max-width:none">
       <option value="__ALL__">— Todas —</option>
     </select>
   </div>
-  <div id="presFilterList" style="overflow-y:auto;flex:1;padding:4px 0"></div>
-  <div style="padding:6px 12px;border-top:1px solid var(--line);font-size:9px;color:var(--muted)" id="presFilterCount"></div>
+  <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex-shrink:0">
+    <span style="font-size:10.5px;color:var(--muted);font-weight:600">Cat 2</span>
+    <select id="presFilterCat2" onchange="presFilterCat2Change()" class="rb-sel" style="flex:1;font-size:10.5px;max-width:none">
+      <option value="__ALL__">— Todas —</option>
+    </select>
+  </div>
+  <div id="presFilterList" style="overflow-y:auto;flex:1;min-height:120px;padding:4px 0"></div>
+  <div style="padding:6px 12px;border-top:1px solid var(--line);font-size:9px;color:var(--muted);flex-shrink:0" id="presFilterCount"></div>
+  <div style="display:flex;justify-content:flex-end;gap:8px;padding:8px 12px;border-top:1px solid var(--line);flex-shrink:0">
+    <button type="button" class="btn-outline" onclick="presFilterCancel()" title="Descarta los cambios hechos desde que se abrió el panel">Cancelar</button>
+    <button type="button" class="btn-solid" onclick="presFilterClose()">Aceptar</button>
+  </div>
 </div>
 <div id="presYearMenu" style="display:none;position:fixed;z-index:100002;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:210px">
   <div style="font-size:10px;font-weight:700;color:#555;margin-bottom:8px" id="pymTitle"></div>
@@ -6045,32 +6065,83 @@ function _presSVG(all,S,TW,mn,mx,opts){
   return svg;
 }
 
-/* ═══ FILTRO DE LÍNEA DE TIEMPO ═══ */
+/* ═══ FILTRO DE LÍNEA DE TIEMPO ═══
+   Mismas opciones que "Seleccionar escenarios y tareas" del Gantt (Escenarios = Cat 1, Cat 1, Cat 2, Todas/Ninguna,
+   Restablecer, Cancelar/Aceptar), pero sobre el estado propio de la LdT (PRES_HIDDEN_KEYS), independiente del Gantt. */
+let _presFilterSnapshot=null;
+const _pfKey=t=>(t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea;
+function _pfBase(){
+  const escF=(document.getElementById('presFilterEsc')||{value:''}).value;
+  return TASKS.filter(t=>!escF||(t.escenario||'')===escF);
+}
+function _pfScenarios(){ // Cat 1 presentes en la LdT (respeta el filtro de Escenario del menú «Escenario»)
+  const present=new Set(_pfBase().map(t=>t.c1));
+  return SCENARIOS.filter(s=>present.has(s)).concat([...present].filter(s=>!SCENARIOS.includes(s)));
+}
 function openPresFilter(e){
   const panel=document.getElementById('presFilterPanel');
-  const _escF=(document.getElementById('presFilterEsc')||{value:''}).value;
-  const tasks=TASKS.filter(t=>!_escF||(t.escenario||'')===_escF);
-  const cat2s=[...new Set(tasks.map(t=>t.c2))];
-  const sel=document.getElementById('presFilterCat2');
-  sel.innerHTML='<option value="__ALL__">— Todas —</option>'+
-    cat2s.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  _presFilterSnapshot=new Set(PRES_HIDDEN_KEYS); // para "Cancelar"
+  const c1=document.getElementById('presFilterCat');
+  const prev=c1.value;
+  c1.innerHTML='<option value="__ALL__">— Todas —</option>'+_pfScenarios().map(c=>`<option value="${esc(c)}"${c===prev?' selected':''}>${esc(c)}</option>`).join('');
+  presFilterBuildScen();
   presFilterPopulate();
   // Posicionar el panel bajo el elemento que se hizo clic (el botón real
   // #btnPresFilter está oculto/no usado — usarlo aquí daba un rect en 0,0,
   // abriendo el panel siempre en la esquina superior izquierda).
   const anchor=(e&&(e.currentTarget||e.target))||document.getElementById('btnPresFilter');
   const r=anchor.getBoundingClientRect();
-  panel.style.top=Math.min(r.bottom+4,innerHeight-400)+'px';
-  panel.style.left=Math.min(r.left,innerWidth-350)+'px';
+  panel.style.top=Math.max(8,Math.min(r.bottom+4,innerHeight-460))+'px';
+  panel.style.left=Math.max(8,Math.min(r.left,innerWidth-430))+'px';
   panel.style.display='flex';
   e&&e.stopPropagation();
 }
+function togglePresFilterScenDrop(e){toggleDropMenu(e,'presFilterScenDropBtn','presFilterScenDropPanel','block');}
+function presFilterBuildScen(){
+  const box=document.getElementById('presFilterScenChecks'),lbl=document.getElementById('presFilterScenDropLabel');
+  if(!box)return;
+  box.innerHTML='';
+  const base=_pfBase(),scs=_pfScenarios();
+  if(!scs.length){if(lbl)lbl.textContent='— sin datos —';return;}
+  const shown=[];let allFull=true;
+  scs.forEach(s=>{
+    const ts=base.filter(t=>t.c1===s);
+    const nVis=ts.filter(t=>!PRES_HIDDEN_KEYS.has(_pfKey(t))).length;
+    if(nVis>0)shown.push(s);
+    if(nVis<ts.length)allFull=false;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:6px;padding:4px 10px;cursor:pointer;user-select:none;white-space:nowrap';
+    row.onmouseenter=()=>{row.style.background='var(--bg)';};
+    row.onmouseleave=()=>{row.style.background='';};
+    const cb=document.createElement('input');cb.type='checkbox';cb.style.accentColor='var(--accent)';cb.style.cursor='pointer';
+    cb.checked=ts.length>0&&nVis===ts.length;cb.indeterminate=nVis>0&&nVis<ts.length; // parcial: algunas tareas ocultas
+    const sw=document.createElement('span');
+    sw.style.cssText=`background:${SCEN_COLOR[s]||'#888'};width:12px;height:12px;border-radius:2px;flex-shrink:0;border:1px solid rgba(0,0,0,.15);display:inline-block`;
+    const nm=document.createElement('span');nm.textContent=s;nm.style.cssText='font-size:11px;color:var(--ink)';
+    cb.addEventListener('change',()=>presFilterScenToggle(s,cb.checked));
+    // stopPropagation: la fila se reconstruye al alternar y, ya desconectada, el clic parecería "fuera" y cerraría los paneles
+    row.addEventListener('click',e=>{if(e.target===cb)return;e.stopPropagation();cb.checked=!cb.checked;presFilterScenToggle(s,cb.checked);});
+    row.append(cb,sw,nm);box.appendChild(row);
+  });
+  if(lbl){const txt=shown.join(', ');lbl.textContent=shown.length===0?'Ninguno':(allFull&&shown.length===scs.length)?'Todos':txt.slice(0,28)+(txt.length>28?'…':'');}
+}
+function presFilterScenToggle(s,show){ // muestra/oculta todas las tareas de esa Cat 1
+  _presSnap();
+  _pfBase().filter(t=>t.c1===s).forEach(t=>{const k=_pfKey(t);if(show)PRES_HIDDEN_KEYS.delete(k);else PRES_HIDDEN_KEYS.add(k);});
+  presFilterBuildScen();presFilterPopulate();renderPres();
+}
 function presFilterPopulate(){
-  const _escF=(document.getElementById('presFilterEsc')||{value:''}).value;
-  const cat2=document.getElementById('presFilterCat2').value;
-  const tasks=TASKS.filter(t=>(!_escF||(t.escenario||'')===_escF)&&(cat2==='__ALL__'||t.c2===cat2));
+  const base=_pfBase();
+  const cat=(document.getElementById('presFilterCat')||{value:'__ALL__'}).value;
+  // Cat 2 en cascada según la Cat 1 elegida (igual que en el Gantt)
+  const cat2El=document.getElementById('presFilterCat2');
+  const prev=cat2El.value;
+  const c2vals=[...new Set(base.filter(t=>cat==='__ALL__'||t.c1===cat).map(t=>t.c2))];
+  cat2El.innerHTML='<option value="__ALL__">— Todas —</option>'+c2vals.map(v=>`<option value="${esc(v)}"${v===prev?' selected':''}>${esc(v)}</option>`).join('');
+  const cat2=cat2El.value;
+  const tasks=base.filter(t=>(cat==='__ALL__'||t.c1===cat)&&(cat2==='__ALL__'||t.c2===cat2));
   const seen=new Set(),items=[];
-  tasks.forEach(t=>{const k=(t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea;if(!seen.has(k)){seen.add(k);items.push({k,t});}});
+  tasks.forEach(t=>{const k=_pfKey(t);if(!seen.has(k)){seen.add(k);items.push({k,t});}});
   // ordenar cronológicamente
   const c2early={};tasks.forEach(t=>{if(!(t.c2 in c2early)||t.iLB<c2early[t.c2])c2early[t.c2]=t.iLB;});
   items.sort((a,b)=>(c2early[a.t.c2]||0)-(c2early[b.t.c2]||0)||a.t.iLB-b.t.iLB);
@@ -6078,31 +6149,51 @@ function presFilterPopulate(){
   list.innerHTML=items.map(({k,t})=>{
     const checked=!PRES_HIDDEN_KEYS.has(k);
     const claseIcon=t.hito?'◆':t.evento?'▼':'▬';
-    return `<label style="display:flex;align-items:center;gap:6px;padding:5px 12px;border-bottom:1px solid #f5f5f5;cursor:pointer;font-size:11px;user-select:none">`+
-      `<input type="checkbox" ${checked?'checked':''} data-pfk="${esc(k)}" onchange="presFilterToggle(this)">`+
+    return `<label style="display:flex;align-items:center;gap:6px;padding:5px 12px;border-bottom:1px solid var(--grid);cursor:pointer;font-size:11px;user-select:none">`+
+      `<input type="checkbox" style="accent-color:var(--accent)" ${checked?'checked':''} data-pfk="${esc(k)}" onchange="presFilterToggle(this)">`+
       `<span style="color:${CAT2_COLOR[t.c2]||'#888'};font-size:10px;font-weight:600;min-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.c2)}</span>`+
-      `<span style="color:#aaa;font-size:10px;min-width:14px">${claseIcon}</span>`+
-      `<span style="flex:1">${esc(t.tarea)}</span></label>`;
-  }).join('');
+      `<span style="color:var(--muted);font-size:10px;min-width:14px">${claseIcon}</span>`+
+      `<span style="flex:1;color:var(--ink)">${esc(t.tarea)}</span></label>`;
+  }).join('')||'<div style="padding:10px;color:var(--muted);font-size:11px">Sin resultados</div>';
   presFilterCount();
+}
+function presFilterCat2Change(){
+  const cat=document.getElementById('presFilterCat').value,cat2=document.getElementById('presFilterCat2').value;
+  // Al elegir una Cat 2 específica se muestran automáticamente todas sus tareas (igual que en el Gantt)
+  if(cat2!=='__ALL__'){
+    _presSnap();
+    _pfBase().filter(t=>(cat==='__ALL__'||t.c1===cat)&&t.c2===cat2).forEach(t=>PRES_HIDDEN_KEYS.delete(_pfKey(t)));
+    presFilterBuildScen();renderPres();
+  }
+  presFilterPopulate();
 }
 function presFilterToggle(cb){
   const k=cb.dataset.pfk;
   _presSnap();if(cb.checked) PRES_HIDDEN_KEYS.delete(k); else PRES_HIDDEN_KEYS.add(k);
-  presFilterCount();renderPres();
+  presFilterBuildScen();presFilterCount();renderPres();
 }
 function presFilterCheckAll(show){
+  _presSnap(); // un solo punto de deshacer para todo el lote
   document.querySelectorAll('#presFilterList input[type=checkbox]').forEach(cb=>{
     cb.checked=show;
     const k=cb.dataset.pfk;
-    _presSnap();if(show) PRES_HIDDEN_KEYS.delete(k); else PRES_HIDDEN_KEYS.add(k);
+    if(show) PRES_HIDDEN_KEYS.delete(k); else PRES_HIDDEN_KEYS.add(k);
   });
-  presFilterCount();renderPres();
+  presFilterBuildScen();presFilterCount();renderPres();
 }
 function presFilterReset(){
   _presSnap();PRES_HIDDEN_KEYS.clear();
-  presFilterPopulate();
+  document.getElementById('presFilterCat').value='__ALL__';
+  document.getElementById('presFilterCat2').value='__ALL__';
+  presFilterBuildScen();presFilterPopulate();
   renderPres();
+}
+function presFilterClose(){
+  ['presFilterPanel','presFilterScenDropPanel'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.display='none';});
+}
+function presFilterCancel(){ // descarta los cambios hechos desde que se abrió el panel
+  if(_presFilterSnapshot){_presSnap();PRES_HIDDEN_KEYS=new Set(_presFilterSnapshot);renderPres();}
+  presFilterClose();
 }
 function presFilterCount(){
   const _escF=(document.getElementById('presFilterEsc')||{value:''}).value;
@@ -8720,8 +8811,8 @@ document.getElementById('gtbBorderSwatch').addEventListener('click',e=>{
 // Cerrar presFilterPanel y presTextBoxMenu al hacer clic fuera
 document.addEventListener('click',e=>{
   const p=document.getElementById('presFilterPanel');
-  if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('#btnPresFilter'))
-    p.style.display='none';
+  if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('#btnPresFilter')&&!e.target.closest('#presFilterScenDropPanel'))
+    presFilterClose();
   const m=document.getElementById('presTextBoxMenu');
   if(m&&m.style.display!=='none'&&!m.contains(e.target)&&!e.target.closest('[data-ptb]')&&!e.target.closest('#colorPicker')){
     m.style.display='none';
@@ -9295,6 +9386,7 @@ document.addEventListener('keydown',e=>{
             <span style="font-weight:400;font-size:11px;opacity:.85">XML grandes, líneas base, columnas del Gantt por clic derecho y gestión de cargas</span>
           </div>
           <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
+            <li><b>Línea de Tiempo — «Seleccionar escenarios y tareas»:</b> el panel ahora trae las mismas opciones que el del Gantt: desplegable de <b>Escenarios</b> (Cat 1, con estado parcial), filtros <b>Cat 1</b> y <b>Cat 2</b> en cascada, Todas/Ninguna, Restablecer y <b>Cancelar/Aceptar</b>. Sigue siendo independiente del Gantt. «Todas/Ninguna» ahora es un solo paso de Deshacer.</li>
             <li><b>Gantt — Barra de herramientas rediseñada:</b> grupos separados por divisores, botón <b>Capas</b> con contador (agrupa los 8 interruptores de visualización), accesos rápidos sincronizados (Avance real, Línea base, Ruta crítica), botones con texto (Ordenar, Filtrar, Editar, Ajustes, Compartir) y menú <b>⋯ Más</b> automático cuando la ventana es estrecha. No cambia ninguna función.</li>
             <li><b>Project XML — Lectura en streaming:</b> ya no carga el archivo completo ni construye un DOM gigante; procesa por partes y solo conserva proyecto, campos personalizados, tareas y líneas base (sin asignaciones ni time phasing). Un XML de 1.7 GB se lee en unos 35–80 s con memoria acotada. Barra de avance de carga.</li>
             <li><b>Líneas base 0–10 y «LB actual»:</b> Comienzo/Fin de cada línea base por tarea; la LB actual es la de fecha de guardado más reciente. Columnas «LB actual / Inicio / Fin» y mapeo automático de Start/End LB con la LB actual.</li>
