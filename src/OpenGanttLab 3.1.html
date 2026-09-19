@@ -8522,7 +8522,11 @@ function pxmlApplyMapping(silent){
       const fLB=pxmlParseDate(t.fLB)||fRPraw||new Date();
       const iRP=iRPraw||iLB;
       const fRP=fRPraw||fLB;
-      let av=parseFloat(t.av)||0;if(av>1&&av<=100)av=av/100;
+      // El avance se maneja en 0–100 en toda la app (igual que la ruta de Excel). El campo estándar PercentComplete ya viene
+      // en 0–100; un campo personalizado con fracciones (0.76 = 76%) se multiplica por 100.
+      let av=parseFloat(t.av)||0;
+      if(m.av!=='PercentComplete'&&av>0&&av<=1)av=Math.round(av*10000)/100;
+      av=Math.max(0,Math.min(100,av));
       let hito=false,evento=false;
       if(t.clase){const cl=t.clase.toLowerCase();hito=cl.includes('hito')||cl==='1';evento=cl.includes('evento');}
       else if(row.Milestone==='1')hito=true;
