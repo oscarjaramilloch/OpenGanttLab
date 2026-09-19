@@ -2540,11 +2540,31 @@ function toggleEdicionMenu(e){toggleDropMenu(e,'btnEdicionMenu','edicionMenuPane
 function closeEdicionMenu(){const p=document.getElementById('edicionMenuPanel');if(p)p.style.display='none';}
 function toggleScenDrop(){toggleDropMenu(null,'scenDropBtn','scenDropPanel','flex');}
 function toggleOrdenMenu(e){toggleDropMenu(e,'btnOrdenMenu','ordenMenuPanel');}
-function toggleFechaEstadoMenu(e){toggleDropMenu(e,'btnFechaEstadoMenu','fechaEstadoMenuPanel');}
-function toggleRutaCriticaMenu(e){toggleDropMenu(e,'btnRutaCriticaMenu','rutaCriticaMenuPanel');}
+// Opciones de Fecha de estado / Ruta crítica: viven como panel lateral del popover Capas, que se mantiene abierto
+const LAYER_OPT_PANELS=['fechaEstadoMenuPanel','rutaCriticaMenuPanel'];
+function toggleLayerOptions(e,btnId,panelId){
+  if(e)e.stopPropagation();
+  const panel=document.getElementById(panelId),btn=document.getElementById(btnId),cap=document.getElementById('capasMenuPanel');
+  if(!panel||!btn)return;
+  const wasOpen=panel.style.display!=='none'&&panel.style.display!=='';
+  LAYER_OPT_PANELS.forEach(id=>{const p=document.getElementById(id);if(p)p.style.display='none';});
+  if(wasOpen)return;
+  const br=btn.getBoundingClientRect();
+  const cr=cap&&cap.style.display!=='none'&&cap.style.display!==''?cap.getBoundingClientRect():null;
+  document.body.appendChild(panel);panel.style.display='block';
+  const pw=panel.offsetWidth,ph=panel.offsetHeight;
+  let left=cr?cr.right+8:br.left;
+  if(left+pw>window.innerWidth-8)left=cr?Math.max(8,cr.left-pw-8):window.innerWidth-pw-8;
+  const top=Math.max(8,Math.min(br.top-8,window.innerHeight-ph-8));
+  panel.style.left=left+'px';panel.style.top=top+'px';
+}
+function toggleFechaEstadoMenu(e){toggleLayerOptions(e,'btnFechaEstadoMenu','fechaEstadoMenuPanel');}
+function toggleRutaCriticaMenu(e){toggleLayerOptions(e,'btnRutaCriticaMenu','rutaCriticaMenuPanel');}
 document.addEventListener('click',e=>{
   document.querySelectorAll('.rb-menu-panel').forEach(p=>{
     if(p.style.display==='none'||p.style.display==='')return;
+    // clic dentro de un panel lateral de opciones = sigue "dentro" de Capas
+    if(p.id==='capasMenuPanel'&&e.target.closest&&e.target.closest('#fechaEstadoMenuPanel,#rutaCriticaMenuPanel'))return;
     const btnId=p.getAttribute('data-menu-btn');
     const btn=btnId?document.getElementById(btnId):null;
     if(!p.contains(e.target)&&!(btn&&btn.contains(e.target)))p.style.display='none';
@@ -2592,6 +2612,9 @@ document.getElementById('btnResetLayers').addEventListener('click',resetLayers);
 // ESC cierra cualquier menú abierto y devuelve el foco a su botón
 document.addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
+  // primero el panel lateral de opciones (si hay), dejando Capas abierto
+  const sub=LAYER_OPT_PANELS.map(id=>document.getElementById(id)).find(p=>p&&p.style.display!=='none'&&p.style.display!=='');
+  if(sub){sub.style.display='none';const sb=document.getElementById(sub.getAttribute('data-menu-btn')||'');if(sb&&sb.offsetParent!==null)sb.focus();return;}
   const open=[...document.querySelectorAll('.rb-menu-panel')].find(p=>p.style.display!=='none'&&p.style.display!=='');
   if(!open)return;
   const btn=document.getElementById(open.getAttribute('data-menu-btn')||'');
