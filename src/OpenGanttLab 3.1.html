@@ -3278,8 +3278,9 @@ function presDrawDeps(fresh){
     const byKey=new Map();TASKS.forEach(t=>byKey.set(pkOf(t),t));
     const sel=_presBarKey?byKey.get(_presBarKey.replace(/^LB\|/,''))||null:null;
     const chain=sel&&ix.byT.has(sel)?depChain(sel):null;
+    // Con el interruptor apagado no se dibuja nada; encendido, al seleccionar una barra solo queda la cadena azul (el resto de flechas se apaga)
     const dim=!!(chain&&chain.size>1),showAll=chk('presShowDeps');
-    if(!showAll&&!dim)return;
+    if(!showAll)return;
     const COL={g:'#7a8494',r:'#d63031',b:'#1a6fa0',o:'#e67e22'};
     const mk=k=>`<marker id="pdep_${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,1 L10,5 L0,9 z" fill="${COL[k]}"/></marker>`;
     body.querySelectorAll('svg').forEach(svg=>{
@@ -3298,7 +3299,7 @@ function presDrawDeps(fresh){
         const exitR=e.type==='FS'||e.type==='FF',enterL=e.type==='FS'||e.type==='SS';
         const off=Math.max(a.h,b.h)/2+6;
         const d=depRoute(exitR?a.r:a.l,a.y,exitR,enterL?b.l:b.r,b.y,enterL,off);
-        if(showAll){
+        if(!dim){
           const c=(!lbSvg&&e.bad)?'o':(e.p.crit&&e.s.crit)?'r':'g';
           base+=`<path d="${d}" fill="none" stroke="${COL[c]}" stroke-width="1.3" stroke-linejoin="round"${c==='o'?' stroke-dasharray="4 3"':''} marker-end="url(#pdep_${c})"/>`;
         }
@@ -9151,7 +9152,7 @@ document.addEventListener('keydown',e=>{
         </table>
         <ul>
           <li><b>Formato de la columna Predecesoras:</b> el mismo de Project. Ejemplos: <code>12</code> (FC sin desfase), <code>12CC+2 d&iacute;as</code> (CC con 2 d&iacute;as de retraso), <code>7FF-1 d&iacute;a</code> (FF con 1 d&iacute;a de adelanto), <code>12;15FC+3d</code> (varias, separadas por &laquo;;&raquo;). Se aceptan las siglas en espa&ntilde;ol o en ingl&eacute;s.</li>
-          <li><b>Resaltar una cadena:</b> haz <b>clic en una barra o hito</b>: se marcan en azul todas sus predecesoras y sucesoras (directas e indirectas) y el resto se atena&uacute;. Con el interruptor apagado tambi&eacute;n funciona: solo se dibuja esa cadena. Clic en un espacio en blanco o de nuevo en la barra para quitar el resaltado.</li>
+          <li><b>Resaltar una cadena:</b> haz <b>clic en una barra o hito</b>: se marcan en azul todas sus predecesoras y sucesoras (directas e indirectas) y el resto se atena&uacute;. En el Gantt tambi&eacute;n funciona con el interruptor apagado (solo se dibuja esa cadena); en la L&iacute;nea de Tiempo, con el interruptor encendido queda &uacute;nicamente la cadena azul y el resto de flechas se apaga, y con el interruptor apagado no se dibuja nada. Clic en un espacio en blanco o de nuevo en la barra para quitar el resaltado.</li>
           <li><b>Colores:</b> gris = normal; <span style="color:#d63031"><b>rojo</b></span> = entre dos tareas de la ruta cr&iacute;tica; <span style="color:#e67e22"><b>naranja discontinuo</b></span> = conflicto de fechas (solo si activas ese aviso en Configuraci&oacute;n).</li>
           <li><b>Tooltip:</b> al pasar el cursor sobre una barra aparecen sus predecesoras y sucesoras con el tipo y el desfase.</li>
           <li><b>Columnas:</b> clic derecho en un encabezado &rarr; <b>ID</b>, <b>Predecesoras</b> y <b>Sucesoras</b> para verlas junto a cada tarea.</li>
@@ -9209,7 +9210,7 @@ document.addEventListener('keydown',e=>{
         <h3>Dependencias en la L&iacute;nea de Tiempo</h3>
         <ul>
           <li>Activa <b>Dependencias</b> en el men&uacute; <b>Capas</b>. Usa los mismos datos, tipos (FC, CC, FF, CF) y colores que el Gantt: gris normal, rojo entre tareas cr&iacute;ticas y naranja discontinuo para conflictos de fechas (si los activaste en Configuraci&oacute;n).</li>
-          <li><b>Un clic en una barra o hito</b> resalta en azul su cadena de predecesoras y sucesoras y atena&uacute;a el resto. Funciona aunque el interruptor est&eacute; apagado.</li>
+          <li><b>Un clic en una barra o hito</b> resalta en azul su cadena de predecesoras y sucesoras y atena&uacute;a el resto; las dem&aacute;s flechas se apagan mientras hay una cadena seleccionada. Solo se dibuja con el interruptor Dependencias encendido.</li>
           <li>En el <b>Comparador</b> las flechas se dibujan en ambas secciones, cada una con sus propias barras.</li>
           <li>Con <b>Ejecutivo</b> o <b>Vista Hitos</b> activos no se dibujan flechas (rombos con texto debajo, o solo hitos); al volver a la vista normal reaparecen.</li>
           <li>Solo se conectan tareas visibles: las ocultas (Delete, filtros) no tienen flecha.</li>
