@@ -1010,6 +1010,7 @@ th,td{padding:0}
             <input type="file" id="pxmlFileIn" accept=".xml" multiple style="display:none" onchange="pxmlLoadFiles(this.files)">
           </div>
           <div id="pxmlLoadLog" style="font-size:11px;color:#555;background:#f8f8f8;border-radius:4px;padding:8px 12px;min-height:40px;white-space:pre-wrap;display:none"></div>
+          <div id="pxmlLoadBarWrap" style="display:none;align-items:center;gap:10px;margin-top:8px"><div style="flex:1;height:8px;background:#e3e8ef;border-radius:999px;overflow:hidden"><div id="pxmlLoadBar" style="height:100%;width:0;background:var(--accent,#1a5fb4);border-radius:999px;transition:width .15s"></div></div><span id="pxmlLoadPct" style="font-size:11px;font-weight:600;color:#555;min-width:36px;text-align:right">0%</span></div>
         </div>
         <!-- TAB: BASE DE DATOS -->
         <div id="pxmlPaneDb" style="display:none">
@@ -7431,13 +7432,20 @@ async function pxmlLoadFiles(files){
   const log=document.getElementById('pxmlLoadLog');
   log.style.display='block';
   log.textContent='';
+  // Barra de avance global: cada archivo aporta una fracción igual; dentro de un archivo avanza con los bytes leídos
+  const bar=document.getElementById('pxmlLoadBar'),pctEl=document.getElementById('pxmlLoadPct'),barWrap=document.getElementById('pxmlLoadBarWrap');
+  const nFiles=Math.max(1,files.length);let fIdx=0;
+  const setBar=frac=>{const p=Math.max(0,Math.min(100,Math.round(frac*100)));if(bar)bar.style.width=p+'%';if(pctEl)pctEl.textContent=p+'%';};
+  if(barWrap){barWrap.style.display='flex';setBar(0);}
   for(const file of files){
+    const idx0=fIdx++;
     if(!file.name.toLowerCase().endsWith('.xml')){log.textContent+=`⚠ ${file.name}: no es XML\n`;continue;}
     log.textContent+=`Cargando ${file.name}…\n`;
     try{
       const base=log.textContent;
       const result=await pxmlParseFile(file,(pct,n)=>{log.textContent=base+`  Leyendo ${pct}% · ${n} tareas…
-`;});
+`;setBar((idx0+pct/100)/nFiles);});
+      setBar((idx0+1)/nFiles);
       log.textContent=base+`  Línea base actual: ${result.currentBaseline} (${result.baselineWhy}${result.baselineDate?' '+result.baselineDate:''})
 `+(result.skipped?`  ⚠ ${result.skipped} bloque(s) de tareas con XML inválido omitidos
 `:'');
@@ -7449,6 +7457,7 @@ async function pxmlLoadFiles(files){
       pxmlMergeCols();
     }catch(e2){log.textContent+=`❌ ${file.name}: ${e2.message}\n`;}
   }
+  setBar(1);if(barWrap)setTimeout(()=>{barWrap.style.display='none';},1200);
   // Resetear el input para permitir cargar más archivos en la misma sesión
   const inp=document.getElementById('pxmlFileIn');
   if(inp) inp.value='';
@@ -7669,9 +7678,9 @@ function pxmlBuildMapGrid(){
           <option value="__FIXED__" ${val==='__FIXED__'?'selected':''}>✏ Valor fijo</option>
           ${optsHtml}
         </select>
-        <input type="text" id="pxmlFixed_${i}_${f.key}" placeholder="Valor fijo…" value="${esc(fixedVal)}"
-          style="display:${val==='__FIXED__'?'block':'none'};font:inherit;font-size:10px;padding:2px 5px;border:1px solid #cdd2d8;border-radius:3px"
-          onchange="pxmlSaveFixedMap(${i},'${f.key}',this.value)">
+        <textarea id="pxmlFixed_${i}_${f.key}" rows="1" placeholder="Valor fijo…" oninput="pxmlGrow(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
+          style="display:${val==='__FIXED__'?'block':'none'};width:100%;box-sizing:border-box;resize:none;overflow:hidden;line-height:1.3;font:inherit;font-size:10px;padding:3px 5px;border:1px solid #cdd2d8;border-radius:3px;white-space:pre-wrap;word-break:break-word"
+          onchange="pxmlSaveFixedMap(${i},'${f.key}',this.value)">${esc(fixedVal)}</textarea>
       </div>`;
     }).join('');
     // Intentar establecer el valor seleccionado después de insertar HTML
@@ -7689,6 +7698,7 @@ function pxmlBuildMapGrid(){
       </div>
     </details>`;
   }).join('');
+  grid.querySelectorAll('textarea[id^="pxmlFixed_"]').forEach(t=>{if(t.style.display!=='none')pxmlGrow(t);});
   // Restaurar valores seleccionados (los select se generan como string, hay que setearlos por JS)
   PXML_DB.forEach((db,i)=>{
     if(!db.mapping)return;
@@ -7755,13 +7765,15 @@ function pxmlRenameCustom(key,val){
   c.label=val;edSyncExtraCols();
   if(_colVis['x:'+key]&&TASKS.length)render(); // columna visible en el Gantt: actualizar su título
 }
+// "Valor fijo": el campo crece con el texto (varias líneas visuales) para poder verlo completo; Enter confirma
+function pxmlGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
 // Nombre de la carga. Si Escenario (el agrupador) está en "Valor fijo", nombre y valor fijo son lo mismo y se mantienen iguales.
 function pxmlRenameDb(i,val){
   const db=PXML_DB[i];if(!db)return;
   db.variantName=val;
   if(db.mapping&&db.mapping.escenario==='__FIXED__'){
     db.mapping.escenario_fixed=val;
-    const f=document.getElementById(`pxmlFixed_${i}_escenario`);if(f&&f!==document.activeElement)f.value=val;
+    const f=document.getElementById(`pxmlFixed_${i}_escenario`);if(f&&f!==document.activeElement){f.value=val;pxmlGrow(f);}
   }
   const n=document.getElementById(`pxmlName_${i}`);if(n&&n!==document.activeElement)n.value=val;
   pxmlAutoApply();
@@ -7770,7 +7782,7 @@ function pxmlSaveMap(dbIdx,field,val){
   if(!PXML_DB[dbIdx].mapping)PXML_DB[dbIdx].mapping={};
   PXML_DB[dbIdx].mapping[field]=val;
   const fixEl=document.getElementById(`pxmlFixed_${dbIdx}_${field}`);
-  if(fixEl)fixEl.style.display=val==='__FIXED__'?'block':'none';
+  if(fixEl){fixEl.style.display=val==='__FIXED__'?'block':'none';if(val==='__FIXED__')pxmlGrow(fixEl);}
   // Escenario = Valor fijo: la carga se renombra con ese valor
   if(field==='escenario'&&val==='__FIXED__'){
     const fx=((fixEl&&fixEl.value)||PXML_DB[dbIdx].mapping.escenario_fixed||'').trim();
