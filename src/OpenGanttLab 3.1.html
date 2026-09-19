@@ -7614,7 +7614,7 @@ function pxmlRefreshDb(){
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
           <label style="font-size:10px;color:#888;white-space:nowrap">Variante (Cat 1):</label>
           <input type="text" value="${esc(db.variantName||db.projectName)}"
-            oninput="PXML_DB[${i}].variantName=this.value"
+            oninput="pxmlRenameDb(${i},this.value)"
             style="flex:1;font:inherit;font-size:12px;font-weight:600;padding:2px 6px;border:1px solid #cdd2d8;border-radius:4px;color:#1a3a6b"
             title="Nombre que se usará como Categoría 1 en el Gantt">
         </div>
@@ -7678,7 +7678,7 @@ function pxmlBuildMapGrid(){
     return `<details open style="border:1px solid #e0e0e0;border-radius:6px;margin-bottom:10px;overflow:hidden">
       <summary style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8f9fa;cursor:pointer;list-style:none;font-size:12px;font-weight:600;color:#1a3a6b">
         <span style="background:#1a5fb4;color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0">${i+1}</span>
-        <span style="flex:1">${esc(db.variantName||db.projectName)}</span>
+        <input type="text" id="pxmlName_${i}" value="${esc(db.variantName||db.projectName)}" title="Nombre de esta carga (variante). Editable" oninput="pxmlRenameDb(${i},this.value)" onclick="event.stopPropagation()" onkeydown="event.stopPropagation()" onkeyup="event.stopPropagation()" style="flex:1;min-width:0;font:inherit;font-size:12px;font-weight:600;color:#1a3a6b;padding:3px 6px;border:1px solid transparent;border-radius:4px;background:transparent" onfocus="this.style.borderColor='#9db8e0';this.style.background='#fff'" onblur="this.style.borderColor='transparent';this.style.background='transparent'">
         <span style="font-size:10px;font-weight:400;color:#888">${db.fileName} · ${db.tasks.length} tareas</span>
         <button onclick="event.preventDefault();event.stopPropagation();pxmlAddCustom()" title="Agregar mapeo personalizado (crea una columna extra en la Tabla de Datos, solo esta sesión)" style="${_PXML_ICON_BTN}">${PXML_PLUS_SVG}</button>
         <button onclick="event.preventDefault();event.stopPropagation();pxmlDuplicate(${i})" title="Duplicar esta carga de XML (para probar otro mapeo)" style="${_PXML_ICON_BTN}">${PXML_COPY_SVG}</button>
@@ -7757,16 +7757,37 @@ function pxmlRenameCustom(key,val){
   c.label=val;edSyncExtraCols();
   if(_colVis['x:'+key]&&TASKS.length)render(); // columna visible en el Gantt: actualizar su título
 }
+// Nombre de la carga (variante). Si Categoría 1 está en "Valor fijo", nombre y valor fijo son lo mismo y se mantienen iguales.
+function pxmlRenameDb(i,val){
+  const db=PXML_DB[i];if(!db)return;
+  db.variantName=val;
+  if(db.mapping&&db.mapping.c1==='__FIXED__'){
+    db.mapping.c1_fixed=val;
+    const f=document.getElementById(`pxmlFixed_${i}_c1`);if(f&&f!==document.activeElement)f.value=val;
+  }
+  const n=document.getElementById(`pxmlName_${i}`);if(n&&n!==document.activeElement)n.value=val;
+  pxmlAutoApply();
+}
 function pxmlSaveMap(dbIdx,field,val){
   if(!PXML_DB[dbIdx].mapping)PXML_DB[dbIdx].mapping={};
   PXML_DB[dbIdx].mapping[field]=val;
   const fixEl=document.getElementById(`pxmlFixed_${dbIdx}_${field}`);
   if(fixEl)fixEl.style.display=val==='__FIXED__'?'block':'none';
+  // Categoría 1 = Valor fijo: la carga se renombra con ese valor
+  if(field==='c1'&&val==='__FIXED__'){
+    const fx=((fixEl&&fixEl.value)||PXML_DB[dbIdx].mapping.c1_fixed||'').trim();
+    if(fx){PXML_DB[dbIdx].variantName=fx;PXML_DB[dbIdx].mapping.c1_fixed=fx;const n=document.getElementById(`pxmlName_${dbIdx}`);if(n)n.value=fx;}
+  }
   pxmlAutoApply();
 }
 function pxmlSaveFixedMap(dbIdx,field,val){
   if(!PXML_DB[dbIdx].mapping)PXML_DB[dbIdx].mapping={};
   PXML_DB[dbIdx].mapping[field+'_fixed']=val;
+  // Categoría 1 = Valor fijo: la carga se renombra con ese valor
+  if(field==='c1'&&PXML_DB[dbIdx].mapping.c1==='__FIXED__'&&val.trim()){
+    PXML_DB[dbIdx].variantName=val.trim();
+    const n=document.getElementById(`pxmlName_${dbIdx}`);if(n)n.value=val.trim();
+  }
   pxmlAutoApply();
 }
 function pxmlCopyMapping(fromIdx,toIdx){
