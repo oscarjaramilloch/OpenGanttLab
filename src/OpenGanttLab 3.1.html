@@ -162,6 +162,7 @@ th,td{padding:0}
 .c2:hover::after{content:' 🎨';font-size:9px;opacity:.7}
 .c3{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden}
 .hxc{position:sticky;top:0;z-index:25;background:var(--head);border-bottom:2px solid var(--line);border-right:1px solid var(--line);color:var(--muted);font-weight:700;text-align:center;vertical-align:middle;font-size:var(--fs-cat2)}
+.lastl{border-right:none!important}
 .xc{position:sticky;z-index:11;background:#fff;font-size:var(--fs-tasks);text-align:center;border-right:1px solid var(--line);border-top:1px solid var(--grid);padding:2px 6px;vertical-align:middle;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .c3 .c3-txt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-overflow:ellipsis;white-space:normal;word-break:break-word;line-height:1.15}
 .cc{background:#fff;border-top:1px solid var(--grid);padding:0}
@@ -2821,6 +2822,8 @@ function render(){
   let _xl=lC3+wC3;
   const xcols=_ganttExtDefs().filter(d=>_colVis[d.id]).map(d=>{const w=_ganttExtW(d),c={d,w,left:_xl};_xl+=w;return c;});
   const wX=_xl-(lC3+wC3);
+  // última columna fija de la izquierda: sin divisor derecho, para que el margen en blanco antes del gráfico no se note
+  const _ll=k=>((xcols.length?k==='x':_colVis.c3&&k==='c3')?' lastl':'');
   // Si Resumen=Sí Y Marca Activity=Sí, esa tarea nunca se oculta por "Ocultar Resumen"
   const vis=TASKS.filter(t=>SCEN_ON[t.c1]&&!HIDDEN_KEYS.has((t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea)&&(!_onlyCrit||t.crit)&&(!_showM2||norm(t.marca2||'')==='si')&&(_showSummary||!t.summary||norm(t.marca2||'')==='si'));
   if(!vis.length){wrap.innerHTML='<div class="empty">No hay actividades visibles. Revisa escenarios o filtros.</div>';document.getElementById('legend').innerHTML='';document.getElementById('btnToday').style.display='none';updateStatusbar(vis);return;}
@@ -2845,9 +2848,10 @@ function render(){
   if(_uniformMinor){
     const step=S.grid[1].x-S.grid[0].x;
     glBg=`;background-image:linear-gradient(to right, var(--grid) 1px, transparent 1px);background-repeat:repeat-x;background-size:${step}px 100%;background-position:${S.grid[0].x+XPAD}px 0`;
-    gl=S.grid.filter(g=>g.major).map(g=>`<div class="gl major" style="left:${g.x+XPAD}px"></div>`).join('');
+    // la 1.ª línea del patrón (inicio del gráfico) se tapa con una franja blanca para que no marque el margen en blanco
+    gl=`<div style="position:absolute;top:0;bottom:0;left:${S.grid[0].x+XPAD}px;width:1px;background:#fff;pointer-events:none"></div>`+S.grid.filter(g=>g.major&&g.x>0.5).map(g=>`<div class="gl major" style="left:${g.x+XPAD}px"></div>`).join('');
   } else {
-    gl=S.grid.map(g=>`<div class="gl ${g.major?'major':''}" style="left:${g.x+XPAD}px"></div>`).join('');
+    gl=S.grid.filter(g=>g.x>0.5).map(g=>`<div class="gl ${g.major?'major':''}" style="left:${g.x+XPAD}px"></div>`).join('');
   }
   const estDate=parseLocal(document.getElementById('estDate').value);
   const estX=estDate?S.x(estDate)+XPAD:null;
@@ -2974,8 +2978,8 @@ function render(){
         const c1td=(emitC1&&_colVis.c1)?`<td class="c1" data-cat1="${esc(c1)}" rowspan="${g1._c1Rows}" style="width:${CAT1_W}px;min-width:${CAT1_W}px;left:${lC1}px;background:${c1bg};color:${c1fg}" title="Clic: cambiar color">${esc(c1)}</td>`:'';
         const c2td=(emitC2&&_colVis.c2)?`<td class="c2" data-cat2="${esc(c2)}" rowspan="${g2._tg.length}" style="left:${lC2}px;width:${CAT2_W}px;min-width:${CAT2_W}px;background:${c2bg};color:${c2fg}" title="Clic: cambiar color barras">${esc(c2)}</td>`:'';
         const m2td=_colVis.m2?`<td class="c2 marca2col" style="left:${lM2}px;width:${MARCA2_W}px;min-width:${MARCA2_W}px;text-align:center;font-size:10px;background:#fff;">${esc(tg.marca2||"")}</td>`:'';
-        const c3td=_colVis.c3?`<td class="c3" style="left:${lC3}px;width:${CAT3_W}px;min-width:${CAT3_W}px" title="${esc(tg.name)}"><div class="c3-txt">${esc(tg.name)}</div></td>`:'';
-        const xtds=xcols.map(c=>{const tx=_ganttExtText(tg.insts[0],c.d);return `<td class="xc" style="left:${c.left}px;width:${c.w}px;min-width:${c.w}px" title="${esc(tx)}">${esc(tx)}</td>`;}).join('');
+        const c3td=_colVis.c3?`<td class="c3${_ll('c3')}" style="left:${lC3}px;width:${CAT3_W}px;min-width:${CAT3_W}px" title="${esc(tg.name)}"><div class="c3-txt">${esc(tg.name)}</div></td>`:'';
+        const xtds=xcols.map(c=>{const tx=_ganttExtText(tg.insts[0],c.d);return `<td class="xc${c===xcols[xcols.length-1]?' lastl':''}" style="left:${c.left}px;width:${c.w}px;min-width:${c.w}px" title="${esc(tx)}">${esc(tx)}</td>`;}).join('');
         if(emitC1&&!firstC1) trCls=' class="sep-c1"';
         body+=`<tr${trCls}>${esctd}${c1td}${c2td}${m2td}${c3td}${xtds}`+
       `<td class="cc" style="width:${W}px;min-width:${W}px"><div class="br" style="width:${W}px;height:${RH}px${glBg}">${tlHtml}${gl}${cnt}</div></td></tr>`;
@@ -2987,18 +2991,18 @@ function render(){
   });
 
   // encabezado (escalado)
-  const supers=hasSuper?S.superlevel.map(m=>`<div class="yr" style="left:${m.x+XPAD}px;width:${m.w}px;height:${yH}px;line-height:${yH}px;font-weight:700">${m.lbl}</div>`).join(''):'';
+  const supers=hasSuper?S.superlevel.map(m=>`<div class="yr" style="left:${m.x+XPAD}px;width:${m.w}px;height:${yH}px;line-height:${yH}px;font-weight:700${m.x<=0?';border-left:none':''}">${m.lbl}</div>`).join(''):'';
   const hasMinors=S.minor.some(m=>m.lbl);const majorH=(!hasSuper&&!hasMinors)?HH:yH;const majorLH=(!hasSuper&&!hasMinors)?HH:yH;
-  const majors=S.major.map(m=>`<div class="yr" style="left:${m.x+XPAD}px;width:${m.w}px;height:${majorH}px;line-height:${majorLH}px;top:${hasSuper?yH:0}px">${m.lbl}</div>`).join('');
-  const minors=S.minor.map(m=>m.lbl?`<div class="mo" style="left:${m.x+XPAD}px;width:${m.w}px;top:${hasSuper?yH*2:yH}px;height:${yH}px;line-height:${yH}px"${m.tip?` title="${esc(m.tip)}"`:''}>${m.lbl}</div>`:'').join('');
+  const majors=S.major.map(m=>`<div class="yr" style="left:${m.x+XPAD}px;width:${m.w}px;height:${majorH}px;line-height:${majorLH}px;top:${hasSuper?yH:0}px${m.x<=0?';border-left:none':''}">${m.lbl}</div>`).join('');
+  const minors=S.minor.map(m=>m.lbl?`<div class="mo" style="left:${m.x+XPAD}px;width:${m.w}px;top:${hasSuper?yH*2:yH}px;height:${yH}px;line-height:${yH}px${m.x<=0?';border-left:none':''}"${m.tip?` title="${esc(m.tip)}"`:''}>${m.lbl}</div>`:'').join('');
   const estHdr=(estX!=null&&SHOW_HOY)?`<div class="tl" id="todayLine" style="left:${estX}px"></div>`:'';
 
   const hEsc=_colVis.esc?`<th class="hcat1 hcat-esc" style="left:0;width:${ESCENARIO_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'esc');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Escenario<span class="hdr-filter-btn" data-hcol="esc" onclick="edfOpenFilter(event,'esc','Escenario','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="esc"></div></div></th>`:'';
   const hC1=_colVis.c1?`<th class="hcat1" style="left:${lC1}px;width:${CAT1_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c1');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 1<span class="hdr-filter-btn" data-hcol="c1" onclick="edfOpenFilter(event,'c1','Categoría 1','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c1"></div></div></th>`:'';
   const hC2=_colVis.c2?`<th class="hcat2" style="left:${lC2}px;width:${CAT2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 2<span class="hdr-filter-btn" data-hcol="c2" onclick="edfOpenFilter(event,'c2','Categoría 2','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c2"></div></div></th>`:'';
   const hM2=_colVis.m2?`<th class="hcat2 hcat-m2" style="left:${lM2}px;width:${MARCA2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'m2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Marca Activity<span class="hdr-filter-btn" data-hcol="m2" onclick="edfOpenFilter(event,'m2','Marca Activity','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="m2"></div></div></th>`:'';
-  const hC3=_colVis.c3?`<th class="hcat3" style="left:${lC3}px;width:${CAT3_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c3');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Nombre de Tarea<span class="hdr-filter-btn" data-hcol="c3" onclick="edfOpenFilter(event,'c3','Nombre de Tarea','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c3"></div></div></th>`:'';
-  const hX=xcols.map(c=>`<th class="hxc" style="left:${c.left}px;width:${c.w}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'${c.d.id}');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.d.label)}<span class="hdr-filter-btn" data-hcol="${c.d.id}" onclick="edfOpenFilter(event,'${c.d.id}','${esc(c.d.label)}','${c.d.type}','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="ext:${c.d.id}"></div></div></th>`).join('');
+  const hC3=_colVis.c3?`<th class="hcat3${_ll('c3')}" style="left:${lC3}px;width:${CAT3_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c3');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Nombre de Tarea<span class="hdr-filter-btn" data-hcol="c3" onclick="edfOpenFilter(event,'c3','Nombre de Tarea','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c3"></div></div></th>`:'';
+  const hX=xcols.map(c=>`<th class="hxc${c===xcols[xcols.length-1]?' lastl':''}" style="left:${c.left}px;width:${c.w}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'${c.d.id}');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.d.label)}<span class="hdr-filter-btn" data-hcol="${c.d.id}" onclick="edfOpenFilter(event,'${c.d.id}','${esc(c.d.label)}','${c.d.type}','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="ext:${c.d.id}"></div></div></th>`).join('');
   const totalTableW=lC3+wC3+wX+W;
   wrap.innerHTML=`<table><thead><tr>`+
     hEsc+hC1+hC2+hM2+hC3+hX+
