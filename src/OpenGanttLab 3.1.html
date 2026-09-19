@@ -159,13 +159,19 @@ header .sub{font-size:clamp(9px,1.1vw,12px);color:var(--muted);margin-top:1px;fo
 @keyframes tb-pop-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .tb-pop-title{padding:4px 8px 6px;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--muted)}
 .tb-pop-sep{height:1px;margin:6px 0;background:var(--line)}
-.tb-lrow-wrap{display:flex;align-items:center;gap:4px;padding-right:4px;border-radius:8px}
+.tb-lrow-wrap{display:flex;align-items:center;position:relative;padding-right:52px;border-radius:8px}
+.tb-lrow-wrap>div[id$="MenuWrap"]{position:absolute!important;right:4px;top:50%;transform:translateY(-50%)}
 .tb-lrow-wrap:hover{background:rgba(127,127,127,.1)}
 .tb-lrow{flex:1;justify-content:flex-start;gap:10px;padding:7px 8px}
 .tb-lrow svg{width:18px;height:18px;flex-shrink:0;color:var(--muted)}
 .tb-lrow .tg-label{flex:1;font-size:12.5px}
 .tb-lrow:has(input:checked) svg{color:var(--accent)}
 .tb-lrow input:focus-visible+.tg-track{outline:2px solid var(--accent);outline-offset:2px}
+/* Compacto (ancho extremo, cuando ni con todo en "Más" cabe): c1 = accesos rápidos sin switch, c2 = solo íconos */
+#mainRibbon.tb-c1 .tb-pill .tb-sw{display:none}
+#mainRibbon.tb-c1 .tb-pill{padding:0 10px}
+#mainRibbon.tb-c2 .tb-pill>span,#mainRibbon.tb-c2 .tb-capas .tb-lbl{display:none}
+#mainRibbon.tb-c2 .tb-pill{padding:0 8px}
 [data-tb][hidden],.tb-div[hidden],.tb-pop [hidden]{display:none!important}
 /* Leyenda fija */
 .legend{display:flex;flex-direction:column;gap:3px;padding:4px 16px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:48}
@@ -2514,11 +2520,13 @@ function toggleDropMenu(e,btnId,panelId,openDisplay){
   if(e)e.stopPropagation();
   const panel=document.getElementById(panelId);if(!panel)return;
   const wasOpen=panel.style.display!=='none'&&panel.style.display!=='';
+  // Medir antes de cerrar: si el botón vive dentro de otro panel (p.ej. el ⚙ de Fecha de estado dentro de Capas),
+  // closeAllDropMenus() lo oculta y su rect quedaría en cero.
+  const btn=document.getElementById(btnId);
+  const r=btn.getBoundingClientRect();
   closeAllDropMenus();
   if(!wasOpen){
-    const btn=document.getElementById(btnId);
-    const r=btn.getBoundingClientRect();
-    panel.style.left=r.left+'px';panel.style.top=(r.bottom+4)+'px';
+    panel.style.left=Math.max(8,Math.min(r.left,window.innerWidth-(panel.offsetWidth||300)-8))+'px';panel.style.top=(r.bottom+4)+'px';
     document.body.appendChild(panel);panel.style.display=openDisplay||'block';
   }
 }
@@ -2603,13 +2611,17 @@ document.querySelectorAll('#masMenuPanel [data-mas]').forEach(b=>b.addEventListe
     ORDER.forEach(k=>{const h=holder(k);if(h)h.hidden=false;});
     document.querySelectorAll('#masMenuPanel [data-mas]').forEach(b=>b.hidden=true);
     masWrap.style.display='none';dividers.forEach(d=>d.hidden=false);
+    ribbon.classList.remove('tb-c1','tb-c2');
+    const over=()=>ribbon.scrollWidth>ribbon.clientWidth+1;
     let n=0;
-    while(ribbon.scrollWidth>ribbon.clientWidth+1&&n<ORDER.length){
+    while(over()&&n<ORDER.length){
       const k=ORDER[n++],h=holder(k);
       if(h)h.hidden=true;
       const mi=document.querySelector('#masMenuPanel [data-mas="'+k+'"]');if(mi)mi.hidden=false;
       masWrap.style.display='inline-block';
     }
+    if(over())ribbon.classList.add('tb-c1');
+    if(over())ribbon.classList.add('tb-c2');
     // divisores que quedan pegados a un grupo vacío
     const vis=el=>!el.hidden&&el.style.display!=='none';
     dividers.forEach(d=>{
@@ -9054,10 +9066,12 @@ document.addEventListener('keydown',e=>{
         <li>Cada sección tiene su propia barra de herramientas arriba. Los interruptores (toggles) se activan con un clic; los íconos con «˅» abren un menú.</li>
       </ul>
 <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px">Comparador de Escenarios (Gantt)</h2><ul style="padding-left:18px;margin-bottom:12px">
-        <li><b>Interruptores:</b> Avance real (relleno de avance en las barras), Línea Base, Marca Activity, Resumen (mostrar las tareas resumen), Fechas (fechas junto a las barras), Fecha de estado y Ruta Crítica (borde rojo).</li>
+        <li><b>Barra de herramientas:</b> agrupada en Actualizar · Vista (Capas y accesos rápidos) · Análisis (Ordenar, Filtrar) · Edición · Ajustes y Compartir. Si la ventana es estrecha, los grupos de la derecha pasan al menú <b>⋯ Más</b>.</li>
+        <li><b>Capas:</b> el botón «Capas» (con el número de capas activas) abre la lista de capas de visualización: Avance real (relleno de avance en las barras), Línea base, Marca Activity, Resumen (mostrar las tareas resumen), Fechas (fechas junto a las barras), Dependencias, Fecha de estado y Ruta crítica (borde rojo; el ícono junto a las dos últimas abre sus opciones). «Restablecer capas» deja solo Fechas activa. Se cierra con clic fuera o con Esc.</li>
+        <li><b>Accesos rápidos:</b> Avance real, Línea base y Ruta crítica también están en la barra como interruptores; siempre reflejan lo mismo que el menú Capas.</li>
         <li><b>Actualizar:</b> recarga el Excel vinculado con los últimos cambios.</li>
-        <li><b>Orden de tareas:</b> Cronológico u Original (orden del archivo) dentro de cada Categoría 2.</li>
-        <li><b>Filtro:</b> activa/desactiva los filtros por columna (ícono de embudo en cada encabezado) y «Borrar» los quita todos.</li>
+        <li><b>Ordenar:</b> Cronológico u Original (orden del archivo) dentro de cada Categoría 2.</li>
+        <li><b>Filtrar:</b> activa/desactiva los filtros por columna (ícono de embudo en cada encabezado) y «Borrar» los quita todos.</li>
         <li><b>Selección de tareas:</b> elige qué tareas y categorías se ven.</li>
         <li><b>Edición:</b> Insertar texto libre, Mover en bloque las fechas de un grupo y Reordenar grupos.</li>
         <li><b>Dependencias:</b> flechas entre predecesoras y sucesoras (FC, CC, FF, CF) con clic en una barra para resaltar su cadena; el ícono de aviso lista conflictos de fechas, predecesoras inexistentes y ciclos.</li>
@@ -9144,6 +9158,7 @@ document.addEventListener('keydown',e=>{
             <span style="font-weight:400;font-size:11px;opacity:.85">XML grandes, líneas base, columnas del Gantt por clic derecho y gestión de cargas</span>
           </div>
           <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
+            <li><b>Gantt — Barra de herramientas rediseñada:</b> grupos separados por divisores, botón <b>Capas</b> con contador (agrupa los 8 interruptores de visualización), accesos rápidos sincronizados (Avance real, Línea base, Ruta crítica), botones con texto (Ordenar, Filtrar, Editar, Ajustes, Compartir) y menú <b>⋯ Más</b> automático cuando la ventana es estrecha. No cambia ninguna función.</li>
             <li><b>Project XML — Lectura en streaming:</b> ya no carga el archivo completo ni construye un DOM gigante; procesa por partes y solo conserva proyecto, campos personalizados, tareas y líneas base (sin asignaciones ni time phasing). Un XML de 1.7 GB se lee en unos 35–80 s con memoria acotada. Barra de avance de carga.</li>
             <li><b>Líneas base 0–10 y «LB actual»:</b> Comienzo/Fin de cada línea base por tarea; la LB actual es la de fecha de guardado más reciente. Columnas «LB actual / Inicio / Fin» y mapeo automático de Start/End LB con la LB actual.</li>
             <li><b>Tabla de Datos:</b> ventana virtual desde 250 filas (miles de tareas sin lentitud), repintado diferido del Gantt/LdT mientras se edita, sin doble carga al abrir, «Av%» renombrado a <b>Avance Real</b>, columnas de fecha personalizadas con calendario y filtro, deshacer/rehacer/restaurar XML, anchos de columna ajustables y botón Agregar fila.</li>
