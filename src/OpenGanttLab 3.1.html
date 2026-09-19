@@ -3245,7 +3245,8 @@ function ganttDrawDeps(){
   const showAll=!!(document.getElementById('showDeps')||{}).checked;
   const els=wrap.querySelectorAll('[data-di]');
   els.forEach(el=>{el.style.opacity='';});
-  if(!ix.has||(!showAll&&!_depSel))return;
+  // Sin el interruptor Dependencias no se dibuja nada; encendido, al seleccionar una barra solo queda la cadena azul (igual que en la LdT)
+  if(!ix.has||!showAll)return;
   const chain=_depSel?depChain(_depSel):null;
   const dim=!!(chain&&chain.size>1);
   const tb=wrap.querySelector('table');if(!tb)return;
@@ -3259,7 +3260,7 @@ function ganttDrawDeps(){
   let paths='';
   ix.edges.forEach(e=>{
     const inCh=chain&&chain.has(e.p)&&chain.has(e.s);
-    if(!showAll&&!inCh)return;
+    if(dim&&!inCh)return;
     const a=A.get(e.p._di),b=A.get(e.s._di);if(!a||!b)return;
     const c=e.bad?'o':inCh&&dim?'b':(e.p.crit&&e.s.crit)?'r':'g';
     const exitR=e.type==='FS'||e.type==='FF',enterL=e.type==='FS'||e.type==='SS';
@@ -3338,6 +3339,7 @@ function depFocus(t){
   closeDepIssues();
   const wrap=document.getElementById('wrap');
   if(window.ogReturnToGantt)ogReturnToGantt();
+  const _sd=document.getElementById('showDeps');if(_sd&&!_sd.checked){_sd.checked=true;render();}
   _depSel=depIndex().byT.has(t)?t:null;
   ganttDrawDeps();
   const el=wrap&&wrap.querySelector(`[data-di="${t._di}"]`);
@@ -9263,7 +9265,7 @@ document.addEventListener('keydown',e=>{
         </table>
         <ul>
           <li><b>Formato de la columna Predecesoras:</b> el mismo de Project. Ejemplos: <code>12</code> (FC sin desfase), <code>12CC+2 d&iacute;as</code> (CC con 2 d&iacute;as de retraso), <code>7FF-1 d&iacute;a</code> (FF con 1 d&iacute;a de adelanto), <code>12;15FC+3d</code> (varias, separadas por &laquo;;&raquo;). Se aceptan las siglas en espa&ntilde;ol o en ingl&eacute;s.</li>
-          <li><b>Resaltar una cadena:</b> haz <b>clic en una barra o hito</b>: se marcan en azul todas sus predecesoras y sucesoras (directas e indirectas) y el resto se atena&uacute;. En el Gantt tambi&eacute;n funciona con el interruptor apagado (solo se dibuja esa cadena); en la L&iacute;nea de Tiempo, con el interruptor encendido queda &uacute;nicamente la cadena azul y el resto de flechas se apaga, y con el interruptor apagado no se dibuja nada. Clic en un espacio en blanco o de nuevo en la barra para quitar el resaltado.</li>
+          <li><b>Resaltar una cadena:</b> haz <b>clic en una barra o hito</b>: se marcan en azul todas sus predecesoras y sucesoras (directas e indirectas) y el resto se atena&uacute;. Solo funciona con el interruptor <b>Dependencias</b> encendido: queda &uacute;nicamente la cadena azul y el resto de flechas se apaga; con el interruptor apagado no se dibuja nada (igual en el Gantt y en la L&iacute;nea de Tiempo). Clic en un espacio en blanco o de nuevo en la barra para quitar el resaltado.</li>
           <li><b>Colores:</b> gris = normal; <span style="color:#d63031"><b>rojo</b></span> = entre dos tareas de la ruta cr&iacute;tica; <span style="color:#e67e22"><b>naranja discontinuo</b></span> = conflicto de fechas (solo si activas ese aviso en Configuraci&oacute;n).</li>
           <li><b>Tooltip:</b> al pasar el cursor sobre una barra aparecen sus predecesoras y sucesoras con el tipo y el desfase.</li>
           <li><b>Columnas:</b> clic derecho en un encabezado &rarr; <b>ID</b>, <b>Predecesoras</b> y <b>Sucesoras</b> para verlas junto a cada tarea.</li>
