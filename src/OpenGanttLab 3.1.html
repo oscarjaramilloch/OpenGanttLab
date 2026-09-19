@@ -5474,6 +5474,10 @@ function _presSVG(all,S,TW,mn,mx,opts){
     return maxW;
   })();
   const RAP_LABEL_W=groupByC1?Math.max(RAP_LABEL_W_USER,_rapAutoLabelW):32;
+  // Borde derecho del rectángulo del nombre de Categoría 1 (Vista C1): ceñido al texto. El margen de 50px que dejaba
+  // ese rectángulo enorme con una sola línea (pensado para las fechas a la izquierda de las barras) pasa a ser
+  // espacio interior de la banda, entre el divisor y el inicio del gráfico.
+  const _rapLblEnd=groupByC1?RAP_LABEL_W+12:0;
   // Margen extra manual (controles del ribbon) — declarado antes de ML/MR porque el margen
   // izquierdo/derecho debe sumarse directamente a esos anchos, no solo al lienzo total.
   const _extraTop=+(document.getElementById('presExtraTop')||{value:0}).value||0;
@@ -5496,7 +5500,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const needL=halfW-rawX-50; if(needL>_autoLeft)_autoLeft=needL;
     const needR=halfW-(TW-rawX)-80; if(needR>_autoRight)_autoRight=needR;
   });
-  const ML=50+(groupByC1?RAP_LABEL_W:0)+_extraLeft+Math.max(0,_autoLeft),MR=80+_extraRight+Math.max(0,_autoRight);
+  const ML=(groupByC1?_rapLblEnd+40:50)+_extraLeft+Math.max(0,_autoLeft),MR=80+_extraRight+Math.max(0,_autoRight);
   // Título (Escenario/Comparador) con "Distancia al eje" (titleYOffset), mismo principio que
   // los hitos: el texto se desplaza hacia arriba (más lejos del eje) restando el offset a su
   // posición natural, y el alto reservado arriba (_titleShift) crece exactamente lo necesario
@@ -5587,7 +5591,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     <pattern id="pat-dots-dense-lt" patternUnits="userSpaceOnUse" width="5" height="5"><circle cx="2.5" cy="2.5" r="1.2" fill="rgba(255,255,255,0.42)"/></pattern>
   </defs>`;
   const _msPerPx=TW>0?(+mx- +mn)/TW:0;
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" data-task-y0="${taskY0}" data-layer-h="${layerH}" data-ms-per-px="${_msPerPx}" data-ml="${ML}" data-use-lb="${useLB?1:0}" style="font-family:${ff};background:#fff">${patDefs}`;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" data-task-y0="${taskY0}" data-layer-h="${layerH}" data-ms-per-px="${_msPerPx}" data-ml="${ML}" data-rap-lw="${RAP_LABEL_W}" data-use-lb="${useLB?1:0}" style="font-family:${ff};background:#fff">${patDefs}`;
   // Vista RaP: caja + etiqueta por cada banda de Categoría 1 (color de separación gris —
   // valor provisional, a validar). La etiqueta se parte en varias líneas por palabras si no
   // cabe en el ancho reservado (RAP_LABEL_W).
@@ -5599,7 +5603,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const bandSelCls=(b.c1===_presRapSelC1)?' class="pres-sel"':'';
       svg+=`<rect x="2" y="${by0}" width="${ML+TW+MR-4}" height="${by1-by0}" rx="8" ry="8" fill="none" stroke="${bandGray}" stroke-width="1.5" data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;
       // Divisor vertical entre la columna de nombres de Categoría 1 y el Gantt
-      svg+=`<line x1="${ML}" y1="${by0}" x2="${ML}" y2="${by1}" stroke="${bandGray}" stroke-width="1.5"/>`;
+      svg+=`<line x1="${_rapLblEnd}" y1="${by0}" x2="${_rapLblEnd}" y2="${by1}" stroke="${bandGray}" stroke-width="1.5"/>`;
       // Estilo/texto editable de la etiqueta de Categoría 1 — guardado en PRES_OPTS bajo una
       // clave sintética ("RAPC1|"+c1) para reutilizar el mismo menú y mecanismo de guardado
       // (presOpts) que las barras de tarea, sin tocar el dato real (TASKS.c1). Ver dblclick de
@@ -5607,7 +5611,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const c1OptKey='RAPC1|'+b.c1;
       const c1Opt=PRES_OPTS[c1OptKey]||{};
       const labelFsz=c1Opt.fontSize||Math.max(fsz+2,13);
-      const lx=ML/2,cy=(by0+by1)/2;
+      const lx=(2+_rapLblEnd)/2,cy=(by0+by1)/2;
       const availH=Math.max(0,(by1-by0)-10);
       const charW=labelFsz*0.62;
       const labelRaw=(c1Opt.label!==undefined&&c1Opt.label!=='')?c1Opt.label:String(b.c1||'');
@@ -5636,7 +5640,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       // verticalmente (antes del texto, que va encima con pointer-events:none para no robarle
       // el arrastre al hacer clic justo sobre las letras) — el doble clic sobre esta misma
       // asa abre el menú de edición de texto.
-      svg+=`<rect x="2" y="${by0}" width="${ML-5}" height="${by1-by0}" fill="transparent" data-rap-reorder="1" data-c1="${ex(String(b.c1||''))}" style="cursor:move"/>`;
+      svg+=`<rect x="2" y="${by0}" width="${_rapLblEnd-5}" height="${by1-by0}" fill="transparent" data-rap-reorder="1" data-c1="${ex(String(b.c1||''))}" style="cursor:move"/>`;
       svg+=`<text x="${lx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${labelFsz}" font-weight="${labelWeight}" font-style="${labelStyle}" text-decoration="${labelDeco}" fill="${labelFill}" transform="rotate(-90 ${lx} ${cy})" pointer-events="none">${tspans}</text>`;
       // Asa de arrastre: borde inferior de la banda → ajustar su alto (filas) manualmente
       svg+=`<rect x="2" y="${by1-3}" width="${ML+TW+MR-4}" height="6" fill="transparent" data-rap-resize="h" data-c1="${ex(String(b.c1||''))}" data-rows="${b.rows}" style="cursor:ns-resize"/>`;
@@ -5644,7 +5648,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     // Asa de arrastre: divisor entre la columna de Categoría 1 y el Gantt → ajustar su ancho
     const _rapLastBand=rapBands[rapBands.length-1];
     const _rapTotalRows=_rapLastBand.startLy+_rapLastBand.rows;
-    svg+=`<rect x="${ML-3}" y="${taskY0}" width="6" height="${_rapTotalRows*layerH}" fill="transparent" data-rap-resize="w" style="cursor:ew-resize"/>`;
+    svg+=`<rect x="${_rapLblEnd-3}" y="${taskY0}" width="6" height="${_rapTotalRows*layerH}" fill="transparent" data-rap-resize="w" style="cursor:ew-resize"/>`;
     // Metadata para el arrastre de reordenamiento vertical (ver data-rap-reorder abajo) — se
     // necesita fuera de esta función para hacer hit-test contra la posición del puntero.
     _presLastRapBands=rapBands.map(b=>({c1:b.c1,startLy:b.startLy,rows:b.rows}));
@@ -6974,7 +6978,7 @@ document.getElementById('presBody').addEventListener('mousedown',e=>{
   const pt=_pdSvgPt(svg,e.clientX,e.clientY);
   const type=handle.dataset.rapResize;
   if(type==='w'){
-    _presRapDrag={type,startX:pt.x,startW:RAP_LABEL_W_USER};
+    _presRapDrag={type,startX:pt.x,startW:RAP_LABEL_W_USER||(+svg.dataset.rapLw||0)};
   } else {
     _presRapDrag={type,startY:pt.y,c1:handle.dataset.c1,layerH:+svg.dataset.layerH||42,startRows:+handle.dataset.rows||1};
   }
@@ -9500,6 +9504,7 @@ document.addEventListener('keydown',e=>{
             <span style="font-weight:400;font-size:11px;opacity:.85">XML grandes, líneas base, columnas del Gantt por clic derecho y gestión de cargas</span>
           </div>
           <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
+            <li><b>Línea de Tiempo — Vista C1:</b> el rectángulo con el nombre de Categoría 1 ahora se ciñe al texto (antes quedaba muy ancho con una sola línea); las barras no se mueven, el espacio sobrante pasa a ser interior de la banda. El divisor sigue siendo arrastrable.</li>
             <li><b>Línea de Tiempo — Hito dentro de la banda C1:</b> en el panel del hito, sección <b>Ubicación</b>: «Sobre el eje» (por defecto, como siempre) o «Dentro de banda C1» con selector de <b>Banda</b>. En Vista C1 el rombo se dibuja en su fecha como una fila más de la banda, con el nombre a la derecha y la fecha debajo, sin línea al eje; se arrastra entre filas como una barra. No aplica en Ejecutivo ni Vista Hitos.</li>
             <li><b>Línea de Tiempo — «Seleccionar escenarios y tareas»:</b> el panel ahora trae las mismas opciones que el del Gantt: desplegable de <b>Escenarios</b> (Cat 1, con estado parcial), filtros <b>Cat 1</b> y <b>Cat 2</b> en cascada, Todas/Ninguna, Restablecer y <b>Cancelar/Aceptar</b>. Sigue siendo independiente del Gantt. «Todas/Ninguna» ahora es un solo paso de Deshacer.</li>
             <li><b>Gantt — Barra de herramientas rediseñada:</b> grupos separados por divisores, botón <b>Capas</b> con contador (agrupa los 8 interruptores de visualización), accesos rápidos sincronizados (Avance real, Línea base, Ruta crítica), botones con texto (Ordenar, Filtrar, Editar, Ajustes, Compartir) y menú <b>⋯ Más</b> automático cuando la ventana es estrecha. No cambia ninguna función.</li>
