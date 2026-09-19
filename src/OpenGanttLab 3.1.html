@@ -2622,7 +2622,7 @@ function _ganttColVal(t,col){
    por defecto, después de "Nombre de Tarea"; incluyen las columnas extra de los mapeos personalizados. */
 const GANTT_EXT_DEFS=[
   {id:'iLB',label:'Start LB',type:'date',w:86},{id:'fLB',label:'End LB',type:'date',w:86},
-  {id:'av',label:'Av%',type:'number',w:58},
+  {id:'av',label:'Avance Real',type:'number',w:88},
   {id:'iRP',label:'Start R/P',type:'date',w:86},{id:'fRP',label:'End R/P',type:'date',w:86},
   {id:'clase',label:'Clase',type:'text',w:72},{id:'crit',label:'Ruta Crítica',type:'text',w:84},
   {id:'summary',label:'Resumen',type:'text',w:72}
@@ -2847,8 +2847,9 @@ function render(){
     }
     return n;
   };
-  const BAR_H_NOLB=13; // alto fijo (px) de la barra R/P cuando no se muestra la línea base
-  const _barsMin=showLB?27*fs:BAR_H_NOLB+6,_hitoMin=16*fs;
+  // Tamaños fijos (px), independientes de la fuente: barras (LB y R/P) y hitos = 12 px
+  const BAR_H=12,HITO_SZ=12;
+  const _barsMin=showLB?BAR_H*2+7:BAR_H+6,_hitoMin=Math.ceil(HITO_SZ*1.42)+3;
   const yH=Math.max(16,Math.round(21*(fsYear/10)));
   const _onlyCrit=document.getElementById('showOnlyCrit')&&document.getElementById('showOnlyCrit').checked;
   const _showM2=document.getElementById('showMarca2')&&document.getElementById('showMarca2').checked;
@@ -2974,12 +2975,12 @@ function render(){
         xcols.forEach((c,i)=>_th(_wrapOn(c.d.id)?_lines(_xtx[i],c.w-12,fsTask):1,fsTask));
         const _onlyMarks=tg.insts.every(t=>t.hito||t.evento);
         const RH=Math.max(18,Math.round(Math.max(_txtH,_onlyMarks?_hitoMin:_barsMin)));
-        const diamSz=Math.round(11*fs);
+        const diamSz=HITO_SZ;
         // barras centradas verticalmente en la fila (sobra espacio cuando el texto ocupa 2 líneas)
         const _bo=Math.max(0,Math.round((RH-_barsMin)/2));
-        const lbH=Math.round(10*fs),lbTop=Math.round(3*fs)+_bo;
-        const rpH=showLB?Math.round(10*fs):BAR_H_NOLB;
-        const rpTop=showLB?Math.round(15*fs)+_bo:Math.max(0,Math.round((RH-rpH)/2));
+        const lbH=BAR_H,lbTop=2+_bo;
+        const rpH=BAR_H;
+        const rpTop=showLB?lbTop+lbH+3:Math.max(0,Math.round((RH-rpH)/2));
         const dateCY=rpTop+rpH/2;
         // dibujar TODAS las instancias (misma fila, distintas posiciones X)
         tg.insts.forEach(t=>{
@@ -3391,7 +3392,7 @@ let PXML_CUSTOM=[];   // [{key:'x1',label:'Nombre'}]
 let _pxmlCustomSeq=0;
 const ED_COLS=[
   {key:'escenario',label:'Escenario',type:'text'},{key:'c1',label:'Categoría 1',type:'text'},{key:'c2',label:'Categoría 2',type:'text'},{key:'tarea',label:'Nombre de Tarea',type:'text'},
-  {key:'iLB',label:'Start LB',type:'date'},{key:'fLB',label:'End LB',type:'date'},{key:'av',label:'Av%',type:'number'},
+  {key:'iLB',label:'Start LB',type:'date'},{key:'fLB',label:'End LB',type:'date'},{key:'av',label:'Avance Real',type:'number'},
   {key:'iRP',label:'Start R/P',type:'date'},{key:'fRP',label:'End R/P',type:'date'},{key:'clase',label:'Clase',type:'text'},{key:'crit',label:'Ruta Crítica',type:'text'},{key:'marca2',label:'Marca Activity',type:'text'},{key:'summary',label:'Resumen',type:'text'}
 ];
 const ED_FIELD_BY_COL={escenario:'esc',c1:'c1',c2:'c2',tarea:'tar',iLB:'ilb',fLB:'flb',av:'av',iRP:'irp',fRP:'frp',clase:'tipo',crit:'crit',marca2:'m2',summary:'resumen'};
