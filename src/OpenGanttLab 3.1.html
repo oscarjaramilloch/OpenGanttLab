@@ -7630,14 +7630,23 @@ function pxmlRefreshDb(){
         <div style="font-size:10px;color:#888">${esc(db.fileName)} · ${db.tasks.length} tareas · LB actual: <b>${db.currentBaseline!==undefined?db.currentBaseline:'—'}</b>${db.baselineDate?' (guardada '+db.baselineDate+')':''} · ${db.customCols.length} campos custom · ${db.loaded}</div>
       </div>
       <button onclick="pxmlDuplicate(${i})" title="Duplicar escenario" class="rb-flat" style="padding:.4rem .5rem">${PXML_COPY_SVG}</button>
-      <button onclick="pxmlRemove(${i})" title="Quitar este archivo" class="rb-flat" style="padding:.4rem .5rem">${PXML_TRASH_SVG}</button>
+      <button onclick="pxmlRemove(${i})" title="Eliminar escenario" class="rb-flat" style="padding:.4rem .5rem">${PXML_TRASH_SVG}</button>
     </div>`).join('');
 }
 function pxmlRemove(i){
+  const db=PXML_DB[i];if(!db)return;
+  if(!confirm(`¿Eliminar "${db.variantName||db.projectName}"? Se quitan también sus tareas de la Tabla de Datos.`))return;
   PXML_DB.splice(i,1);
   pxmlMergeCols();
   pxmlRefreshDb();
   document.getElementById('pxmlDbCount').textContent=PXML_DB.length;
+  pxmlBuildMapGrid();
+  if(PXML_DB.length)pxmlAutoApply();
+  else{ // sin cargas: quitar las tareas que vinieron de XML
+    TASKS=TASKS.filter(t=>!t._fromXml);
+    if(document.getElementById('editorModal').style.display==='flex')populateEditor();
+    if(TASKS.length)render();
+  }
 }
 function pxmlClearAll(){
   if(!confirm('¿Eliminar todos los archivos cargados?'))return;
@@ -7691,6 +7700,7 @@ function pxmlBuildMapGrid(){
         <span style="font-size:10px;font-weight:400;color:#888">${db.fileName} · ${db.tasks.length} tareas</span>
         <button onclick="event.preventDefault();event.stopPropagation();pxmlAddCustom()" title="Agregar mapeo personalizado" class="rb-flat" style="padding:.4rem .5rem">${PXML_PLUS_SVG}</button>
         <button onclick="event.preventDefault();event.stopPropagation();pxmlDuplicate(${i})" title="Duplicar escenario" class="rb-flat" style="padding:.4rem .5rem">${PXML_COPY_SVG}</button>
+        <button onclick="event.preventDefault();event.stopPropagation();pxmlRemove(${i})" title="Eliminar escenario" class="rb-flat" style="padding:.4rem .5rem">${PXML_TRASH_SVG}</button>
         ${i<PXML_DB.length-1?`<button onclick="event.preventDefault();event.stopPropagation();pxmlCopyMapping(${i},${i+1})" class="rb-flat" title="Copiar mapeo al siguiente archivo">${PXML_CLIP_SVG}Copiar al [${i+2}]</button>`:''}
       </summary>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;padding:12px 14px" id="pxmlFields_${i}">
