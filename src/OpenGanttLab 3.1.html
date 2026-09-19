@@ -1929,8 +1929,25 @@ th,td{padding:0}
         <span class="pop-unit" style="font-size:8px">clic para cambiar</span>
       </div>
     </div>
+    <!-- Ubicación (sobre el eje / dentro de una banda de Categoría 1) -->
+    <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:6px">
+      <div class="pop-label" style="margin-bottom:0">Ubicación</div>
+      <div class="pbm-seg" role="group" aria-label="Ubicación del hito">
+        <button type="button" id="pbmMitoLocAxis" class="pbm-seg-btn active" onclick="presSetMitoLoc(false)" title="Sobre el eje (por defecto)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l4 4-4 4-4-4z"/><path d="M12 11v9"/></svg>
+        </button>
+        <button type="button" id="pbmMitoLocBand" class="pbm-seg-btn" onclick="presSetMitoLoc(true)" title="Dentro de una banda de Categoría 1 (requiere Vista C1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M12 9l3 3-3 3-3-3z"/></svg>
+        </button>
+      </div>
+      <div id="pbmMitoBandWrap" style="display:none;align-items:center;gap:5px;font-size:10px">
+        <span class="pop-unit" style="min-width:38px">Banda:</span>
+        <select id="pbmMitoBandSel" class="rb-sel" onchange="presSetMitoBand(this.value)" style="flex:1;max-width:none"></select>
+      </div>
+      <div id="pbmMitoLocNote" style="display:none;font-size:9.5px;color:var(--muted);line-height:1.35">Requiere Vista C1 activa (y no funciona en Ejecutivo ni Vista Hitos).</div>
+    </div>
     <!-- Línea -->
-    <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:5px">
+    <div id="pbmMitoLineaSec" style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:5px">
       <button type="button" class="pop-label" onclick="pbmToggleSection('pbmMitoLineaBody',this)" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:0;cursor:pointer;font:inherit">
         <span>Línea</span>
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .15s;transform:rotate(180deg)"><path d="m6 9 6 6 6-6"/></svg>
@@ -1965,7 +1982,7 @@ th,td{padding:0}
       </div>
     </div>
     <!-- Distancia al eje (posición arriba/abajo + desplazamiento) -->
-    <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:2px;display:flex;flex-direction:column;gap:6px">
+    <div id="pbmMitoDistSec" style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:2px;display:flex;flex-direction:column;gap:6px">
       <div class="pop-label" style="margin-bottom:0">Distancia al eje</div>
       <div style="display:flex;align-items:center;gap:6px">
         <div class="pbm-seg" role="group" aria-label="Posición del hito">
@@ -5303,9 +5320,11 @@ function _presLayers(tasks, applyOffsets=true){
 // y automáticamente vuelve a su propio arreglo (sin necesidad de "resetear" nada a mano);
 // el color/texto/etc. de cada barra sigue compartido entre ambas vistas.
 function _presLayersRaP(tasks,useLB,minRowsForC1){
+  // Un ítem puede traer __bandC1 (hito dibujado "dentro de banda"): esa es su banda aunque su c1 sea otra.
+  const bc=t=>t.__bandC1!==undefined?t.__bandC1:t.c1;
   const c1earliest={};
-  tasks.forEach(t=>{if(!c1earliest[t.c1]||+t.iLB<c1earliest[t.c1])c1earliest[t.c1]=+t.iLB;});
-  const defaultC1Order=[...new Set([...tasks].sort((a,b)=>(c1earliest[a.c1]||0)-(c1earliest[b.c1]||0)).map(t=>t.c1))];
+  tasks.forEach(t=>{const b=bc(t);if(!c1earliest[b]||+t.iLB<c1earliest[b])c1earliest[b]=+t.iLB;});
+  const defaultC1Order=[...new Set([...tasks].sort((a,b)=>(c1earliest[bc(a)]||0)-(c1earliest[bc(b)]||0)).map(bc))];
   // Orden manual (RAP_C1_ORDER, ver arrastre de banda completa) sobre el orden por defecto
   // (cronológico) — las categorías sin posición manual asignada mantienen su lugar relativo
   // por defecto, detrás de las que sí se movieron explícitamente.
@@ -5315,7 +5334,7 @@ function _presLayersRaP(tasks,useLB,minRowsForC1){
     return oa-ob;
   });
   const byC1=new Map();
-  tasks.forEach(t=>{const arr=byC1.get(t.c1);if(arr)arr.push(t);else byC1.set(t.c1,[t]);});
+  tasks.forEach(t=>{const b=bc(t),arr=byC1.get(b);if(arr)arr.push(t);else byC1.set(b,[t]);});
   const result=[],bands=[];
   let baseLayer=0;
   c1order.forEach(c1=>{
@@ -5375,7 +5394,16 @@ function _presSVG(all,S,TW,mn,mx,opts){
   const titleYOffset=opts.titleYOffset||0;
   // Vista Hitos: solo diamantes de hito, sin barras de tarea ni filas de resumen (que son
   // tareas con summary=true dentro del mismo filtro de abajo).
-  const tasks=hitosOnly?[]:all.filter(t=>!t.hito&&!t.evento&&!isExecHidden(t)),milestones=all.filter(t=>t.hito&&!isExecHidden(t)),eventos=all.filter(t=>t.evento);
+  const tasks=hitosOnly?[]:all.filter(t=>!t.hito&&!t.evento&&!isExecHidden(t)),eventos=all.filter(t=>t.evento);
+  // Hitos con la opción «Ubicación → Dentro de banda C1» (PRES_OPTS[...].miBand = nombre de la banda): solo en Vista C1
+  // normal (no Ejecutivo ni Vista Hitos); se dibujan como una fila más de su banda, con el nombre a la derecha.
+  const _allMs=all.filter(t=>t.hito&&!isExecHidden(t));
+  const _bandOf=m=>{
+    const o=PRES_OPTS[useLB?'LB|'+pkOf(m):pkOf(m)];
+    if(!groupByC1||hitosOnly||execMode||!o||!o.miBand)return null;
+    return o.miBand===true?m.c1:o.miBand;
+  };
+  const milestones=_allMs.filter(m=>_bandOf(m)===null),bandMs=_allMs.filter(m=>_bandOf(m)!==null);
   // Vista RaP: agrupa por Categoría 1 en bandas — desactiva layersOverride (piensa en filas
   // absolutas ajenas a las bandas) y el offset manual por barra, ya que el sentido de la
   // fila cambia por completo con el agrupamiento.
@@ -5399,8 +5427,24 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const longest=Math.max(...lines.map(l=>l.length),1);
     return Math.max(1,Math.ceil((longest*fontSize*0.62+16)/_rapLayerH));
   };
-  const layered=(groupByC1)
-    ? (()=>{const r=_presLayersRaP(tasks,useLB,_rapMinRows);rapBands=r.bands;return r.result;})()
+  // Envoltorios de los hitos "dentro de banda": ocupan en la banda el ancho del rombo + su nombre a la derecha
+  // (convertido a fechas con ms/px) para que el reparto de filas no los solape con las barras.
+  const _dsB=+(document.getElementById('presDiamondSz')||{value:9}).value||9;
+  const _msPerPxB=TW>0?(+mx- +mn)/TW:0;
+  const bandWrappers=bandMs.map(m=>{
+    const o=PRES_OPTS[useLB?'LB|'+pkOf(m):pkOf(m)]||{};
+    const fs=o.fontSize||fsz;
+    const lbl=(o.label!==undefined&&String(o.label).trim()!=='')?o.label:m.tarea;
+    const longest=Math.max(...String(lbl).split(/\r?\n/).map(l=>l.trim().length),1);
+    const wPx=_dsB+6+longest*fs*0.6;
+    const w=Object.create(m);
+    w.__hitoBand=true;w.__bandC1=_bandOf(m);w.__m=m;
+    const a=new Date(+m.iLB-_dsB*_msPerPxB),b=new Date(+m.iLB+wPx*_msPerPxB);
+    w.iLB=a;w.iRP=a;w.fLB=b;w.fRP=b;
+    return w;
+  });
+  const layeredAll=(groupByC1)
+    ? (()=>{const r=_presLayersRaP(tasks.concat(bandWrappers),useLB,_rapMinRows);rapBands=r.bands;return r.result;})()
     : (layersOverride
       ? layersOverride.map(({t,baseLy})=>{
           const k=pkOf(t);
@@ -5409,14 +5453,15 @@ function _presSVG(all,S,TW,mn,mx,opts){
           return{t,ly:Math.max(0,baseLy+off)};
         })
       : _presLayers(tasks));
-  const numLy=layered.length?Math.max(...layered.map(l=>l.ly))+1:0;
+  const bandPlaced=layeredAll.filter(l=>l.t.__hitoBand),layered=layeredAll.filter(l=>!l.t.__hitoBand);
+  const numLy=layeredAll.length?Math.max(...layeredAll.map(l=>l.ly))+1:0;
   // Ancho mínimo de la columna de etiquetas: la más ancha de todas (más líneas o fuente más
   // grande necesita más columnas lado a lado) — RAP_LABEL_W_USER (arrastre manual del borde)
   // solo puede agrandarlo más, nunca lo deja por debajo de lo que el texto necesita.
   const _rapAutoLabelW=(()=>{
     if(!groupByC1)return 32;
     let maxW=6;
-    [...new Set(tasks.map(t=>t.c1))].forEach(c1=>{
+    [...new Set(tasks.concat(bandWrappers).map(t=>t.__bandC1!==undefined?t.__bandC1:t.c1))].forEach(c1=>{
       const{lines,fontSize}=_rapLabelInfo(c1);
       // Una sola línea: ancho ceñido al texto (mínimo posible). Con salto de línea, cada
       // columna extra necesita más separación (colGap, igual que en el render) para no verse
@@ -5827,6 +5872,33 @@ function _presSVG(all,S,TW,mn,mx,opts){
       svg+=`<polygon points="${mx2},${dY-ds} ${mx2+ds},${dY} ${mx2},${dY+ds} ${mx2-ds},${dY}" fill="${col}" stroke="${col}" stroke-width="1.5"${mitoAttrs}/>`;
       svg+=mitoML(mitoLines,mx2,dY+ds+mfsz+2);
       svg+=mitoDateAt(dY,dY+ds+mfsz+2+(mitoLines.length)*mitoLineH);
+    }
+  });
+
+  // ── Hitos dentro de banda C1: rombo en su fecha sobre la fila asignada, nombre (y fecha) a la derecha, sin línea al eje ──
+  bandPlaced.forEach(({t:w,ly})=>{
+    const m=w.__m,mk=useLB?'LB|'+pk(m):pk(m),o=PRES_OPTS[mk]||{};
+    const col=m.crit?'#FF0000':(o.color||CAT2_COLOR[m.c2]||'#555');
+    const mx3=x(m.iLB),cy=taskY0+ly*layerH+layerH/2,ds=_dsB;
+    const mfsz=o.fontSize||fsz,lh=mfsz*1.3;
+    const lines=String((o.label!==undefined&&String(o.label).trim()!=='')?o.label:m.tarea).split(/\r?\n/).map(l=>ex(l.trim())).filter(Boolean);
+    const dSz=Math.max(7,mfsz-1);
+    const showDate=o.miShowDate===true||(presShowDates&&o.miShowDate!==false);
+    const dateOut=o.miDateAlign==='out',dPos=o.miDatePos||'bottom';
+    const dateInline=showDate&&!(dateOut&&(dPos==='top'||dPos==='bottom'||dPos==='left'));
+    const nL=lines.length+(dateInline?1:0),tx=mx3+ds+5;
+    const y0=cy-(nL-1)*lh/2+mfsz*0.35;
+    const selCls=(mk===_presBarKey)?' class="pres-sel"':'';
+    svg+=`<polygon points="${mx3},${cy-ds} ${mx3+ds},${cy} ${mx3},${cy+ds} ${mx3-ds},${cy}" fill="${col}" stroke="${col}" stroke-width="1.5" data-pres-mito="${ex(mk)}" data-in-band="1"${selCls} style="cursor:pointer"/>`;
+    const tAttrs=`text-anchor="start" font-size="${mfsz}" font-weight="${o.textBold!==false?'bold':'normal'}" font-style="${o.textItalic?'italic':'normal'}"${o.textUnder?' text-decoration="underline"':''} fill="#333" pointer-events="none"`;
+    let ts=`<text ${tAttrs}>`;
+    lines.forEach((ln,i)=>{ts+=`<tspan x="${tx}" ${i===0?`y="${y0}"`:`dy="${lh}"`}>${ln}</tspan>`;});
+    if(dateInline)ts+=`<tspan x="${tx}" dy="${lh}" font-size="${dSz}" font-weight="normal" fill="${col}">${fD(m.iLB)}</tspan>`;
+    svg+=ts+'</text>';
+    if(showDate&&!dateInline){ // fecha independiente arriba / abajo / izquierda del rombo
+      let xx=mx3,yy=cy+ds+dSz+2,an='middle';
+      if(dPos==='top')yy=cy-ds-2;else if(dPos==='left'){xx=mx3-ds-4;yy=cy+dSz*0.35;an='end';}
+      svg+=`<text x="${xx}" y="${yy}" text-anchor="${an}" font-size="${dSz}" fill="${col}" pointer-events="none">${fD(m.iLB)}</text>`;
     }
   });
 
@@ -6530,6 +6602,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pbmExecHideRow').style.display='inline-flex';
     document.getElementById('pbmMitoAbove').classList.toggle('active',opt.miAbove!==false);
     document.getElementById('pbmMitoBelow').classList.toggle('active',opt.miAbove===false);
+    _pbmSyncMitoLoc(opt,_miTask);
     const _lShow=opt.lineHide!==true;
     document.getElementById('presLineShow').checked=_lShow;
     document.getElementById('presLineControls').style.display=_lShow?'flex':'none';
@@ -6968,10 +7041,10 @@ function _presRapFinishReorder(draggedC1,targetC1){
 // ── Mousedown en barra de LdT ──
 document.getElementById('presBody').addEventListener('mousedown',e=>{
   if(e.button!==0)return;
-  const bar=e.target.closest('[data-pres-bar]');
+  const bar=e.target.closest('[data-pres-bar],[data-pres-mito][data-in-band]'); // hito dentro de banda: se arrastra por filas como una barra
   if(!bar)return;
   const svg=bar.closest('svg');if(!svg)return;
-  const key=bar.dataset.presBar;
+  const key=bar.dataset.presBar||bar.dataset.presMito;
   const{t}=_pdFindTask(key);if(!t)return;
   const bb=bar.getBBox();
   const pt=_pdSvgPt(svg,e.clientX,e.clientY);
@@ -7232,6 +7305,44 @@ function presPickLineColor(){
   cp.style.display='block';
   cp.style.left=Math.min(r.left,window.innerWidth-250)+'px';
   cp.style.top=Math.min(r.bottom+4,window.innerHeight-(cp.offsetHeight||300))+'px';
+}
+// Ubicación del hito: sobre el eje (por defecto) o dentro de una banda de Categoría 1 (solo Vista C1)
+function _pbmSyncMitoLoc(opt,task){
+  const canBand=!!_presLastGroupByC1&&!(document.getElementById('presShowExecutive')||{}).checked&&!(document.getElementById('presShowHitos')||{}).checked;
+  const inBand=!!opt.miBand;
+  const set=(id,on)=>{const el=document.getElementById(id);if(el)el.classList.toggle('active',on);};
+  set('pbmMitoLocAxis',!inBand);set('pbmMitoLocBand',inBand);
+  const ba=document.getElementById('pbmMitoLocBand');if(ba)ba.disabled=!canBand&&!inBand;
+  const note=document.getElementById('pbmMitoLocNote');if(note)note.style.display=(!canBand)?'block':'none';
+  const wrap=document.getElementById('pbmMitoBandWrap'),sel=document.getElementById('pbmMitoBandSel');
+  if(wrap&&sel){
+    wrap.style.display=inBand?'flex':'none';
+    if(inBand){
+      const own=task?task.c1:'';
+      const cur=opt.miBand===true?own:opt.miBand;
+      const c1s=[...new Set(TASKS.filter(t=>!t.hito&&!t.evento).map(t=>t.c1).concat(own,cur).filter(Boolean))];
+      sel.innerHTML=c1s.map(c=>`<option value="${esc(c)}"${c===cur?' selected':''}>${esc(c)}</option>`).join('');
+    }
+  }
+  // Dentro de banda no hay línea al eje ni "Distancia al eje": se ocultan esas secciones
+  const ls=document.getElementById('pbmMitoLineaSec'),ds=document.getElementById('pbmMitoDistSec');
+  if(ls)ls.style.display=inBand?'none':'flex';
+  if(ds)ds.style.display=inBand?'none':'flex';
+}
+function presSetMitoLoc(inBand){
+  if(!_presBarKey)return;
+  _presSnap();
+  if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={color:'#555',miAbove:true};
+  const o=PRES_OPTS[_presBarKey],f=_pdFindTask(_presBarKey),t=f&&f.t;
+  if(inBand){if(!o.miBand)o.miBand=t?t.c1:true;}
+  else delete o.miBand;
+  _pbmSyncMitoLoc(o,t);
+  renderPres();
+}
+function presSetMitoBand(v){
+  if(!_presBarKey||!PRES_OPTS[_presBarKey])return;
+  _presSnap();PRES_OPTS[_presBarKey].miBand=v;
+  renderPres();
 }
 function presSetMitoPos(above){
   if(!_presBarKey)return;
@@ -9387,6 +9498,7 @@ document.addEventListener('keydown',e=>{
             <span style="font-weight:400;font-size:11px;opacity:.85">XML grandes, líneas base, columnas del Gantt por clic derecho y gestión de cargas</span>
           </div>
           <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
+            <li><b>Línea de Tiempo — Hito dentro de la banda C1:</b> en el panel del hito, sección <b>Ubicación</b>: «Sobre el eje» (por defecto, como siempre) o «Dentro de banda C1» con selector de <b>Banda</b>. En Vista C1 el rombo se dibuja en su fecha como una fila más de la banda, con el nombre a la derecha y la fecha debajo, sin línea al eje; se arrastra entre filas como una barra. No aplica en Ejecutivo ni Vista Hitos.</li>
             <li><b>Línea de Tiempo — «Seleccionar escenarios y tareas»:</b> el panel ahora trae las mismas opciones que el del Gantt: desplegable de <b>Escenarios</b> (Cat 1, con estado parcial), filtros <b>Cat 1</b> y <b>Cat 2</b> en cascada, Todas/Ninguna, Restablecer y <b>Cancelar/Aceptar</b>. Sigue siendo independiente del Gantt. «Todas/Ninguna» ahora es un solo paso de Deshacer.</li>
             <li><b>Gantt — Barra de herramientas rediseñada:</b> grupos separados por divisores, botón <b>Capas</b> con contador (agrupa los 8 interruptores de visualización), accesos rápidos sincronizados (Avance real, Línea base, Ruta crítica), botones con texto (Ordenar, Filtrar, Editar, Ajustes, Compartir) y menú <b>⋯ Más</b> automático cuando la ventana es estrecha. No cambia ninguna función.</li>
             <li><b>Project XML — Lectura en streaming:</b> ya no carga el archivo completo ni construye un DOM gigante; procesa por partes y solo conserva proyecto, campos personalizados, tareas y líneas base (sin asignaciones ni time phasing). Un XML de 1.7 GB se lee en unos 35–80 s con memoria acotada. Barra de avance de carga.</li>
