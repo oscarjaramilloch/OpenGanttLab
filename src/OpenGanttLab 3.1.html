@@ -2698,9 +2698,8 @@ function openColMenu(e,col){
       <input type="checkbox" ${_colVis[d.id]?'checked':''} onchange="toggleColVisibility('${d.id}',this.checked)">
       <span>${esc(d.label)}</span>
     </label>`;
-  list.innerHTML=_COL_DEFS.map(item).join('')+
-    `<div style="font-size:10px;font-weight:700;color:var(--muted);padding:6px 14px 4px;border-top:1px solid #eee;border-bottom:1px solid #eee;margin-top:2px">Columnas de la Tabla de Datos</div>`+
-    _ganttExtDefs().map(item).join('');
+  // una sola lista: todas son columnas de la Tabla de Datos (las de la izquierda visibles por defecto, el resto ocultas)
+  list.innerHTML=[..._COL_DEFS,..._ganttExtDefs()].map(item).join('');
   // Ajustar texto: solo ícono (outline), primero en las opciones y POR COLUMNA (la del encabezado clicado);
   // activo = ajustado (2 líneas), inactivo = una línea con "…"
   const _wOn=_wrapOn(col);
