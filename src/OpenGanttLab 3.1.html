@@ -344,6 +344,16 @@ th,td{padding:0}
 .edVirt tbody tr.ed-r{height:36px}
 .edVirt textarea.etar{height:22px}
 .edVirt tbody td:nth-child(4){position:relative}
+/* Diálogo propio de la app (ogDialog): reemplaza prompt()/confirm() nativos */
+#ogDlg{position:fixed;inset:0;z-index:300000;background:rgba(15,25,35,.45);display:flex;align-items:center;justify-content:center;padding:16px}
+#ogDlg .og-card{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.28);width:min(420px,100%);padding:22px 24px 18px;font-family:var(--ff)}
+#ogDlg .og-ttl{font-size:15px;font-weight:700;color:var(--ink);margin:0 0 6px}
+#ogDlg .og-msg{font-size:12.5px;color:var(--muted);line-height:1.55;margin:0 0 14px;white-space:pre-line}
+#ogDlg .og-in{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+#ogDlg .og-in:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+#ogDlg .og-err{font-size:11.5px;color:#c0392b;margin:6px 0 0;min-height:16px}
+#ogDlg .og-btns{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+#ogDlg .btn-solid.og-danger{background:#c0392b;border-color:#c0392b}
 tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;box-shadow:inset 0 0 0 1px #e8b94a;border-radius:3px}
 .edVirt textarea.etar:focus{position:absolute;left:4px;right:4px;width:auto;z-index:4;box-shadow:0 0 0 1.5px var(--accent),0 4px 12px rgba(0,0,0,.18)}
 #editorBody tr.ed-sp td{display:table-cell!important;padding:0!important;border:none!important}
@@ -8287,6 +8297,44 @@ function edSchedForward(root,self){
   return moved;
 }
 document.getElementById('edSchedChk').checked=_edAutoSched;
+/* ═══ Diálogo de la app ═══
+   ogDialog({title,msg,input:{value,placeholder,validate(v)→mensaje de error|''},ok,cancel,danger}) → Promise
+   Con input resuelve al texto confirmado (o null si se cancela); sin input resuelve true/false. */
+function ogDialog(o){
+  return new Promise(res=>{
+    const old=document.getElementById('ogDlg');if(old)old.remove();
+    const wrap=document.createElement('div');wrap.id='ogDlg';
+    wrap.innerHTML=`<div class="og-card" role="dialog" aria-modal="true" aria-labelledby="ogDlgT">
+      <div class="og-ttl" id="ogDlgT">${esc(o.title||'')}</div>
+      ${o.msg?`<div class="og-msg">${esc(o.msg)}</div>`:''}
+      ${o.input?`<input class="og-in" type="text" spellcheck="false" placeholder="${esc(o.input.placeholder||'')}"><div class="og-err"></div>`:''}
+      <div class="og-btns">
+        ${o.cancel===false?'':`<button type="button" class="btn-outline og-cancel">${esc(o.cancel||'Cancelar')}</button>`}
+        <button type="button" class="btn-solid og-ok${o.danger?' og-danger':''}">${esc(o.ok||'Aceptar')}</button>
+      </div></div>`;
+    document.body.appendChild(wrap);
+    const inp=wrap.querySelector('.og-in'),err=wrap.querySelector('.og-err');
+    const prev=document.activeElement;
+    const done=v=>{document.removeEventListener('keydown',key,true);wrap.remove();if(prev&&prev.focus)try{prev.focus();}catch(_){}res(v);};
+    const accept=()=>{
+      if(!inp)return done(true);
+      const v=inp.value.trim(),msg=o.input.validate?o.input.validate(v):(v?'':'Escribe un nombre.');
+      if(msg){err.textContent=msg;inp.focus();return;}
+      done(v);
+    };
+    const cancel=()=>done(o.input?null:false);
+    const key=e=>{
+      if(e.key==='Escape'){e.preventDefault();e.stopPropagation();cancel();}
+      else if(e.key==='Enter'&&!(e.target.closest&&e.target.closest('.og-cancel'))){e.preventDefault();e.stopPropagation();accept();}
+    };
+    document.addEventListener('keydown',key,true);
+    wrap.addEventListener('mousedown',e=>{if(e.target===wrap)cancel();});
+    wrap.querySelector('.og-ok').onclick=accept;
+    const cb=wrap.querySelector('.og-cancel');if(cb)cb.onclick=cancel;
+    if(inp){inp.value=o.input.value||'';inp.addEventListener('input',()=>{err.textContent='';});inp.focus();inp.select();}
+    else wrap.querySelector('.og-ok').focus();
+  });
+}
 /* ═══ GESTIÓN DE ESCENARIOS ═══
    Un escenario es el agrupador mayor (columna "Escenario"). Si una tarea no lo trae (típico de un XML
    sin mapear ese campo) se usa el archivo XML de origen (pscope) y, en última instancia, la Categoría 1,
@@ -8347,14 +8395,18 @@ function _scenCommit(list){
   _edUndo.push(_edClone(TASKS));if(_edUndo.length>100)_edUndo.shift();_edRedo=[];
   _edApply(list);
 }
-function scenDuplicate(i){
+async function scenDuplicate(i){
   const s=_scenCache[i];if(!s)return;
   const names=new Set(scenList().map(x=>x.key));
   const base=s.key.replace(/ \(copia( \d+)?\)$/,'')||'Escenario';
   let n=1,def;do{def=base+' (copia'+(n>1?' '+n:'')+')';n++;}while(names.has(def));
-  const name=(prompt('Nombre del escenario duplicado:',def)||'').trim();
+  const name=await ogDialog({
+    title:'Duplicar escenario',
+    msg:`Se copian las ${s.n} actividades de "${scenLabel(s.key)}" tal cual (fechas, avance, dependencias y campos).`,
+    input:{value:def,placeholder:'Nombre del escenario nuevo',validate:v=>!v?'Escribe un nombre.':names.has(v)?'Ya existe un escenario con ese nombre.':''},
+    ok:'Duplicar'
+  });
   if(!name)return;
-  if(names.has(name)){alert('Ya existe un escenario llamado "'+name+'".');return;}
   let last=-1;TASKS.forEach((t,j)=>{if(scenKey(t)===s.key)last=j;});
   const copies=_edClone(TASKS.filter(t=>scenKey(t)===s.key)).map(t=>{
     t.escenario=name;t.id=Date.now()+'_'+Math.random().toString(36).slice(2);
@@ -8365,9 +8417,10 @@ function scenDuplicate(i){
   scenRefresh();
   document.getElementById('status').textContent=`✓ Escenario "${name}" creado: ${copies.length} actividades copiadas de "${scenLabel(s.key)}".`;
 }
-function scenDelete(i){
+async function scenDelete(i){
   const s=_scenCache[i];if(!s)return;
-  if(!confirm(`¿Eliminar el escenario "${scenLabel(s.key)}" y sus ${s.n} actividades? Puedes deshacerlo desde la Tabla de Datos.`))return;
+  const ok=await ogDialog({title:'Eliminar escenario',msg:`Se eliminará "${scenLabel(s.key)}" con sus ${s.n} actividades.\nPuedes deshacerlo desde la Tabla de Datos.`,ok:'Eliminar',danger:true});
+  if(!ok)return;
   _scenCommit(TASKS.filter(t=>scenKey(t)!==s.key));
   scenRefresh();
 }
