@@ -3416,6 +3416,8 @@ function presSetLinks(which,val){
   const me=depPid(T),resolve=depResolverFor(TASKS),bad=[];
   if(which==='sucs'&&!me){apToast('⚠ La tarea no tiene ID: asígnalo en la Tabla de Datos.');pbmFillDeps(_pbmDepKey);return;}
   const snap=_edClone(TASKS);
+  const _cycSet=()=>{const c=depIndex().issues.find(i=>i.k==='cycle');return new Set(c?c.ts:[]);};
+  _depIdx=null;const cycBefore=_cycSet();
   let changed=false;
   if(which==='preds'){
     r.links.forEach(l=>{const p=resolve(T,l.pid);if(!p)bad.push(l.pid);else if(p===T)bad.push(l.pid+' (ella misma)');});
@@ -3431,6 +3433,16 @@ function presSetLinks(which,val){
       const nv=depFmt(nl)||undefined;
       if(depFmt(links)!==(nv||'')){s.preds=nv;changed=true;}
     });
+  }
+  // Un vínculo nuevo no puede crear un ciclo: se revierte y no se escribe nada
+  if(changed){
+    _depIdx=null;const cycAfter=_cycSet();
+    if([...cycAfter].some(t=>!cycBefore.has(t))){
+      TASKS.forEach((x,i)=>{x.preds=snap[i].preds;});
+      _depIdx=null;
+      apToast('⚠ Esa relación crearía un ciclo de dependencias: no se guardó.');
+      pbmFillDeps(_pbmDepKey);return;
+    }
   }
   if(bad.length)apToast('⚠ Sin efecto (no existe o no es válido): '+bad.join(', '));
   if(!changed){pbmFillDeps(_pbmDepKey);return;}
