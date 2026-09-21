@@ -49,6 +49,7 @@
 <li><b>Nombre la carga</b>En la pestaña <ui>Base de datos</ui> del XML edite el nombre de la variante (por ejemplo «P50»).</li>
 <li><b>Revise el mapeo de cada archivo</b>Cada archivo tiene su mapeo independiente. Con <ui>Copiar al [n]</ui> lleva el mapeo al siguiente.</li>
 </ol>
+<fig slug="xml-dos-cargas" t="Dos XML cargados como variantes" observe="Cada archivo es una fila con su nombre de variante editable (P50 y P90 en el ejemplo).|Los íconos de la derecha duplican o eliminan cada carga.">Base de datos de XML con dos variantes.</fig>
 <callout type="tip" title="Probar otro mapeo sin releer el archivo">
 <p>En la Base de datos de XML, el ícono <ui>Duplicar escenario</ui> copia una carga con su propio mapeo, para probar otra configuración sin volver a leer el archivo (útil con XML muy grandes). El ícono de papelera elimina la carga y sus tareas, con confirmación.</p>
 </callout>
@@ -58,7 +59,7 @@
 <callout type="info" title="«Escenarios» en el panel del Gantt">
 <p>La lista «Escenarios» del panel de selección del Gantt muestra las <b>Categorías 1</b>, cada una con su color. Para filtrar por el escenario en sentido de esta página (columna Escenario) use el <b>segmentador</b> de la Tabla de Datos o, en la Línea de Tiempo, el menú <ui>Escenario</ui>.</p>
 </callout>
-<p>En la Línea de Tiempo, el menú <ui>Escenario</ui> filtra por el escenario y edita los títulos de las secciones; su <ui>Selección de tareas</ui> ofrece las mismas opciones que la del Gantt.</p>
+<p>En la Línea de Tiempo, el menú <ui>Escenario</ui> filtra por el escenario y edita los títulos de las secciones; su <ui>Selección de tareas</ui> ofrece las mismas opciones que la del Gantt. En la Tabla de Datos, el <a href="#/datos/filtrar-datos">segmentador</a> muestra solo las filas de un escenario.</p>
 
 <h2 id="comparar">Comparar escenarios</h2>
 <p>Hay dos formas complementarias de comparar:</p>
@@ -66,6 +67,7 @@
 <li><b>Entre escenarios:</b> active varios escenarios a la vez en el Gantt. Cada uno se distingue por el color de su Categoría 1.</li>
 <li><b>Contra la línea base:</b> active <ui>Línea base</ui> para ver, en cada tarea, la barra planificada junto a la real o proyectada. En la Línea de Tiempo, el modo <ui>Comparador</ui> muestra ambas secciones.</li>
 </ul>
+<fig slug="gantt-dos-escenarios" t="Dos escenarios en el mismo Gantt" observe="La columna Escenario separa «Plan base» y «Plan replanificado».|En el escenario replanificado las mismas tareas empiezan y terminan más tarde.">Ejemplo con una copia del plan desplazada 45 días.</fig>
 <callout type="result" title="Cómo interpretar">
 <p>Compare la posición de una misma tarea en dos escenarios (o en la Línea Base y el proyectado): si el fin se corre a la derecha, la tarea se retrasó; si el inicio se corre, se desplazó. La barra de estado muestra el inicio, el fin y la duración del conjunto visible.</p>
 </callout>

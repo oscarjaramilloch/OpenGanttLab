@@ -45,6 +45,7 @@ async function abrir(browser, { datos = true, w = W, h = H } = {}) {
   const page = await browser.newPage();
   await page.setViewport({ width: w, height: h, deviceScaleFactor: 2 });
   page.on('pageerror', e => console.log('  PAGEERR', e.message));
+  await page.evaluateOnNewDocument(() => { try { localStorage.clear(); sessionStorage.clear(); } catch (e) { /* sin almacenamiento */ } });
   await page.goto(APP, { waitUntil: 'load' });
   await page.evaluate(rows => { document.getElementById('splashModal').style.display = 'none'; if (rows) { parseRows(rows); render(); } }, datos ? ROWS : null);
   await sleep(300);
@@ -554,6 +555,93 @@ FIGS['58'] = async b => {           // Menú Ordenar
   const p = await abrir(b); await gantt(p);
   await click(p, '#btnOrdenMenu'); const r = await rectOf(p, '#btnOrdenMenu');
   await shot(p, 'fig-58-menu-ordenar', { clip: C(r.x - 40, r.y - 16, 420, 150) }); await p.close();
+};
+
+/* ══ Figuras de secciones con interacción (Vistas, Escenarios, Avanzadas) ══ */
+const ESC2 = p => p.evaluate(() => { TASKS.forEach(t => { t.escenario = ['Ingeniería', 'Compras'].includes(t.c1) ? 'Plan base' : 'Plan replanificado'; }); });
+
+FIGS['60'] = async b => {           // Ejecutivo: tareas ocultas
+  const p = await ldt(b); await set(p, 'presShowExecutive', true);
+  await p.evaluate(() => { [3, 6, 10].forEach(i => PRES_EXEC_HIDDEN_KEYS.add(pkOf(TASKS[i]))); renderPres(); }); await sleep(600);
+  await p.evaluate(() => document.getElementById('execHiddenBtn').click()); await sleep(500);
+  await modalShot(p, 'fig-60-ldt-tareas-ocultas', '#execHiddenModal > div');
+  await p.close();
+};
+FIGS['61'] = async b => {           // Vista C1: elementos interactivos (anotada)
+  const p = await ldt(b); await set(p, 'presShowRaP', true); await sleep(600);
+  const q = await p.evaluate(() => {
+    const R = e => { const r = e.getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; };
+    const lab = document.querySelector('[data-rap-reorder]'), band = document.querySelector('[data-rap-band-border]');
+    const sv = document.querySelector('#presBody svg').getBoundingClientRect();
+    return { lab: lab ? R(lab) : null, band: band ? R(band) : null, sv: { x: sv.left, y: sv.top, w: sv.width, h: sv.height } };
+  });
+  console.log('  c1:', JSON.stringify(q.lab), JSON.stringify(q.band));
+  const y0 = 62, x0 = NAV;
+  await shot(p, 'fig-61-ldt-c1-bandas', { clip: C(q.sv.x - 14, q.sv.y - 6, q.sv.w + 28, Math.min(q.sv.h, 760)), ann: [
+    ...(q.lab ? [{ n: 1, rect: q.lab, at: 'tl', dx: -4, pad: 2 }] : []), ...(q.band ? [{ n: 2, rect: q.band, at: 'tr', dx: -8, dy: 4, pad: 1 }] : []),
+  ] });
+  await p.close();
+};
+FIGS['62'] = async b => {           // Ajustes de la Línea de Tiempo
+  const p = await ldt(b, { w: 1900 }); await click(p, '#btnPresAreaMenu'); await sleep(400);
+  const m = await rectOf(p, '#presAreaMenuPanel'), t = await rectOf(p, '#btnPresAreaMenu');
+  const x0 = Math.min(t.x, m.x) - 24, x1 = Math.max(t.x + t.w, m.x + m.w) + 24;
+  await shot(p, 'fig-62-ldt-ajustes', { clip: C(x0, t.y - 16, x1 - x0, m.y + m.h - t.y + 40) });
+  await p.close();
+};
+FIGS['63'] = async b => {           // Dos escenarios comparados en el Gantt
+  const p = await abrir(b); await ESC2(p); await gantt(p, { dep: false });
+  await p.evaluate(() => {
+    TASKS.filter(t => t.escenario === 'Plan replanificado').forEach(t => { const d = 45 * 864e5; t.iRP = new Date(+t.iRP + d); t.fRP = new Date(+t.fRP + d); });
+    toggleColVisibility('esc', true); toggleColVisibility('c1', false); toggleColVisibility('m2', false); render();
+  }); await sleep(900);
+  await shot(p, 'fig-63-gantt-dos-escenarios', { clip: await gClip(p) }); await p.close();
+};
+FIGS['64'] = async b => {           // Dos XML cargados como variantes
+  const p = await abrir(b, { datos: false });
+  await click(p, '#navDatos'); await p.evaluate(() => datosSwitchView('xml')); await sleep(300);
+  await p.evaluate(async (a, c) => { await pxmlLoadFiles([new File([a], 'Planta_P50.xml', { type: 'text/xml' }), new File([c], 'Planta_P90.xml', { type: 'text/xml' })]); pxmlTab('db'); PXML_DB[0].variantName = 'P50'; PXML_DB[1].variantName = 'P90'; pxmlRefreshDb(); }, demoXml('Planta P50'), demoXml('Planta P90'));
+  await sleep(1200);
+  await shot(p, 'fig-64-xml-dos-cargas', { clip: C(NAV, 0, W - NAV, 560) }); await p.close();
+};
+FIGS['65'] = async b => {           // Segmentador de escenario en la Tabla de Datos (anotada)
+  const p = await abrir(b); await ESC2(p);
+  await click(p, '#navDatos'); await sleep(600);
+  await p.evaluate(() => { populateEditor(); const s = document.getElementById('edSegSel'); s.value = '0'; edSegChange('0'); }); await sleep(600);
+  await shot(p, 'fig-65-tabla-segmentador', { clip: C(NAV, 0, W - NAV, 520), ann: [{ n: 1, rect: await rectOf(p, '#edSegWrap'), at: 'tc', dy: -6, pad: 3 }] });
+  await p.close();
+};
+FIGS['66'] = async b => {           // Ajustes del Gantt: fuente y tamaños
+  const p = await abrir(b); await gantt(p); await click(p, '#btnFontMenu'); await sleep(400);
+  const m = await rectOf(p, '#fontMenuPanel'), t = await rectOf(p, '#btnFontMenu');
+  await shot(p, 'fig-66-gantt-ajustes-fuente', { clip: C(Math.max(0, Math.min(t.x, m.x) - 40), t.y - 20, Math.max(m.w, 340) + 100, m.y + m.h - t.y + 50) }); await p.close();
+};
+FIGS['67'] = async b => {           // Mapeo personalizado (botón +)
+  const p = await conXml(b); await p.evaluate(() => { pxmlTab('map'); pxmlAddCustom(); }); await sleep(800);
+  await p.evaluate(() => { const el = document.querySelector('#pxmlFields_0 input[type=text][oninput*="pxmlRenameCustom"]'); if (el) { el.value = 'Responsable'; el.dispatchEvent(new Event('input', { bubbles: true })); el.scrollIntoView({ block: 'center' }); } }); await sleep(500);
+  const r = await p.evaluate(() => { const el = document.querySelector('#pxmlFields_0 input[oninput*="pxmlRenameCustom"]'); const c = el ? el.closest('div[style*="flex-direction:column"]').getBoundingClientRect() : null; return c ? { x: c.left, y: c.top, w: c.width, h: c.height } : null; });
+  const y0 = r ? Math.max(0, r.y - 380) : 60;
+  await shot(p, 'fig-67-xml-mapeo-personalizado', { clip: C(NAV, y0, W - NAV, 560), ann: r ? [{ n: 1, rect: r, at: 'tl', dx: 2, dy: 2, pad: 3 }] : null }); await p.close();
+};
+FIGS['68'] = async b => {           // Ubicación de un hito en Vista C1
+  const p = await ldt(b); await set(p, 'presShowRaP', true); await sleep(600);
+  await p.evaluate(() => { const el = document.querySelector('#presBody [data-pres-mito]'); const r = el.getBoundingClientRect(); el.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, clientX: r.left + 4, clientY: r.top + 4 })); }); await sleep(700);
+  const m = await rectOf(p, '#presBarMenu');
+  await p.evaluate(() => { const e = [...document.querySelectorAll('#presBarMenu *')].find(x => /Ubicación/.test(x.textContent) && x.children.length < 3); if (e) e.scrollIntoView({ block: 'center' }); }); await sleep(300);
+  await shot(p, 'fig-68-ldt-hito-ubicacion', { clip: C(Math.max(0, m.x - 60), Math.max(0, m.y - 10), Math.min(W, m.w + 120), Math.min(H, m.h + 20)) }); await p.close();
+};
+FIGS['69'] = async b => {           // Selección de barras (una y varias)
+  const p = await ldt(b); await sleep(300);
+  const info = await p.evaluate(() => {
+    const els = [...document.querySelectorAll('#presBody [data-pres-bar]')];
+    const a = els[3], c = els[6];
+    a.dispatchEvent(new MouseEvent('click', { bubbles: true })); c.dispatchEvent(new MouseEvent('click', { bubbles: true, ctrlKey: true }));
+    const R = e => { const r = e.getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; };
+    return { a: R(a), c: R(c) };
+  }); await sleep(400);
+  const y = Math.max(62, info.a.y - 90);
+  await shot(p, 'fig-69-ldt-seleccion', { clip: C(info.a.x - 200 > NAV ? info.a.x - 200 : NAV, y, 640, Math.min(H, info.c.y - y + 120)), ann: [{ n: 1, rect: info.a, at: 'tl', pad: 3 }, { n: 2, rect: info.c, at: 'tl', pad: 3 }] });
+  await p.close();
 };
 
 (async () => {

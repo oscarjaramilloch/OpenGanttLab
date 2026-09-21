@@ -45,6 +45,7 @@
 <tr><td>Clic en un año</td><td>Cambia el color de fondo y la fuente de ese año.</td></tr>
 <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Deshace y rehace cambios en la Línea de Tiempo.</td></tr>
 </table>
+<fig slug="ldt-seleccion" t="Selección de barras" legend="Barra seleccionada con un clic (borde punteado azul)|Segunda barra agregada con Ctrl + clic">Los elementos seleccionados se resaltan; con varios seleccionados, el doble clic edita todos a la vez.</fig>
 
 <h3 id="panel-edicion">El panel de edición</h3>
 <p>Un doble clic sobre una barra abre su panel de edición.</p>
@@ -57,7 +58,8 @@
 <ol class="steps">
 <li><b>Active Ejecutivo</b>En <ui>Capas</ui> → <ui>Modo de vista</ui>.</li>
 <li><b>Oculte una tarea de esta vista</b>Selecciónela con un clic y pulse <kbd>Delete</kbd>, o use doble clic → <ui>Ocultar de Ejecutivo</ui>.</li>
-<li><b>Recupere lo oculto</b>Aparece el botón <ui>Tareas ocultas (N)</ui>: ábralo para restaurar una tarea o todas.</li>
+<li><b>Recupere lo oculto</b>Aparece el botón <ui>Tareas ocultas (N)</ui>: ábralo para restaurar una tarea o todas.
+<fig slug="ldt-tareas-ocultas" t="Tareas ocultas de la Línea de Tiempo" observe="La lista muestra las tareas ocultas (3 en el ejemplo).|«Restaurar todas» las devuelve; también puede restaurarlas una a una.|Las tareas siguen existiendo en el Gantt, el Excel y el XML.">Cuadro que aparece al pulsar «Tareas ocultas (N)».</fig></li>
 </ol>
 <callout type="note" title="Persistencia">
 <p>Las tareas ocultas y el formato de fecha se guardan por proyecto en el navegador y también viajan con «Compartir».</p>
@@ -70,6 +72,7 @@
 <li>El borde derecho de la columna de etiquetas y el borde inferior de cada banda se arrastran para ajustar su ancho y alto.</li>
 <li>Un doble clic en la etiqueta abre el panel de edición del texto (solo visual).</li>
 </ul>
+<fig slug="ldt-c1-bandas" t="Bandas de la Vista C1" legend="Etiqueta vertical de la banda: se selecciona y se arrastra para reordenar|Banda de Categoría 1: su borde inferior se arrastra para ajustar el alto">Cada Categoría 1 es una banda con su etiqueta.</fig>
 
 <h2 id="edicion">Edición: textos y formas libres</h2>
 <p>El menú <ui>Editar</ui> agrega elementos propios sobre el diagrama.</p>
@@ -90,4 +93,5 @@
 </ul>
 
 <h2 id="ajustes-ldt">Ajustes del área de visualización</h2>
-<p>El menú <ui>Ajustes</ui> controla el formato de fecha (14 formatos, por ejemplo dd/mm/aa o mmm/aaaa), el espacio extra a izquierda, derecha, arriba y abajo, el alto de las barras, el tamaño de los rombos, y el alto y ancho de la fila de años. Abajo a la derecha hay una barra de <b>zoom</b> de 25 % a 400 %; pulse el porcentaje para volver a 100 %.</p>
+<p>El menú <ui>Ajustes</ui> controla el espacio extra a izquierda, derecha, arriba y abajo, el alto de las barras, el tamaño de los rombos, y el alto y ancho de la fila de años. El formato de fecha (14 formatos, por ejemplo dd/mm/aa o mmm/aaaa) se elige en el selector de la barra inferior. Abajo a la derecha hay una barra de <b>zoom</b> de 25 % a 400 %; pulse el porcentaje para volver a 100 %.</p>
+<fig slug="ldt-ajustes" t="Ajustes de la Línea de Tiempo" observe="Área visualización: espacio extra a izquierda, derecha, arriba y abajo.|Tareas: alto de las barras. Hitos: tamaño del rombo.|Años: altura y ancho de la fila de años.">Panel del menú Ajustes.</fig>
