@@ -4297,7 +4297,7 @@ let _edRows=[],_edVis=[],_edShown=[],_edVirt=false,_edWin=[0,0],_edRH=36,_edRaf=
 function _edModel(t){
   const dv=d=>(d instanceof Date&&!isNaN(d))?isoLocal(d):'',s=v=>v==null?'':String(v);
   const m={esc:s(t.escenario),c1:s(t.c1),c2:s(t.c2),tar:s(t.tarea),ilb:dv(t.iLB),flb:dv(t.fLB),av:s(t.av),irp:dv(t.iRP),frp:dv(t.fRP),
-    tipo:t.hito?'HITO':t.evento?'EVENTO':'TAREA',crit:t.crit?'si':'no',m2:s(t.marca2),resumen:t.summary?'si':'no',pid:s(t.pid),preds:s(t.preds),sucs:depSucText(t),ps:s(t.pscope),pu:s(t.puid),x:Object.assign({},t.extra||{})};
+    tipo:t.hito?'HITO':t.evento?'EVENTO':'TAREA',crit:t.crit?'si':'no',m2:s(t.marca2),resumen:t.summary?'si':'no',pid:s(t.pid),preds:s(t.preds),sucs:depSucText(t),ps:s(t.pscope),pu:s(t.puid),fx:t._fromXml?1:0,dbi:t._dbIdx,x:Object.assign({},t.extra||{})};
   m.dur=String(_edDurOf(m));return m;
 }
 function _edFiltered(){
@@ -4539,7 +4539,7 @@ function applyEditorChanges(silent){
     const iLB=d(f.ilb)||new Date(),fLB=d(f.flb)||new Date();
     const tarea=g(f.tar)||'(sin nombre)';
     if(tarea==='(sin nombre)')continue;
-    nt.push({escenario:g(f.esc),c1:g(f.c1),c2:g(f.c2),tarea,iLB,fLB,av:Math.max(0,Math.min(100,+g(f.av)||0)),iRP:d(f.irp)||iLB,fRP:d(f.frp)||fLB,hito:f.tipo==='HITO',evento:f.tipo==='EVENTO',crit:f.crit==='si',marca2:g(f.m2),summary:f.resumen==='si',pid:g(f.pid)||undefined,preds:g(f.preds)||undefined,pscope:f.ps||undefined,puid:f.pu||undefined,extra:(f.x&&Object.keys(f.x).length)?Object.assign({},f.x):undefined});
+    nt.push({escenario:g(f.esc),c1:g(f.c1),c2:g(f.c2),tarea,iLB,fLB,av:Math.max(0,Math.min(100,+g(f.av)||0)),iRP:d(f.irp)||iLB,fRP:d(f.frp)||fLB,hito:f.tipo==='HITO',evento:f.tipo==='EVENTO',crit:f.crit==='si',marca2:g(f.m2),summary:f.resumen==='si',pid:g(f.pid)||undefined,preds:g(f.preds)||undefined,pscope:f.ps||undefined,puid:f.pu||undefined,extra:(f.x&&Object.keys(f.x).length)?Object.assign({},f.x):undefined,_fromXml:f.fx?true:undefined,_dbIdx:f.fx?f.dbi:undefined});
   }
   if(!nt.length){if(!silent)alert('No hay tareas válidas.');return;}
   if(!_edNoUndo&&_edSig(TASKS)!==_edSig(nt)){_edUndo.push(_edClone(TASKS));if(_edUndo.length>100)_edUndo.shift();_edRedo=[];}
@@ -8542,13 +8542,15 @@ async function scenDuplicate(i){
     ok:'Duplicar'
   });
   if(!name)return;
-  let last=-1;TASKS.forEach((t,j)=>{if(scenKey(t)===s.key)last=j;});
-  const copies=_edClone(TASKS.filter(t=>scenKey(t)===s.key)).map(t=>{
+  // El original también queda con su nombre en "Escenario" (si venía vacío), para poder distinguirlo de la copia en filtros, Gantt y LdT
+  const base0=_edClone(TASKS).map(t=>{if(scenKey(t)===s.key&&!t.escenario)t.escenario=s.key;return t;});
+  let last=-1;base0.forEach((t,j)=>{if(scenKey(t)===s.key)last=j;});
+  const copies=_edClone(base0.filter(t=>scenKey(t)===s.key)).map(t=>{
     t.escenario=name;t.id=Date.now()+'_'+Math.random().toString(36).slice(2);
     delete t._fromXml;delete t._dbIdx;delete t._di;
     return t;
   });
-  _scenCommit([...TASKS.slice(0,last+1),...copies,...TASKS.slice(last+1)]);
+  _scenCommit([...base0.slice(0,last+1),...copies,...base0.slice(last+1)]);
   scenRefresh();
   document.getElementById('status').textContent=`✓ Escenario "${name}" creado: ${copies.length} actividades copiadas de "${scenLabel(s.key)}".`;
 }
@@ -9326,7 +9328,7 @@ function pxmlApplyMapping(silent){
       if(t.crit){const cv=t.crit.toLowerCase();crit=cv==='si'||cv==='yes'||cv==='1'||cv==='true';}
       else if(row.Critical==='1')crit=true;
       const id=Date.now()+'_'+Math.random().toString(36).slice(2);
-      const _escxml=String(t.escenario||row.escenario||'').trim();
+      const _escxml=String(t.escenario||row.escenario||'').trim()||fileVariant;
       const _m2raw=String(t.marca2||row.marca2||'').trim();
       const _m2xml=_m2raw===''?'':((_m2raw==='1'||norm(_m2raw)==='si'||norm(_m2raw)==='yes'||norm(_m2raw)==='true')?'Sí':'No');
       let summary=false;
