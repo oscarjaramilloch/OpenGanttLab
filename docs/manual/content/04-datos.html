@@ -10,10 +10,10 @@
 </learn>
 
 <h2 id="excel">Cargar un Excel</h2>
-<p>El Excel debe tener una hoja con estas columnas. La primera fila que contenga «Nombre de Tarea» (dentro de las ocho primeras) se toma como encabezado.</p>
+<p>El archivo debe ser un <b>.xlsx</b> (el formato antiguo .xls no se puede leer; guárdelo antes como .xlsx). Debe tener una hoja con estas columnas. La primera fila que contenga «Nombre de Tarea» (dentro de las ocho primeras) se toma como encabezado.</p>
 <table>
 <tr><th>Columna</th><th>Qué contiene</th><th>Obligatoria</th></tr>
-<tr><td>id</td><td>Identificador de la tarea (se usa para las dependencias).</td><td>No</td></tr>
+<tr><td><code>id</code></td><td>Campo <b>ID</b>: identificador de la tarea (se usa para las dependencias). El encabezado de la columna es «id» (no distingue mayúsculas).</td><td>No</td></tr>
 <tr><td>Escenario</td><td>La versión del cronograma (agrupador mayor). Si su Excel usa la Categoría 1 para las versiones (P10, P50, P90), deje esta columna vacía: cada Categoría 1 cuenta como un escenario.</td><td>No</td></tr>
 <tr><td>Categoría 1</td><td>Agrupación mayor de las tareas (frente, disciplina o variante).</td><td><span class="badge r">Sí</span></td></tr>
 <tr><td>Categoría 2</td><td>La fase o agrupación de la tarea.</td><td>No</td></tr>
@@ -40,7 +40,7 @@
 
 <h2 id="xml">Importar desde Project XML</h2>
 <p>El XML de Project se gestiona en <ui>Datos</ui> → <ui>Gestión de XML</ui> (la tercera pestaña de la sección). Tiene cuatro pestañas: <b>Cargar XML</b>, <b>Base de datos</b>, <b>Mapeo de columnas</b> y <b>Vista previa</b>.</p>
-<fig slug="lectura-xml" t="Cómo se lee un archivo XML de Project" observe="La lectura es por partes, así que un archivo de 1,7 GB se procesa con memoria acotada.|Se conservan las predecesoras, convertidas del UID al ID de Project.">Qué se conserva y qué se descarta al leer el XML.</fig>
+<fig slug="lectura-xml" t="Cómo se lee un archivo XML de Project" observe="La lectura es por partes, así que un archivo muy grande no se carga entero en memoria.|Se conservan las predecesoras, convertidas del UID al ID de Project.">Qué se conserva y qué se descarta al leer el XML.</fig>
 
 <ol class="steps">
 <li><b>Cargue uno o varios XML</b>En la pestaña <ui>Cargar XML</ui> arrastre los archivos o haga clic para elegirlos. Una barra muestra el avance de lectura.
@@ -112,8 +112,8 @@
 <tr><td><code>7FF-1 día</code></td><td>Fin a Fin con 1 día de adelanto.</td></tr>
 <tr><td><code>12;15FC+3d</code></td><td>Dos predecesoras, separadas por «;».</td></tr>
 </table>
-<callout type="note" title="Ámbito de los ids">
-<p>El id solo tiene que ser único dentro de su <b>Escenario</b>. Si Escenario está vacío se usa un nombre generado: la variante del archivo XML o, en Excel, la Categoría 1. En un XML los ids se buscan en todo el archivo; en Excel, un id único en todo el archivo también puede enlazar entre escenarios.</p>
+<callout type="note" title="Ámbito de los ID">
+<p>El ID solo tiene que ser único dentro de su <b>Escenario</b>. Si Escenario está vacío se usa un nombre generado: la variante del archivo XML o, en Excel, la Categoría 1. En un XML los ID se buscan en todo el archivo; en Excel, un ID único en todo el archivo también puede enlazar entre escenarios.</p>
 </callout>
 
 <h2 id="filtrar-datos">Filtrar la tabla</h2>

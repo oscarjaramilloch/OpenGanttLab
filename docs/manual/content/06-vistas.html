@@ -2,7 +2,7 @@
 
 <learn>
 <ul>
-<li>Elegir el modo de vista adecuado: normal, Comparador, Ejecutivo, Vista C1 o Vista Hitos.</li>
+<li>Elegir el modo de vista adecuado: Comparador, Segmentación, Ejecutivo, Vista C1 o Vista Hitos.</li>
 <li>Editar barras, hitos y textos sin alterar los datos.</li>
 <li>Insertar textos y formas libres.</li>
 <li>Mostrar dependencias en la Línea de Tiempo.</li>
@@ -10,21 +10,20 @@
 </learn>
 
 <h2 id="modos">Los modos de vista</h2>
-<p>Los modos se eligen en <ui>Capas</ui>. Todos usan los mismos datos; cambia cómo se dibujan.</p>
+<p>En <ui>Capas</ui>, la sección <b>Contenido</b> decide qué elementos se muestran y la sección <b>Modo de vista</b> decide cómo se dibuja el diagrama. Todos usan los mismos datos. Sin ningún modo activo, la Línea de Tiempo muestra su <b>vista base</b>: una barra por tarea sobre el eje de años, con los hitos sobre el eje.</p>
 <fig slug="capas-ldt" t="Menú Capas de la Línea de Tiempo" observe="CONTENIDO: qué elementos se muestran (Marca Activity, Resumen, Leyenda, Fechas, Dependencias, Fecha de estado, Ruta crítica).|MODO DE VISTA: Comparador, Segmentación, Ejecutivo, Vista C1 y Vista Hitos.">Contenido y modo de vista.</fig>
 <table>
-<tr><th>Modo</th><th>Qué muestra</th><th>Cuándo usarlo</th></tr>
-<tr><td>Normal</td><td>Una barra por tarea sobre el eje de años, con hitos arriba.</td><td>Vista general del cronograma.</td></tr>
+<tr><th>Modo de vista</th><th>Qué hace</th><th>Cuándo usarlo</th></tr>
 <tr><td>Comparador</td><td>Dos secciones: la Línea Base arriba y lo Real/Proyectado abajo.</td><td>Mostrar cuánto se desplazó el plan.</td></tr>
 <tr><td>Ejecutivo</td><td>Cada tarea es un rombo en su fecha fin, con nombre y fecha debajo.</td><td>Láminas de alto nivel, solo con fechas de entrega.</td></tr>
 <tr><td>Vista C1</td><td>Agrupa las barras en bandas por Categoría 1, con el color de Categoría 2.</td><td>Presentar el cronograma por disciplina o frente.</td></tr>
+<tr><td>Segmentación</td><td>Agrega bajo los años una fila con el subperíodo de la escala (trimestres, meses o semanas). No tiene efecto con la escala Años.</td><td>Ubicar las fechas con más precisión.</td></tr>
 <tr><td>Vista Hitos</td><td>Solo los rombos de hito; oculta las barras.</td><td>Un comité que solo quiere ver los hitos.</td></tr>
 </table>
-<p>«Segmentación» agrupa por Categoría 2.</p>
 
-<h3 id="comparacion">Comparación visual de los modos</h3>
+<h3 id="comparacion">Comparación visual: vista base y modos</h3>
 <figs>
-<fig slug="ldt-normal" t="Modo normal" observe="Barras con nombre y fechas.|Hitos sobre el eje con línea punteada.">El cronograma completo.</fig>
+<fig slug="ldt-normal" t="Vista base (sin modos)" observe="Barras con nombre y fechas.|Hitos sobre el eje con línea punteada.">El cronograma completo.</fig>
 <fig slug="ldt-ejecutivo" t="Modo Ejecutivo" observe="Un rombo por tarea, en su fecha fin.">Solo entregas.</fig>
 <fig slug="ldt-vista-c1" t="Vista C1" observe="Una banda por Categoría 1.|Etiqueta vertical con el nombre.">Agrupado por Categoría 1.</fig>
 <fig slug="ldt-hitos" t="Vista Hitos" observe="Solo hitos, arriba y abajo del eje.">Solo hitos.</fig>
@@ -84,8 +83,8 @@
 <p>Active <ui>Dependencias</ui> en <ui>Capas</ui> → <ui>Contenido</ui>. Usa los mismos datos, tipos y colores que el Gantt.</p>
 <fig slug="ldt-dependencias" t="Dependencias en la Línea de Tiempo" observe="Las flechas unen barras y rombos.|Un clic en una barra resalta su cadena en azul y atenúa el resto.">Cadena de dependencias resaltada.</fig>
 <ul>
-<li>Se dibujan en el modo normal y en el Comparador (en las dos secciones, cada una con sus barras).</li>
-<li><b>No</b> se dibujan en <ui>Ejecutivo</ui> ni en <ui>Vista Hitos</ui>; al volver a la vista normal reaparecen.</li>
+<li>Se dibujan en la vista base y en el Comparador (en las dos secciones, cada una con sus barras).</li>
+<li><b>No</b> se dibujan en <ui>Ejecutivo</ui> ni en <ui>Vista Hitos</ui>; al volver a la vista base reaparecen.</li>
 <li>Solo se conectan tareas visibles: las ocultas (Delete, filtros) no tienen flecha.</li>
 <li>El resaltado por clic funciona con el interruptor encendido.</li>
 </ul>

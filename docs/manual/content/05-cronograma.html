@@ -2,7 +2,7 @@
 
 <learn>
 <ul>
-<li>Leer el Gantt: barras, hitos, avance y línea base.</li>
+<li>Leer el Gantt: barras, hitos, avance y Línea Base.</li>
 <li>Activar y entender las dependencias y sus tipos.</li>
 <li>Resaltar la cadena de una tarea y revisar los avisos.</li>
 <li>Mostrar columnas adicionales y usar los tooltips.</li>
@@ -11,7 +11,7 @@
 
 <h2 id="leer">Cómo leer el Gantt</h2>
 <p>Cada fila es una tarea o un hito, agrupada por Categoría 1 y Categoría 2. A la derecha, el eje de tiempo muestra las barras.</p>
-<fig slug="gantt-dependencias" t="Gantt con Línea Base, avance y dependencias" observe="La barra rayada gris es la Línea Base; la barra de color es lo Real/Proyectado, y su parte más oscura es el avance.|Los rombos son hitos. Con borde rojo, están en la ruta crítica.|Las flechas unen predecesoras y sucesoras.">Cronograma de ejemplo (proyecto inventado) con las capas Línea base, Avance real, Ruta crítica y Dependencias activas.</fig>
+<fig slug="gantt-dependencias" t="Gantt con Línea Base, avance y dependencias" observe="La barra rayada gris es la Línea Base; la barra de color es lo Real/Proyectado, y su parte más oscura es el avance.|Los rombos son hitos. Con borde rojo, están en la ruta crítica.|Las flechas unen predecesoras y sucesoras.">Cronograma de ejemplo (proyecto inventado) con las capas Línea base, Avance real y Dependencias activas. Las tareas críticas se ven con borde rojo.</fig>
 <fig slug="lb-vs-rp" t="Línea Base frente a Real/Proyectado">Cómo se interpreta el desplazamiento entre lo planificado y lo real o proyectado.</fig>
 <callout type="tip" title="Un vistazo rápido">
 <p>Si la barra de color empieza o termina después de la rayada, la tarea se desplazó respecto al plan. La diferencia es el desplazamiento.</p>
@@ -48,7 +48,7 @@
 <fig slug="avisos-dependencias" t="Avisos de dependencias" observe="Cada aviso indica la tarea afectada y el problema.|Un clic en un aviso lleva a la tarea en el Gantt (y activa Dependencias si estaba apagado).">Ejemplo: la tarea «Precomisionado» apunta a una predecesora con id 99 que no existe.</fig>
 <table>
 <tr><th>Aviso</th><th>Causa</th></tr>
-<tr><td>Predecesoras inexistentes</td><td>Una predecesora apunta a un id que no existe en su escenario.</td></tr>
+<tr><td>Predecesoras inexistentes</td><td>Una predecesora apunta a un ID que no existe en su escenario.</td></tr>
 <tr><td>Ciclos</td><td>Dos o más tareas dependen entre sí (A depende de B y B de A).</td></tr>
 <tr><td>Autorreferencias</td><td>Una tarea se lista a sí misma como predecesora.</td></tr>
 <tr><td>Formato no reconocido</td><td>Parte del texto de la columna Predecesoras no tiene el formato de Project.</td></tr>

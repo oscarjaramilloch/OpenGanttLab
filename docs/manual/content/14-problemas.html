@@ -3,10 +3,12 @@
 <h2 id="importacion">Importación</h2>
 <h3 id="faltan-tareas">Faltan tareas después de cargar el Excel</h3>
 <p>Una fila se omite si le falta el <b>Nombre de Tarea</b>, la <b>Categoría 1</b> o alguna de las fechas de <b>Línea Base</b>. Complete esas columnas y vuelva a cargar. Compruebe también que la primera fila con encabezados esté entre las ocho primeras filas de la hoja.</p>
+<h3 id="xls-antiguo">«No es un .xlsx válido»</h3>
+<p>El lector solo admite el formato <b>.xlsx</b>. Si el archivo es un .xls antiguo, ábralo en Excel y guárdelo como .xlsx antes de cargarlo.</p>
 <h3 id="fechas-texto">Las fechas salen mal o no salen</h3>
 <p>Verifique que las columnas de fecha del Excel sean fechas reales y no texto. Puede cambiar el formato de visualización en el selector de la barra inferior.</p>
 <h3 id="xml-lento">El XML es enorme y tarda</h3>
-<p>Es normal: se lee por partes y una barra muestra el avance. Un archivo de 1,7 GB puede tardar entre 35 y 80 segundos. No cierre la pestaña mientras carga.</p>
+<p>Los XML grandes se leen por partes y pueden tardar según su tamaño y el equipo. Una barra muestra el avance durante la carga. No cierre la pestaña mientras carga.</p>
 <h3 id="xml-no-carga">El XML no pasa a la tabla</h3>
 <p>Los campos <b>Categoría 1</b>, <b>Categoría 2</b> y <b>Nombre de Tarea</b> del mapeo son obligatorios. Mientras alguno esté vacío, verá el mensaje «Completa los campos obligatorios…» y los datos no se cargan. Asigne una columna o un «Valor fijo» a cada uno.</p>
 <h3 id="xml-invalido">«No parece un XML de Microsoft Project»</h3>
@@ -14,7 +16,7 @@
 
 <h2 id="visualizacion">Visualización</h2>
 <h3 id="gantt-vacio">El Gantt aparece vacío</h3>
-<p>Aún no hay datos cargados. Vaya a <ui>Datos</ui> y use <ui>Cargar archivo</ui>. Si hay datos, revise que haya escenarios marcados en el selector y que no haya filtros activos (<ui>Filtrar</ui> → <ui>Borrar filtros</ui>).</p>
+<p>Aún no hay datos cargados. Vaya a <ui>Datos</ui> y use <ui>Cargar archivo</ui>. Si hay datos, revise que haya Categorías 1 marcadas en <ui>Filtrar</ui> → <ui>Selección de tareas</ui> y que no haya filtros activos (<ui>Filtrar</ui> → <ui>Borrar filtros</ui>).</p>
 <h3 id="sin-linea-base">No veo la Línea Base</h3>
 <p>Active la capa <ui>Línea base</ui> (Gantt) o <ui>Comparador</ui> (Línea de Tiempo) y compruebe que Start LB y End LB tengan fechas.</p>
 <h3 id="faltan-en-gantt">Faltan tareas en el Gantt</h3>
@@ -45,7 +47,7 @@
 <tr><td>Un hito aparece como barra</td><td>La columna «Clase» no dice «Hito» y las fechas de LB no son iguales.</td><td>Escriba «Hito» en Clase.</td></tr>
 <tr><td>Avance de 0,76 en vez de 76</td><td>Excel guarda los porcentajes como fracción.</td><td>Se convierte solo: 0–1 se interpreta como porcentaje. Si ve 0,76 %, revise que el valor no sea &lt; 1 por error.</td></tr>
 <tr><td>Dos tareas con el mismo nombre en una fila</td><td>Tareas partidas con el mismo nombre.</td><td>Es lo esperado: se dibujan en la misma fila, en distintas posiciones.</td></tr>
-<tr><td>Predecesora que «no existe»</td><td>El id no está en el mismo Escenario.</td><td>Revise la columna Escenario (o la Categoría 1) y el ID.</td></tr>
+<tr><td>Predecesora que «no existe»</td><td>El ID no está en el mismo Escenario.</td><td>Revise la columna Escenario (o la Categoría 1) y el ID.</td></tr>
 <tr><td>Cambié una fecha y se movieron otras tareas</td><td>La <b>reprogramación de sucesoras</b> está activa: mueve las sucesoras de la fila editada.</td><td>Desactive <ui>Reprogramar sucesoras</ui> en la barra de la Tabla de Datos, o use <ui>Deshacer</ui> (un solo paso).</td></tr>
 <tr><td>Datos distintos tras «Actualizar»</td><td>El Excel cambió desde la última carga.</td><td>Es lo esperado: «Actualizar» recarga el Excel vinculado.</td></tr>
 </table>
