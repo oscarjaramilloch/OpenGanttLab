@@ -1,0 +1,60 @@
+<!--{"slug":"exportacion","title":"Exportar y compartir","group":"Producir","lead":"Lleve el resultado fuera de la aplicación: imagen, PDF, PowerPoint, Excel o un archivo HTML autónomo que se abre sin el Excel original."}-->
+
+<learn>
+<ul>
+<li>Exportar la Línea de Tiempo a PNG, PDF y PowerPoint.</li>
+<li>Guardar los datos en Excel.</li>
+<li>Compartir un HTML autónomo con datos y configuración.</li>
+</ul>
+</learn>
+
+<h2 id="resumen">Qué formato usar</h2>
+<table>
+<tr><th>Quiero…</th><th>Use</th><th>Dónde</th></tr>
+<tr><td>Una imagen para un informe</td><td>PNG</td><td>Línea de Tiempo → <ui>Exportar</ui></td></tr>
+<tr><td>Un documento para imprimir</td><td>PDF</td><td>Línea de Tiempo → <ui>Exportar</ui></td></tr>
+<tr><td>Una diapositiva</td><td>PPTX (PowerPoint)</td><td>Línea de Tiempo → <ui>Exportar</ui></td></tr>
+<tr><td>Llevar la tabla a Excel</td><td>Descargar .xlsx o Guardar cambios</td><td>Datos</td></tr>
+<tr><td>Enviar todo a otra persona</td><td>Compartir</td><td>Barra de herramientas</td></tr>
+</table>
+
+<h2 id="exportar">Exportar la Línea de Tiempo</h2>
+<ol class="steps">
+<li><b>Deje la vista como la quiere</b>Elija el modo de vista, los colores y los textos.</li>
+<li><b>Abra Exportar</b>Pulse <ui>Exportar</ui> en la barra de la Línea de Tiempo.
+<fig slug="ldt-exportar" t="Menú Exportar de la Línea de Tiempo" observe="PNG: imagen de alta resolución.|PDF: abre una página de impresión con el tamaño exacto del diagrama.|PPTX: una diapositiva de PowerPoint (requiere internet la primera vez).">Los tres formatos de exportación.</fig></li>
+<li><b>Elija el formato</b>El archivo se descarga o se abre para imprimir.</li>
+</ol>
+<callout type="info" title="Qué incluye la exportación">
+<p>PNG y PDF incluyen las flechas de dependencias si el interruptor está activo, pero no el resaltado temporal de una cadena seleccionada. PPTX no incluye flechas: exporta barras, hitos, líneas y textos.</p>
+</callout>
+<p>La exportación a imagen, PDF y PowerPoint está en la <b>Línea de Tiempo</b>. Para llevar el Gantt a otro documento, compártalo (ver más abajo) o capture la pantalla.</p>
+
+<h2 id="excel">Excel</h2>
+<ul>
+<li><ui>Descargar .xlsx</ui> genera un Excel con todas las tareas, incluidas las columnas de Predecesoras y Sucesoras.</li>
+<li><ui>Guardar cambios en el Excel vinculado</ui> escribe la tabla en el mismo archivo (Chrome o Edge).</li>
+<li>Desde la Gestión de XML, el ícono <ui>Exportar a Excel</ui> descarga toda la base como un archivo <code>.csv</code> (que Excel abre), con las líneas base 0–10.</li>
+</ul>
+
+<h2 id="compartir">Compartir</h2>
+<p><ui>Compartir</ui> genera un único archivo HTML —una copia de la aplicación con sus datos embebidos— que se abre en cualquier navegador sin el Excel ni el XML originales. Se guarda por defecto como <code>OpenGanttLab_compartir.html</code>.</p>
+<ol class="steps">
+<li><b>Prepare el resultado</b>Deje el Gantt y la Línea de Tiempo como quiere que se vean.</li>
+<li><b>Pulse Compartir</b>En Chrome o Edge se abre el selector de carpeta; en otros navegadores el archivo se descarga.</li>
+<li><b>Envíe el archivo</b>Quien lo reciba lo abre y ve lo mismo que usted.</li>
+</ol>
+<callout type="result" title="Qué conserva el archivo compartido">
+<ul>
+<li>Las tareas y sus fechas, avance, ruta crítica, ID y predecesoras.</li>
+<li>Los colores, textos editados, formas y cuadros de texto de la Línea de Tiempo.</li>
+<li>Las capas y modos activos: Comparador, Segmentación, Leyenda, Fecha de estado, Ruta crítica y Dependencias.</li>
+<li>Las tareas ocultas de Ejecutivo, los títulos, el orden de las bandas y el formato de fecha.</li>
+</ul>
+</callout>
+<callout type="warn" title="Lo que no viaja">
+<p>Las preferencias de <ui>Configuración</ui> (por ejemplo el aviso de conflictos de fechas) son del navegador de cada persona, y las columnas de mapeo personalizadas de XML duran solo la sesión.</p>
+</callout>
+<callout type="tip" title="Cambios sin compartir">
+<p>El botón <ui>Compartir</ui> se resalta cuando hay cambios sin guardar. En <ui>Configuración</ui> puede activar un recordatorio cada N minutos.</p>
+</callout>

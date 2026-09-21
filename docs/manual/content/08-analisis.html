@@ -1,0 +1,43 @@
+<!--{"slug":"analisis","title":"Análisis y control","group":"Analizar","lead":"Las herramientas de lectura y control con que cuenta OpenGanttLab: indicadores de la barra de estado, avance, ruta crítica, fecha de estado, dependencias y desplazamientos."}-->
+
+<learn>
+<ul>
+<li>Leer los indicadores de la barra de estado.</li>
+<li>Usar avance, ruta crítica y fecha de estado para controlar el proyecto.</li>
+<li>Detectar problemas de datos y de secuencia con los avisos.</li>
+</ul>
+</learn>
+
+<callout type="info" title="Alcance">
+<p>OpenGanttLab es una herramienta de <b>visualización y comparación de cronogramas</b>. No calcula valor ganado ni costos y no incluye tableros de gráficos: analiza fechas, avance, ruta crítica y dependencias.</p>
+</callout>
+
+<h2 id="indicadores">Indicadores de la barra de estado</h2>
+<p>La barra inferior resume el conjunto de tareas visible.</p>
+<table>
+<tr><th>Indicador</th><th>Qué significa</th></tr>
+<tr><td>Tareas</td><td>Número de tareas visibles.</td></tr>
+<tr><td>Críticas</td><td>Cuántas están marcadas en la ruta crítica.</td></tr>
+<tr><td>Inicio · Fin</td><td>La fecha más temprana y la más tardía (entre Línea Base y Real/Proyectado).</td></tr>
+<tr><td>Duración</td><td>Días entre el inicio y el fin del conjunto.</td></tr>
+<tr><td>Porcentaje</td><td>Avance promedio de las tareas visibles.</td></tr>
+</table>
+<p>Las cifras cambian con los filtros, con los escenarios activos y con las capas <ui>Marca Activity</ui> y <ui>Resumen</ui>.</p>
+
+<h2 id="avance">Avance</h2>
+<p>La capa <ui>Avance real</ui> rellena cada barra según su porcentaje. Los porcentajes vienen de la columna «Avance %» (0–100) del Excel o de «% Completado» del XML. En <ui>Configuración</ui> puede hacer que los tooltips muestren, además, los <b>días restantes o vencidos</b> de cada tarea.</p>
+
+<h2 id="ruta-critica">Ruta crítica</h2>
+<p>La ruta crítica <b>se lee de los datos</b> (columna «Ruta Crítica» del Excel o campo «Crítica» del XML): OpenGanttLab no la calcula. La capa <ui>Ruta crítica</ui> resalta esas tareas con borde rojo, y sus opciones ajustan el grosor del borde. Con las dependencias activas, las flechas entre dos tareas críticas se dibujan en rojo.</p>
+
+<h2 id="fecha-estado-analisis">Fecha de estado</h2>
+<p>La capa <ui>Fecha de estado</ui> dibuja una línea vertical en la fecha de corte. Todo lo que queda a su izquierda ya debería haber ocurrido; compárelo con el avance. Se configura en <ui>Capas</ui> (estilo, grosor y color) y se comparte con la Línea de Tiempo.</p>
+
+<h2 id="desplazamiento">Desplazamientos entre línea base y proyectado</h2>
+<p>Con <ui>Línea base</ui> activa, la diferencia de posición entre la barra rayada y la de color es el desplazamiento. Si necesita ver las fechas exactas, active <ui>Fechas</ui>, o agregue al Gantt las columnas «Start LB», «End LB», «Start R/P» y «End R/P» con un clic derecho en un encabezado.</p>
+
+<h2 id="secuencia">Calidad de la secuencia</h2>
+<p>El ícono de aviso de dependencias señala problemas que afectan la lectura del cronograma: predecesoras inexistentes, ciclos y textos con formato inválido. Opcionalmente, también los <a href="#/cronograma/conflictos">conflictos de fechas</a>. Revíselos antes de presentar un cronograma.</p>
+
+<h2 id="mover">Mover fechas en bloque</h2>
+<p>Para simular un desplazamiento de un grupo de tareas, use <ui>Editar</ui> → <ui>Mover en bloque</ui>. Se explica en <a href="#/avanzadas/mover-en-bloque">Funciones avanzadas</a>.</p>

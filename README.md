@@ -10,6 +10,7 @@ Herramienta HTML standalone para comparar escenarios de plan de actividades, con
 - `src/OpenGanttLab.html` — versión anterior (v2.x), conservada como referencia.
 - `dist/OpenGanttLab_v2.0_RTM.html` — build ofuscada v2.0 para distribución (no incluye las funciones de la serie 3.x).
 - `docs/OpenGanttLab_Presentacion_v2.html` — presentación del proyecto.
+- `docs/manual/` — **manual de usuario** con capturas reales, diagramas, búsqueda y navegación por capítulos (abrir `docs/manual/index.html`). Se regenera con `docs/manual/tools/` (ver `docs/manual/README.md`).
 - `index.html` — página de descarga para GitHub Pages; `SOURCE_PATH` apunta a la versión vigente.
 - La **Ayuda** dentro de la aplicación (sección «Ayuda») documenta la interfaz y trae el historial de cambios por versión.
 

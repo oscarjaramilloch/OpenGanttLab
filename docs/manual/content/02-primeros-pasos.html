@@ -1,0 +1,52 @@
+<!--{"slug":"primeros-pasos","title":"Primeros pasos","group":"Comenzar","lead":"En cinco minutos: abrir la aplicación, cargar su primer cronograma y recorrer el Gantt, la Línea de Tiempo y la Tabla de Datos."}-->
+
+<learn>
+<ul>
+<li>Abrir OpenGanttLab y cargar su primer archivo.</li>
+<li>Reconocer el flujo de trabajo completo.</li>
+<li>Hacer un primer recorrido por las tres vistas.</li>
+</ul>
+</learn>
+
+<h2 id="requisitos">Requisitos</h2>
+<ul>
+<li>Un navegador moderno: <b>Chrome</b> o <b>Edge</b> (versión 86 o superior).</li>
+<li>Un archivo de cronograma: un <b>Excel (.xlsx)</b> con las columnas que se describen en <a href="#/datos/excel">Proyectos y datos</a>, o un <b>XML exportado desde Microsoft Project</b>.</li>
+<li>No requiere instalación ni conexión a internet. Solo la exportación a PowerPoint necesita internet la primera vez.</li>
+</ul>
+
+<h2 id="abrir">Abrir OpenGanttLab</h2>
+<p>Abra el archivo <code>OpenGanttLab 3.1.html</code> en el navegador. Aparece una pantalla de bienvenida con los datos del autor y la licencia.</p>
+<fig slug="bienvenida" t="Pantalla de bienvenida" observe="Pulse «Iniciar» para entrar.|Si abre un archivo compartido que ya trae datos, esta pantalla no aparece.">La primera pantalla al abrir la aplicación.</fig>
+
+<h2 id="flujo">El flujo de trabajo</h2>
+<p>Casi todo el trabajo sigue el mismo recorrido de cinco etapas. Puede repetir cualquiera de ellas: al corregir un dato, las vistas se actualizan.</p>
+<fig slug="flujo-trabajo" t="Flujo de trabajo en OpenGanttLab">Importar, revisar, comparar, presentar y exportar.</fig>
+
+<h2 id="primer-proyecto">Cargar su primer proyecto</h2>
+<ol class="steps">
+<li><b>Vaya a Datos</b>Pulse <ui>Datos</ui> en el riel de navegación (a la izquierda).</li>
+<li><b>Cargue el archivo</b>Pulse el ícono <ui>Cargar archivo</ui> (flecha hacia arriba). La aplicación detecta sola si es un Excel o un XML.
+<fig slug="datos-cargar-menu" t="Menú de carga de la Tabla de Datos" observe="El ícono de la izquierda carga un archivo directamente.|La flecha (˅) abre «Cargar archivo (Excel o XML)» y «Gestión de XML (Base de datos)».">Las dos formas de cargar datos desde la barra de la Tabla de Datos.</fig></li>
+<li><b>Elija el archivo</b>Seleccione su .xlsx o su .xml. Las tareas aparecen en la tabla y, de inmediato, en el Gantt.</li>
+<li><b>Revise los datos</b>Compruebe nombres, fechas y avance en la <a href="#/datos/tabla-de-datos">Tabla de Datos</a>. Puede corregir directamente en ella.</li>
+<li><b>Abra el Gantt</b>Pulse <ui>Comparador de Escenarios</ui> para ver el cronograma.</li>
+</ol>
+<callout type="tip" title="Atajo">
+<p>Con el Gantt vacío, un clic sobre el área de trabajo abre un menú para vincular su Excel o importar un XML.</p>
+</callout>
+<callout type="info" title="¿XML de Project?">
+<p>Un XML necesita un paso más: el <b>mapeo de columnas</b>, donde se indica de qué campo del XML sale cada dato. Casi todo se mapea solo. Vea <a href="#/datos/xml">Importar desde Project XML</a>.</p>
+</callout>
+
+<h2 id="recorrido">Primer recorrido</h2>
+<ol class="steps">
+<li><b>Gantt</b>Active <ui>Línea base</ui> para ver las barras rayadas junto a las de color, y <ui>Avance real</ui> para el relleno de avance. Detalles en <a href="#/cronograma">Cronograma</a>.</li>
+<li><b>Dependencias</b>En <ui>Capas</ui> active <ui>Dependencias</ui> y haga clic en una barra para resaltar su cadena.</li>
+<li><b>Línea de Tiempo</b>Pulse <ui>Línea de Tiempo</ui> en el riel. Pruebe <ui>Vista C1</ui>, <ui>Ejecutivo</ui> y <ui>Vista Hitos</ui>. Detalles en <a href="#/vistas">Vistas</a>.</li>
+<li><b>Exporte</b>Use <ui>Exportar</ui> (PNG, PDF o PPTX) o <ui>Compartir</ui> para guardar un HTML autónomo. Detalles en <a href="#/exportacion">Exportar y compartir</a>.</li>
+</ol>
+
+<callout type="result" title="Resultado esperado">
+<p>Al terminar debería ver su cronograma en el Gantt, con los colores de cada Categoría 1 y Categoría 2, y poder pasar a la Línea de Tiempo sin volver a cargar nada.</p>
+</callout>

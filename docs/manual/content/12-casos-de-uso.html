@@ -1,0 +1,46 @@
+<!--{"slug":"casos-de-uso","title":"Casos de uso","group":"Consultar","lead":"Tres situaciones típicas resueltas de principio a fin. Todas usan el proyecto de ejemplo del manual (una planta industrial ficticia)."}-->
+
+<learn>
+<ul>
+<li>Comparar la línea base con el cronograma proyectado.</li>
+<li>Preparar la lámina de un comité.</li>
+<li>Revisar la secuencia de un XML de Project.</li>
+</ul>
+</learn>
+
+<h2 id="caso-linea-base">Caso 1 · ¿Cuánto se desplazó el proyecto?</h2>
+<p><b>Situación:</b> el equipo replanificó y el gerente pregunta qué tareas se corrieron respecto al plan original.</p>
+<ol class="steps">
+<li><b>Cargue los datos</b>Cargue el Excel o el XML con las fechas LB y R/P (<a href="#/datos">Proyectos y datos</a>).</li>
+<li><b>Active Línea base y Avance real</b>En <ui>Capas</ui> o con los accesos rápidos de la barra.</li>
+<li><b>Lea los desplazamientos</b>Compare la barra rayada con la de color; agregue las columnas «Start LB», «End LB», «Start R/P» y «End R/P» con clic derecho si necesita las fechas exactas.</li>
+<li><b>Identifique lo crítico</b>Active <ui>Ruta crítica</ui> para ver qué tareas condicionan la fecha final.</li>
+</ol>
+<callout type="result" title="Resultado">
+<p>Una vista única con lo planificado, lo proyectado y el avance de cada tarea, donde se ve de inmediato qué se desplazó y cuánto.</p>
+</callout>
+
+<h2 id="caso-comite">Caso 2 · Una lámina para el comité</h2>
+<p><b>Situación:</b> hay que presentar el cronograma a un comité en una sola lámina, con foco en los hitos.</p>
+<ol class="steps">
+<li><b>Abra la Línea de Tiempo</b>Elija el modo de vista: <ui>Vista C1</ui> para agrupar por disciplina, o <ui>Ejecutivo</ui> para mostrar solo entregas.</li>
+<li><b>Depure lo que se ve</b>Oculte con <kbd>Delete</kbd> las tareas que no aporten, o use <ui>Selección de tareas</ui>.</li>
+<li><b>Ajuste la presentación</b>Edite colores y textos con doble clic; agregue una llamada o una forma desde <ui>Editar</ui>. Active <ui>Leyenda</ui> si hace falta.</li>
+<li><b>Exporte</b><ui>Exportar</ui> → PowerPoint, o PNG para pegarlo en un informe.</li>
+</ol>
+<callout type="tip" title="Guarde su trabajo">
+<p>Use <ui>Compartir</ui> para conservar la configuración de la lámina. Al abrir el archivo compartido verá exactamente lo mismo.</p>
+</callout>
+
+<h2 id="caso-secuencia">Caso 3 · Revisar la secuencia de un XML de Project</h2>
+<p><b>Situación:</b> llega un XML de Project de varios cientos de megabytes y hay que revisar si la lógica está bien enlazada.</p>
+<ol class="steps">
+<li><b>Cárguelo</b>En <ui>Datos</ui> → <ui>Gestión de XML</ui>. La lectura por partes evita que el navegador se bloquee.</li>
+<li><b>Complete el mapeo</b>Confirme Categoría 1, Categoría 2, Nombre de Tarea y las fechas. Compruebe con la vista previa.</li>
+<li><b>Active las dependencias</b>En el Gantt: <ui>Capas</ui> → <ui>Dependencias</ui>.</li>
+<li><b>Revise los avisos</b>El ícono de triángulo lista predecesoras inexistentes y ciclos. Active el aviso de conflictos de fechas en <ui>Configuración</ui> si quiere comparar también las fechas.</li>
+<li><b>Siga una cadena</b>Haga clic en un hito importante para resaltar todo lo que lo precede.</li>
+</ol>
+<callout type="info" title="Tiempo de lectura">
+<p>Un XML de 1,7 GB se lee en unos 35 a 80 segundos, según el equipo, con una barra de avance.</p>
+</callout>

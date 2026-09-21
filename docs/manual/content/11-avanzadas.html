@@ -1,0 +1,47 @@
+<!--{"slug":"avanzadas","title":"Funciones avanzadas","group":"Producir","lead":"Herramientas para ajustar el diagrama a la medida: mover fechas en bloque, reordenar grupos, texto libre, columnas personalizadas y más."}-->
+
+<learn>
+<ul>
+<li>Mover las fechas de un grupo de tareas en bloque.</li>
+<li>Reordenar escenarios, Categoría 1 y Categoría 2.</li>
+<li>Insertar texto libre en el Gantt.</li>
+<li>Usar columnas personalizadas y ajustes de fuente.</li>
+</ul>
+</learn>
+
+<h2 id="menu-edicion">El menú Editar del Gantt</h2>
+<fig slug="menu-edicion" t="Menú Editar del Gantt" observe="Insertar texto: nota libre sobre el diagrama.|Mover en bloque: desplaza fechas de un grupo.|Reordenar grupos: cambia el orden visual.">Las tres herramientas de edición del Gantt.</fig>
+
+<h2 id="mover-en-bloque">Mover en bloque</h2>
+<p>Desplaza por un número de días las fechas de todas las tareas de un grupo. Es útil para simular un retraso o un adelanto de una fase completa.</p>
+<ol class="steps">
+<li><b>Abra la herramienta</b><ui>Editar</ui> → <ui>Mover en bloque</ui>.
+<fig slug="mover-en-bloque" t="Mover en bloque" observe="Agrupar por: Escenario, Categoría 1 o Categoría 2.|Valor: el grupo concreto.|Fechas: Línea Base, Real/Proyectado o ambas.|Desplazar: días (un número negativo adelanta).">Cuadro de diálogo de la herramienta.</fig></li>
+<li><b>Elija el grupo y las fechas</b>Seleccione «Agrupar por», el valor y qué fechas mover (LB, R/P o ambas).</li>
+<li><b>Indique los días y aplique</b>Un número negativo mueve hacia atrás.</li>
+</ol>
+<callout type="danger" title="Modifica los datos">
+<p>Mover en bloque cambia las fechas de las tareas y <b>no se puede deshacer</b> con el botón Deshacer. Guarde una copia antes de usarlo (por ejemplo con <ui>Compartir</ui> o <ui>Descargar .xlsx</ui>). Si cargó un XML, <ui>Restaurar</ui> en la Tabla de Datos vuelve a los datos originales.</p>
+</callout>
+
+<h2 id="reordenar-grupos">Reordenar grupos</h2>
+<p>Cambia el orden visual de los grupos con las flechas ▲▼: primero los Escenarios o Categoría 1 y, dentro de cada uno, sus Categoría 2.</p>
+<fig slug="reordenar-grupos" t="Reordenar grupos" observe="Cada grupo tiene un número de posición y flechas para subir o bajar.|Las Categoría 2 se mueven dentro de su Categoría 1.">Orden de los grupos del Gantt.</fig>
+
+<h2 id="texto-libre">Texto libre en el Gantt</h2>
+<p><ui>Editar</ui> → <ui>Insertar texto</ui> agrega una nota sobre el diagrama. Se arrastra y se puede redimensionar; permite elegir tamaño, color, fondo, borde, alineación y estilo.</p>
+
+<h2 id="fuente">Fuente y tamaños</h2>
+<p>El menú <ui>Ajustes</ui> cambia la <b>familia de fuente</b> (Segoe UI, Arial, Calibri, Times New Roman, Georgia, Verdana, Courier New o Tahoma) y el <b>tamaño por elemento</b>: fechas, meses, años, Categoría 1, Categoría 2 y nombre de tarea. Se aplica al Gantt y a la Línea de Tiempo.</p>
+
+<h2 id="columnas-personalizadas">Columnas personalizadas</h2>
+<p>En la Gestión de XML, el botón <ui>+</ui> del mapeo crea una columna extra a partir de cualquier campo del XML. Aparece al final de la Tabla de Datos y, con clic derecho en un encabezado, en el Gantt. Si todo su contenido son fechas, la columna es de tipo fecha (calendario y filtro por año, mes y día).</p>
+
+<h2 id="color-paleta">Colores y paletas</h2>
+<p>El selector de color incluye filas «Estándar» y «Recientes» (paleta de Office). Los colores por defecto de Categoría 1, Categoría 2 y Escenario se definen en <a href="#/interfaz/configuracion">Configuración</a>.</p>
+
+<h2 id="seleccion-multiple">Selección múltiple en la Línea de Tiempo</h2>
+<p>Con <kbd>Ctrl</kbd> o <kbd>Shift</kbd> + clic agrega barras a la selección. Un doble clic abre el panel y los cambios (color, texto, fechas, trama, ocultar) se aplican a todas; arrastrar una mueve el grupo conservando el desplazamiento relativo entre filas.</p>
+
+<h2 id="hito-banda">Ubicación de un hito en la Vista C1</h2>
+<p>En el panel de edición de un hito, la opción <b>Ubicación</b> permite colocarlo dentro de una banda de Categoría 1 (con un selector de banda). Requiere la <ui>Vista C1</ui> activa y no funciona en Ejecutivo ni en Vista Hitos. Por defecto, el hito sigue sobre el eje.</p>

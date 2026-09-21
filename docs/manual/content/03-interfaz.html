@@ -1,0 +1,76 @@
+<!--{"slug":"interfaz","title":"La interfaz","group":"Comenzar","lead":"Un recorrido por la pantalla: riel de navegación, barra de herramientas, área de trabajo y barra de estado."}-->
+
+<learn>
+<ul>
+<li>Identificar cada zona de la pantalla y para qué sirve.</li>
+<li>Usar el riel de navegación y la barra de herramientas.</li>
+<li>Controlar la escala, el zoom y el formato de fecha.</li>
+</ul>
+</learn>
+
+<h2 id="pantalla">La pantalla principal</h2>
+<p>La pantalla se compone de un riel de navegación a la izquierda y, a su derecha, el espacio de trabajo de la sección elegida. En el Gantt el espacio de trabajo se divide en cinco zonas.</p>
+<fig slug="pantalla-principal" t="Pantalla principal (Comparador de Escenarios)" legend="Riel de navegación|Barra de herramientas|Columnas de la tabla (Categoría 1, Categoría 2, Nombre de Tarea)|Área del cronograma: barras, hitos y dependencias|Leyenda de colores|Barra de estado y escala">Las zonas del Gantt. Los números corresponden a la lista de abajo.</fig>
+
+<h2 id="riel">Riel de navegación</h2>
+<p>El riel tiene cinco secciones. Cada una abre su propio espacio con su propia barra de herramientas.</p>
+<fig slug="riel-navegacion" t="Riel de navegación" legend="Comparador de Escenarios (Gantt)|Línea de Tiempo|Datos|Configuración|Ayuda|Botón para colapsar el riel">El riel en su versión expandida. Al colapsarlo queda solo con íconos.</fig>
+<table>
+<tr><th>Sección</th><th>Para qué sirve</th></tr>
+<tr><td>Comparador de Escenarios</td><td>El diagrama de Gantt: Línea Base frente a Real/Proyectado, por escenario.</td></tr>
+<tr><td>Línea de Tiempo</td><td>La vista ejecutiva para presentar, con edición libre.</td></tr>
+<tr><td>Datos</td><td>La Tabla de Datos, la carga de archivos y la Gestión de XML.</td></tr>
+<tr><td>Configuración</td><td>Tema, recordatorios y valores por defecto.</td></tr>
+<tr><td>Ayuda</td><td>Documentación, historial de cambios y enlace a este manual.</td></tr>
+</table>
+<callout type="tip" title="Más espacio">
+<p>Pulse el botón <ui>« Colapsar</ui> para reducir el riel a íconos. La aplicación recuerda su elección.</p>
+</callout>
+
+<h2 id="barra-herramientas">Barra de herramientas</h2>
+<p>Cada sección tiene su barra. Hay dos tipos de controles: <b>interruptores</b> (se activan con un clic) y <b>menús</b> (íconos con una flecha ˅ que abren opciones). Pase el cursor sobre cualquier ícono para ver su nombre.</p>
+<fig slug="barra-herramientas" t="Barra de herramientas del Gantt" legend="Capas: qué elementos se dibujan|Accesos rápidos: Avance real, Línea base y Ruta crítica|Ordenar: orden de las tareas|Filtrar: filtros y selección de tareas|Editar: texto libre, mover en bloque y reordenar|Ajustes: fuente y tamaños|Compartir: guardar un HTML autónomo">La barra del Gantt con la ventana ancha. En ventanas más estrechas, los últimos controles pasan al menú «⋯ Más herramientas».</fig>
+<callout type="info" title="Barra que se adapta">
+<p>La barra ajusta lo que muestra al ancho de la ventana: primero oculta las etiquetas, luego los accesos rápidos, y agrupa el resto en el menú <ui>Más herramientas</ui> (⋯). Ninguna función desaparece.</p>
+</callout>
+
+<h3 id="capas">El menú Capas</h3>
+<p>Las <b>capas</b> deciden qué se dibuja sobre el cronograma. El número junto a «Capas» indica cuántas están activas.</p>
+<fig slug="capas-gantt" t="Menú Capas del Gantt" observe="Cada capa es un interruptor.|«Fecha de estado» y «Ruta crítica» tienen opciones propias (estilo, grosor, color).|«Restablecer capas» vuelve a la configuración inicial.">Todas las capas disponibles en el Gantt.</fig>
+<table>
+<tr><th>Capa</th><th>Qué hace</th></tr>
+<tr><td>Avance real</td><td>Rellena cada barra según su porcentaje de avance.</td></tr>
+<tr><td>Línea base</td><td>Dibuja la barra de Línea Base junto a la Real/Proyectada.</td></tr>
+<tr><td>Marca Activity</td><td>Muestra solo las tareas marcadas como «Activity».</td></tr>
+<tr><td>Resumen</td><td>Incluye las tareas resumen (viene apagado).</td></tr>
+<tr><td>Fechas</td><td>Escribe las fechas junto a las barras y a los hitos.</td></tr>
+<tr><td>Dependencias</td><td>Dibuja las flechas entre predecesoras y sucesoras.</td></tr>
+<tr><td>Fecha de estado</td><td>Dibuja una línea vertical en la fecha de corte.</td></tr>
+<tr><td>Ruta crítica</td><td>Resalta con borde rojo las tareas críticas.</td></tr>
+</table>
+
+<h2 id="barra-estado">Barra de estado y escala</h2>
+<p>En la parte inferior hay dos bloques: un resumen del proyecto visible y los controles de escala.</p>
+<fig slug="barra-estado" t="Barra de estado" observe="Tareas, Críticas, Inicio, Fin y Duración del conjunto visible; a la derecha, el avance promedio.|Deslizador y botones − / + para el zoom; «100 %» vuelve al tamaño normal.|Escala: Días, Semanas, Meses, Trimestres o Años.|Formato de fecha (por ejemplo mm/aa) y botón de reloj para ir a la fecha de hoy.">Resumen del proyecto y controles de zoom, escala y formato de fecha.</fig>
+<callout type="note" title="El resumen sigue a los filtros">
+<p>Las cifras de la barra de estado se calculan sobre las tareas que están visibles. Si filtra o desactiva escenarios, cambian.</p>
+</callout>
+
+<h2 id="ayuda-integrada">Ayuda integrada</h2>
+<p>La sección <ui>Ayuda</ui> del riel abre la documentación dentro de la aplicación. Incluye un manual resumido, una referencia técnica, el historial de cambios y un enlace a este manual completo.</p>
+<fig slug="ayuda" t="Sección Ayuda" legend="Botón «Manual completo»: abre este manual|Pestañas: Manual de usuario, Referencia e Historial de cambios|Aviso con el enlace al manual completo">La documentación integrada en la aplicación.</fig>
+
+<h2 id="configuracion">Configuración</h2>
+<p>La sección <ui>Configuración</ui> guarda preferencias <b>de este navegador</b> (no viajan con «Compartir»).</p>
+<fig slug="configuracion" t="Sección Configuración" observe="Apariencia: tema oscuro y pestaña de inicio.|Recordatorios: aviso de cambios sin compartir.|Datos y métricas: avance en tooltips, conflictos de fechas, borde de la ruta crítica.|Paleta de colores por defecto.">Preferencias de la aplicación.</fig>
+<table>
+<tr><th>Opción</th><th>Qué controla</th></tr>
+<tr><td>Tema oscuro</td><td>Cambia la apariencia de toda la aplicación.</td></tr>
+<tr><td>Pestaña de inicio</td><td>Sección con la que se abre: Diagrama de Gantt, Línea de Tiempo o Datos.</td></tr>
+<tr><td>Recordatorios</td><td>Avisa cada N minutos si hay cambios sin compartir (0 = desactivado).</td></tr>
+<tr><td>Avance en tooltips</td><td>Muestra solo el porcentaje, o el porcentaje más los días restantes o vencidos.</td></tr>
+<tr><td>Avisar de conflictos de fechas</td><td>Activa el aviso opcional de dependencias (vea <a href="#/cronograma/conflictos">Conflictos de fechas</a>).</td></tr>
+<tr><td>Ancho de borde de la ruta crítica</td><td>Grosor por defecto del borde rojo de las tareas críticas.</td></tr>
+<tr><td>Paleta de colores</td><td>Colores que se asignan por defecto a Categoría 1, Categoría 2 y Escenario.</td></tr>
+<tr><td>Editor de Datos</td><td>Qué columnas se ven en la Tabla de Datos.</td></tr>
+</table>

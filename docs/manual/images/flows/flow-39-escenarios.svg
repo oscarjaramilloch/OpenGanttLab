@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 250" width="940" height="250" role="img" aria-labelledby="t d" font-family="Inter,'Segoe UI',Arial,sans-serif">
+<title id="t">Flujo de escenarios</title><desc id="d">Cargar variantes, nombrarlas, elegir escenarios y compararlos.</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#5a6b78"/></marker>
+<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#2563eb"/></marker>
+<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#d0d0d0"/><line x1="0" y1="0" x2="0" y2="6" stroke="#8a8a8a" stroke-width="1.4"/></pattern>
+</defs>
+<rect x=".5" y=".5" width="939" height="249" rx="14" fill="#fff" stroke="#dde5ee"/>
+<text x="470" text-anchor="middle" font-size="17" font-weight="700" fill="#0f2d5b"><tspan x="470" y="38.0">Trabajar con escenarios</tspan></text>
+<rect x="24" y="70" width="170" height="60" rx="10" fill="#fff7e6" stroke="#f59e0b" stroke-width="1.5"/><text x="109" text-anchor="middle" font-size="13" font-weight="600" fill="#7a4a00"><tspan x="109" y="96.4">Cargar cada versión</tspan><tspan x="109" y="112.7">p. ej. P10 · P50 · P90</tspan></text>
+<line x1="196" y1="100" x2="246" y2="100" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="248" y="70" width="170" height="60" rx="10" fill="#e8f0ff" stroke="#2563eb" stroke-width="1.5"/><text x="333" text-anchor="middle" font-size="13" font-weight="600" fill="#0f2d5b"><tspan x="333" y="96.4">Nombrar el escenario</tspan><tspan x="333" y="112.7">variante o columna Escenario</tspan></text>
+<line x1="420" y1="100" x2="470" y2="100" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="472" y="70" width="170" height="60" rx="10" fill="#e8f0ff" stroke="#2563eb" stroke-width="1.5"/><text x="557" text-anchor="middle" font-size="13" font-weight="600" fill="#0f2d5b"><tspan x="557" y="96.4">Filtrar y comparar</tspan><tspan x="557" y="112.7">segmentador · Selección</tspan></text>
+<line x1="644" y1="100" x2="694" y2="100" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="696" y="70" width="220" height="60" rx="10" fill="#ecfdf3" stroke="#16a34a" stroke-width="1.5"/><text x="806" text-anchor="middle" font-size="13" font-weight="600" fill="#0f5132"><tspan x="806" y="96.4">Ver en el Gantt</tspan><tspan x="806" y="112.7">y presentar en la LdT</tspan></text>
+<text x="470" text-anchor="middle" font-size="12" font-weight="500" fill="#5a6b78"><tspan x="470" y="176.2">Duplicar escenario (Datos → Gestión de escenarios) crea una copia idéntica para simular cambios sin tocar el original.</tspan></text>
+<text x="470" text-anchor="middle" font-size="12" font-weight="500" fill="#5a6b78"><tspan x="470" y="202.2">Eliminar escenario quita también sus tareas de la tabla; se puede deshacer.</tspan></text>
+</svg>

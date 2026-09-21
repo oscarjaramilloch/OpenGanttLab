@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 400" width="940" height="400" role="img" aria-labelledby="t d" font-family="Inter,'Segoe UI',Arial,sans-serif">
+<title id="t">Arquitectura conceptual</title><desc id="d">Excel y Project XML alimentan la Tabla de Datos, que alimenta el Gantt, la Línea de Tiempo y el análisis; el resultado se exporta o se comparte.</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#5a6b78"/></marker>
+<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#2563eb"/></marker>
+<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#d0d0d0"/><line x1="0" y1="0" x2="0" y2="6" stroke="#8a8a8a" stroke-width="1.4"/></pattern>
+</defs>
+<rect x=".5" y=".5" width="939" height="399" rx="14" fill="#fff" stroke="#dde5ee"/>
+<text x="470" text-anchor="middle" font-size="17" font-weight="700" fill="#0f2d5b"><tspan x="470" y="40.0">De los datos al resultado</tspan></text>
+<text x="120" text-anchor="middle" font-size="11" font-weight="700" fill="#5a6b78"><tspan x="120" y="81.8">ENTRADA</tspan></text>
+<text x="470" text-anchor="middle" font-size="11" font-weight="700" fill="#5a6b78"><tspan x="470" y="81.8">DATOS DE LA APLICACIÓN</tspan></text>
+<text x="770" text-anchor="middle" font-size="11" font-weight="700" fill="#5a6b78"><tspan x="770" y="81.8">VISTAS</tspan></text>
+<rect x="30" y="100" width="180" height="78" rx="10" fill="#ecfdf3" stroke="#16a34a" stroke-width="1.5"/><text x="120" text-anchor="middle" font-size="14" font-weight="600" fill="#0f5132"><tspan x="120" y="135.2">Excel (.xlsx)</tspan><tspan x="120" y="152.7">Escenarios y tareas</tspan></text>
+<rect x="30" y="220" width="180" height="78" rx="10" fill="#fff7e6" stroke="#f59e0b" stroke-width="1.5"/><text x="120" text-anchor="middle" font-size="14" font-weight="600" fill="#7a4a00"><tspan x="120" y="255.2">Project XML (.xml)</tspan><tspan x="120" y="272.6">Incluso de más de 1 GB</tspan></text>
+<line x1="212" y1="139" x2="320" y2="190" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="212" y1="259" x2="320" y2="210" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="322" y="140" width="296" height="120" rx="14" fill="#e8f0ff" stroke="#2563eb" stroke-width="2"/><text x="470" text-anchor="middle" font-size="13" font-weight="600" fill="#0f2d5b"><tspan x="470" y="180.2">Tabla de Datos</tspan><tspan x="470" y="196.4">Escenario · Categoría 1 · Categoría 2</tspan><tspan x="470" y="212.7">Tarea · fechas LB y R/P · avance</tspan><tspan x="470" y="228.9">ID · Predecesoras</tspan></text>
+<line x1="620" y1="175" x2="690" y2="128" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="620" y1="200" x2="690" y2="200" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah)"/>
+<line x1="620" y1="225" x2="690" y2="272" stroke="#5a6b78" stroke-width="2" marker-end="url(#ah)"/>
+<rect x="692" y="100" width="220" height="56" rx="10" fill="#fff" stroke="#c9d5e3" stroke-width="1.5"/><text x="802" text-anchor="middle" font-size="13" font-weight="600" fill="#172b3a"><tspan x="802" y="124.4">Gantt</tspan><tspan x="802" y="140.7">Comparador de Escenarios</tspan></text>
+<rect x="692" y="172" width="220" height="56" rx="10" fill="#fff" stroke="#c9d5e3" stroke-width="1.5"/><text x="802" text-anchor="middle" font-size="13" font-weight="600" fill="#172b3a"><tspan x="802" y="196.4">Línea de Tiempo</tspan><tspan x="802" y="212.7">Vista ejecutiva</tspan></text>
+<rect x="692" y="244" width="220" height="56" rx="10" fill="#fff" stroke="#c9d5e3" stroke-width="1.5"/><text x="802" text-anchor="middle" font-size="13" font-weight="600" fill="#172b3a"><tspan x="802" y="268.4">Análisis</tspan><tspan x="802" y="284.7">Barra de estado · avisos</tspan></text>
+<path d="M802 302 V338 H470 V322" fill="none" stroke="#2563eb" stroke-width="2" stroke-linejoin="round" marker-end="url(#ab)"/>
+<rect x="300" y="322" width="340" height="56" rx="10" fill="#f0f6ff" stroke="#2563eb" stroke-width="1.5"/><text x="470" text-anchor="middle" font-size="13" font-weight="600" fill="#0f2d5b"><tspan x="470" y="346.4">Exportar y compartir</tspan><tspan x="470" y="362.7">PNG · PDF · PPTX · Excel · HTML autónomo</tspan></text>
+</svg>

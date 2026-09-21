@@ -1,0 +1,72 @@
+<!--{"slug":"escenarios","title":"Escenarios","group":"Analizar","lead":"Un escenario es una versión del cronograma. Aprenda a cargar varias versiones, elegir cuáles ver y compararlas en el Gantt y en la Línea de Tiempo."}-->
+
+<learn>
+<ul>
+<li>Entender qué es un escenario en Excel y en XML.</li>
+<li>Cargar, duplicar y eliminar escenarios.</li>
+<li>Elegir qué escenarios se ven y compararlos.</li>
+</ul>
+</learn>
+
+<h2 id="que-es">Qué es un escenario</h2>
+<p>Un <b>escenario</b> es una versión del cronograma que quiere comparar: un plan base y una replanificación, o las variantes P10, P50 y P90 de una simulación. Cada escenario tiene sus propias tareas.</p>
+<p>El escenario de una tarea se determina así, en este orden:</p>
+<ol>
+<li>La columna <b>Escenario</b> de la tarea, si tiene valor.</li>
+<li>Si no, el <b>archivo XML de origen</b> (cada XML cargado cuenta como un escenario, con el nombre de su variante).</li>
+<li>Si no, su <b>Categoría 1</b>. Así, un Excel antiguo que usa la Categoría 1 para las versiones sigue funcionando sin cambios.</li>
+</ol>
+<callout type="note" title="Escenario y dependencias">
+<p>El escenario es también el <b>ámbito de los ids</b> de las dependencias: dos escenarios pueden repetir los mismos ids sin mezclarse.</p>
+</callout>
+<fig slug="escenarios" t="Trabajar con escenarios" observe="Cada variante se carga como una carga distinta.|Duplicar copia el escenario completo; Eliminar quita sus tareas.">Del archivo cargado a la comparación.</fig>
+
+<h2 id="gestion">Gestión de escenarios</h2>
+<p>La sección <ui>Datos</ui> tiene una pestaña <ui>Gestión de escenarios</ui> con la lista de todos los escenarios de la sesión, vengan de Excel o de XML.</p>
+<fig slug="gestion-escenarios" t="Gestión de escenarios" legend="Un escenario: nombre, número de actividades, Categorías 1, rango de fechas y origen (Excel o XML)|Herramientas: Ver en la Tabla de Datos, Duplicar escenario y Eliminar escenario" observe="El resumen indica cuántos escenarios y actividades hay en total.|El origen indica si el escenario viene de un Excel o de un XML.">Lista de escenarios de la sesión.</fig>
+<table>
+<tr><th>Ícono</th><th>Qué hace</th></tr>
+<tr><td>Ver en la Tabla de Datos</td><td>Abre la tabla filtrada por ese escenario (con el segmentador).</td></tr>
+<tr><td>Duplicar escenario</td><td>Crea una copia idéntica (fechas, avance, dependencias y campos) con un nombre nuevo.</td></tr>
+<tr><td>Eliminar escenario</td><td>Quita el escenario y todas sus actividades, con confirmación.</td></tr>
+</table>
+<ol class="steps">
+<li><b>Pulse Duplicar escenario</b>La aplicación propone un nombre («… (copia)»).
+<fig slug="duplicar-escenario" t="Duplicar escenario" observe="El cuadro indica cuántas actividades se copian.|Valida el nombre en el mismo cuadro: no puede estar vacío ni repetirse.">Cuadro de diálogo de la aplicación.</fig></li>
+<li><b>Escriba el nombre y confirme</b>La copia aparece en la Tabla de Datos, con sus predecesoras resueltas dentro de la copia.</li>
+<li><b>Edite la copia</b>Cambie fechas, avance o dependencias en la Tabla de Datos, filtrando por el escenario nuevo con el segmentador.</li>
+</ol>
+<callout type="tip" title="Ideal para simular">
+<p>Duplique «Plan base», mueva fechas en la copia y compárelas en el Gantt. Las copias sobreviven a un nuevo «Aplicar mapeo» del XML.</p>
+</callout>
+<callout type="danger" title="Eliminar borra las tareas">
+<p>Eliminar un escenario quita todas sus actividades de la tabla. Puede deshacerlo desde la Tabla de Datos con <ui>Deshacer</ui>.</p>
+</callout>
+
+<h2 id="cargar">Cargar varios escenarios</h2>
+<ol class="steps">
+<li><b>Cargue cada variante</b>En <ui>Datos</ui> → <ui>Gestión de XML</ui> cargue un XML por variante (o varios a la vez). Con Excel, use una fila por tarea y escenario, con la versión en la columna Escenario.</li>
+<li><b>Nombre la carga</b>En la pestaña <ui>Base de datos</ui> del XML edite el nombre de la variante (por ejemplo «P50»).</li>
+<li><b>Revise el mapeo de cada archivo</b>Cada archivo tiene su mapeo independiente. Con <ui>Copiar al [n]</ui> lleva el mapeo al siguiente.</li>
+</ol>
+<callout type="tip" title="Probar otro mapeo sin releer el archivo">
+<p>En la Base de datos de XML, el ícono <ui>Duplicar escenario</ui> copia una carga con su propio mapeo, para probar otra configuración sin volver a leer el archivo (útil con XML muy grandes). El ícono de papelera elimina la carga y sus tareas, con confirmación.</p>
+</callout>
+
+<h2 id="elegir">Elegir qué se ve</h2>
+<p>En el Gantt, abra <ui>Filtrar</ui> → <ui>Selección de tareas</ui>. Allí marca qué <b>Categorías 1</b> (la lista «Escenarios»), qué Categorías 2 y qué tareas se ven. La leyenda de colores y la barra de estado se recalculan con lo que queda visible. Más detalle en <a href="#/filtros/seleccion">Selección de tareas</a>.</p>
+<callout type="info" title="«Escenarios» en el panel del Gantt">
+<p>La lista «Escenarios» del panel de selección del Gantt muestra las <b>Categorías 1</b>, cada una con su color. Para filtrar por el escenario en sentido de esta página (columna Escenario) use el <b>segmentador</b> de la Tabla de Datos o, en la Línea de Tiempo, el menú <ui>Escenario</ui>.</p>
+</callout>
+<p>En la Línea de Tiempo, el menú <ui>Escenario</ui> filtra por el escenario y edita los títulos de las secciones; su <ui>Selección de tareas</ui> ofrece las mismas opciones que la del Gantt.</p>
+
+<h2 id="comparar">Comparar escenarios</h2>
+<p>Hay dos formas complementarias de comparar:</p>
+<ul>
+<li><b>Entre escenarios:</b> active varios escenarios a la vez en el Gantt. Cada uno se distingue por el color de su Categoría 1.</li>
+<li><b>Contra la línea base:</b> active <ui>Línea base</ui> para ver, en cada tarea, la barra planificada junto a la real o proyectada. En la Línea de Tiempo, el modo <ui>Comparador</ui> muestra ambas secciones.</li>
+</ul>
+<callout type="result" title="Cómo interpretar">
+<p>Compare la posición de una misma tarea en dos escenarios (o en la línea base y el proyectado): si el fin se corre a la derecha, la tarea se retrasó; si el inicio se corre, se desplazó. La barra de estado muestra el inicio, el fin y la duración del conjunto visible.</p>
+</callout>
+<p>Vea el diagrama <a href="#/cronograma/leer">Línea Base frente a Real/Proyectado</a> y el <a href="#/vistas/comparador">Comparador</a> de la Línea de Tiempo.</p>

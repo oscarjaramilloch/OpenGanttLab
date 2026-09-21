@@ -1,0 +1,39 @@
+<!--{"slug":"filtros","title":"Filtros y orden","group":"Analizar","lead":"Decida qué tareas ver y en qué orden: filtros por columna, selección de tareas y orden cronológico u original."}-->
+
+<learn>
+<ul>
+<li>Filtrar por columna, con búsqueda y condiciones.</li>
+<li>Seleccionar escenarios, Categoría 1 y Categoría 2.</li>
+<li>Cambiar el orden de las tareas.</li>
+</ul>
+</learn>
+
+<h2 id="columna">Filtros por columna</h2>
+<ol class="steps">
+<li><b>Active los filtros</b>Abra el menú <ui>Filtrar</ui> y elija <ui>Activar/desactivar filtros por columna</ui>. Aparece un botón de embudo en cada encabezado.</li>
+<li><b>Abra el filtro de una columna</b>Pulse el embudo del encabezado. Se abre un panel con la lista de valores.
+<fig slug="filtro-columna" t="Filtro de una columna" observe="Caja de búsqueda para encontrar un valor.|Lista de valores con casillas; «Seleccionar todo» marca o desmarca todos.|«Filtros de texto» abre condiciones (igual a, comienza por, contiene…).|Cancelar y Aceptar.">Ejemplo con la columna Categoría 2.</fig></li>
+<li><b>Marque los valores y acepte</b>El Gantt muestra solo las tareas que cumplen todos los filtros activos.</li>
+<li><b>Quite los filtros</b>Con <ui>Borrar filtros</ui> del mismo menú.</li>
+</ol>
+<p>Según el tipo de columna, las condiciones cambian: <b>texto</b> (es igual a, no es igual a, comienza por, termina con, contiene, no contiene), <b>número</b> (igual, mayor, menor, entre…) y <b>fecha</b> (igual, antes de, después de, entre; con filtro por año, mes y día).</p>
+<callout type="tip" title="Filtros en la Tabla de Datos">
+<p>La Tabla de Datos tiene su propio icono <ui>Filtro</ui> con el mismo panel. Los filtros del Gantt y de la tabla son independientes.</p>
+</callout>
+
+<h2 id="seleccion">Selección de tareas</h2>
+<p>La <ui>Selección de tareas</ui> (menú <ui>Filtrar</ui>) elige qué Categorías 1, Categorías 2 y tareas concretas se ven en el Gantt.</p>
+<fig slug="seleccion-tareas" t="Selección de escenarios y tareas" observe="Escenarios (las Categorías 1), Cat 1 y Cat 2 se eligen en listas desplegables.|Cada tarea tiene una casilla; «Todas» y «Ninguna» marcan o desmarcan todo.|«Mostrando todas (N)» indica cuántas tareas quedan visibles.|Cancelar descarta; Aceptar aplica.">Seleccione un subconjunto del cronograma.</fig>
+<p>La Línea de Tiempo tiene el mismo panel, con las mismas opciones.</p>
+
+<h2 id="orden">Orden de las tareas</h2>
+<p>El menú <ui>Ordenar</ui> define el orden de tareas e hitos dentro de cada Categoría 2:</p>
+<table>
+<tr><th>Opción</th><th>Efecto</th></tr>
+<tr><td>Cronológico</td><td>Ordena por fecha de inicio.</td></tr>
+<tr><td>Original (Excel, XML)</td><td>Respeta el orden del archivo de origen.</td></tr>
+</table>
+<p>Para cambiar el orden de los grupos (Escenario, Categoría 1 y Categoría 2) use <a href="#/avanzadas/reordenar-grupos">Reordenar grupos</a>.</p>
+
+<h2 id="busqueda">Búsqueda</h2>
+<p>OpenGanttLab no tiene un buscador global de tareas; la búsqueda se hace dentro de cada filtro de columna (caja «Buscar» del panel) o con el filtro de texto «contiene». Para localizar una tarea, filtre la columna <b>Nombre de Tarea</b>.</p>

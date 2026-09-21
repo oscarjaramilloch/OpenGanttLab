@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual de OpenGanttLab</title>
+<meta name="description" content="Manual de usuario de OpenGanttLab: importar cronogramas, comparar escenarios, dependencias, Línea de Tiempo, exportación y solución de problemas.">
+<link rel="icon" href="../../assets/logo.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem('ogl-manual-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="assets/manual.css">
+</head>
+<body>
+<!-- Generado por tools/build.js a partir de content/*.html — no editar a mano. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="i-tip" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></symbol><symbol id="i-warn" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol><symbol id="i-danger" viewBox="0 0 24 24"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z"/><path d="M12 8v5"/><path d="M12 16h.01"/></symbol><symbol id="i-result" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></symbol><symbol id="i-note" viewBox="0 0 24 24"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></symbol><symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 7h6"/></symbol><symbol id="i-rocket" viewBox="0 0 24 24"><path d="M5 15c-1.5 1.3-2 4-2 6 2 0 4.7-.5 6-2"/><path d="M9 15l-3-3c1-4 4-8 12-9 0 8-5 11-9 12z"/><circle cx="15" cy="9" r="1.5"/></symbol><symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M9 9v11"/></symbol><symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 9 5-5 5 5"/><path d="M12 4v12"/></symbol><symbol id="i-gantt" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 13h6"/><path d="M11 17h7"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 3v4"/><path d="M16 3v4"/><circle cx="12" cy="15" r="2"/></symbol><symbol id="i-compare" viewBox="0 0 24 24"><path d="M4 7h12"/><path d="m13 4 3 3-3 3"/><path d="M20 17H8"/><path d="m11 14-3 3 3 3"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 16v-4"/><path d="M12 16V8"/><path d="M16 16v-6"/></symbol><symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 4h18l-7 8v6l-4 2v-8z"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol><symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5 5L21 13l-8 8-4-4 8-8z"/><path d="M4 20l4-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h11l-2 4 2 4H5"/></symbol><symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 4.9.8c0 1.7-2.4 2-2.4 3.7"/><path d="M12 17h.01"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol><symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></symbol><symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></symbol><symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol><symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12"/><path d="M18 6 6 18"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol></defs></svg>
+<a class="skip" href="#main">Saltar al contenido</a>
+<header class="top">
+  <button class="iconbtn" id="menuBtn" aria-label="Abrir el menú"><svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg></button>
+  <a class="brand" href="#/introduccion"><img src="../../assets/logo.svg" alt="" width="30" height="30"><span>Open<b>Gantt</b>Lab</span><small>Manual de usuario</small></a>
+  <span class="spacer"></span>
+  <div class="search" role="search"><svg class="ic" aria-hidden="true"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Buscar en el manual…" aria-label="Buscar en el manual" autocomplete="off"><kbd>Ctrl K</kbd><div class="results" id="results" role="listbox"></div></div>
+  <span class="spacer"></span>
+  <a class="btn primary" href="../../src/OpenGanttLab%203.1.html" target="_blank" rel="noopener"><svg class="ic" aria-hidden="true"><use href="#i-ext"/></svg><span class="lbl">Abrir la aplicación</span></a>
+  <button class="iconbtn" id="printBtn" title="Imprimir o guardar todo el manual como PDF" aria-label="Imprimir el manual"><svg class="ic" aria-hidden="true"><use href="#i-print"/></svg></button>
+  <button class="iconbtn" id="themeBtn" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema"><svg class="ic" aria-hidden="true"><use href="#i-moon"/></svg></button>
+</header>
+<div class="layout">
+  <nav class="side" id="side" aria-label="Capítulos del manual"></nav>
+  <main id="main">
+    <div class="crumbs" id="crumbs" aria-label="Ruta"></div>
+<article data-slug="introduccion" id="introduccion" hidden aria-labelledby="introduccion--h1"><p class="kicker">Capítulo 1 · Comenzar</p><h1 id="introduccion--h1">Introducción</h1><p class="lead">OpenGanttLab convierte un cronograma en un Gantt comparable, una Línea de Tiempo lista para presentar y una tabla de datos editable. Todo en un solo archivo, sin instalación y sin conexión.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Entender qué hace OpenGanttLab y qué problemas resuelve.</li>
+<li>Reconocer sus tres espacios de trabajo: Gantt, Línea de Tiempo y Datos.</li>
+<li>Conocer los conceptos que se usan en todo el manual.</li>
+</ul></div>
+
+<h2 id="introduccion--que-es">¿Qué es OpenGanttLab?</h2>
+<p>OpenGanttLab es una herramienta para <b>visualizar, comparar y presentar cronogramas de proyecto</b>. Lee archivos <b>Excel (.xlsx)</b> con varios escenarios o archivos <b>XML de Microsoft Project</b> (incluso de más de 1 GB) y los muestra en tres formatos:</p>
+<div class="cards">
+<a class="card" href="#/cronograma"><div class="ci"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M7 13h6"/><path d="M11 17h7"/></svg></div><b>Gantt · Comparador de Escenarios</b><span>Barras de Línea Base frente a Real/Proyectado, avance, ruta crítica y dependencias.</span></a>
+<a class="card" href="#/vistas"><div class="ci"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 3v4"/><path d="M16 3v4"/><circle cx="12" cy="15" r="2"/></svg></div><b>Línea de Tiempo</b><span>Vista ejecutiva con hitos, barras y textos editables, lista para presentar.</span></a>
+<a class="card" href="#/datos"><div class="ci"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M9 9v11"/></svg></div><b>Datos</b><span>Tabla editable con todas las tareas, carga de Excel/XML y gestión de escenarios.</span></a>
+</div>
+<p>Es una aplicación <b>standalone</b>: un único archivo HTML que se abre en el navegador. Los datos no salen de su computador.</p>
+
+<h2 id="introduccion--para-quien">¿Para quién está diseñado?</h2>
+<ul>
+<li><b>Planificadores y controladores de proyecto</b> que comparan versiones de un cronograma (por ejemplo P10, P50 y P90).</li>
+<li><b>Gerentes y líderes de proyecto</b> que necesitan una lámina clara del cronograma para un comité.</li>
+<li><b>Equipos de ingeniería y construcción</b> que reciben cronogramas de Microsoft Project y quieren revisarlos rápido.</li>
+</ul>
+
+<h2 id="introduccion--problemas">¿Qué problemas resuelve?</h2>
+<div class="table-wrap"><table>
+<tr><th>Necesidad</th><th>Cómo lo resuelve OpenGanttLab</th></tr>
+<tr><td>Comparar la línea base con lo real o proyectado</td><td>El Gantt dibuja ambas barras en la misma fila y muestra el avance como relleno.</td></tr>
+<tr><td>Comparar varias versiones del cronograma</td><td>Cada versión es un escenario: se gestiona, se duplica y se filtra desde la sección Datos.</td></tr>
+<tr><td>Entender qué depende de qué</td><td>Las dependencias se dibujan como flechas y se resalta la cadena completa de una tarea.</td></tr>
+<tr><td>Presentar el cronograma a un comité</td><td>La Línea de Tiempo permite editar colores, textos, hitos y formas, y exportar a PNG, PDF o PowerPoint.</td></tr>
+<tr><td>Abrir un XML enorme de Project</td><td>El archivo se lee por partes y solo se conserva lo necesario.</td></tr>
+<tr><td>Enviar el resultado sin enviar el Excel</td><td>«Compartir» genera un HTML autónomo con los datos embebidos.</td></tr>
+</table></div>
+
+<h2 id="introduccion--arquitectura">Cómo funciona por dentro</h2>
+<p>Los datos entran por <b>Excel</b> o <b>Project XML</b>, se convierten en una única <b>Tabla de Datos</b> y de ahí alimentan las vistas. Cualquier corrección en la tabla se refleja en el Gantt y en la Línea de Tiempo.</p>
+<figure class="fig" id="figura-01"><div class="imgbox"><img src="images/diagrams/diag-01-arquitectura.svg" width="940" height="400" alt="De los datos al resultado" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 01 — De los datos al resultado</span><span class="fd">Las dos fuentes de entrada, la Tabla de Datos, las vistas y las salidas.</span><div class="observe"><b>Qué observar</b><ul><li>La Tabla de Datos es el centro: todo lo que ve en las vistas sale de ella.</li><li>Las vistas no modifican los datos: los cambios visuales de la Línea de Tiempo (colores, textos) son solo de presentación.</li></ul></div></figcaption></figure>
+
+<h2 id="introduccion--conceptos">Conceptos principales</h2>
+<p>Estos términos aparecen en toda la aplicación. Encontrará definiciones completas en el <a href="#/referencia/glosario">glosario</a>.</p>
+<dl class="gloss">
+<dt>Escenario</dt><dd>Una versión del cronograma que se quiere comparar (por ejemplo «Plan base» o «P50»). Es el agrupador mayor: la columna <b>Escenario</b>. Si una tarea no la trae, se usa el archivo XML de origen y, en último caso, su Categoría 1.</dd>
+<dt>Categoría 1 y Categoría 2</dt><dd>Los dos niveles con que se agrupan las tareas dentro de un escenario: Categoría 2 es la fase o agrupación dentro de una Categoría 1. Cada una tiene su propio color.</dd>
+<dt>Línea Base (LB) y Real/Proyectado (R/P)</dt><dd>Cada tarea tiene dos juegos de fechas: los planificados originalmente (LB) y los reales o proyectados (R/P).</dd>
+<dt>Hito y evento</dt><dd>Un hito es una tarea sin duración (un rombo). Un evento es un marcador que se dibuja sobre el eje de la Línea de Tiempo.</dd>
+<dt>Dependencia</dt><dd>Una relación entre dos tareas: la predecesora condiciona a la sucesora, con un tipo (FC, CC, FF, CF) y un desfase opcional.</dd>
+</dl>
+<figure class="fig" id="figura-02"><div class="imgbox"><img src="images/diagrams/diag-02-jerarquia.svg" width="940" height="240" alt="Cómo se organizan las tareas" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 02 — Cómo se organizan las tareas</span><span class="fd">La jerarquía con la que OpenGanttLab ordena y colorea las tareas.</span><div class="observe"><b>Qué observar</b><ul><li>Escenario es un agrupador opcional.</li><li>Una tarea pertenece a una Categoría 2; esta, a una Categoría 1.</li></ul></div></figcaption></figure>
+
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Navegador recomendado</div><p>Use Chrome o Edge (versión 86 o superior). Funciones como guardar los cambios directamente en el Excel usan una API propia de estos navegadores.</p></div></div>
+
+<h2 id="introduccion--software-libre">Software libre</h2>
+<p>OpenGanttLab se distribuye bajo la licencia <b>GNU GPLv3</b>: puede usarlo, estudiarlo, modificarlo y compartirlo. Las versiones modificadas que se distribuyan deben publicarse también bajo GPLv3, con su código fuente.</p>
+</article>
+
+<article data-slug="primeros-pasos" id="primeros-pasos" hidden aria-labelledby="primeros-pasos--h1"><p class="kicker">Capítulo 2 · Comenzar</p><h1 id="primeros-pasos--h1">Primeros pasos</h1><p class="lead">En cinco minutos: abrir la aplicación, cargar su primer cronograma y recorrer el Gantt, la Línea de Tiempo y la Tabla de Datos.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Abrir OpenGanttLab y cargar su primer archivo.</li>
+<li>Reconocer el flujo de trabajo completo.</li>
+<li>Hacer un primer recorrido por las tres vistas.</li>
+</ul></div>
+
+<h2 id="primeros-pasos--requisitos">Requisitos</h2>
+<ul>
+<li>Un navegador moderno: <b>Chrome</b> o <b>Edge</b> (versión 86 o superior).</li>
+<li>Un archivo de cronograma: un <b>Excel (.xlsx)</b> con las columnas que se describen en <a href="#/datos/excel">Proyectos y datos</a>, o un <b>XML exportado desde Microsoft Project</b>.</li>
+<li>No requiere instalación ni conexión a internet. Solo la exportación a PowerPoint necesita internet la primera vez.</li>
+</ul>
+
+<h2 id="primeros-pasos--abrir">Abrir OpenGanttLab</h2>
+<p>Abra el archivo <code>OpenGanttLab 3.1.html</code> en el navegador. Aparece una pantalla de bienvenida con los datos del autor y la licencia.</p>
+<figure class="fig" id="figura-03"><div class="imgbox"><img src="images/screenshots/fig-03-bienvenida.webp" width="640" height="600" alt="Pantalla de bienvenida" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 03 — Pantalla de bienvenida</span><span class="fd">La primera pantalla al abrir la aplicación.</span><div class="observe"><b>Qué observar</b><ul><li>Pulse «Iniciar» para entrar.</li><li>Si abre un archivo compartido que ya trae datos, esta pantalla no aparece.</li></ul></div></figcaption></figure>
+
+<h2 id="primeros-pasos--flujo">El flujo de trabajo</h2>
+<p>Casi todo el trabajo sigue el mismo recorrido de cinco etapas. Puede repetir cualquiera de ellas: al corregir un dato, las vistas se actualizan.</p>
+<figure class="fig" id="figura-04"><div class="imgbox"><img src="images/flows/flow-04-flujo-trabajo.svg" width="940" height="200" alt="Flujo de trabajo en OpenGanttLab" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 04 — Flujo de trabajo en OpenGanttLab</span><span class="fd">Importar, revisar, comparar, presentar y exportar.</span></figcaption></figure>
+
+<h2 id="primeros-pasos--primer-proyecto">Cargar su primer proyecto</h2>
+<ol class="steps">
+<li><b>Vaya a Datos</b>Pulse <span class="ui">Datos</span> en el riel de navegación (a la izquierda).</li>
+<li><b>Cargue el archivo</b>Pulse el ícono <span class="ui">Cargar archivo</span> (flecha hacia arriba). La aplicación detecta sola si es un Excel o un XML.
+<figure class="fig" id="figura-05"><div class="imgbox"><img src="images/screenshots/fig-05-datos-cargar-menu.webp" width="940" height="330" alt="Menú de carga de la Tabla de Datos" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 05 — Menú de carga de la Tabla de Datos</span><span class="fd">Las dos formas de cargar datos desde la barra de la Tabla de Datos.</span><div class="observe"><b>Qué observar</b><ul><li>El ícono de la izquierda carga un archivo directamente.</li><li>La flecha (˅) abre «Cargar archivo (Excel o XML)» y «Gestión de XML (Base de datos)».</li></ul></div></figcaption></figure></li>
+<li><b>Elija el archivo</b>Seleccione su .xlsx o su .xml. Las tareas aparecen en la tabla y, de inmediato, en el Gantt.</li>
+<li><b>Revise los datos</b>Compruebe nombres, fechas y avance en la <a href="#/datos/tabla-de-datos">Tabla de Datos</a>. Puede corregir directamente en ella.</li>
+<li><b>Abra el Gantt</b>Pulse <span class="ui">Comparador de Escenarios</span> para ver el cronograma.</li>
+</ol>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Atajo</div><p>Con el Gantt vacío, un clic sobre el área de trabajo abre un menú para vincular su Excel o importar un XML.</p></div></div>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">¿XML de Project?</div><p>Un XML necesita un paso más: el <b>mapeo de columnas</b>, donde se indica de qué campo del XML sale cada dato. Casi todo se mapea solo. Vea <a href="#/datos/xml">Importar desde Project XML</a>.</p></div></div>
+
+<h2 id="primeros-pasos--recorrido">Primer recorrido</h2>
+<ol class="steps">
+<li><b>Gantt</b>Active <span class="ui">Línea base</span> para ver las barras rayadas junto a las de color, y <span class="ui">Avance real</span> para el relleno de avance. Detalles en <a href="#/cronograma">Cronograma</a>.</li>
+<li><b>Dependencias</b>En <span class="ui">Capas</span> active <span class="ui">Dependencias</span> y haga clic en una barra para resaltar su cadena.</li>
+<li><b>Línea de Tiempo</b>Pulse <span class="ui">Línea de Tiempo</span> en el riel. Pruebe <span class="ui">Vista C1</span>, <span class="ui">Ejecutivo</span> y <span class="ui">Vista Hitos</span>. Detalles en <a href="#/vistas">Vistas</a>.</li>
+<li><b>Exporte</b>Use <span class="ui">Exportar</span> (PNG, PDF o PPTX) o <span class="ui">Compartir</span> para guardar un HTML autónomo. Detalles en <a href="#/exportacion">Exportar y compartir</a>.</li>
+</ol>
+
+<div class="callout result" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg><div class="cb"><div class="ct">Resultado esperado</div><p>Al terminar debería ver su cronograma en el Gantt, con los colores de cada Categoría 1 y Categoría 2, y poder pasar a la Línea de Tiempo sin volver a cargar nada.</p></div></div>
+</article>
+
+<article data-slug="interfaz" id="interfaz" hidden aria-labelledby="interfaz--h1"><p class="kicker">Capítulo 3 · Comenzar</p><h1 id="interfaz--h1">La interfaz</h1><p class="lead">Un recorrido por la pantalla: riel de navegación, barra de herramientas, área de trabajo y barra de estado.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Identificar cada zona de la pantalla y para qué sirve.</li>
+<li>Usar el riel de navegación y la barra de herramientas.</li>
+<li>Controlar la escala, el zoom y el formato de fecha.</li>
+</ul></div>
+
+<h2 id="interfaz--pantalla">La pantalla principal</h2>
+<p>La pantalla se compone de un riel de navegación a la izquierda y, a su derecha, el espacio de trabajo de la sección elegida. En el Gantt el espacio de trabajo se divide en cinco zonas.</p>
+<figure class="fig" id="figura-06"><div class="imgbox"><img src="images/annotated/fig-06-pantalla-principal.webp" width="1440" height="900" alt="Pantalla principal (Comparador de Escenarios)" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 06 — Pantalla principal (Comparador de Escenarios)</span><span class="fd">Las zonas del Gantt. Los números corresponden a la lista de abajo.</span><ol class="legend"><li>Riel de navegación</li><li>Barra de herramientas</li><li>Columnas de la tabla (Categoría 1, Categoría 2, Nombre de Tarea)</li><li>Área del cronograma: barras, hitos y dependencias</li><li>Leyenda de colores</li><li>Barra de estado y escala</li></ol></figcaption></figure>
+
+<h2 id="interfaz--riel">Riel de navegación</h2>
+<p>El riel tiene cinco secciones. Cada una abre su propio espacio con su propia barra de herramientas.</p>
+<figure class="fig" id="figura-07"><div class="imgbox"><img src="images/annotated/fig-07-riel-navegacion.webp" width="252" height="420" alt="Riel de navegación" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 07 — Riel de navegación</span><span class="fd">El riel en su versión expandida. Al colapsarlo queda solo con íconos.</span><ol class="legend"><li>Comparador de Escenarios (Gantt)</li><li>Línea de Tiempo</li><li>Datos</li><li>Configuración</li><li>Ayuda</li><li>Botón para colapsar el riel</li></ol></figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>Sección</th><th>Para qué sirve</th></tr>
+<tr><td>Comparador de Escenarios</td><td>El diagrama de Gantt: Línea Base frente a Real/Proyectado, por escenario.</td></tr>
+<tr><td>Línea de Tiempo</td><td>La vista ejecutiva para presentar, con edición libre.</td></tr>
+<tr><td>Datos</td><td>La Tabla de Datos, la carga de archivos y la Gestión de XML.</td></tr>
+<tr><td>Configuración</td><td>Tema, recordatorios y valores por defecto.</td></tr>
+<tr><td>Ayuda</td><td>Documentación, historial de cambios y enlace a este manual.</td></tr>
+</table></div>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Más espacio</div><p>Pulse el botón <span class="ui">« Colapsar</span> para reducir el riel a íconos. La aplicación recuerda su elección.</p></div></div>
+
+<h2 id="interfaz--barra-herramientas">Barra de herramientas</h2>
+<p>Cada sección tiene su barra. Hay dos tipos de controles: <b>interruptores</b> (se activan con un clic) y <b>menús</b> (íconos con una flecha ˅ que abren opciones). Pase el cursor sobre cualquier ícono para ver su nombre.</p>
+<figure class="fig" id="figura-08"><div class="imgbox"><img src="images/annotated/fig-08-barra-herramientas.webp" width="1648" height="104" alt="Barra de herramientas del Gantt" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 08 — Barra de herramientas del Gantt</span><span class="fd">La barra del Gantt con la ventana ancha. En ventanas más estrechas, los últimos controles pasan al menú «⋯ Más herramientas».</span><ol class="legend"><li>Capas: qué elementos se dibujan</li><li>Accesos rápidos: Avance real, Línea base y Ruta crítica</li><li>Ordenar: orden de las tareas</li><li>Filtrar: filtros y selección de tareas</li><li>Editar: texto libre, mover en bloque y reordenar</li><li>Ajustes: fuente y tamaños</li><li>Compartir: guardar un HTML autónomo</li></ol></figcaption></figure>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Barra que se adapta</div><p>La barra ajusta lo que muestra al ancho de la ventana: primero oculta las etiquetas, luego los accesos rápidos, y agrupa el resto en el menú <span class="ui">Más herramientas</span> (⋯). Ninguna función desaparece.</p></div></div>
+
+<h3 id="interfaz--capas">El menú Capas</h3>
+<p>Las <b>capas</b> deciden qué se dibuja sobre el cronograma. El número junto a «Capas» indica cuántas están activas.</p>
+<figure class="fig" id="figura-09"><div class="imgbox"><img src="images/screenshots/fig-09-capas-gantt.webp" width="700" height="432" alt="Menú Capas del Gantt" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 09 — Menú Capas del Gantt</span><span class="fd">Todas las capas disponibles en el Gantt.</span><div class="observe"><b>Qué observar</b><ul><li>Cada capa es un interruptor.</li><li>«Fecha de estado» y «Ruta crítica» tienen opciones propias (estilo, grosor, color).</li><li>«Restablecer capas» vuelve a la configuración inicial.</li></ul></div></figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>Capa</th><th>Qué hace</th></tr>
+<tr><td>Avance real</td><td>Rellena cada barra según su porcentaje de avance.</td></tr>
+<tr><td>Línea base</td><td>Dibuja la barra de Línea Base junto a la Real/Proyectada.</td></tr>
+<tr><td>Marca Activity</td><td>Muestra solo las tareas marcadas como «Activity».</td></tr>
+<tr><td>Resumen</td><td>Incluye las tareas resumen (viene apagado).</td></tr>
+<tr><td>Fechas</td><td>Escribe las fechas junto a las barras y a los hitos.</td></tr>
+<tr><td>Dependencias</td><td>Dibuja las flechas entre predecesoras y sucesoras.</td></tr>
+<tr><td>Fecha de estado</td><td>Dibuja una línea vertical en la fecha de corte.</td></tr>
+<tr><td>Ruta crítica</td><td>Resalta con borde rojo las tareas críticas.</td></tr>
+</table></div>
+
+<h2 id="interfaz--barra-estado">Barra de estado y escala</h2>
+<p>En la parte inferior hay dos bloques: un resumen del proyecto visible y los controles de escala.</p>
+<figure class="fig" id="figura-10"><div class="imgbox"><img src="images/screenshots/fig-10-barra-estado.webp" width="1188" height="78" alt="Barra de estado" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 10 — Barra de estado</span><span class="fd">Resumen del proyecto y controles de zoom, escala y formato de fecha.</span><div class="observe"><b>Qué observar</b><ul><li>Tareas, Críticas, Inicio, Fin y Duración del conjunto visible; a la derecha, el avance promedio.</li><li>Deslizador y botones − / + para el zoom; «100 %» vuelve al tamaño normal.</li><li>Escala: Días, Semanas, Meses, Trimestres o Años.</li><li>Formato de fecha (por ejemplo mm/aa) y botón de reloj para ir a la fecha de hoy.</li></ul></div></figcaption></figure>
+<div class="callout note" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></svg><div class="cb"><div class="ct">El resumen sigue a los filtros</div><p>Las cifras de la barra de estado se calculan sobre las tareas que están visibles. Si filtra o desactiva escenarios, cambian.</p></div></div>
+
+<h2 id="interfaz--ayuda-integrada">Ayuda integrada</h2>
+<p>La sección <span class="ui">Ayuda</span> del riel abre la documentación dentro de la aplicación. Incluye un manual resumido, una referencia técnica, el historial de cambios y un enlace a este manual completo.</p>
+<figure class="fig" id="figura-11"><div class="imgbox"><img src="images/annotated/fig-11-ayuda.webp" width="868" height="584" alt="Sección Ayuda" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 11 — Sección Ayuda</span><span class="fd">La documentación integrada en la aplicación.</span><ol class="legend"><li>Botón «Manual completo»: abre este manual</li><li>Pestañas: Manual de usuario, Referencia e Historial de cambios</li><li>Aviso con el enlace al manual completo</li></ol></figcaption></figure>
+
+<h2 id="interfaz--configuracion">Configuración</h2>
+<p>La sección <span class="ui">Configuración</span> guarda preferencias <b>de este navegador</b> (no viajan con «Compartir»).</p>
+<figure class="fig" id="figura-12"><div class="imgbox"><img src="images/screenshots/fig-12-configuracion.webp" width="528" height="900" alt="Sección Configuración" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 12 — Sección Configuración</span><span class="fd">Preferencias de la aplicación.</span><div class="observe"><b>Qué observar</b><ul><li>Apariencia: tema oscuro y pestaña de inicio.</li><li>Recordatorios: aviso de cambios sin compartir.</li><li>Datos y métricas: avance en tooltips, conflictos de fechas, borde de la ruta crítica.</li><li>Paleta de colores por defecto.</li></ul></div></figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>Opción</th><th>Qué controla</th></tr>
+<tr><td>Tema oscuro</td><td>Cambia la apariencia de toda la aplicación.</td></tr>
+<tr><td>Pestaña de inicio</td><td>Sección con la que se abre: Diagrama de Gantt, Línea de Tiempo o Datos.</td></tr>
+<tr><td>Recordatorios</td><td>Avisa cada N minutos si hay cambios sin compartir (0 = desactivado).</td></tr>
+<tr><td>Avance en tooltips</td><td>Muestra solo el porcentaje, o el porcentaje más los días restantes o vencidos.</td></tr>
+<tr><td>Avisar de conflictos de fechas</td><td>Activa el aviso opcional de dependencias (vea <a href="#/cronograma/conflictos">Conflictos de fechas</a>).</td></tr>
+<tr><td>Ancho de borde de la ruta crítica</td><td>Grosor por defecto del borde rojo de las tareas críticas.</td></tr>
+<tr><td>Paleta de colores</td><td>Colores que se asignan por defecto a Categoría 1, Categoría 2 y Escenario.</td></tr>
+<tr><td>Editor de Datos</td><td>Qué columnas se ven en la Tabla de Datos.</td></tr>
+</table></div>
+</article>
+
+<article data-slug="datos" id="datos" hidden aria-labelledby="datos--h1"><p class="kicker">Capítulo 4 · Datos</p><h1 id="datos--h1">Proyectos y datos</h1><p class="lead">Cómo entran los datos a OpenGanttLab —Excel o Project XML—, cómo se revisan y se corrigen en la Tabla de Datos y cómo se ordenan por escenarios.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Preparar un Excel con las columnas correctas y cargarlo.</li>
+<li>Importar un XML de Microsoft Project y mapear sus campos.</li>
+<li>Editar, filtrar y guardar datos en la Tabla de Datos.</li>
+<li>Escribir dependencias en el formato de Project.</li>
+</ul></div>
+
+<h2 id="datos--excel">Cargar un Excel</h2>
+<p>El Excel debe tener una hoja con estas columnas. La primera fila que contenga «Nombre de Tarea» (dentro de las ocho primeras) se toma como encabezado.</p>
+<div class="table-wrap"><table>
+<tr><th>Columna</th><th>Qué contiene</th><th>Obligatoria</th></tr>
+<tr><td>id</td><td>Identificador de la tarea (se usa para las dependencias).</td><td>No</td></tr>
+<tr><td>Escenario</td><td>La versión del cronograma (agrupador mayor). Si su Excel usa la Categoría 1 para las versiones (P10, P50, P90), deje esta columna vacía: cada Categoría 1 cuenta como un escenario.</td><td>No</td></tr>
+<tr><td>Categoría 1</td><td>Agrupación mayor de las tareas (frente, disciplina o variante).</td><td><span class="badge r">Sí</span></td></tr>
+<tr><td>Categoría 2</td><td>La fase o agrupación de la tarea.</td><td>No</td></tr>
+<tr><td>Nombre de Tarea</td><td>El texto que se ve en el Gantt.</td><td><span class="badge r">Sí</span></td></tr>
+<tr><td>Start LB · End LB</td><td>Inicio y fin de la Línea Base.</td><td><span class="badge r">Sí</span></td></tr>
+<tr><td>Avance %</td><td>De 0 a 100, o de 0,0 a 1,0.</td><td>No</td></tr>
+<tr><td>Start R/P · End R/P</td><td>Inicio y fin Real/Proyectado. Si faltan, se usan los de la Línea Base.</td><td>No</td></tr>
+<tr><td>Clase</td><td>«Tarea», «Hito» o «Evento». Una tarea con inicio y fin de LB iguales se toma como hito.</td><td>No</td></tr>
+<tr><td>Ruta Crítica</td><td>«Si» o «No».</td><td>No</td></tr>
+<tr><td>Marca Activity · Resumen</td><td>«Si» o «No».</td><td>No</td></tr>
+<tr><td>Predecesoras · Sucesoras</td><td>Dependencias en el formato de Project (ver <a href="#/datos/dependencias-datos">más abajo</a>).</td><td>No</td></tr>
+</table></div>
+<div class="callout warn" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="cb"><div class="ct">Filas que se omiten</div><p>Una fila se omite si le falta el <b>Nombre de Tarea</b>, la <b>Categoría 1</b> o alguna fecha de <b>Línea Base</b>. Si faltan tareas después de cargar, revise primero esas tres columnas.</p></div></div>
+<p>Puede partir de una plantilla vacía con el ícono <span class="ui">Descargar plantilla</span> de la barra de la Tabla de Datos.</p>
+
+<h3 id="datos--excel-vinculado">Excel vinculado</h3>
+<p>Cuando el navegador lo permite (Chrome o Edge), el Excel queda <b>vinculado</b>. Aparecen entonces dos botones nuevos: <span class="ui">Actualizar</span>, que recarga el archivo con los últimos cambios guardados en Excel, y <span class="ui">Guardar cambios en el Excel vinculado</span>, que escribe la tabla en el mismo archivo.</p>
+<figure class="fig" id="figura-13"><div class="imgbox"><img src="images/diagrams/diag-13-ciclo-excel.svg" width="940" height="300" alt="Ciclo de trabajo con un Excel vinculado" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 13 — Ciclo de trabajo con un Excel vinculado</span><span class="fd">Actualizar trae datos del Excel; Guardar cambios los devuelve. Descargar y Compartir generan archivos nuevos.</span></figcaption></figure>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Autoguardado</div><p>Si hay un Excel vinculado (o un archivo elegido con «Compartir») y ya concedió permiso de escritura, la aplicación guarda los cambios sola cada 5 minutos. Sin destino vinculado no guarda nada: el aviso de «cambios sin compartir» es la única señal.</p></div></div>
+
+<h2 id="datos--xml">Importar desde Project XML</h2>
+<p>El XML de Project se gestiona en <span class="ui">Datos</span> → <span class="ui">Gestión de XML</span> (la tercera pestaña de la sección). Tiene cuatro pestañas: <b>Cargar XML</b>, <b>Base de datos</b>, <b>Mapeo de columnas</b> y <b>Vista previa</b>.</p>
+<figure class="fig" id="figura-14"><div class="imgbox"><img src="images/flows/flow-14-lectura-xml.svg" width="940" height="330" alt="Cómo se lee un archivo XML de Project" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 14 — Cómo se lee un archivo XML de Project</span><span class="fd">Qué se conserva y qué se descarta al leer el XML.</span><div class="observe"><b>Qué observar</b><ul><li>La lectura es por partes, así que un archivo de 1,7 GB se procesa con memoria acotada.</li><li>Se conservan las predecesoras, convertidas del UID al ID de Project.</li></ul></div></figcaption></figure>
+
+<ol class="steps">
+<li><b>Cargue uno o varios XML</b>En la pestaña <span class="ui">Cargar XML</span> arrastre los archivos o haga clic para elegirlos. Una barra muestra el avance de lectura.
+<figure class="fig" id="figura-15"><div class="imgbox"><img src="images/screenshots/fig-15-xml-cargar.webp" width="1188" height="520" alt="Cargar XML" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 15 — Cargar XML</span><span class="fd">La zona de carga de la Gestión de XML.</span><div class="observe"><b>Qué observar</b><ul><li>Se pueden cargar varios archivos a la vez.</li><li>Una barra de avance indica el porcentaje leído.</li></ul></div></figcaption></figure></li>
+<li><b>Revise la base de datos</b>La pestaña <span class="ui">Base de datos</span> lista cada archivo cargado con su nombre de variante (editable), su cantidad de tareas y su «LB actual».
+<figure class="fig" id="figura-16"><div class="imgbox"><img src="images/screenshots/fig-16-xml-base-datos.webp" width="1188" height="520" alt="Base de datos de XML cargados" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 16 — Base de datos de XML cargados</span><span class="fd">Cada archivo cargado es una fila de la base de datos.</span><div class="observe"><b>Qué observar</b><ul><li>El nombre de la variante es editable: es el nombre del escenario.</li><li>«LB actual: N» indica cuál de las 11 líneas base de Project se usa.</li><li>Los íconos de la derecha duplican o eliminan la carga.</li></ul></div></figcaption></figure></li>
+<li><b>Configure el mapeo</b>En <span class="ui">Mapeo de columnas</span> indique de qué campo del XML sale cada dato de la tabla. La mayoría se mapea automáticamente.
+<figure class="fig" id="figura-17"><div class="imgbox"><img src="images/annotated/fig-17-xml-mapeo.webp" width="1188" height="560" alt="Mapeo de columnas" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 17 — Mapeo de columnas</span><span class="fd">Cada archivo tiene su propio mapeo independiente.</span><ol class="legend"><li>Nombre de la carga (variante o escenario)</li><li>Herramientas: agregar mapeo personalizado, duplicar y eliminar</li><li>Un campo de mapeo: buscador, lista de columnas y valor fijo</li></ol></figcaption></figure></li>
+<li><b>Compruebe con la vista previa</b>La pestaña <span class="ui">Vista previa</span> muestra las primeras tareas con el mapeo aplicado.</li>
+</ol>
+
+<h3 id="datos--mapeo">Cómo funciona el mapeo</h3>
+<p>Para cada campo de la tabla puede elegir:</p>
+<div class="table-wrap"><table>
+<tr><th>Opción</th><th>Efecto</th></tr>
+<tr><td>Una columna del XML</td><td>Toma el valor de esa columna en cada tarea (incluye los campos personalizados del proyecto).</td></tr>
+<tr><td>★ Variante del archivo</td><td>Usa el nombre de la carga como valor.</td></tr>
+<tr><td>✏ Valor fijo</td><td>Escribe un texto que se aplica a todas las tareas del archivo.</td></tr>
+<tr><td>— No mapear —</td><td>Deja el campo vacío.</td></tr>
+</table></div>
+<p>Los campos <b>Categoría 1</b>, <b>Categoría 2</b> y <b>Nombre de Tarea</b> son obligatorios. Cuando están completos, los datos pasan solos a la Tabla de Datos; no hay botón de aplicar.</p>
+<ul>
+<li>Si <b>Escenario</b> está en «Valor fijo», la carga se renombra con ese valor y viceversa.</li>
+<li><span class="ui">Copiar al [n]</span> copia el mapeo al siguiente archivo.</li>
+<li>El botón <span class="ui">+</span> crea un <b>mapeo personalizado</b>: una columna extra con nombre editable que aparece en la tabla y en el Gantt. Dura solo la sesión.</li>
+</ul>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Líneas base 0–10</div><p>Project guarda hasta 11 líneas base. OpenGanttLab guarda el inicio y el fin de todas y usa por defecto la de fecha de guardado más reciente (la «LB actual»). El mapeo automático de Start LB y End LB usa esa línea.</p></div></div>
+<div class="callout warn" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="cb"><div class="ct">Las columnas personalizadas no viajan</div><p>Los mapeos personalizados existen solo durante la sesión: no se guardan con <span class="ui">Compartir</span> ni se exportan a Excel.</p></div></div>
+
+<h2 id="datos--tabla-de-datos">La Tabla de Datos</h2>
+<p>La tabla contiene todas las tareas y es el lugar para corregir datos. Los cambios se aplican solos.</p>
+<figure class="fig" id="figura-18"><div class="imgbox"><img src="images/annotated/fig-18-tabla-datos.webp" width="1188" height="520" alt="Tabla de Datos" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 18 — Tabla de Datos</span><span class="fd">La barra y las columnas de la Tabla de Datos.</span><ol class="legend"><li>Restaurar datos originales del XML, Deshacer y Rehacer</li><li>Cargar archivo y más opciones de carga</li><li>Descargar plantilla</li><li>Descargar .xlsx</li><li>Agregar fila</li><li>Filtro por columna</li><li>Compartir</li><li>Pestañas: Tabla de Datos, Gestión de escenarios y Gestión de XML</li><li>Reprogramar sucesoras (interruptor)</li><li>Segmentador de escenario</li><li>Encabezados con botón de filtro</li></ol><div class="observe"><b>Qué observar</b><ul><li>Con un Excel vinculado aparecen además «Actualizar» y «Guardar cambios».</li><li>La columna «Duración (d)» está a la derecha de End R/P.</li></ul></div></figcaption></figure>
+<ul>
+<li><b>Editar:</b> haga clic en una celda y escriba. El Gantt y la Línea de Tiempo se actualizan al salir de la tabla, no en cada tecla.</li>
+<li><b>Agregar o eliminar filas:</b> <span class="ui">Agregar fila</span> al final; el ícono de papelera al final de cada fila la elimina.</li>
+<li><b>Deshacer, rehacer y restaurar:</b> <span class="ui">Restaurar</span> vuelve a los datos originales del XML y descarta los cambios manuales (se puede deshacer).</li>
+<li><b>Ancho de columna:</b> arrastre el borde derecho del encabezado.</li>
+<li><b>Tablas grandes:</b> desde 250 filas solo se dibujan las visibles, así que sigue fluida con miles de tareas.</li>
+</ul>
+
+<h3 id="datos--duracion">Duración y reprogramación de sucesoras</h3>
+<p>La columna <b>Duración (d)</b> muestra los días corridos de cada tarea (fin − inicio + 1; los hitos y eventos valen 0). Al editar una fila, la tabla puede <b>reprogramar sus sucesoras</b> como lo hace Project con programación automática.</p>
+<figure class="fig" id="figura-19"><div class="imgbox"><img src="images/annotated/fig-19-reprogramar-sucesoras.webp" width="1188" height="560" alt="Reprogramación de sucesoras" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 19 — Reprogramación de sucesoras</span><span class="fd">Al ampliar «Ingeniería básica», sus sucesoras se desplazan.</span><ol class="legend"><li>Celda editada (End R/P)</li></ol><div class="observe"><b>Qué observar</b><ul><li>Las celdas con fondo amarillo son las fechas que cambiaron automáticamente.</li><li>Las filas con fondo azul claro son las sucesoras reprogramadas.</li><li>La Línea Base no cambia.</li></ul></div></figcaption></figure>
+<ul>
+<li><b>Qué dispara la reprogramación:</b> cambiar Start R/P, End R/P, Duración o Predecesoras de una fila.</li>
+<li><b>Qué se mueve:</b> las sucesoras de esa fila, dentro de su escenario, lo antes posible según sus vínculos (FC, CC, FF, CF y desfase). Se empujan y también se adelantan.</li>
+<li><b>Mover el Start R/P</b> conserva la duración (corre también el End R/P); editar el End R/P o la Duración la cambia.</li>
+<li><b>Lo que no se mueve:</b> las tareas con avance 100 %, las tareas resumen y la Línea Base. Las de 100 % y las resumen siguen valiendo como predecesoras.</li>
+<li><b>Deshacer:</b> la edición y todo lo reprogramado son un solo paso de historial.</li>
+<li><b>Ciclos:</b> si hay un ciclo de dependencias no se reprograma nada y aparece un aviso.</li>
+</ul>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Días corridos</div><p>La reprogramación usa días corridos, sin calendario laboral. Puede apagarla con el interruptor <span class="ui">Reprogramar sucesoras</span> de la barra (viene encendido y la aplicación recuerda su elección en este navegador).</p></div></div>
+
+<h3 id="datos--dependencias-datos">Dependencias: ID, Predecesoras y Sucesoras</h3>
+<p>Las tres últimas columnas de la tabla sirven para las dependencias. <b>ID</b> identifica la tarea, <b>Predecesoras</b> se escribe a mano o viene del XML, y <b>Sucesoras</b> se calcula sola (es la inversa de las predecesoras).</p>
+<figure class="fig" id="figura-20"><div class="imgbox"><img src="images/annotated/fig-20-tabla-dependencias.webp" width="1188" height="520" alt="Columnas de dependencias" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 20 — Columnas de dependencias</span><span class="fd">Las columnas ID, Predecesoras y Sucesoras.</span><ol class="legend"><li>ID, Predecesoras (editable) y Sucesoras (calculada)</li></ol></figcaption></figure>
+<p>La columna <b>Predecesoras</b> usa el mismo formato que Microsoft Project: el número de la predecesora, el tipo de vínculo y un desfase opcional.</p>
+<figure class="fig" id="figura-21"><div class="imgbox"><img src="images/diagrams/diag-21-formato-predecesoras.svg" width="940" height="250" alt="Cómo se escribe una predecesora" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 21 — Cómo se escribe una predecesora</span><span class="fd">Anatomía de una predecesora.</span><div class="observe"><b>Qué observar</b><ul><li>Se aceptan las siglas en español (FC, CC, FF, CF) y en inglés (FS, SS, FF, SF).</li><li>El desfase admite días, semanas, horas y minutos (por ejemplo +2 días, -1d, +3w).</li><li>Sin tipo ni desfase, el vínculo es Fin a Comienzo.</li></ul></div></figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>Ejemplo</th><th>Significado</th></tr>
+<tr><td><code>12</code></td><td>La tarea 12 debe terminar antes de que empiece esta (Fin a Comienzo).</td></tr>
+<tr><td><code>12CC+2 días</code></td><td>Comienzo a Comienzo con 2 días de retraso.</td></tr>
+<tr><td><code>7FF-1 día</code></td><td>Fin a Fin con 1 día de adelanto.</td></tr>
+<tr><td><code>12;15FC+3d</code></td><td>Dos predecesoras, separadas por «;».</td></tr>
+</table></div>
+<div class="callout note" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></svg><div class="cb"><div class="ct">Ámbito de los ids</div><p>El id solo tiene que ser único dentro de su <b>Escenario</b>. Si Escenario está vacío se usa un nombre generado: la variante del archivo XML o, en Excel, la Categoría 1. En un XML los ids se buscan en todo el archivo; en Excel, un id único en todo el archivo también puede enlazar entre escenarios.</p></div></div>
+
+<h2 id="datos--filtrar-datos">Filtrar la tabla</h2>
+<p>El ícono <span class="ui">Filtro</span> muestra u oculta los botones de embudo de cada encabezado. Los filtros de cada columna se explican en <a href="#/filtros/columna">Filtros y orden</a>. Además, el <b>segmentador de escenario</b> (a la derecha de la barra) muestra en la tabla solo las filas del escenario elegido; «Todos (N)» las muestra todas.</p>
+</article>
+
+<article data-slug="cronograma" id="cronograma" hidden aria-labelledby="cronograma--h1"><p class="kicker">Capítulo 5 · Visualizar</p><h1 id="cronograma--h1">Cronograma: el Gantt</h1><p class="lead">El Comparador de Escenarios: barras de Línea Base y Real/Proyectado, avance, ruta crítica, dependencias y todas las herramientas de lectura del diagrama.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Leer el Gantt: barras, hitos, avance y línea base.</li>
+<li>Activar y entender las dependencias y sus tipos.</li>
+<li>Resaltar la cadena de una tarea y revisar los avisos.</li>
+<li>Mostrar columnas adicionales y usar los tooltips.</li>
+</ul></div>
+
+<h2 id="cronograma--leer">Cómo leer el Gantt</h2>
+<p>Cada fila es una tarea o un hito, agrupada por Categoría 1 y Categoría 2. A la derecha, el eje de tiempo muestra las barras.</p>
+<figure class="fig" id="figura-22"><div class="imgbox"><img src="images/screenshots/fig-22-gantt-dependencias.webp" width="1188" height="589" alt="Gantt con Línea Base, avance y dependencias" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 22 — Gantt con Línea Base, avance y dependencias</span><span class="fd">Cronograma de ejemplo (proyecto inventado) con las capas Línea base, Avance real, Ruta crítica y Dependencias activas.</span><div class="observe"><b>Qué observar</b><ul><li>La barra rayada gris es la Línea Base; la barra de color es lo Real/Proyectado, y su parte más oscura es el avance.</li><li>Los rombos son hitos. Con borde rojo, están en la ruta crítica.</li><li>Las flechas unen predecesoras y sucesoras.</li></ul></div></figcaption></figure>
+<figure class="fig" id="figura-23"><div class="imgbox"><img src="images/diagrams/diag-23-lb-vs-rp.svg" width="940" height="250" alt="Línea Base frente a Real/Proyectado" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 23 — Línea Base frente a Real/Proyectado</span><span class="fd">Cómo se interpreta el desplazamiento entre lo planificado y lo real o proyectado.</span></figcaption></figure>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Un vistazo rápido</div><p>Si la barra de color empieza o termina después de la rayada, la tarea se desplazó respecto al plan. La diferencia es el desplazamiento.</p></div></div>
+
+<h2 id="cronograma--tooltip">Detalle al pasar el cursor</h2>
+<p>Al pasar el cursor sobre una barra o un hito aparece un cuadro con sus fechas, avance, si es crítica y —si tiene— sus predecesoras y sucesoras.</p>
+<figure class="fig" id="figura-24"><div class="imgbox"><img src="images/screenshots/fig-24-tooltip-tarea.webp" width="900" height="330" alt="Tooltip de una tarea" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 24 — Tooltip de una tarea</span><span class="fd">El detalle de una tarea sin abrir ningún panel.</span><div class="observe"><b>Qué observar</b><ul><li>Fechas de la Línea Base y Real/Proyectado.</li><li>Avance (y días restantes si lo activó en Configuración).</li><li>Predecesoras y sucesoras con su tipo de vínculo.</li></ul></div></figcaption></figure>
+
+<h2 id="cronograma--dependencias">Dependencias</h2>
+<p>Una <b>dependencia</b> relaciona dos tareas: la <b>predecesora</b> condiciona a la <b>sucesora</b>. OpenGanttLab admite los cuatro tipos de Project.</p>
+<figure class="fig" id="figura-25"><div class="imgbox"><img src="images/diagrams/diag-25-tipos-dependencia.svg" width="940" height="400" alt="Los cuatro tipos de vínculo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 25 — Los cuatro tipos de vínculo</span><span class="fd">FC, CC, FF y CF entre una tarea A (predecesora) y una tarea B (sucesora).</span></figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>Tipo</th><th>Sigla en inglés</th><th>Significado</th></tr>
+<tr><td>FC · Fin a Comienzo</td><td>FS</td><td>B empieza cuando termina A. Es el tipo por defecto.</td></tr>
+<tr><td>CC · Comienzo a Comienzo</td><td>SS</td><td>B empieza cuando empieza A.</td></tr>
+<tr><td>FF · Fin a Fin</td><td>FF</td><td>B termina cuando termina A.</td></tr>
+<tr><td>CF · Comienzo a Fin</td><td>SF</td><td>B termina cuando empieza A.</td></tr>
+</table></div>
+
+<h3 id="cronograma--ver-dependencias">Ver las flechas</h3>
+<ol class="steps">
+<li><b>Abra Capas</b>Pulse <span class="ui">Capas</span> en la barra de herramientas.</li>
+<li><b>Active Dependencias</b>Las flechas se dibujan entre las tareas visibles. Gris = normal; <span style="color:#d63031;font-weight:700">rojo</span> = entre dos tareas de la ruta crítica.</li>
+<li><b>Resalte una cadena</b>Haga clic en una barra o en un hito: se marcan en azul todas sus predecesoras y sucesoras (directas e indirectas) y el resto se atenúa.
+<figure class="fig" id="figura-26"><div class="imgbox"><img src="images/screenshots/fig-26-gantt-cadena.webp" width="1188" height="589" alt="Cadena de dependencias de una tarea" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 26 — Cadena de dependencias de una tarea</span><span class="fd">Resaltado de la cadena completa de una tarea.</span><div class="observe"><b>Qué observar</b><ul><li>La tarea seleccionada («Obras civiles y cimentaciones») y su cadena en azul.</li><li>El resto de barras queda atenuado.</li><li>Un clic en un espacio en blanco, o de nuevo en la barra, quita el resaltado.</li></ul></div></figcaption></figure></li>
+</ol>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Solo con el interruptor encendido</div><p>El resaltado de cadena funciona con <span class="ui">Dependencias</span> activo. Cambiar el interruptor reinicia la selección.</p></div></div>
+
+<h3 id="cronograma--avisos">Avisos de dependencias</h3>
+<p>Cuando hay algo que revisar aparece un ícono de triángulo junto a las capas, con el número de avisos.</p>
+<figure class="fig" id="figura-27"><div class="imgbox"><img src="images/screenshots/fig-27-avisos-dependencias.webp" width="616" height="266" alt="Avisos de dependencias" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 27 — Avisos de dependencias</span><span class="fd">Ejemplo: la tarea «Precomisionado» apunta a una predecesora con id 99 que no existe.</span><div class="observe"><b>Qué observar</b><ul><li>Cada aviso indica la tarea afectada y el problema.</li><li>Un clic en un aviso lleva a la tarea en el Gantt (y activa Dependencias si estaba apagado).</li></ul></div></figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>Aviso</th><th>Causa</th></tr>
+<tr><td>Predecesoras inexistentes</td><td>Una predecesora apunta a un id que no existe en su escenario.</td></tr>
+<tr><td>Ciclos</td><td>Dos o más tareas dependen entre sí (A depende de B y B de A).</td></tr>
+<tr><td>Autorreferencias</td><td>Una tarea se lista a sí misma como predecesora.</td></tr>
+<tr><td>Formato no reconocido</td><td>Parte del texto de la columna Predecesoras no tiene el formato de Project.</td></tr>
+<tr><td>Conflictos de fechas <span class="badge o">opcional</span></td><td>Las fechas de la sucesora contradicen el vínculo (ver abajo).</td></tr>
+</table></div>
+
+<h3 id="cronograma--conflictos">Conflictos de fechas</h3>
+<p>Un conflicto ocurre cuando la sucesora empieza o termina antes de lo que permite el vínculo. Por ejemplo, con un vínculo FC, B empieza antes de que termine A.</p>
+<figure class="fig" id="figura-28"><div class="imgbox"><img src="images/diagrams/diag-28-conflicto-fechas.svg" width="940" height="240" alt="Qué es un conflicto de fechas" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 28 — Qué es un conflicto de fechas</span><span class="fd">B empieza antes de que termine A en un vínculo Fin a Comienzo.</span></figcaption></figure>
+<div class="callout note" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></svg><div class="cb"><div class="ct">Viene apagado</div><p>En la práctica una tarea puede empezar antes que su predecesora <b>por estrategia</b>. Por eso el aviso es opcional: actívelo en <span class="ui">Configuración</span> → <span class="ui">Datos y métricas</span> → «Avisar de conflictos de fechas». Compara las fechas Real/Proyectado y tolera 1 día.</p></div></div>
+
+<h2 id="cronograma--columnas">Mostrar u ocultar columnas</h2>
+<p>Haga <b>clic derecho</b> sobre un encabezado de columna para abrir el menú <span class="ui">Mostrar / Ocultar</span>. Es una sola lista con todas las columnas de la Tabla de Datos.</p>
+<figure class="fig" id="figura-29"><div class="imgbox"><img src="images/screenshots/fig-29-menu-columnas.webp" width="620" height="524" alt="Menú de columnas del Gantt" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 29 — Menú de columnas del Gantt</span><span class="fd">Todas las columnas de la tabla, disponibles desde un clic derecho.</span><div class="observe"><b>Qué observar</b><ul><li>Las columnas de la izquierda se ven por defecto; las demás, ocultas.</li><li>Se pueden agregar ID, Predecesoras y Sucesoras junto a cada tarea.</li><li>El primer ícono del menú activa «Ajustar texto» para la columna donde se hizo clic.</li></ul></div></figcaption></figure>
+<ul>
+<li>Las columnas agregadas quedan fijas a la izquierda, a continuación de «Nombre de Tarea», con su propio botón de filtro.</li>
+<li><b>Ajustar texto:</b> activo, el texto se ajusta a 2 líneas; inactivo, se corta con «…». La preferencia se guarda por columna.</li>
+<li>La altura de cada fila se ajusta sola al contenido.</li>
+<li>Arrastre el borde derecho de un encabezado para cambiar el ancho de la columna.</li>
+</ul>
+
+<h2 id="cronograma--colores">Colores</h2>
+<p>Un clic en una celda de <b>Escenario</b>, <b>Categoría 1</b> o <b>Categoría 2</b> abre un selector de color. El color de Categoría 2 es el de sus barras. Los colores por defecto se definen en <a href="#/interfaz/configuracion">Configuración</a>.</p>
+
+<h2 id="cronograma--fecha-estado">Fecha de estado y hoy</h2>
+<p>La capa <span class="ui">Fecha de estado</span> dibuja una línea vertical en la fecha de corte del proyecto, con estilo, grosor y color configurables. El botón de reloj de la barra inferior lleva la vista a la fecha de hoy.</p>
+</article>
+
+<article data-slug="vistas" id="vistas" hidden aria-labelledby="vistas--h1"><p class="kicker">Capítulo 6 · Visualizar</p><h1 id="vistas--h1">Vistas: la Línea de Tiempo</h1><p class="lead">La Línea de Tiempo presenta el cronograma para un comité: cuatro modos de vista, edición libre de colores y textos, formas, dependencias y exportación.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Elegir el modo de vista adecuado: normal, Comparador, Ejecutivo, Vista C1 o Vista Hitos.</li>
+<li>Editar barras, hitos y textos sin alterar los datos.</li>
+<li>Insertar textos y formas libres.</li>
+<li>Mostrar dependencias en la Línea de Tiempo.</li>
+</ul></div>
+
+<h2 id="vistas--modos">Los modos de vista</h2>
+<p>Los modos se eligen en <span class="ui">Capas</span>. Todos usan los mismos datos; cambia cómo se dibujan.</p>
+<figure class="fig" id="figura-30"><div class="imgbox"><img src="images/screenshots/fig-30-capas-ldt.webp" width="348" height="578" alt="Menú Capas de la Línea de Tiempo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 30 — Menú Capas de la Línea de Tiempo</span><span class="fd">Contenido y modo de vista.</span><div class="observe"><b>Qué observar</b><ul><li>CONTENIDO: qué elementos se muestran (Marca Activity, Resumen, Leyenda, Fechas, Dependencias, Fecha de estado, Ruta crítica).</li><li>MODO DE VISTA: Comparador, Segmentación, Ejecutivo, Vista C1 y Vista Hitos.</li></ul></div></figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>Modo</th><th>Qué muestra</th><th>Cuándo usarlo</th></tr>
+<tr><td>Normal</td><td>Una barra por tarea sobre el eje de años, con hitos arriba.</td><td>Vista general del cronograma.</td></tr>
+<tr><td>Comparador</td><td>Dos secciones: la Línea Base arriba y lo Real/Proyectado abajo.</td><td>Mostrar cuánto se desplazó el plan.</td></tr>
+<tr><td>Ejecutivo</td><td>Cada tarea es un rombo en su fecha fin, con nombre y fecha debajo.</td><td>Láminas de alto nivel, solo con fechas de entrega.</td></tr>
+<tr><td>Vista C1</td><td>Agrupa las barras en bandas por Categoría 1, con el color de Categoría 2.</td><td>Presentar el cronograma por disciplina o frente.</td></tr>
+<tr><td>Vista Hitos</td><td>Solo los rombos de hito; oculta las barras.</td><td>Un comité que solo quiere ver los hitos.</td></tr>
+</table></div>
+<p>«Segmentación» agrupa por Categoría 2.</p>
+
+<h3 id="vistas--comparacion">Comparación visual de los modos</h3>
+<div class="figgrid">
+<figure class="fig" id="figura-31"><div class="imgbox"><img src="images/screenshots/fig-31-ldt-normal.webp" width="1188" height="1033" alt="Modo normal" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 31 — Modo normal</span><span class="fd">El cronograma completo.</span><div class="observe"><b>Qué observar</b><ul><li>Barras con nombre y fechas.</li><li>Hitos sobre el eje con línea punteada.</li></ul></div></figcaption></figure>
+<figure class="fig" id="figura-32"><div class="imgbox"><img src="images/screenshots/fig-32-ldt-ejecutivo.webp" width="890" height="1010" alt="Modo Ejecutivo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 32 — Modo Ejecutivo</span><span class="fd">Solo entregas.</span><div class="observe"><b>Qué observar</b><ul><li>Un rombo por tarea, en su fecha fin.</li></ul></div></figcaption></figure>
+<figure class="fig" id="figura-33"><div class="imgbox"><img src="images/screenshots/fig-33-ldt-vista-c1.webp" width="1188" height="1026" alt="Vista C1" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 33 — Vista C1</span><span class="fd">Agrupado por Categoría 1.</span><div class="observe"><b>Qué observar</b><ul><li>Una banda por Categoría 1.</li><li>Etiqueta vertical con el nombre.</li></ul></div></figcaption></figure>
+<figure class="fig" id="figura-34"><div class="imgbox"><img src="images/screenshots/fig-34-ldt-hitos.webp" width="890" height="282" alt="Vista Hitos" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 34 — Vista Hitos</span><span class="fd">Solo hitos.</span><div class="observe"><b>Qué observar</b><ul><li>Solo hitos, arriba y abajo del eje.</li></ul></div></figcaption></figure>
+</div>
+
+<h2 id="vistas--comparador">Comparador</h2>
+<p>Con <span class="ui">Comparador</span> activo la Línea de Tiempo se divide en dos secciones que comparten las mismas filas: arriba la <b>Línea Base</b>, abajo lo <b>Real/Proyectado</b>. Los títulos de cada sección se editan en <span class="ui">Escenario</span> (Título Escenario y Título Comparador).</p>
+<figure class="fig" id="figura-35"><div class="imgbox"><img src="images/screenshots/fig-35-ldt-comparador.webp" width="890" height="1696" alt="Línea de Tiempo en modo Comparador" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 35 — Línea de Tiempo en modo Comparador</span><span class="fd">Las dos secciones con el mismo orden de tareas.</span><div class="observe"><b>Qué observar</b><ul><li>Sección superior: fechas de la Línea Base.</li><li>Sección inferior: fechas Real/Proyectado.</li><li>Compare la posición de una misma barra en ambas secciones.</li></ul></div></figcaption></figure>
+
+<h2 id="vistas--interaccion">Interactuar con el diagrama</h2>
+<div class="table-wrap"><table>
+<tr><th>Acción</th><th>Resultado</th></tr>
+<tr><td>Un clic en una barra, hito o evento</td><td>Lo selecciona (borde punteado azul) y lo deja listo para <kbd>Delete</kbd>.</td></tr>
+<tr><td><kbd>Delete</kbd> con algo seleccionado</td><td>Lo oculta de la Línea de Tiempo. No cambia los datos.</td></tr>
+<tr><td>Doble clic</td><td>Abre el panel de edición.</td></tr>
+<tr><td>Arrastrar</td><td>Mueve la barra o el hito.</td></tr>
+<tr><td><kbd>Ctrl</kbd> o <kbd>Shift</kbd> + clic</td><td>Agrega barras a la selección; el doble clic las edita todas a la vez.</td></tr>
+<tr><td>Clic en un espacio en blanco</td><td>Limpia la selección.</td></tr>
+<tr><td>Clic en un año</td><td>Cambia el color de fondo y la fuente de ese año.</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Deshace y rehace cambios en la Línea de Tiempo.</td></tr>
+</table></div>
+
+<h3 id="vistas--panel-edicion">El panel de edición</h3>
+<p>Un doble clic sobre una barra abre su panel de edición.</p>
+<figure class="fig" id="figura-36"><div class="imgbox"><img src="images/annotated/fig-36-ldt-panel-edicion.webp" width="878" height="576" alt="Panel de edición de una barra" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 36 — Panel de edición de una barra</span><span class="fd">Todos los cambios del panel son visuales: nunca modifican la Tabla de Datos.</span><ol class="legend"><li>Barra seleccionada (doble clic)</li><li>Panel de edición</li></ol><div class="observe"><b>Qué observar</b><ul><li>Texto: nombre, color, tamaño, negrita, alineación y posición.</li><li>Fondo: color de la barra y trama.</li><li>Fechas: mostrar comienzo y fin, alinear y posición.</li><li>Posición: capa (arriba/abajo).</li></ul></div></figcaption></figure>
+<div class="callout warn" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="cb"><div class="ct">Lo visual no cambia los datos</div><p>Editar el texto o el color en la Línea de Tiempo solo afecta la presentación. El dato real de la tabla, del Gantt, del Excel y del XML no se toca.</p></div></div>
+
+<h2 id="vistas--ejecutivo">Ejecutivo: ocultar tareas</h2>
+<ol class="steps">
+<li><b>Active Ejecutivo</b>En <span class="ui">Capas</span> → <span class="ui">Modo de vista</span>.</li>
+<li><b>Oculte una tarea de esta vista</b>Selecciónela con un clic y pulse <kbd>Delete</kbd>, o use doble clic → <span class="ui">Ocultar de Ejecutivo</span>.</li>
+<li><b>Recupere lo oculto</b>Aparece el botón <span class="ui">Tareas ocultas (N)</span>: ábralo para restaurar una tarea o todas.</li>
+</ol>
+<div class="callout note" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></svg><div class="cb"><div class="ct">Persistencia</div><p>Las tareas ocultas y el formato de fecha se guardan por proyecto en el navegador y también viajan con «Compartir».</p></div></div>
+
+<h2 id="vistas--vista-c1">Vista C1: bandas por Categoría 1</h2>
+<ul>
+<li>Cada banda tiene una etiqueta vertical con el nombre de su Categoría 1.</li>
+<li>La etiqueta se puede seleccionar y <b>arrastrar hacia arriba o abajo</b> para reordenar las bandas, con una vista previa en vivo.</li>
+<li>El borde derecho de la columna de etiquetas y el borde inferior de cada banda se arrastran para ajustar su ancho y alto.</li>
+<li>Un doble clic en la etiqueta abre el panel de edición del texto (solo visual).</li>
+</ul>
+
+<h2 id="vistas--edicion">Edición: textos y formas libres</h2>
+<p>El menú <span class="ui">Editar</span> agrega elementos propios sobre el diagrama.</p>
+<figure class="fig" id="figura-37"><div class="imgbox"><img src="images/screenshots/fig-37-ldt-edicion-formas.webp" width="420" height="420" alt="Menú Editar y selector de formas" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 37 — Menú Editar y selector de formas</span><span class="fd">Insertar texto y formas.</span><div class="observe"><b>Qué observar</b><ul><li>Reset filas devuelve las barras a su posición automática.</li><li>Reset Diagrama restablece los colores al heredado de Categoría 2.</li><li>Insertar forma ofrece 12 formas: rectángulo, rectángulo redondeado, óvalo, rombo, triángulo, pentágono, hexágono, estrella, llamada, cruz, línea y flecha.</li></ul></div></figcaption></figure>
+<ul>
+<li><b>Formas:</b> se arrastran, se redimensionan con las asas de las esquinas y giran libremente. Pueden llevar texto dentro, que se mantiene horizontal aunque la forma gire.</li>
+<li><b>Panel de forma:</b> relleno, borde y grosor; texto con tamaño, alineación y posición; y valores numéricos de ancho, alto, posición y giro.</li>
+</ul>
+
+<h2 id="vistas--dependencias-ldt">Dependencias en la Línea de Tiempo</h2>
+<p>Active <span class="ui">Dependencias</span> en <span class="ui">Capas</span> → <span class="ui">Contenido</span>. Usa los mismos datos, tipos y colores que el Gantt.</p>
+<figure class="fig" id="figura-38"><div class="imgbox"><img src="images/screenshots/fig-38-ldt-dependencias.webp" width="1188" height="1124" alt="Dependencias en la Línea de Tiempo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 38 — Dependencias en la Línea de Tiempo</span><span class="fd">Cadena de dependencias resaltada.</span><div class="observe"><b>Qué observar</b><ul><li>Las flechas unen barras y rombos.</li><li>Un clic en una barra resalta su cadena en azul y atenúa el resto.</li></ul></div></figcaption></figure>
+<ul>
+<li>Se dibujan en el modo normal y en el Comparador (en las dos secciones, cada una con sus barras).</li>
+<li><b>No</b> se dibujan en <span class="ui">Ejecutivo</span> ni en <span class="ui">Vista Hitos</span>; al volver a la vista normal reaparecen.</li>
+<li>Solo se conectan tareas visibles: las ocultas (Delete, filtros) no tienen flecha.</li>
+<li>El resaltado por clic funciona con el interruptor encendido.</li>
+</ul>
+
+<h2 id="vistas--ajustes-ldt">Ajustes del área de visualización</h2>
+<p>El menú <span class="ui">Ajustes</span> controla el formato de fecha (14 formatos, por ejemplo dd/mm/aa o mmm/aaaa), el espacio extra a izquierda, derecha, arriba y abajo, el alto de las barras, el tamaño de los rombos, y el alto y ancho de la fila de años. Abajo a la derecha hay una barra de <b>zoom</b> de 25 % a 400 %; pulse el porcentaje para volver a 100 %.</p>
+</article>
+
+<article data-slug="escenarios" id="escenarios" hidden aria-labelledby="escenarios--h1"><p class="kicker">Capítulo 7 · Analizar</p><h1 id="escenarios--h1">Escenarios</h1><p class="lead">Un escenario es una versión del cronograma. Aprenda a cargar varias versiones, elegir cuáles ver y compararlas en el Gantt y en la Línea de Tiempo.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Entender qué es un escenario en Excel y en XML.</li>
+<li>Cargar, duplicar y eliminar escenarios.</li>
+<li>Elegir qué escenarios se ven y compararlos.</li>
+</ul></div>
+
+<h2 id="escenarios--que-es">Qué es un escenario</h2>
+<p>Un <b>escenario</b> es una versión del cronograma que quiere comparar: un plan base y una replanificación, o las variantes P10, P50 y P90 de una simulación. Cada escenario tiene sus propias tareas.</p>
+<p>El escenario de una tarea se determina así, en este orden:</p>
+<ol>
+<li>La columna <b>Escenario</b> de la tarea, si tiene valor.</li>
+<li>Si no, el <b>archivo XML de origen</b> (cada XML cargado cuenta como un escenario, con el nombre de su variante).</li>
+<li>Si no, su <b>Categoría 1</b>. Así, un Excel antiguo que usa la Categoría 1 para las versiones sigue funcionando sin cambios.</li>
+</ol>
+<div class="callout note" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></svg><div class="cb"><div class="ct">Escenario y dependencias</div><p>El escenario es también el <b>ámbito de los ids</b> de las dependencias: dos escenarios pueden repetir los mismos ids sin mezclarse.</p></div></div>
+<figure class="fig" id="figura-39"><div class="imgbox"><img src="images/flows/flow-39-escenarios.svg" width="940" height="250" alt="Trabajar con escenarios" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 39 — Trabajar con escenarios</span><span class="fd">Del archivo cargado a la comparación.</span><div class="observe"><b>Qué observar</b><ul><li>Cada variante se carga como una carga distinta.</li><li>Duplicar copia el escenario completo; Eliminar quita sus tareas.</li></ul></div></figcaption></figure>
+
+<h2 id="escenarios--gestion">Gestión de escenarios</h2>
+<p>La sección <span class="ui">Datos</span> tiene una pestaña <span class="ui">Gestión de escenarios</span> con la lista de todos los escenarios de la sesión, vengan de Excel o de XML.</p>
+<figure class="fig" id="figura-40"><div class="imgbox"><img src="images/annotated/fig-40-gestion-escenarios.webp" width="1188" height="330" alt="Gestión de escenarios" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 40 — Gestión de escenarios</span><span class="fd">Lista de escenarios de la sesión.</span><ol class="legend"><li>Un escenario: nombre, número de actividades, Categorías 1, rango de fechas y origen (Excel o XML)</li><li>Herramientas: Ver en la Tabla de Datos, Duplicar escenario y Eliminar escenario</li></ol><div class="observe"><b>Qué observar</b><ul><li>El resumen indica cuántos escenarios y actividades hay en total.</li><li>El origen indica si el escenario viene de un Excel o de un XML.</li></ul></div></figcaption></figure>
+<div class="table-wrap"><table>
+<tr><th>Ícono</th><th>Qué hace</th></tr>
+<tr><td>Ver en la Tabla de Datos</td><td>Abre la tabla filtrada por ese escenario (con el segmentador).</td></tr>
+<tr><td>Duplicar escenario</td><td>Crea una copia idéntica (fechas, avance, dependencias y campos) con un nombre nuevo.</td></tr>
+<tr><td>Eliminar escenario</td><td>Quita el escenario y todas sus actividades, con confirmación.</td></tr>
+</table></div>
+<ol class="steps">
+<li><b>Pulse Duplicar escenario</b>La aplicación propone un nombre («… (copia)»).
+<figure class="fig" id="figura-41"><div class="imgbox"><img src="images/screenshots/fig-41-duplicar-escenario.webp" width="468" height="272" alt="Duplicar escenario" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 41 — Duplicar escenario</span><span class="fd">Cuadro de diálogo de la aplicación.</span><div class="observe"><b>Qué observar</b><ul><li>El cuadro indica cuántas actividades se copian.</li><li>Valida el nombre en el mismo cuadro: no puede estar vacío ni repetirse.</li></ul></div></figcaption></figure></li>
+<li><b>Escriba el nombre y confirme</b>La copia aparece en la Tabla de Datos, con sus predecesoras resueltas dentro de la copia.</li>
+<li><b>Edite la copia</b>Cambie fechas, avance o dependencias en la Tabla de Datos, filtrando por el escenario nuevo con el segmentador.</li>
+</ol>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Ideal para simular</div><p>Duplique «Plan base», mueva fechas en la copia y compárelas en el Gantt. Las copias sobreviven a un nuevo «Aplicar mapeo» del XML.</p></div></div>
+<div class="callout danger" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg><div class="cb"><div class="ct">Eliminar borra las tareas</div><p>Eliminar un escenario quita todas sus actividades de la tabla. Puede deshacerlo desde la Tabla de Datos con <span class="ui">Deshacer</span>.</p></div></div>
+
+<h2 id="escenarios--cargar">Cargar varios escenarios</h2>
+<ol class="steps">
+<li><b>Cargue cada variante</b>En <span class="ui">Datos</span> → <span class="ui">Gestión de XML</span> cargue un XML por variante (o varios a la vez). Con Excel, use una fila por tarea y escenario, con la versión en la columna Escenario.</li>
+<li><b>Nombre la carga</b>En la pestaña <span class="ui">Base de datos</span> del XML edite el nombre de la variante (por ejemplo «P50»).</li>
+<li><b>Revise el mapeo de cada archivo</b>Cada archivo tiene su mapeo independiente. Con <span class="ui">Copiar al [n]</span> lleva el mapeo al siguiente.</li>
+</ol>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Probar otro mapeo sin releer el archivo</div><p>En la Base de datos de XML, el ícono <span class="ui">Duplicar escenario</span> copia una carga con su propio mapeo, para probar otra configuración sin volver a leer el archivo (útil con XML muy grandes). El ícono de papelera elimina la carga y sus tareas, con confirmación.</p></div></div>
+
+<h2 id="escenarios--elegir">Elegir qué se ve</h2>
+<p>En el Gantt, abra <span class="ui">Filtrar</span> → <span class="ui">Selección de tareas</span>. Allí marca qué <b>Categorías 1</b> (la lista «Escenarios»), qué Categorías 2 y qué tareas se ven. La leyenda de colores y la barra de estado se recalculan con lo que queda visible. Más detalle en <a href="#/filtros/seleccion">Selección de tareas</a>.</p>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">«Escenarios» en el panel del Gantt</div><p>La lista «Escenarios» del panel de selección del Gantt muestra las <b>Categorías 1</b>, cada una con su color. Para filtrar por el escenario en sentido de esta página (columna Escenario) use el <b>segmentador</b> de la Tabla de Datos o, en la Línea de Tiempo, el menú <span class="ui">Escenario</span>.</p></div></div>
+<p>En la Línea de Tiempo, el menú <span class="ui">Escenario</span> filtra por el escenario y edita los títulos de las secciones; su <span class="ui">Selección de tareas</span> ofrece las mismas opciones que la del Gantt.</p>
+
+<h2 id="escenarios--comparar">Comparar escenarios</h2>
+<p>Hay dos formas complementarias de comparar:</p>
+<ul>
+<li><b>Entre escenarios:</b> active varios escenarios a la vez en el Gantt. Cada uno se distingue por el color de su Categoría 1.</li>
+<li><b>Contra la línea base:</b> active <span class="ui">Línea base</span> para ver, en cada tarea, la barra planificada junto a la real o proyectada. En la Línea de Tiempo, el modo <span class="ui">Comparador</span> muestra ambas secciones.</li>
+</ul>
+<div class="callout result" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg><div class="cb"><div class="ct">Cómo interpretar</div><p>Compare la posición de una misma tarea en dos escenarios (o en la línea base y el proyectado): si el fin se corre a la derecha, la tarea se retrasó; si el inicio se corre, se desplazó. La barra de estado muestra el inicio, el fin y la duración del conjunto visible.</p></div></div>
+<p>Vea el diagrama <a href="#/cronograma/leer">Línea Base frente a Real/Proyectado</a> y el <a href="#/vistas/comparador">Comparador</a> de la Línea de Tiempo.</p>
+</article>
+
+<article data-slug="analisis" id="analisis" hidden aria-labelledby="analisis--h1"><p class="kicker">Capítulo 8 · Analizar</p><h1 id="analisis--h1">Análisis y control</h1><p class="lead">Las herramientas de lectura y control con que cuenta OpenGanttLab: indicadores de la barra de estado, avance, ruta crítica, fecha de estado, dependencias y desplazamientos.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Leer los indicadores de la barra de estado.</li>
+<li>Usar avance, ruta crítica y fecha de estado para controlar el proyecto.</li>
+<li>Detectar problemas de datos y de secuencia con los avisos.</li>
+</ul></div>
+
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Alcance</div><p>OpenGanttLab es una herramienta de <b>visualización y comparación de cronogramas</b>. No calcula valor ganado ni costos y no incluye tableros de gráficos: analiza fechas, avance, ruta crítica y dependencias.</p></div></div>
+
+<h2 id="analisis--indicadores">Indicadores de la barra de estado</h2>
+<p>La barra inferior resume el conjunto de tareas visible.</p>
+<div class="table-wrap"><table>
+<tr><th>Indicador</th><th>Qué significa</th></tr>
+<tr><td>Tareas</td><td>Número de tareas visibles.</td></tr>
+<tr><td>Críticas</td><td>Cuántas están marcadas en la ruta crítica.</td></tr>
+<tr><td>Inicio · Fin</td><td>La fecha más temprana y la más tardía (entre Línea Base y Real/Proyectado).</td></tr>
+<tr><td>Duración</td><td>Días entre el inicio y el fin del conjunto.</td></tr>
+<tr><td>Porcentaje</td><td>Avance promedio de las tareas visibles.</td></tr>
+</table></div>
+<p>Las cifras cambian con los filtros, con los escenarios activos y con las capas <span class="ui">Marca Activity</span> y <span class="ui">Resumen</span>.</p>
+
+<h2 id="analisis--avance">Avance</h2>
+<p>La capa <span class="ui">Avance real</span> rellena cada barra según su porcentaje. Los porcentajes vienen de la columna «Avance %» (0–100) del Excel o de «% Completado» del XML. En <span class="ui">Configuración</span> puede hacer que los tooltips muestren, además, los <b>días restantes o vencidos</b> de cada tarea.</p>
+
+<h2 id="analisis--ruta-critica">Ruta crítica</h2>
+<p>La ruta crítica <b>se lee de los datos</b> (columna «Ruta Crítica» del Excel o campo «Crítica» del XML): OpenGanttLab no la calcula. La capa <span class="ui">Ruta crítica</span> resalta esas tareas con borde rojo, y sus opciones ajustan el grosor del borde. Con las dependencias activas, las flechas entre dos tareas críticas se dibujan en rojo.</p>
+
+<h2 id="analisis--fecha-estado-analisis">Fecha de estado</h2>
+<p>La capa <span class="ui">Fecha de estado</span> dibuja una línea vertical en la fecha de corte. Todo lo que queda a su izquierda ya debería haber ocurrido; compárelo con el avance. Se configura en <span class="ui">Capas</span> (estilo, grosor y color) y se comparte con la Línea de Tiempo.</p>
+
+<h2 id="analisis--desplazamiento">Desplazamientos entre línea base y proyectado</h2>
+<p>Con <span class="ui">Línea base</span> activa, la diferencia de posición entre la barra rayada y la de color es el desplazamiento. Si necesita ver las fechas exactas, active <span class="ui">Fechas</span>, o agregue al Gantt las columnas «Start LB», «End LB», «Start R/P» y «End R/P» con un clic derecho en un encabezado.</p>
+
+<h2 id="analisis--secuencia">Calidad de la secuencia</h2>
+<p>El ícono de aviso de dependencias señala problemas que afectan la lectura del cronograma: predecesoras inexistentes, ciclos y textos con formato inválido. Opcionalmente, también los <a href="#/cronograma/conflictos">conflictos de fechas</a>. Revíselos antes de presentar un cronograma.</p>
+
+<h2 id="analisis--mover">Mover fechas en bloque</h2>
+<p>Para simular un desplazamiento de un grupo de tareas, use <span class="ui">Editar</span> → <span class="ui">Mover en bloque</span>. Se explica en <a href="#/avanzadas/mover-en-bloque">Funciones avanzadas</a>.</p>
+</article>
+
+<article data-slug="filtros" id="filtros" hidden aria-labelledby="filtros--h1"><p class="kicker">Capítulo 9 · Analizar</p><h1 id="filtros--h1">Filtros y orden</h1><p class="lead">Decida qué tareas ver y en qué orden: filtros por columna, selección de tareas y orden cronológico u original.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Filtrar por columna, con búsqueda y condiciones.</li>
+<li>Seleccionar escenarios, Categoría 1 y Categoría 2.</li>
+<li>Cambiar el orden de las tareas.</li>
+</ul></div>
+
+<h2 id="filtros--columna">Filtros por columna</h2>
+<ol class="steps">
+<li><b>Active los filtros</b>Abra el menú <span class="ui">Filtrar</span> y elija <span class="ui">Activar/desactivar filtros por columna</span>. Aparece un botón de embudo en cada encabezado.</li>
+<li><b>Abra el filtro de una columna</b>Pulse el embudo del encabezado. Se abre un panel con la lista de valores.
+<figure class="fig" id="figura-42"><div class="imgbox"><img src="images/screenshots/fig-42-filtro-columna.webp" width="760" height="560" alt="Filtro de una columna" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 42 — Filtro de una columna</span><span class="fd">Ejemplo con la columna Categoría 2.</span><div class="observe"><b>Qué observar</b><ul><li>Caja de búsqueda para encontrar un valor.</li><li>Lista de valores con casillas; «Seleccionar todo» marca o desmarca todos.</li><li>«Filtros de texto» abre condiciones (igual a, comienza por, contiene…).</li><li>Cancelar y Aceptar.</li></ul></div></figcaption></figure></li>
+<li><b>Marque los valores y acepte</b>El Gantt muestra solo las tareas que cumplen todos los filtros activos.</li>
+<li><b>Quite los filtros</b>Con <span class="ui">Borrar filtros</span> del mismo menú.</li>
+</ol>
+<p>Según el tipo de columna, las condiciones cambian: <b>texto</b> (es igual a, no es igual a, comienza por, termina con, contiene, no contiene), <b>número</b> (igual, mayor, menor, entre…) y <b>fecha</b> (igual, antes de, después de, entre; con filtro por año, mes y día).</p>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Filtros en la Tabla de Datos</div><p>La Tabla de Datos tiene su propio icono <span class="ui">Filtro</span> con el mismo panel. Los filtros del Gantt y de la tabla son independientes.</p></div></div>
+
+<h2 id="filtros--seleccion">Selección de tareas</h2>
+<p>La <span class="ui">Selección de tareas</span> (menú <span class="ui">Filtrar</span>) elige qué Categorías 1, Categorías 2 y tareas concretas se ven en el Gantt.</p>
+<figure class="fig" id="figura-43"><div class="imgbox"><img src="images/screenshots/fig-43-seleccion-tareas.webp" width="460" height="760" alt="Selección de escenarios y tareas" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 43 — Selección de escenarios y tareas</span><span class="fd">Seleccione un subconjunto del cronograma.</span><div class="observe"><b>Qué observar</b><ul><li>Escenarios (las Categorías 1), Cat 1 y Cat 2 se eligen en listas desplegables.</li><li>Cada tarea tiene una casilla; «Todas» y «Ninguna» marcan o desmarcan todo.</li><li>«Mostrando todas (N)» indica cuántas tareas quedan visibles.</li><li>Cancelar descarta; Aceptar aplica.</li></ul></div></figcaption></figure>
+<p>La Línea de Tiempo tiene el mismo panel, con las mismas opciones.</p>
+
+<h2 id="filtros--orden">Orden de las tareas</h2>
+<p>El menú <span class="ui">Ordenar</span> define el orden de tareas e hitos dentro de cada Categoría 2:</p>
+<div class="table-wrap"><table>
+<tr><th>Opción</th><th>Efecto</th></tr>
+<tr><td>Cronológico</td><td>Ordena por fecha de inicio.</td></tr>
+<tr><td>Original (Excel, XML)</td><td>Respeta el orden del archivo de origen.</td></tr>
+</table></div>
+<p>Para cambiar el orden de los grupos (Escenario, Categoría 1 y Categoría 2) use <a href="#/avanzadas/reordenar-grupos">Reordenar grupos</a>.</p>
+
+<h2 id="filtros--busqueda">Búsqueda</h2>
+<p>OpenGanttLab no tiene un buscador global de tareas; la búsqueda se hace dentro de cada filtro de columna (caja «Buscar» del panel) o con el filtro de texto «contiene». Para localizar una tarea, filtre la columna <b>Nombre de Tarea</b>.</p>
+</article>
+
+<article data-slug="exportacion" id="exportacion" hidden aria-labelledby="exportacion--h1"><p class="kicker">Capítulo 10 · Producir</p><h1 id="exportacion--h1">Exportar y compartir</h1><p class="lead">Lleve el resultado fuera de la aplicación: imagen, PDF, PowerPoint, Excel o un archivo HTML autónomo que se abre sin el Excel original.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Exportar la Línea de Tiempo a PNG, PDF y PowerPoint.</li>
+<li>Guardar los datos en Excel.</li>
+<li>Compartir un HTML autónomo con datos y configuración.</li>
+</ul></div>
+
+<h2 id="exportacion--resumen">Qué formato usar</h2>
+<div class="table-wrap"><table>
+<tr><th>Quiero…</th><th>Use</th><th>Dónde</th></tr>
+<tr><td>Una imagen para un informe</td><td>PNG</td><td>Línea de Tiempo → <span class="ui">Exportar</span></td></tr>
+<tr><td>Un documento para imprimir</td><td>PDF</td><td>Línea de Tiempo → <span class="ui">Exportar</span></td></tr>
+<tr><td>Una diapositiva</td><td>PPTX (PowerPoint)</td><td>Línea de Tiempo → <span class="ui">Exportar</span></td></tr>
+<tr><td>Llevar la tabla a Excel</td><td>Descargar .xlsx o Guardar cambios</td><td>Datos</td></tr>
+<tr><td>Enviar todo a otra persona</td><td>Compartir</td><td>Barra de herramientas</td></tr>
+</table></div>
+
+<h2 id="exportacion--exportar">Exportar la Línea de Tiempo</h2>
+<ol class="steps">
+<li><b>Deje la vista como la quiere</b>Elija el modo de vista, los colores y los textos.</li>
+<li><b>Abra Exportar</b>Pulse <span class="ui">Exportar</span> en la barra de la Línea de Tiempo.
+<figure class="fig" id="figura-44"><div class="imgbox"><img src="images/screenshots/fig-44-ldt-exportar.webp" width="405" height="172" alt="Menú Exportar de la Línea de Tiempo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 44 — Menú Exportar de la Línea de Tiempo</span><span class="fd">Los tres formatos de exportación.</span><div class="observe"><b>Qué observar</b><ul><li>PNG: imagen de alta resolución.</li><li>PDF: abre una página de impresión con el tamaño exacto del diagrama.</li><li>PPTX: una diapositiva de PowerPoint (requiere internet la primera vez).</li></ul></div></figcaption></figure></li>
+<li><b>Elija el formato</b>El archivo se descarga o se abre para imprimir.</li>
+</ol>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Qué incluye la exportación</div><p>PNG y PDF incluyen las flechas de dependencias si el interruptor está activo, pero no el resaltado temporal de una cadena seleccionada. PPTX no incluye flechas: exporta barras, hitos, líneas y textos.</p></div></div>
+<p>La exportación a imagen, PDF y PowerPoint está en la <b>Línea de Tiempo</b>. Para llevar el Gantt a otro documento, compártalo (ver más abajo) o capture la pantalla.</p>
+
+<h2 id="exportacion--excel">Excel</h2>
+<ul>
+<li><span class="ui">Descargar .xlsx</span> genera un Excel con todas las tareas, incluidas las columnas de Predecesoras y Sucesoras.</li>
+<li><span class="ui">Guardar cambios en el Excel vinculado</span> escribe la tabla en el mismo archivo (Chrome o Edge).</li>
+<li>Desde la Gestión de XML, el ícono <span class="ui">Exportar a Excel</span> descarga toda la base como un archivo <code>.csv</code> (que Excel abre), con las líneas base 0–10.</li>
+</ul>
+
+<h2 id="exportacion--compartir">Compartir</h2>
+<p><span class="ui">Compartir</span> genera un único archivo HTML —una copia de la aplicación con sus datos embebidos— que se abre en cualquier navegador sin el Excel ni el XML originales. Se guarda por defecto como <code>OpenGanttLab_compartir.html</code>.</p>
+<ol class="steps">
+<li><b>Prepare el resultado</b>Deje el Gantt y la Línea de Tiempo como quiere que se vean.</li>
+<li><b>Pulse Compartir</b>En Chrome o Edge se abre el selector de carpeta; en otros navegadores el archivo se descarga.</li>
+<li><b>Envíe el archivo</b>Quien lo reciba lo abre y ve lo mismo que usted.</li>
+</ol>
+<div class="callout result" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg><div class="cb"><div class="ct">Qué conserva el archivo compartido</div><ul>
+<li>Las tareas y sus fechas, avance, ruta crítica, ID y predecesoras.</li>
+<li>Los colores, textos editados, formas y cuadros de texto de la Línea de Tiempo.</li>
+<li>Las capas y modos activos: Comparador, Segmentación, Leyenda, Fecha de estado, Ruta crítica y Dependencias.</li>
+<li>Las tareas ocultas de Ejecutivo, los títulos, el orden de las bandas y el formato de fecha.</li>
+</ul></div></div>
+<div class="callout warn" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="cb"><div class="ct">Lo que no viaja</div><p>Las preferencias de <span class="ui">Configuración</span> (por ejemplo el aviso de conflictos de fechas) son del navegador de cada persona, y las columnas de mapeo personalizadas de XML duran solo la sesión.</p></div></div>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Cambios sin compartir</div><p>El botón <span class="ui">Compartir</span> se resalta cuando hay cambios sin guardar. En <span class="ui">Configuración</span> puede activar un recordatorio cada N minutos.</p></div></div>
+</article>
+
+<article data-slug="avanzadas" id="avanzadas" hidden aria-labelledby="avanzadas--h1"><p class="kicker">Capítulo 11 · Producir</p><h1 id="avanzadas--h1">Funciones avanzadas</h1><p class="lead">Herramientas para ajustar el diagrama a la medida: mover fechas en bloque, reordenar grupos, texto libre, columnas personalizadas y más.</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Mover las fechas de un grupo de tareas en bloque.</li>
+<li>Reordenar escenarios, Categoría 1 y Categoría 2.</li>
+<li>Insertar texto libre en el Gantt.</li>
+<li>Usar columnas personalizadas y ajustes de fuente.</li>
+</ul></div>
+
+<h2 id="avanzadas--menu-edicion">El menú Editar del Gantt</h2>
+<figure class="fig" id="figura-45"><div class="imgbox"><img src="images/screenshots/fig-45-menu-edicion.webp" width="420" height="210" alt="Menú Editar del Gantt" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 45 — Menú Editar del Gantt</span><span class="fd">Las tres herramientas de edición del Gantt.</span><div class="observe"><b>Qué observar</b><ul><li>Insertar texto: nota libre sobre el diagrama.</li><li>Mover en bloque: desplaza fechas de un grupo.</li><li>Reordenar grupos: cambia el orden visual.</li></ul></div></figcaption></figure>
+
+<h2 id="avanzadas--mover-en-bloque">Mover en bloque</h2>
+<p>Desplaza por un número de días las fechas de todas las tareas de un grupo. Es útil para simular un retraso o un adelanto de una fase completa.</p>
+<ol class="steps">
+<li><b>Abra la herramienta</b><span class="ui">Editar</span> → <span class="ui">Mover en bloque</span>.
+<figure class="fig" id="figura-46"><div class="imgbox"><img src="images/screenshots/fig-46-mover-en-bloque.webp" width="416" height="358" alt="Mover en bloque" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 46 — Mover en bloque</span><span class="fd">Cuadro de diálogo de la herramienta.</span><div class="observe"><b>Qué observar</b><ul><li>Agrupar por: Escenario, Categoría 1 o Categoría 2.</li><li>Valor: el grupo concreto.</li><li>Fechas: Línea Base, Real/Proyectado o ambas.</li><li>Desplazar: días (un número negativo adelanta).</li></ul></div></figcaption></figure></li>
+<li><b>Elija el grupo y las fechas</b>Seleccione «Agrupar por», el valor y qué fechas mover (LB, R/P o ambas).</li>
+<li><b>Indique los días y aplique</b>Un número negativo mueve hacia atrás.</li>
+</ol>
+<div class="callout danger" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg><div class="cb"><div class="ct">Modifica los datos</div><p>Mover en bloque cambia las fechas de las tareas y <b>no se puede deshacer</b> con el botón Deshacer. Guarde una copia antes de usarlo (por ejemplo con <span class="ui">Compartir</span> o <span class="ui">Descargar .xlsx</span>). Si cargó un XML, <span class="ui">Restaurar</span> en la Tabla de Datos vuelve a los datos originales.</p></div></div>
+
+<h2 id="avanzadas--reordenar-grupos">Reordenar grupos</h2>
+<p>Cambia el orden visual de los grupos con las flechas ▲▼: primero los Escenarios o Categoría 1 y, dentro de cada uno, sus Categoría 2.</p>
+<figure class="fig" id="figura-47"><div class="imgbox"><img src="images/screenshots/fig-47-reordenar-grupos.webp" width="520" height="621" alt="Reordenar grupos" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 47 — Reordenar grupos</span><span class="fd">Orden de los grupos del Gantt.</span><div class="observe"><b>Qué observar</b><ul><li>Cada grupo tiene un número de posición y flechas para subir o bajar.</li><li>Las Categoría 2 se mueven dentro de su Categoría 1.</li></ul></div></figcaption></figure>
+
+<h2 id="avanzadas--texto-libre">Texto libre en el Gantt</h2>
+<p><span class="ui">Editar</span> → <span class="ui">Insertar texto</span> agrega una nota sobre el diagrama. Se arrastra y se puede redimensionar; permite elegir tamaño, color, fondo, borde, alineación y estilo.</p>
+
+<h2 id="avanzadas--fuente">Fuente y tamaños</h2>
+<p>El menú <span class="ui">Ajustes</span> cambia la <b>familia de fuente</b> (Segoe UI, Arial, Calibri, Times New Roman, Georgia, Verdana, Courier New o Tahoma) y el <b>tamaño por elemento</b>: fechas, meses, años, Categoría 1, Categoría 2 y nombre de tarea. Se aplica al Gantt y a la Línea de Tiempo.</p>
+
+<h2 id="avanzadas--columnas-personalizadas">Columnas personalizadas</h2>
+<p>En la Gestión de XML, el botón <span class="ui">+</span> del mapeo crea una columna extra a partir de cualquier campo del XML. Aparece al final de la Tabla de Datos y, con clic derecho en un encabezado, en el Gantt. Si todo su contenido son fechas, la columna es de tipo fecha (calendario y filtro por año, mes y día).</p>
+
+<h2 id="avanzadas--color-paleta">Colores y paletas</h2>
+<p>El selector de color incluye filas «Estándar» y «Recientes» (paleta de Office). Los colores por defecto de Categoría 1, Categoría 2 y Escenario se definen en <a href="#/interfaz/configuracion">Configuración</a>.</p>
+
+<h2 id="avanzadas--seleccion-multiple">Selección múltiple en la Línea de Tiempo</h2>
+<p>Con <kbd>Ctrl</kbd> o <kbd>Shift</kbd> + clic agrega barras a la selección. Un doble clic abre el panel y los cambios (color, texto, fechas, trama, ocultar) se aplican a todas; arrastrar una mueve el grupo conservando el desplazamiento relativo entre filas.</p>
+
+<h2 id="avanzadas--hito-banda">Ubicación de un hito en la Vista C1</h2>
+<p>En el panel de edición de un hito, la opción <b>Ubicación</b> permite colocarlo dentro de una banda de Categoría 1 (con un selector de banda). Requiere la <span class="ui">Vista C1</span> activa y no funciona en Ejecutivo ni en Vista Hitos. Por defecto, el hito sigue sobre el eje.</p>
+</article>
+
+<article data-slug="casos-de-uso" id="casos-de-uso" hidden aria-labelledby="casos-de-uso--h1"><p class="kicker">Capítulo 12 · Consultar</p><h1 id="casos-de-uso--h1">Casos de uso</h1><p class="lead">Tres situaciones típicas resueltas de principio a fin. Todas usan el proyecto de ejemplo del manual (una planta industrial ficticia).</p>
+
+<div class="learn"><b>En este capítulo aprenderás a:</b><ul>
+<li>Comparar la línea base con el cronograma proyectado.</li>
+<li>Preparar la lámina de un comité.</li>
+<li>Revisar la secuencia de un XML de Project.</li>
+</ul></div>
+
+<h2 id="casos-de-uso--caso-linea-base">Caso 1 · ¿Cuánto se desplazó el proyecto?</h2>
+<p><b>Situación:</b> el equipo replanificó y el gerente pregunta qué tareas se corrieron respecto al plan original.</p>
+<ol class="steps">
+<li><b>Cargue los datos</b>Cargue el Excel o el XML con las fechas LB y R/P (<a href="#/datos">Proyectos y datos</a>).</li>
+<li><b>Active Línea base y Avance real</b>En <span class="ui">Capas</span> o con los accesos rápidos de la barra.</li>
+<li><b>Lea los desplazamientos</b>Compare la barra rayada con la de color; agregue las columnas «Start LB», «End LB», «Start R/P» y «End R/P» con clic derecho si necesita las fechas exactas.</li>
+<li><b>Identifique lo crítico</b>Active <span class="ui">Ruta crítica</span> para ver qué tareas condicionan la fecha final.</li>
+</ol>
+<div class="callout result" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg><div class="cb"><div class="ct">Resultado</div><p>Una vista única con lo planificado, lo proyectado y el avance de cada tarea, donde se ve de inmediato qué se desplazó y cuánto.</p></div></div>
+
+<h2 id="casos-de-uso--caso-comite">Caso 2 · Una lámina para el comité</h2>
+<p><b>Situación:</b> hay que presentar el cronograma a un comité en una sola lámina, con foco en los hitos.</p>
+<ol class="steps">
+<li><b>Abra la Línea de Tiempo</b>Elija el modo de vista: <span class="ui">Vista C1</span> para agrupar por disciplina, o <span class="ui">Ejecutivo</span> para mostrar solo entregas.</li>
+<li><b>Depure lo que se ve</b>Oculte con <kbd>Delete</kbd> las tareas que no aporten, o use <span class="ui">Selección de tareas</span>.</li>
+<li><b>Ajuste la presentación</b>Edite colores y textos con doble clic; agregue una llamada o una forma desde <span class="ui">Editar</span>. Active <span class="ui">Leyenda</span> si hace falta.</li>
+<li><b>Exporte</b><span class="ui">Exportar</span> → PowerPoint, o PNG para pegarlo en un informe.</li>
+</ol>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Guarde su trabajo</div><p>Use <span class="ui">Compartir</span> para conservar la configuración de la lámina. Al abrir el archivo compartido verá exactamente lo mismo.</p></div></div>
+
+<h2 id="casos-de-uso--caso-secuencia">Caso 3 · Revisar la secuencia de un XML de Project</h2>
+<p><b>Situación:</b> llega un XML de Project de varios cientos de megabytes y hay que revisar si la lógica está bien enlazada.</p>
+<ol class="steps">
+<li><b>Cárguelo</b>En <span class="ui">Datos</span> → <span class="ui">Gestión de XML</span>. La lectura por partes evita que el navegador se bloquee.</li>
+<li><b>Complete el mapeo</b>Confirme Categoría 1, Categoría 2, Nombre de Tarea y las fechas. Compruebe con la vista previa.</li>
+<li><b>Active las dependencias</b>En el Gantt: <span class="ui">Capas</span> → <span class="ui">Dependencias</span>.</li>
+<li><b>Revise los avisos</b>El ícono de triángulo lista predecesoras inexistentes y ciclos. Active el aviso de conflictos de fechas en <span class="ui">Configuración</span> si quiere comparar también las fechas.</li>
+<li><b>Siga una cadena</b>Haga clic en un hito importante para resaltar todo lo que lo precede.</li>
+</ol>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Tiempo de lectura</div><p>Un XML de 1,7 GB se lee en unos 35 a 80 segundos, según el equipo, con una barra de avance.</p></div></div>
+</article>
+
+<article data-slug="referencia" id="referencia" hidden aria-labelledby="referencia--h1"><p class="kicker">Capítulo 13 · Consultar</p><h1 id="referencia--h1">Referencia y glosario</h1><p class="lead">Consulta rápida: atajos, campos, formatos, estados y terminología.</p>
+
+<h2 id="referencia--atajos">Atajos y gestos</h2>
+<div class="table-wrap"><table>
+<tr><th>Atajo</th><th>Acción</th><th>Dónde</th></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Deshacer</td><td>Línea de Tiempo</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Rehacer</td><td>Línea de Tiempo</td></tr>
+<tr><td><kbd>Delete</kbd></td><td>Oculta el elemento seleccionado</td><td>Línea de Tiempo</td></tr>
+<tr><td><kbd>Ctrl</kbd> / <kbd>Shift</kbd> + clic</td><td>Agrega barras a la selección</td><td>Línea de Tiempo</td></tr>
+<tr><td>Doble clic</td><td>Abre el panel de edición</td><td>Línea de Tiempo</td></tr>
+<tr><td>Clic en una barra</td><td>Resalta su cadena de dependencias</td><td>Gantt y Línea de Tiempo</td></tr>
+<tr><td>Clic derecho en un encabezado</td><td>Mostrar / ocultar columnas</td><td>Gantt</td></tr>
+<tr><td>Arrastrar el borde del encabezado</td><td>Cambia el ancho de una columna</td><td>Gantt y Tabla de Datos</td></tr>
+<tr><td><kbd>Esc</kbd></td><td>Cierra primero el panel lateral y después el menú abierto</td><td>Barras de herramientas</td></tr>
+</table></div>
+
+<h2 id="referencia--campos">Campos de la Tabla de Datos</h2>
+<div class="table-wrap"><table>
+<tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+<tr><td>Escenario</td><td>Texto</td><td>La versión del cronograma; también ámbito de los ids de dependencias.</td></tr>
+<tr><td>Categoría 1</td><td>Texto</td><td>Agrupación mayor de las tareas.</td></tr>
+<tr><td>Categoría 2</td><td>Texto</td><td>Fase o agrupación.</td></tr>
+<tr><td>Nombre de Tarea</td><td>Texto</td><td>Nombre visible.</td></tr>
+<tr><td>Start LB · End LB</td><td>Fecha</td><td>Inicio y fin de la Línea Base.</td></tr>
+<tr><td>Avance Real</td><td>Número 0–100</td><td>Porcentaje de avance.</td></tr>
+<tr><td>Start R/P · End R/P</td><td>Fecha</td><td>Inicio y fin Real/Proyectado.</td></tr>
+<tr><td>Duración (d)</td><td>Número (días)</td><td>Días corridos: fin − inicio + 1 de Real/Proyectado; hitos y eventos, 0.</td></tr>
+<tr><td>Clase</td><td>TAREA · HITO · EVENTO</td><td>Tipo de elemento.</td></tr>
+<tr><td>Ruta Crítica</td><td>si · no</td><td>Marca de ruta crítica.</td></tr>
+<tr><td>Marca Activity</td><td>Texto</td><td>«Si» para las tareas marcadas.</td></tr>
+<tr><td>Resumen</td><td>si · no</td><td>Tarea resumen.</td></tr>
+<tr><td>ID</td><td>Texto</td><td>Identificador para las dependencias.</td></tr>
+<tr><td>Predecesoras</td><td>Texto</td><td>Dependencias en el formato de Project.</td></tr>
+<tr><td>Sucesoras</td><td>Calculado</td><td>Inversa de las predecesoras (no se edita).</td></tr>
+</table></div>
+
+<h2 id="referencia--formato-predecesoras">Formato de Predecesoras</h2>
+<div class="kv">
+<div>Estructura</div><div><code>id[tipo][+/−desfase]</code>, separadas por «;» o «,»</div>
+<div>Tipos (español)</div><div>FC, CC, FF, CF</div>
+<div>Tipos (inglés)</div><div>FS, SS, FF, SF</div>
+<div>Unidades de desfase</div><div>d / día(s) · w / sem · h / hora(s) · min · mes; «e» delante = transcurrido (ed, eh)</div>
+<div>Ejemplos</div><div><code>12</code> · <code>12CC+2 días</code> · <code>7FF-1d</code> · <code>12;15FC+3d</code></div>
+</div>
+<div class="callout note" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></svg><div class="cb"><div class="ct">Desfases en porcentaje</div><p>Los desfases en porcentaje que vienen de un XML no se convierten (se leen como 0). Al escribirlos a mano (<code>12FC+50%</code>) sí se conservan.</p></div></div>
+
+<h2 id="referencia--colores-estados">Colores y símbolos</h2>
+<div class="table-wrap"><table>
+<tr><th>Elemento</th><th>Significado</th></tr>
+<tr><td>Barra rayada gris</td><td>Línea Base.</td></tr>
+<tr><td>Barra de color</td><td>Real/Proyectado (color de su Categoría 2).</td></tr>
+<tr><td>Parte más oscura de la barra</td><td>Avance.</td></tr>
+<tr><td>Borde rojo</td><td>Tarea o hito de la ruta crítica.</td></tr>
+<tr><td>Rombo</td><td>Hito.</td></tr>
+<tr><td>Triángulo ▼</td><td>Evento (Línea de Tiempo, sobre el eje).</td></tr>
+<tr><td>Flecha gris</td><td>Dependencia normal.</td></tr>
+<tr><td>Flecha roja</td><td>Dependencia entre dos tareas críticas.</td></tr>
+<tr><td>Flecha azul</td><td>Cadena de la tarea seleccionada.</td></tr>
+<tr><td>Flecha naranja discontinua</td><td>Conflicto de fechas.</td></tr>
+<tr><td>Línea vertical</td><td>Fecha de estado.</td></tr>
+</table></div>
+
+<h2 id="referencia--formatos-fecha">Formatos de fecha</h2>
+<p>El selector de la barra inferior (y el menú Ajustes de la Línea de Tiempo) ofrece 14 formatos: dd/mm · mm/aa · mm/aaaa · dd/mm/aa · dd/mm/aaaa · dd/mmm/aaaa · mmm/aaaa · mmm/aa · mmm-aa · dd-mm · mm-aa · mm-aaaa · dd-mm-aaaa · dd-mmm-aaaa.</p>
+
+<h2 id="referencia--archivos">Archivos y formatos</h2>
+<div class="table-wrap"><table>
+<tr><th>Formato</th><th>Uso</th></tr>
+<tr><td>.xlsx</td><td>Entrada y salida de datos.</td></tr>
+<tr><td>.xml (Project)</td><td>Entrada; se lee por partes.</td></tr>
+<tr><td>.csv</td><td>Salida de la base de XML (con líneas base 0–10).</td></tr>
+<tr><td>.png · .pdf · .pptx</td><td>Salida de la Línea de Tiempo.</td></tr>
+<tr><td>.html</td><td>«Compartir»: copia autónoma de la aplicación con los datos.</td></tr>
+</table></div>
+
+<h2 id="referencia--glosario">Glosario</h2>
+<dl class="gloss">
+<dt>Autoguardado</dt><dd>Guardado silencioso cada 5 minutos en el Excel vinculado o en el archivo elegido con «Compartir», si ya se concedió permiso.</dd>
+<dt>Avance</dt><dd>Porcentaje completado de una tarea (0–100).</dd>
+<dt>Capa</dt><dd>Elemento que se puede mostrar u ocultar sobre el cronograma (avance, línea base, dependencias…).</dd>
+<dt>Categoría 1 / Categoría 2</dt><dd>Niveles de agrupación de las tareas, con color propio.</dd>
+<dt>Cronograma</dt><dd>Conjunto de tareas e hitos con sus fechas.</dd>
+<dt>Dependencia</dt><dd>Relación entre una tarea predecesora y una sucesora.</dd>
+<dt>Desfase (lag)</dt><dd>Retraso (+) o adelanto (−) de un vínculo de dependencia.</dd>
+<dt>Duración</dt><dd>En la barra de estado, los días entre el inicio y el fin del conjunto visible.</dd>
+<dt>Escenario</dt><dd>Una versión del cronograma que se compara con otras. Se toma de la columna Escenario, del archivo XML de origen o de la Categoría 1 (en ese orden).</dd>
+<dt>Evento</dt><dd>Marcador (▼) que se dibuja sobre el eje de la Línea de Tiempo.</dd>
+<dt>Fecha de estado</dt><dd>Fecha de corte del proyecto, dibujada como línea vertical.</dd>
+<dt>Hito</dt><dd>Tarea sin duración, representada por un rombo.</dd>
+<dt>LB actual</dt><dd>La línea base de Project (0–10) que se usa: la de fecha de guardado más reciente.</dd>
+<dt>Línea Base (LB)</dt><dd>Fechas planificadas originalmente.</dd>
+<dt>Marca Activity</dt><dd>Campo «Si/No» para marcar tareas de interés y mostrar solo esas.</dd>
+<dt>Mapeo</dt><dd>Correspondencia entre los campos de un XML y las columnas de la tabla.</dd>
+<dt>Predecesora / Sucesora</dt><dd>La tarea que condiciona / la tarea condicionada en una dependencia.</dd>
+<dt>Reprogramación de sucesoras</dt><dd>Recalcular las fechas de las sucesoras cuando se edita una tarea en la Tabla de Datos, como Project con programación automática (días corridos).</dd>
+<dt>Real/Proyectado (R/P)</dt><dd>Fechas reales, o proyectadas si la tarea no ha terminado.</dd>
+<dt>Resumen</dt><dd>Tarea que agrupa a otras; se muestra con la capa «Resumen».</dd>
+<dt>Segmentador</dt><dd>Selector de la Tabla de Datos que muestra solo las filas de un escenario.</dd>
+<dt>Ruta crítica</dt><dd>Tareas que condicionan la fecha final; se leen de los datos, no se calculan.</dd>
+<dt>Variante</dt><dd>Nombre de una carga de XML; es el escenario.</dd>
+</dl>
+<div class="callout note" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></svg><div class="cb"><div class="ct">Términos que no existen aquí</div><p>OpenGanttLab no maneja recursos, costos ni valor ganado, por lo que términos como ETC o EAC no aplican.</p></div></div>
+</article>
+
+<article data-slug="problemas" id="problemas" hidden aria-labelledby="problemas--h1"><p class="kicker">Capítulo 14 · Consultar</p><h1 id="problemas--h1">Solución de problemas</h1><p class="lead">Síntomas frecuentes, su causa probable y cómo resolverlos.</p>
+
+<h2 id="problemas--importacion">Importación</h2>
+<h3 id="problemas--faltan-tareas">Faltan tareas después de cargar el Excel</h3>
+<p>Una fila se omite si le falta el <b>Nombre de Tarea</b>, la <b>Categoría 1</b> o alguna de las fechas de <b>Línea Base</b>. Complete esas columnas y vuelva a cargar. Compruebe también que la primera fila con encabezados esté entre las ocho primeras filas de la hoja.</p>
+<h3 id="problemas--fechas-texto">Las fechas salen mal o no salen</h3>
+<p>Verifique que las columnas de fecha del Excel sean fechas reales y no texto. Puede cambiar el formato de visualización en el selector de la barra inferior.</p>
+<h3 id="problemas--xml-lento">El XML es enorme y tarda</h3>
+<p>Es normal: se lee por partes y una barra muestra el avance. Un archivo de 1,7 GB puede tardar entre 35 y 80 segundos. No cierre la pestaña mientras carga.</p>
+<h3 id="problemas--xml-no-carga">El XML no pasa a la tabla</h3>
+<p>Los campos <b>Categoría 1</b>, <b>Categoría 2</b> y <b>Nombre de Tarea</b> del mapeo son obligatorios. Mientras alguno esté vacío, verá el mensaje «Completa los campos obligatorios…» y los datos no se cargan. Asigne una columna o un «Valor fijo» a cada uno.</p>
+<h3 id="problemas--xml-invalido">«No parece un XML de Microsoft Project»</h3>
+<p>El archivo no contiene la sección de tareas de Project. Exporte de nuevo desde Project como XML.</p>
+
+<h2 id="problemas--visualizacion">Visualización</h2>
+<h3 id="problemas--gantt-vacio">El Gantt aparece vacío</h3>
+<p>Aún no hay datos cargados. Vaya a <span class="ui">Datos</span> y use <span class="ui">Cargar archivo</span>. Si hay datos, revise que haya escenarios marcados en el selector y que no haya filtros activos (<span class="ui">Filtrar</span> → <span class="ui">Borrar filtros</span>).</p>
+<h3 id="problemas--sin-linea-base">No veo la Línea Base</h3>
+<p>Active la capa <span class="ui">Línea base</span> (Gantt) o <span class="ui">Comparador</span> (Línea de Tiempo) y compruebe que Start LB y End LB tengan fechas.</p>
+<h3 id="problemas--faltan-en-gantt">Faltan tareas en el Gantt</h3>
+<p>Revise los filtros por columna, la selección de tareas y que <span class="ui">Resumen</span> esté activo si busca tareas resumen. Con <span class="ui">Marca Activity</span> activo solo se ven las marcadas. En la Línea de Tiempo, mire <span class="ui">Tareas ocultas (N)</span>.</p>
+<h3 id="problemas--sin-flechas">No veo flechas de dependencias</h3>
+<ul>
+<li>Active <span class="ui">Dependencias</span> en <span class="ui">Capas</span>.</li>
+<li>Confirme que las tareas tengan <b>ID</b> y <b>Predecesoras</b> (columnas del Gantt con clic derecho). En XML, revise que el mapeo de «ID (Project)» y «Predecesoras» esté asignado.</li>
+<li>En la Línea de Tiempo, las flechas no se dibujan en Ejecutivo ni en Vista Hitos.</li>
+<li>Solo se dibujan entre tareas visibles.</li>
+</ul>
+<h3 id="problemas--icono-aviso">Aparece el ícono de aviso junto a las capas</h3>
+<p>Es un aviso de calidad de datos, no un error. Haga clic en él para ver las predecesoras inexistentes, los ciclos o, si lo activó, los conflictos de fechas, y corríjalos en la columna <b>Predecesoras</b> de la Tabla de Datos.</p>
+
+<h2 id="problemas--guardar">Guardar y exportar</h2>
+<h3 id="problemas--no-guarda-excel">No puedo guardar en el Excel</h3>
+<p>Use Chrome o Edge y vincule el archivo desde <span class="ui">Datos</span>. Como alternativa, use <span class="ui">Descargar .xlsx</span>.</p>
+<h3 id="problemas--pptx">La exportación a PowerPoint no se genera</h3>
+<p>La primera vez necesita conexión a internet para descargar el componente de exportación.</p>
+<h3 id="problemas--perdi-cambios">Perdí mis cambios de la Línea de Tiempo</h3>
+<p>Use <span class="ui">Compartir</span> para guardar una copia completa. Las tareas ocultas de Ejecutivo y el formato de fecha también se recuerdan por proyecto en el navegador. Las preferencias de Configuración son propias de cada navegador.</p>
+<h3 id="problemas--cambios-sin-compartir">Aviso de «cambios sin compartir»</h3>
+<p>La aplicación no guarda por sí sola si no hay un destino vinculado. Pulse <span class="ui">Compartir</span> (o guarde en el Excel vinculado) para conservar el trabajo.</p>
+
+<h2 id="problemas--datos-inconsistentes">Datos inconsistentes</h2>
+<div class="table-wrap"><table>
+<tr><th>Síntoma</th><th>Causa probable</th><th>Qué hacer</th></tr>
+<tr><td>Un hito aparece como barra</td><td>La columna «Clase» no dice «Hito» y las fechas de LB no son iguales.</td><td>Escriba «Hito» en Clase.</td></tr>
+<tr><td>Avance de 0,76 en vez de 76</td><td>Excel guarda los porcentajes como fracción.</td><td>Se convierte solo: 0–1 se interpreta como porcentaje. Si ve 0,76 %, revise que el valor no sea &lt; 1 por error.</td></tr>
+<tr><td>Dos tareas con el mismo nombre en una fila</td><td>Tareas partidas con el mismo nombre.</td><td>Es lo esperado: se dibujan en la misma fila, en distintas posiciones.</td></tr>
+<tr><td>Predecesora que «no existe»</td><td>El id no está en el mismo Escenario.</td><td>Revise la columna Escenario (o la Categoría 1) y el ID.</td></tr>
+<tr><td>Cambié una fecha y se movieron otras tareas</td><td>La <b>reprogramación de sucesoras</b> está activa: mueve las sucesoras de la fila editada.</td><td>Desactive <span class="ui">Reprogramar sucesoras</span> en la barra de la Tabla de Datos, o use <span class="ui">Deshacer</span> (un solo paso).</td></tr>
+<tr><td>Datos distintos tras «Actualizar»</td><td>El Excel cambió desde la última carga.</td><td>Es lo esperado: «Actualizar» recarga el Excel vinculado.</td></tr>
+</table></div>
+
+<h2 id="problemas--navegador">Navegador</h2>
+<p>OpenGanttLab está optimizado para <b>Chrome y Edge 86 o superior</b>. En otros navegadores puede funcionar, pero algunas funciones (guardar directamente en el Excel, elegir carpeta al compartir) usan una API que no todos incluyen.</p>
+
+<h2 id="problemas--contacto">¿Sigue el problema?</h2>
+<p>Escriba a <a href="mailto:oscar.jaramillo@outlook.com">oscar.jaramillo@outlook.com</a> o por WhatsApp al +57 313 783 3032, con una descripción breve y, si es posible, una captura de pantalla.</p>
+</article>
+    <div class="pager" id="pager"></div>
+    <footer class="foot">Manual de OpenGanttLab v3.1.2 · © 2026 Oscar Fernando Jaramillo Chamorro · Software libre bajo licencia GNU GPLv3 · <a href="mailto:oscar.jaramillo@outlook.com">oscar.jaramillo@outlook.com</a></footer>
+  </main>
+  <aside class="toc" id="toc" aria-label="En esta página"></aside>
+</div>
+<button class="iconbtn" id="toTop" aria-label="Volver arriba"><svg class="ic" aria-hidden="true"><use href="#i-up"/></svg></button>
+<div id="lightbox" role="dialog" aria-label="Figura ampliada"><button class="iconbtn" aria-label="Cerrar"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button><img alt=""></div>
+<noscript><p style="padding:20px">Este manual necesita JavaScript para mostrar los capítulos.</p></noscript>
+<script>window.MANUAL={"groups":["Comenzar","Datos","Visualizar","Analizar","Producir","Consultar"],"chapters":[{"slug":"introduccion","title":"Introducción","group":"Comenzar","n":1},{"slug":"primeros-pasos","title":"Primeros pasos","group":"Comenzar","n":2},{"slug":"interfaz","title":"La interfaz","group":"Comenzar","n":3},{"slug":"datos","title":"Proyectos y datos","group":"Datos","n":4},{"slug":"cronograma","title":"Cronograma: el Gantt","group":"Visualizar","n":5},{"slug":"vistas","title":"Vistas: la Línea de Tiempo","group":"Visualizar","n":6},{"slug":"escenarios","title":"Escenarios","group":"Analizar","n":7},{"slug":"analisis","title":"Análisis y control","group":"Analizar","n":8},{"slug":"filtros","title":"Filtros y orden","group":"Analizar","n":9},{"slug":"exportacion","title":"Exportar y compartir","group":"Producir","n":10},{"slug":"avanzadas","title":"Funciones avanzadas","group":"Producir","n":11},{"slug":"casos-de-uso","title":"Casos de uso","group":"Consultar","n":12},{"slug":"referencia","title":"Referencia y glosario","group":"Consultar","n":13},{"slug":"problemas","title":"Solución de problemas","group":"Consultar","n":14}]};</script>
+<script src="assets/manual.js"></script>
+</body>
+</html>

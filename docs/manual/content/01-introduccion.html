@@ -1,0 +1,58 @@
+<!--{"slug":"introduccion","title":"Introducción","group":"Comenzar","lead":"OpenGanttLab convierte un cronograma en un Gantt comparable, una Línea de Tiempo lista para presentar y una tabla de datos editable. Todo en un solo archivo, sin instalación y sin conexión."}-->
+
+<learn>
+<ul>
+<li>Entender qué hace OpenGanttLab y qué problemas resuelve.</li>
+<li>Reconocer sus tres espacios de trabajo: Gantt, Línea de Tiempo y Datos.</li>
+<li>Conocer los conceptos que se usan en todo el manual.</li>
+</ul>
+</learn>
+
+<h2 id="que-es">¿Qué es OpenGanttLab?</h2>
+<p>OpenGanttLab es una herramienta para <b>visualizar, comparar y presentar cronogramas de proyecto</b>. Lee archivos <b>Excel (.xlsx)</b> con varios escenarios o archivos <b>XML de Microsoft Project</b> (incluso de más de 1 GB) y los muestra en tres formatos:</p>
+<cards>
+<card href="#/cronograma" icon="gantt" t="Gantt · Comparador de Escenarios">Barras de Línea Base frente a Real/Proyectado, avance, ruta crítica y dependencias.</card>
+<card href="#/vistas" icon="clock" t="Línea de Tiempo">Vista ejecutiva con hitos, barras y textos editables, lista para presentar.</card>
+<card href="#/datos" icon="layout" t="Datos">Tabla editable con todas las tareas, carga de Excel/XML y gestión de escenarios.</card>
+</cards>
+<p>Es una aplicación <b>standalone</b>: un único archivo HTML que se abre en el navegador. Los datos no salen de su computador.</p>
+
+<h2 id="para-quien">¿Para quién está diseñado?</h2>
+<ul>
+<li><b>Planificadores y controladores de proyecto</b> que comparan versiones de un cronograma (por ejemplo P10, P50 y P90).</li>
+<li><b>Gerentes y líderes de proyecto</b> que necesitan una lámina clara del cronograma para un comité.</li>
+<li><b>Equipos de ingeniería y construcción</b> que reciben cronogramas de Microsoft Project y quieren revisarlos rápido.</li>
+</ul>
+
+<h2 id="problemas">¿Qué problemas resuelve?</h2>
+<table>
+<tr><th>Necesidad</th><th>Cómo lo resuelve OpenGanttLab</th></tr>
+<tr><td>Comparar la línea base con lo real o proyectado</td><td>El Gantt dibuja ambas barras en la misma fila y muestra el avance como relleno.</td></tr>
+<tr><td>Comparar varias versiones del cronograma</td><td>Cada versión es un escenario: se gestiona, se duplica y se filtra desde la sección Datos.</td></tr>
+<tr><td>Entender qué depende de qué</td><td>Las dependencias se dibujan como flechas y se resalta la cadena completa de una tarea.</td></tr>
+<tr><td>Presentar el cronograma a un comité</td><td>La Línea de Tiempo permite editar colores, textos, hitos y formas, y exportar a PNG, PDF o PowerPoint.</td></tr>
+<tr><td>Abrir un XML enorme de Project</td><td>El archivo se lee por partes y solo se conserva lo necesario.</td></tr>
+<tr><td>Enviar el resultado sin enviar el Excel</td><td>«Compartir» genera un HTML autónomo con los datos embebidos.</td></tr>
+</table>
+
+<h2 id="arquitectura">Cómo funciona por dentro</h2>
+<p>Los datos entran por <b>Excel</b> o <b>Project XML</b>, se convierten en una única <b>Tabla de Datos</b> y de ahí alimentan las vistas. Cualquier corrección en la tabla se refleja en el Gantt y en la Línea de Tiempo.</p>
+<fig slug="arquitectura" t="De los datos al resultado" observe="La Tabla de Datos es el centro: todo lo que ve en las vistas sale de ella.|Las vistas no modifican los datos: los cambios visuales de la Línea de Tiempo (colores, textos) son solo de presentación.">Las dos fuentes de entrada, la Tabla de Datos, las vistas y las salidas.</fig>
+
+<h2 id="conceptos">Conceptos principales</h2>
+<p>Estos términos aparecen en toda la aplicación. Encontrará definiciones completas en el <a href="#/referencia/glosario">glosario</a>.</p>
+<dl class="gloss">
+<dt>Escenario</dt><dd>Una versión del cronograma que se quiere comparar (por ejemplo «Plan base» o «P50»). Es el agrupador mayor: la columna <b>Escenario</b>. Si una tarea no la trae, se usa el archivo XML de origen y, en último caso, su Categoría 1.</dd>
+<dt>Categoría 1 y Categoría 2</dt><dd>Los dos niveles con que se agrupan las tareas dentro de un escenario: Categoría 2 es la fase o agrupación dentro de una Categoría 1. Cada una tiene su propio color.</dd>
+<dt>Línea Base (LB) y Real/Proyectado (R/P)</dt><dd>Cada tarea tiene dos juegos de fechas: los planificados originalmente (LB) y los reales o proyectados (R/P).</dd>
+<dt>Hito y evento</dt><dd>Un hito es una tarea sin duración (un rombo). Un evento es un marcador que se dibuja sobre el eje de la Línea de Tiempo.</dd>
+<dt>Dependencia</dt><dd>Una relación entre dos tareas: la predecesora condiciona a la sucesora, con un tipo (FC, CC, FF, CF) y un desfase opcional.</dd>
+</dl>
+<fig slug="jerarquia" t="Cómo se organizan las tareas" observe="Escenario es un agrupador opcional.|Una tarea pertenece a una Categoría 2; esta, a una Categoría 1.">La jerarquía con la que OpenGanttLab ordena y colorea las tareas.</fig>
+
+<callout type="info" title="Navegador recomendado">
+<p>Use Chrome o Edge (versión 86 o superior). Funciones como guardar los cambios directamente en el Excel usan una API propia de estos navegadores.</p>
+</callout>
+
+<h2 id="software-libre">Software libre</h2>
+<p>OpenGanttLab se distribuye bajo la licencia <b>GNU GPLv3</b>: puede usarlo, estudiarlo, modificarlo y compartirlo. Las versiones modificadas que se distribuyan deben publicarse también bajo GPLv3, con su código fuente.</p>

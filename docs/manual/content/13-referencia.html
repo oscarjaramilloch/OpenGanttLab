@@ -1,0 +1,106 @@
+<!--{"slug":"referencia","title":"Referencia y glosario","group":"Consultar","lead":"Consulta rápida: atajos, campos, formatos, estados y terminología."}-->
+
+<h2 id="atajos">Atajos y gestos</h2>
+<table>
+<tr><th>Atajo</th><th>Acción</th><th>Dónde</th></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd></td><td>Deshacer</td><td>Línea de Tiempo</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Rehacer</td><td>Línea de Tiempo</td></tr>
+<tr><td><kbd>Delete</kbd></td><td>Oculta el elemento seleccionado</td><td>Línea de Tiempo</td></tr>
+<tr><td><kbd>Ctrl</kbd> / <kbd>Shift</kbd> + clic</td><td>Agrega barras a la selección</td><td>Línea de Tiempo</td></tr>
+<tr><td>Doble clic</td><td>Abre el panel de edición</td><td>Línea de Tiempo</td></tr>
+<tr><td>Clic en una barra</td><td>Resalta su cadena de dependencias</td><td>Gantt y Línea de Tiempo</td></tr>
+<tr><td>Clic derecho en un encabezado</td><td>Mostrar / ocultar columnas</td><td>Gantt</td></tr>
+<tr><td>Arrastrar el borde del encabezado</td><td>Cambia el ancho de una columna</td><td>Gantt y Tabla de Datos</td></tr>
+<tr><td><kbd>Esc</kbd></td><td>Cierra primero el panel lateral y después el menú abierto</td><td>Barras de herramientas</td></tr>
+</table>
+
+<h2 id="campos">Campos de la Tabla de Datos</h2>
+<table>
+<tr><th>Campo</th><th>Tipo</th><th>Descripción</th></tr>
+<tr><td>Escenario</td><td>Texto</td><td>La versión del cronograma; también ámbito de los ids de dependencias.</td></tr>
+<tr><td>Categoría 1</td><td>Texto</td><td>Agrupación mayor de las tareas.</td></tr>
+<tr><td>Categoría 2</td><td>Texto</td><td>Fase o agrupación.</td></tr>
+<tr><td>Nombre de Tarea</td><td>Texto</td><td>Nombre visible.</td></tr>
+<tr><td>Start LB · End LB</td><td>Fecha</td><td>Inicio y fin de la Línea Base.</td></tr>
+<tr><td>Avance Real</td><td>Número 0–100</td><td>Porcentaje de avance.</td></tr>
+<tr><td>Start R/P · End R/P</td><td>Fecha</td><td>Inicio y fin Real/Proyectado.</td></tr>
+<tr><td>Duración (d)</td><td>Número (días)</td><td>Días corridos: fin − inicio + 1 de Real/Proyectado; hitos y eventos, 0.</td></tr>
+<tr><td>Clase</td><td>TAREA · HITO · EVENTO</td><td>Tipo de elemento.</td></tr>
+<tr><td>Ruta Crítica</td><td>si · no</td><td>Marca de ruta crítica.</td></tr>
+<tr><td>Marca Activity</td><td>Texto</td><td>«Si» para las tareas marcadas.</td></tr>
+<tr><td>Resumen</td><td>si · no</td><td>Tarea resumen.</td></tr>
+<tr><td>ID</td><td>Texto</td><td>Identificador para las dependencias.</td></tr>
+<tr><td>Predecesoras</td><td>Texto</td><td>Dependencias en el formato de Project.</td></tr>
+<tr><td>Sucesoras</td><td>Calculado</td><td>Inversa de las predecesoras (no se edita).</td></tr>
+</table>
+
+<h2 id="formato-predecesoras">Formato de Predecesoras</h2>
+<div class="kv">
+<div>Estructura</div><div><code>id[tipo][+/−desfase]</code>, separadas por «;» o «,»</div>
+<div>Tipos (español)</div><div>FC, CC, FF, CF</div>
+<div>Tipos (inglés)</div><div>FS, SS, FF, SF</div>
+<div>Unidades de desfase</div><div>d / día(s) · w / sem · h / hora(s) · min · mes; «e» delante = transcurrido (ed, eh)</div>
+<div>Ejemplos</div><div><code>12</code> · <code>12CC+2 días</code> · <code>7FF-1d</code> · <code>12;15FC+3d</code></div>
+</div>
+<callout type="note" title="Desfases en porcentaje">
+<p>Los desfases en porcentaje que vienen de un XML no se convierten (se leen como 0). Al escribirlos a mano (<code>12FC+50%</code>) sí se conservan.</p>
+</callout>
+
+<h2 id="colores-estados">Colores y símbolos</h2>
+<table>
+<tr><th>Elemento</th><th>Significado</th></tr>
+<tr><td>Barra rayada gris</td><td>Línea Base.</td></tr>
+<tr><td>Barra de color</td><td>Real/Proyectado (color de su Categoría 2).</td></tr>
+<tr><td>Parte más oscura de la barra</td><td>Avance.</td></tr>
+<tr><td>Borde rojo</td><td>Tarea o hito de la ruta crítica.</td></tr>
+<tr><td>Rombo</td><td>Hito.</td></tr>
+<tr><td>Triángulo ▼</td><td>Evento (Línea de Tiempo, sobre el eje).</td></tr>
+<tr><td>Flecha gris</td><td>Dependencia normal.</td></tr>
+<tr><td>Flecha roja</td><td>Dependencia entre dos tareas críticas.</td></tr>
+<tr><td>Flecha azul</td><td>Cadena de la tarea seleccionada.</td></tr>
+<tr><td>Flecha naranja discontinua</td><td>Conflicto de fechas.</td></tr>
+<tr><td>Línea vertical</td><td>Fecha de estado.</td></tr>
+</table>
+
+<h2 id="formatos-fecha">Formatos de fecha</h2>
+<p>El selector de la barra inferior (y el menú Ajustes de la Línea de Tiempo) ofrece 14 formatos: dd/mm · mm/aa · mm/aaaa · dd/mm/aa · dd/mm/aaaa · dd/mmm/aaaa · mmm/aaaa · mmm/aa · mmm-aa · dd-mm · mm-aa · mm-aaaa · dd-mm-aaaa · dd-mmm-aaaa.</p>
+
+<h2 id="archivos">Archivos y formatos</h2>
+<table>
+<tr><th>Formato</th><th>Uso</th></tr>
+<tr><td>.xlsx</td><td>Entrada y salida de datos.</td></tr>
+<tr><td>.xml (Project)</td><td>Entrada; se lee por partes.</td></tr>
+<tr><td>.csv</td><td>Salida de la base de XML (con líneas base 0–10).</td></tr>
+<tr><td>.png · .pdf · .pptx</td><td>Salida de la Línea de Tiempo.</td></tr>
+<tr><td>.html</td><td>«Compartir»: copia autónoma de la aplicación con los datos.</td></tr>
+</table>
+
+<h2 id="glosario">Glosario</h2>
+<dl class="gloss">
+<dt>Autoguardado</dt><dd>Guardado silencioso cada 5 minutos en el Excel vinculado o en el archivo elegido con «Compartir», si ya se concedió permiso.</dd>
+<dt>Avance</dt><dd>Porcentaje completado de una tarea (0–100).</dd>
+<dt>Capa</dt><dd>Elemento que se puede mostrar u ocultar sobre el cronograma (avance, línea base, dependencias…).</dd>
+<dt>Categoría 1 / Categoría 2</dt><dd>Niveles de agrupación de las tareas, con color propio.</dd>
+<dt>Cronograma</dt><dd>Conjunto de tareas e hitos con sus fechas.</dd>
+<dt>Dependencia</dt><dd>Relación entre una tarea predecesora y una sucesora.</dd>
+<dt>Desfase (lag)</dt><dd>Retraso (+) o adelanto (−) de un vínculo de dependencia.</dd>
+<dt>Duración</dt><dd>En la barra de estado, los días entre el inicio y el fin del conjunto visible.</dd>
+<dt>Escenario</dt><dd>Una versión del cronograma que se compara con otras. Se toma de la columna Escenario, del archivo XML de origen o de la Categoría 1 (en ese orden).</dd>
+<dt>Evento</dt><dd>Marcador (▼) que se dibuja sobre el eje de la Línea de Tiempo.</dd>
+<dt>Fecha de estado</dt><dd>Fecha de corte del proyecto, dibujada como línea vertical.</dd>
+<dt>Hito</dt><dd>Tarea sin duración, representada por un rombo.</dd>
+<dt>LB actual</dt><dd>La línea base de Project (0–10) que se usa: la de fecha de guardado más reciente.</dd>
+<dt>Línea Base (LB)</dt><dd>Fechas planificadas originalmente.</dd>
+<dt>Marca Activity</dt><dd>Campo «Si/No» para marcar tareas de interés y mostrar solo esas.</dd>
+<dt>Mapeo</dt><dd>Correspondencia entre los campos de un XML y las columnas de la tabla.</dd>
+<dt>Predecesora / Sucesora</dt><dd>La tarea que condiciona / la tarea condicionada en una dependencia.</dd>
+<dt>Reprogramación de sucesoras</dt><dd>Recalcular las fechas de las sucesoras cuando se edita una tarea en la Tabla de Datos, como Project con programación automática (días corridos).</dd>
+<dt>Real/Proyectado (R/P)</dt><dd>Fechas reales, o proyectadas si la tarea no ha terminado.</dd>
+<dt>Resumen</dt><dd>Tarea que agrupa a otras; se muestra con la capa «Resumen».</dd>
+<dt>Segmentador</dt><dd>Selector de la Tabla de Datos que muestra solo las filas de un escenario.</dd>
+<dt>Ruta crítica</dt><dd>Tareas que condicionan la fecha final; se leen de los datos, no se calculan.</dd>
+<dt>Variante</dt><dd>Nombre de una carga de XML; es el escenario.</dd>
+</dl>
+<callout type="note" title="Términos que no existen aquí">
+<p>OpenGanttLab no maneja recursos, costos ni valor ganado, por lo que términos como ETC o EAC no aplican.</p>
+</callout>

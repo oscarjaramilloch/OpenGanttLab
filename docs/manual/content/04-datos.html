@@ -1,0 +1,120 @@
+<!--{"slug":"datos","title":"Proyectos y datos","group":"Datos","lead":"Cómo entran los datos a OpenGanttLab —Excel o Project XML—, cómo se revisan y se corrigen en la Tabla de Datos y cómo se ordenan por escenarios."}-->
+
+<learn>
+<ul>
+<li>Preparar un Excel con las columnas correctas y cargarlo.</li>
+<li>Importar un XML de Microsoft Project y mapear sus campos.</li>
+<li>Editar, filtrar y guardar datos en la Tabla de Datos.</li>
+<li>Escribir dependencias en el formato de Project.</li>
+</ul>
+</learn>
+
+<h2 id="excel">Cargar un Excel</h2>
+<p>El Excel debe tener una hoja con estas columnas. La primera fila que contenga «Nombre de Tarea» (dentro de las ocho primeras) se toma como encabezado.</p>
+<table>
+<tr><th>Columna</th><th>Qué contiene</th><th>Obligatoria</th></tr>
+<tr><td>id</td><td>Identificador de la tarea (se usa para las dependencias).</td><td>No</td></tr>
+<tr><td>Escenario</td><td>La versión del cronograma (agrupador mayor). Si su Excel usa la Categoría 1 para las versiones (P10, P50, P90), deje esta columna vacía: cada Categoría 1 cuenta como un escenario.</td><td>No</td></tr>
+<tr><td>Categoría 1</td><td>Agrupación mayor de las tareas (frente, disciplina o variante).</td><td><span class="badge r">Sí</span></td></tr>
+<tr><td>Categoría 2</td><td>La fase o agrupación de la tarea.</td><td>No</td></tr>
+<tr><td>Nombre de Tarea</td><td>El texto que se ve en el Gantt.</td><td><span class="badge r">Sí</span></td></tr>
+<tr><td>Start LB · End LB</td><td>Inicio y fin de la Línea Base.</td><td><span class="badge r">Sí</span></td></tr>
+<tr><td>Avance %</td><td>De 0 a 100, o de 0,0 a 1,0.</td><td>No</td></tr>
+<tr><td>Start R/P · End R/P</td><td>Inicio y fin Real/Proyectado. Si faltan, se usan los de la Línea Base.</td><td>No</td></tr>
+<tr><td>Clase</td><td>«Tarea», «Hito» o «Evento». Una tarea con inicio y fin de LB iguales se toma como hito.</td><td>No</td></tr>
+<tr><td>Ruta Crítica</td><td>«Si» o «No».</td><td>No</td></tr>
+<tr><td>Marca Activity · Resumen</td><td>«Si» o «No».</td><td>No</td></tr>
+<tr><td>Predecesoras · Sucesoras</td><td>Dependencias en el formato de Project (ver <a href="#/datos/dependencias-datos">más abajo</a>).</td><td>No</td></tr>
+</table>
+<callout type="warn" title="Filas que se omiten">
+<p>Una fila se omite si le falta el <b>Nombre de Tarea</b>, la <b>Categoría 1</b> o alguna fecha de <b>Línea Base</b>. Si faltan tareas después de cargar, revise primero esas tres columnas.</p>
+</callout>
+<p>Puede partir de una plantilla vacía con el ícono <ui>Descargar plantilla</ui> de la barra de la Tabla de Datos.</p>
+
+<h3 id="excel-vinculado">Excel vinculado</h3>
+<p>Cuando el navegador lo permite (Chrome o Edge), el Excel queda <b>vinculado</b>. Aparecen entonces dos botones nuevos: <ui>Actualizar</ui>, que recarga el archivo con los últimos cambios guardados en Excel, y <ui>Guardar cambios en el Excel vinculado</ui>, que escribe la tabla en el mismo archivo.</p>
+<fig slug="ciclo-excel" t="Ciclo de trabajo con un Excel vinculado">Actualizar trae datos del Excel; Guardar cambios los devuelve. Descargar y Compartir generan archivos nuevos.</fig>
+<callout type="info" title="Autoguardado">
+<p>Si hay un Excel vinculado (o un archivo elegido con «Compartir») y ya concedió permiso de escritura, la aplicación guarda los cambios sola cada 5 minutos. Sin destino vinculado no guarda nada: el aviso de «cambios sin compartir» es la única señal.</p>
+</callout>
+
+<h2 id="xml">Importar desde Project XML</h2>
+<p>El XML de Project se gestiona en <ui>Datos</ui> → <ui>Gestión de XML</ui> (la tercera pestaña de la sección). Tiene cuatro pestañas: <b>Cargar XML</b>, <b>Base de datos</b>, <b>Mapeo de columnas</b> y <b>Vista previa</b>.</p>
+<fig slug="lectura-xml" t="Cómo se lee un archivo XML de Project" observe="La lectura es por partes, así que un archivo de 1,7 GB se procesa con memoria acotada.|Se conservan las predecesoras, convertidas del UID al ID de Project.">Qué se conserva y qué se descarta al leer el XML.</fig>
+
+<ol class="steps">
+<li><b>Cargue uno o varios XML</b>En la pestaña <ui>Cargar XML</ui> arrastre los archivos o haga clic para elegirlos. Una barra muestra el avance de lectura.
+<fig slug="xml-cargar" t="Cargar XML" observe="Se pueden cargar varios archivos a la vez.|Una barra de avance indica el porcentaje leído.">La zona de carga de la Gestión de XML.</fig></li>
+<li><b>Revise la base de datos</b>La pestaña <ui>Base de datos</ui> lista cada archivo cargado con su nombre de variante (editable), su cantidad de tareas y su «LB actual».
+<fig slug="xml-base-datos" t="Base de datos de XML cargados" observe="El nombre de la variante es editable: es el nombre del escenario.|«LB actual: N» indica cuál de las 11 líneas base de Project se usa.|Los íconos de la derecha duplican o eliminan la carga.">Cada archivo cargado es una fila de la base de datos.</fig></li>
+<li><b>Configure el mapeo</b>En <ui>Mapeo de columnas</ui> indique de qué campo del XML sale cada dato de la tabla. La mayoría se mapea automáticamente.
+<fig slug="xml-mapeo" t="Mapeo de columnas" legend="Nombre de la carga (variante o escenario)|Herramientas: agregar mapeo personalizado, duplicar y eliminar|Un campo de mapeo: buscador, lista de columnas y valor fijo">Cada archivo tiene su propio mapeo independiente.</fig></li>
+<li><b>Compruebe con la vista previa</b>La pestaña <ui>Vista previa</ui> muestra las primeras tareas con el mapeo aplicado.</li>
+</ol>
+
+<h3 id="mapeo">Cómo funciona el mapeo</h3>
+<p>Para cada campo de la tabla puede elegir:</p>
+<table>
+<tr><th>Opción</th><th>Efecto</th></tr>
+<tr><td>Una columna del XML</td><td>Toma el valor de esa columna en cada tarea (incluye los campos personalizados del proyecto).</td></tr>
+<tr><td>★ Variante del archivo</td><td>Usa el nombre de la carga como valor.</td></tr>
+<tr><td>✏ Valor fijo</td><td>Escribe un texto que se aplica a todas las tareas del archivo.</td></tr>
+<tr><td>— No mapear —</td><td>Deja el campo vacío.</td></tr>
+</table>
+<p>Los campos <b>Categoría 1</b>, <b>Categoría 2</b> y <b>Nombre de Tarea</b> son obligatorios. Cuando están completos, los datos pasan solos a la Tabla de Datos; no hay botón de aplicar.</p>
+<ul>
+<li>Si <b>Escenario</b> está en «Valor fijo», la carga se renombra con ese valor y viceversa.</li>
+<li><ui>Copiar al [n]</ui> copia el mapeo al siguiente archivo.</li>
+<li>El botón <ui>+</ui> crea un <b>mapeo personalizado</b>: una columna extra con nombre editable que aparece en la tabla y en el Gantt. Dura solo la sesión.</li>
+</ul>
+<callout type="info" title="Líneas base 0–10">
+<p>Project guarda hasta 11 líneas base. OpenGanttLab guarda el inicio y el fin de todas y usa por defecto la de fecha de guardado más reciente (la «LB actual»). El mapeo automático de Start LB y End LB usa esa línea.</p>
+</callout>
+<callout type="warn" title="Las columnas personalizadas no viajan">
+<p>Los mapeos personalizados existen solo durante la sesión: no se guardan con <ui>Compartir</ui> ni se exportan a Excel.</p>
+</callout>
+
+<h2 id="tabla-de-datos">La Tabla de Datos</h2>
+<p>La tabla contiene todas las tareas y es el lugar para corregir datos. Los cambios se aplican solos.</p>
+<fig slug="tabla-datos" t="Tabla de Datos" legend="Restaurar datos originales del XML, Deshacer y Rehacer|Cargar archivo y más opciones de carga|Descargar plantilla|Descargar .xlsx|Agregar fila|Filtro por columna|Compartir|Pestañas: Tabla de Datos, Gestión de escenarios y Gestión de XML|Reprogramar sucesoras (interruptor)|Segmentador de escenario|Encabezados con botón de filtro" observe="Con un Excel vinculado aparecen además «Actualizar» y «Guardar cambios».|La columna «Duración (d)» está a la derecha de End R/P.">La barra y las columnas de la Tabla de Datos.</fig>
+<ul>
+<li><b>Editar:</b> haga clic en una celda y escriba. El Gantt y la Línea de Tiempo se actualizan al salir de la tabla, no en cada tecla.</li>
+<li><b>Agregar o eliminar filas:</b> <ui>Agregar fila</ui> al final; el ícono de papelera al final de cada fila la elimina.</li>
+<li><b>Deshacer, rehacer y restaurar:</b> <ui>Restaurar</ui> vuelve a los datos originales del XML y descarta los cambios manuales (se puede deshacer).</li>
+<li><b>Ancho de columna:</b> arrastre el borde derecho del encabezado.</li>
+<li><b>Tablas grandes:</b> desde 250 filas solo se dibujan las visibles, así que sigue fluida con miles de tareas.</li>
+</ul>
+
+<h3 id="duracion">Duración y reprogramación de sucesoras</h3>
+<p>La columna <b>Duración (d)</b> muestra los días corridos de cada tarea (fin − inicio + 1; los hitos y eventos valen 0). Al editar una fila, la tabla puede <b>reprogramar sus sucesoras</b> como lo hace Project con programación automática.</p>
+<fig slug="reprogramar-sucesoras" t="Reprogramación de sucesoras" legend="Celda editada (End R/P)" observe="Las celdas con fondo amarillo son las fechas que cambiaron automáticamente.|Las filas con fondo azul claro son las sucesoras reprogramadas.|La Línea Base no cambia.">Al ampliar «Ingeniería básica», sus sucesoras se desplazan.</fig>
+<ul>
+<li><b>Qué dispara la reprogramación:</b> cambiar Start R/P, End R/P, Duración o Predecesoras de una fila.</li>
+<li><b>Qué se mueve:</b> las sucesoras de esa fila, dentro de su escenario, lo antes posible según sus vínculos (FC, CC, FF, CF y desfase). Se empujan y también se adelantan.</li>
+<li><b>Mover el Start R/P</b> conserva la duración (corre también el End R/P); editar el End R/P o la Duración la cambia.</li>
+<li><b>Lo que no se mueve:</b> las tareas con avance 100 %, las tareas resumen y la Línea Base. Las de 100 % y las resumen siguen valiendo como predecesoras.</li>
+<li><b>Deshacer:</b> la edición y todo lo reprogramado son un solo paso de historial.</li>
+<li><b>Ciclos:</b> si hay un ciclo de dependencias no se reprograma nada y aparece un aviso.</li>
+</ul>
+<callout type="info" title="Días corridos">
+<p>La reprogramación usa días corridos, sin calendario laboral. Puede apagarla con el interruptor <ui>Reprogramar sucesoras</ui> de la barra (viene encendido y la aplicación recuerda su elección en este navegador).</p>
+</callout>
+
+<h3 id="dependencias-datos">Dependencias: ID, Predecesoras y Sucesoras</h3>
+<p>Las tres últimas columnas de la tabla sirven para las dependencias. <b>ID</b> identifica la tarea, <b>Predecesoras</b> se escribe a mano o viene del XML, y <b>Sucesoras</b> se calcula sola (es la inversa de las predecesoras).</p>
+<fig slug="tabla-dependencias" t="Columnas de dependencias" legend="ID, Predecesoras (editable) y Sucesoras (calculada)">Las columnas ID, Predecesoras y Sucesoras.</fig>
+<p>La columna <b>Predecesoras</b> usa el mismo formato que Microsoft Project: el número de la predecesora, el tipo de vínculo y un desfase opcional.</p>
+<fig slug="formato-predecesoras" t="Cómo se escribe una predecesora" observe="Se aceptan las siglas en español (FC, CC, FF, CF) y en inglés (FS, SS, FF, SF).|El desfase admite días, semanas, horas y minutos (por ejemplo +2 días, -1d, +3w).|Sin tipo ni desfase, el vínculo es Fin a Comienzo.">Anatomía de una predecesora.</fig>
+<table>
+<tr><th>Ejemplo</th><th>Significado</th></tr>
+<tr><td><code>12</code></td><td>La tarea 12 debe terminar antes de que empiece esta (Fin a Comienzo).</td></tr>
+<tr><td><code>12CC+2 días</code></td><td>Comienzo a Comienzo con 2 días de retraso.</td></tr>
+<tr><td><code>7FF-1 día</code></td><td>Fin a Fin con 1 día de adelanto.</td></tr>
+<tr><td><code>12;15FC+3d</code></td><td>Dos predecesoras, separadas por «;».</td></tr>
+</table>
+<callout type="note" title="Ámbito de los ids">
+<p>El id solo tiene que ser único dentro de su <b>Escenario</b>. Si Escenario está vacío se usa un nombre generado: la variante del archivo XML o, en Excel, la Categoría 1. En un XML los ids se buscan en todo el archivo; en Excel, un id único en todo el archivo también puede enlazar entre escenarios.</p>
+</callout>
+
+<h2 id="filtrar-datos">Filtrar la tabla</h2>
+<p>El ícono <ui>Filtro</ui> muestra u oculta los botones de embudo de cada encabezado. Los filtros de cada columna se explican en <a href="#/filtros/columna">Filtros y orden</a>. Además, el <b>segmentador de escenario</b> (a la derecha de la barra) muestra en la tabla solo las filas del escenario elegido; «Todos (N)» las muestra todas.</p>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 250" width="940" height="250" role="img" aria-labelledby="t d" font-family="Inter,'Segoe UI',Arial,sans-serif">
+<title id="t">Línea base frente a real proyectado</title><desc id="d">La barra rayada de la línea base frente a la barra de color de lo real o proyectado, con su desplazamiento.</desc>
+<defs>
+<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#5a6b78"/></marker>
+<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#2563eb"/></marker>
+<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#d0d0d0"/><line x1="0" y1="0" x2="0" y2="6" stroke="#8a8a8a" stroke-width="1.4"/></pattern>
+</defs>
+<rect x=".5" y=".5" width="939" height="249" rx="14" fill="#fff" stroke="#dde5ee"/>
+<text x="470" text-anchor="middle" font-size="17" font-weight="700" fill="#0f2d5b"><tspan x="470" y="38.0">Comparar Línea Base y Real/Proyectado</tspan></text>
+<line x1="60" y1="60" x2="60" y2="230" stroke="#c9d5e3" stroke-dasharray="4 4"/><line x1="600" y1="60" x2="600" y2="230" stroke="#c9d5e3" stroke-dasharray="4 4"/>
+<rect x="60" y="80" width="360" height="22" rx="3" fill="url(#hatch)" stroke="#999"/>
+<text x="30" text-anchor="middle" font-size="12" font-weight="700" fill="#5a6b78"><tspan x="30" y="95.2">LB</tspan></text>
+<rect x="120" y="112" width="480" height="22" rx="3" fill="#2563eb"/>
+<text x="30" text-anchor="middle" font-size="12" font-weight="700" fill="#0f2d5b"><tspan x="30" y="127.2">R/P</tspan></text>
+<text x="60" text-anchor="middle" font-size="11" font-weight="500" fill="#5a6b78"><tspan x="60" y="65.8">inicio LB</tspan></text>
+<text x="600" text-anchor="middle" font-size="11" font-weight="500" fill="#5a6b78"><tspan x="600" y="65.8">fin R/P</tspan></text>
+<line x1="420" y1="156" x2="600" y2="156" stroke="#d63031" stroke-width="2" marker-end="url(#ah)"/>
+<text x="510" text-anchor="middle" font-size="12" font-weight="600" fill="#d63031"><tspan x="510" y="180.2">Desplazamiento del fin</tspan></text>
+<line x1="60" y1="156" x2="120" y2="156" stroke="#f59e0b" stroke-width="2" marker-end="url(#ah)"/>
+<text x="90" text-anchor="middle" font-size="12" font-weight="600" fill="#b45309"><tspan x="90" y="180.2">Inicio</tspan></text>
+<rect x="120" y="112" width="288" height="22" rx="3" fill="rgba(0,0,0,.22)"/>
+<text x="264" text-anchor="middle" font-size="11" font-weight="600" fill="#fff"><tspan x="264" y="126.8">avance real</tspan></text>
+<text x="470" text-anchor="middle" font-size="12" font-weight="500" fill="#5a6b78"><tspan x="470" y="220.2">La barra rayada es la Línea Base; la barra de color es lo Real/Proyectado, con el avance como relleno más oscuro.</tspan></text>
+</svg>

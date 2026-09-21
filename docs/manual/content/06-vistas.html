@@ -1,0 +1,94 @@
+<!--{"slug":"vistas","title":"Vistas: la Línea de Tiempo","group":"Visualizar","lead":"La Línea de Tiempo presenta el cronograma para un comité: cuatro modos de vista, edición libre de colores y textos, formas, dependencias y exportación."}-->
+
+<learn>
+<ul>
+<li>Elegir el modo de vista adecuado: normal, Comparador, Ejecutivo, Vista C1 o Vista Hitos.</li>
+<li>Editar barras, hitos y textos sin alterar los datos.</li>
+<li>Insertar textos y formas libres.</li>
+<li>Mostrar dependencias en la Línea de Tiempo.</li>
+</ul>
+</learn>
+
+<h2 id="modos">Los modos de vista</h2>
+<p>Los modos se eligen en <ui>Capas</ui>. Todos usan los mismos datos; cambia cómo se dibujan.</p>
+<fig slug="capas-ldt" t="Menú Capas de la Línea de Tiempo" observe="CONTENIDO: qué elementos se muestran (Marca Activity, Resumen, Leyenda, Fechas, Dependencias, Fecha de estado, Ruta crítica).|MODO DE VISTA: Comparador, Segmentación, Ejecutivo, Vista C1 y Vista Hitos.">Contenido y modo de vista.</fig>
+<table>
+<tr><th>Modo</th><th>Qué muestra</th><th>Cuándo usarlo</th></tr>
+<tr><td>Normal</td><td>Una barra por tarea sobre el eje de años, con hitos arriba.</td><td>Vista general del cronograma.</td></tr>
+<tr><td>Comparador</td><td>Dos secciones: la Línea Base arriba y lo Real/Proyectado abajo.</td><td>Mostrar cuánto se desplazó el plan.</td></tr>
+<tr><td>Ejecutivo</td><td>Cada tarea es un rombo en su fecha fin, con nombre y fecha debajo.</td><td>Láminas de alto nivel, solo con fechas de entrega.</td></tr>
+<tr><td>Vista C1</td><td>Agrupa las barras en bandas por Categoría 1, con el color de Categoría 2.</td><td>Presentar el cronograma por disciplina o frente.</td></tr>
+<tr><td>Vista Hitos</td><td>Solo los rombos de hito; oculta las barras.</td><td>Un comité que solo quiere ver los hitos.</td></tr>
+</table>
+<p>«Segmentación» agrupa por Categoría 2.</p>
+
+<h3 id="comparacion">Comparación visual de los modos</h3>
+<figs>
+<fig slug="ldt-normal" t="Modo normal" observe="Barras con nombre y fechas.|Hitos sobre el eje con línea punteada.">El cronograma completo.</fig>
+<fig slug="ldt-ejecutivo" t="Modo Ejecutivo" observe="Un rombo por tarea, en su fecha fin.">Solo entregas.</fig>
+<fig slug="ldt-vista-c1" t="Vista C1" observe="Una banda por Categoría 1.|Etiqueta vertical con el nombre.">Agrupado por Categoría 1.</fig>
+<fig slug="ldt-hitos" t="Vista Hitos" observe="Solo hitos, arriba y abajo del eje.">Solo hitos.</fig>
+</figs>
+
+<h2 id="comparador">Comparador</h2>
+<p>Con <ui>Comparador</ui> activo la Línea de Tiempo se divide en dos secciones que comparten las mismas filas: arriba la <b>Línea Base</b>, abajo lo <b>Real/Proyectado</b>. Los títulos de cada sección se editan en <ui>Escenario</ui> (Título Escenario y Título Comparador).</p>
+<fig slug="ldt-comparador" t="Línea de Tiempo en modo Comparador" observe="Sección superior: fechas de la Línea Base.|Sección inferior: fechas Real/Proyectado.|Compare la posición de una misma barra en ambas secciones.">Las dos secciones con el mismo orden de tareas.</fig>
+
+<h2 id="interaccion">Interactuar con el diagrama</h2>
+<table>
+<tr><th>Acción</th><th>Resultado</th></tr>
+<tr><td>Un clic en una barra, hito o evento</td><td>Lo selecciona (borde punteado azul) y lo deja listo para <kbd>Delete</kbd>.</td></tr>
+<tr><td><kbd>Delete</kbd> con algo seleccionado</td><td>Lo oculta de la Línea de Tiempo. No cambia los datos.</td></tr>
+<tr><td>Doble clic</td><td>Abre el panel de edición.</td></tr>
+<tr><td>Arrastrar</td><td>Mueve la barra o el hito.</td></tr>
+<tr><td><kbd>Ctrl</kbd> o <kbd>Shift</kbd> + clic</td><td>Agrega barras a la selección; el doble clic las edita todas a la vez.</td></tr>
+<tr><td>Clic en un espacio en blanco</td><td>Limpia la selección.</td></tr>
+<tr><td>Clic en un año</td><td>Cambia el color de fondo y la fuente de ese año.</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Deshace y rehace cambios en la Línea de Tiempo.</td></tr>
+</table>
+
+<h3 id="panel-edicion">El panel de edición</h3>
+<p>Un doble clic sobre una barra abre su panel de edición.</p>
+<fig slug="ldt-panel-edicion" t="Panel de edición de una barra" legend="Barra seleccionada (doble clic)|Panel de edición" observe="Texto: nombre, color, tamaño, negrita, alineación y posición.|Fondo: color de la barra y trama.|Fechas: mostrar comienzo y fin, alinear y posición.|Posición: capa (arriba/abajo).">Todos los cambios del panel son visuales: nunca modifican la Tabla de Datos.</fig>
+<callout type="warn" title="Lo visual no cambia los datos">
+<p>Editar el texto o el color en la Línea de Tiempo solo afecta la presentación. El dato real de la tabla, del Gantt, del Excel y del XML no se toca.</p>
+</callout>
+
+<h2 id="ejecutivo">Ejecutivo: ocultar tareas</h2>
+<ol class="steps">
+<li><b>Active Ejecutivo</b>En <ui>Capas</ui> → <ui>Modo de vista</ui>.</li>
+<li><b>Oculte una tarea de esta vista</b>Selecciónela con un clic y pulse <kbd>Delete</kbd>, o use doble clic → <ui>Ocultar de Ejecutivo</ui>.</li>
+<li><b>Recupere lo oculto</b>Aparece el botón <ui>Tareas ocultas (N)</ui>: ábralo para restaurar una tarea o todas.</li>
+</ol>
+<callout type="note" title="Persistencia">
+<p>Las tareas ocultas y el formato de fecha se guardan por proyecto en el navegador y también viajan con «Compartir».</p>
+</callout>
+
+<h2 id="vista-c1">Vista C1: bandas por Categoría 1</h2>
+<ul>
+<li>Cada banda tiene una etiqueta vertical con el nombre de su Categoría 1.</li>
+<li>La etiqueta se puede seleccionar y <b>arrastrar hacia arriba o abajo</b> para reordenar las bandas, con una vista previa en vivo.</li>
+<li>El borde derecho de la columna de etiquetas y el borde inferior de cada banda se arrastran para ajustar su ancho y alto.</li>
+<li>Un doble clic en la etiqueta abre el panel de edición del texto (solo visual).</li>
+</ul>
+
+<h2 id="edicion">Edición: textos y formas libres</h2>
+<p>El menú <ui>Editar</ui> agrega elementos propios sobre el diagrama.</p>
+<fig slug="ldt-edicion-formas" t="Menú Editar y selector de formas" observe="Reset filas devuelve las barras a su posición automática.|Reset Diagrama restablece los colores al heredado de Categoría 2.|Insertar forma ofrece 12 formas: rectángulo, rectángulo redondeado, óvalo, rombo, triángulo, pentágono, hexágono, estrella, llamada, cruz, línea y flecha.">Insertar texto y formas.</fig>
+<ul>
+<li><b>Formas:</b> se arrastran, se redimensionan con las asas de las esquinas y giran libremente. Pueden llevar texto dentro, que se mantiene horizontal aunque la forma gire.</li>
+<li><b>Panel de forma:</b> relleno, borde y grosor; texto con tamaño, alineación y posición; y valores numéricos de ancho, alto, posición y giro.</li>
+</ul>
+
+<h2 id="dependencias-ldt">Dependencias en la Línea de Tiempo</h2>
+<p>Active <ui>Dependencias</ui> en <ui>Capas</ui> → <ui>Contenido</ui>. Usa los mismos datos, tipos y colores que el Gantt.</p>
+<fig slug="ldt-dependencias" t="Dependencias en la Línea de Tiempo" observe="Las flechas unen barras y rombos.|Un clic en una barra resalta su cadena en azul y atenúa el resto.">Cadena de dependencias resaltada.</fig>
+<ul>
+<li>Se dibujan en el modo normal y en el Comparador (en las dos secciones, cada una con sus barras).</li>
+<li><b>No</b> se dibujan en <ui>Ejecutivo</ui> ni en <ui>Vista Hitos</ui>; al volver a la vista normal reaparecen.</li>
+<li>Solo se conectan tareas visibles: las ocultas (Delete, filtros) no tienen flecha.</li>
+<li>El resaltado por clic funciona con el interruptor encendido.</li>
+</ul>
+
+<h2 id="ajustes-ldt">Ajustes del área de visualización</h2>
+<p>El menú <ui>Ajustes</ui> controla el formato de fecha (14 formatos, por ejemplo dd/mm/aa o mmm/aaaa), el espacio extra a izquierda, derecha, arriba y abajo, el alto de las barras, el tamaño de los rombos, y el alto y ancho de la fila de años. Abajo a la derecha hay una barra de <b>zoom</b> de 25 % a 400 %; pulse el porcentaje para volver a 100 %.</p>

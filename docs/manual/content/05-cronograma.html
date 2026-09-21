@@ -1,0 +1,79 @@
+<!--{"slug":"cronograma","title":"Cronograma: el Gantt","group":"Visualizar","lead":"El Comparador de Escenarios: barras de Línea Base y Real/Proyectado, avance, ruta crítica, dependencias y todas las herramientas de lectura del diagrama."}-->
+
+<learn>
+<ul>
+<li>Leer el Gantt: barras, hitos, avance y línea base.</li>
+<li>Activar y entender las dependencias y sus tipos.</li>
+<li>Resaltar la cadena de una tarea y revisar los avisos.</li>
+<li>Mostrar columnas adicionales y usar los tooltips.</li>
+</ul>
+</learn>
+
+<h2 id="leer">Cómo leer el Gantt</h2>
+<p>Cada fila es una tarea o un hito, agrupada por Categoría 1 y Categoría 2. A la derecha, el eje de tiempo muestra las barras.</p>
+<fig slug="gantt-dependencias" t="Gantt con Línea Base, avance y dependencias" observe="La barra rayada gris es la Línea Base; la barra de color es lo Real/Proyectado, y su parte más oscura es el avance.|Los rombos son hitos. Con borde rojo, están en la ruta crítica.|Las flechas unen predecesoras y sucesoras.">Cronograma de ejemplo (proyecto inventado) con las capas Línea base, Avance real, Ruta crítica y Dependencias activas.</fig>
+<fig slug="lb-vs-rp" t="Línea Base frente a Real/Proyectado">Cómo se interpreta el desplazamiento entre lo planificado y lo real o proyectado.</fig>
+<callout type="tip" title="Un vistazo rápido">
+<p>Si la barra de color empieza o termina después de la rayada, la tarea se desplazó respecto al plan. La diferencia es el desplazamiento.</p>
+</callout>
+
+<h2 id="tooltip">Detalle al pasar el cursor</h2>
+<p>Al pasar el cursor sobre una barra o un hito aparece un cuadro con sus fechas, avance, si es crítica y —si tiene— sus predecesoras y sucesoras.</p>
+<fig slug="tooltip-tarea" t="Tooltip de una tarea" observe="Fechas de la Línea Base y Real/Proyectado.|Avance (y días restantes si lo activó en Configuración).|Predecesoras y sucesoras con su tipo de vínculo.">El detalle de una tarea sin abrir ningún panel.</fig>
+
+<h2 id="dependencias">Dependencias</h2>
+<p>Una <b>dependencia</b> relaciona dos tareas: la <b>predecesora</b> condiciona a la <b>sucesora</b>. OpenGanttLab admite los cuatro tipos de Project.</p>
+<fig slug="tipos-dependencia" t="Los cuatro tipos de vínculo">FC, CC, FF y CF entre una tarea A (predecesora) y una tarea B (sucesora).</fig>
+<table>
+<tr><th>Tipo</th><th>Sigla en inglés</th><th>Significado</th></tr>
+<tr><td>FC · Fin a Comienzo</td><td>FS</td><td>B empieza cuando termina A. Es el tipo por defecto.</td></tr>
+<tr><td>CC · Comienzo a Comienzo</td><td>SS</td><td>B empieza cuando empieza A.</td></tr>
+<tr><td>FF · Fin a Fin</td><td>FF</td><td>B termina cuando termina A.</td></tr>
+<tr><td>CF · Comienzo a Fin</td><td>SF</td><td>B termina cuando empieza A.</td></tr>
+</table>
+
+<h3 id="ver-dependencias">Ver las flechas</h3>
+<ol class="steps">
+<li><b>Abra Capas</b>Pulse <ui>Capas</ui> en la barra de herramientas.</li>
+<li><b>Active Dependencias</b>Las flechas se dibujan entre las tareas visibles. Gris = normal; <span style="color:#d63031;font-weight:700">rojo</span> = entre dos tareas de la ruta crítica.</li>
+<li><b>Resalte una cadena</b>Haga clic en una barra o en un hito: se marcan en azul todas sus predecesoras y sucesoras (directas e indirectas) y el resto se atenúa.
+<fig slug="gantt-cadena" t="Cadena de dependencias de una tarea" observe="La tarea seleccionada («Obras civiles y cimentaciones») y su cadena en azul.|El resto de barras queda atenuado.|Un clic en un espacio en blanco, o de nuevo en la barra, quita el resaltado.">Resaltado de la cadena completa de una tarea.</fig></li>
+</ol>
+<callout type="info" title="Solo con el interruptor encendido">
+<p>El resaltado de cadena funciona con <ui>Dependencias</ui> activo. Cambiar el interruptor reinicia la selección.</p>
+</callout>
+
+<h3 id="avisos">Avisos de dependencias</h3>
+<p>Cuando hay algo que revisar aparece un ícono de triángulo junto a las capas, con el número de avisos.</p>
+<fig slug="avisos-dependencias" t="Avisos de dependencias" observe="Cada aviso indica la tarea afectada y el problema.|Un clic en un aviso lleva a la tarea en el Gantt (y activa Dependencias si estaba apagado).">Ejemplo: la tarea «Precomisionado» apunta a una predecesora con id 99 que no existe.</fig>
+<table>
+<tr><th>Aviso</th><th>Causa</th></tr>
+<tr><td>Predecesoras inexistentes</td><td>Una predecesora apunta a un id que no existe en su escenario.</td></tr>
+<tr><td>Ciclos</td><td>Dos o más tareas dependen entre sí (A depende de B y B de A).</td></tr>
+<tr><td>Autorreferencias</td><td>Una tarea se lista a sí misma como predecesora.</td></tr>
+<tr><td>Formato no reconocido</td><td>Parte del texto de la columna Predecesoras no tiene el formato de Project.</td></tr>
+<tr><td>Conflictos de fechas <span class="badge o">opcional</span></td><td>Las fechas de la sucesora contradicen el vínculo (ver abajo).</td></tr>
+</table>
+
+<h3 id="conflictos">Conflictos de fechas</h3>
+<p>Un conflicto ocurre cuando la sucesora empieza o termina antes de lo que permite el vínculo. Por ejemplo, con un vínculo FC, B empieza antes de que termine A.</p>
+<fig slug="conflicto-fechas" t="Qué es un conflicto de fechas">B empieza antes de que termine A en un vínculo Fin a Comienzo.</fig>
+<callout type="note" title="Viene apagado">
+<p>En la práctica una tarea puede empezar antes que su predecesora <b>por estrategia</b>. Por eso el aviso es opcional: actívelo en <ui>Configuración</ui> → <ui>Datos y métricas</ui> → «Avisar de conflictos de fechas». Compara las fechas Real/Proyectado y tolera 1 día.</p>
+</callout>
+
+<h2 id="columnas">Mostrar u ocultar columnas</h2>
+<p>Haga <b>clic derecho</b> sobre un encabezado de columna para abrir el menú <ui>Mostrar / Ocultar</ui>. Es una sola lista con todas las columnas de la Tabla de Datos.</p>
+<fig slug="menu-columnas" t="Menú de columnas del Gantt" observe="Las columnas de la izquierda se ven por defecto; las demás, ocultas.|Se pueden agregar ID, Predecesoras y Sucesoras junto a cada tarea.|El primer ícono del menú activa «Ajustar texto» para la columna donde se hizo clic.">Todas las columnas de la tabla, disponibles desde un clic derecho.</fig>
+<ul>
+<li>Las columnas agregadas quedan fijas a la izquierda, a continuación de «Nombre de Tarea», con su propio botón de filtro.</li>
+<li><b>Ajustar texto:</b> activo, el texto se ajusta a 2 líneas; inactivo, se corta con «…». La preferencia se guarda por columna.</li>
+<li>La altura de cada fila se ajusta sola al contenido.</li>
+<li>Arrastre el borde derecho de un encabezado para cambiar el ancho de la columna.</li>
+</ul>
+
+<h2 id="colores">Colores</h2>
+<p>Un clic en una celda de <b>Escenario</b>, <b>Categoría 1</b> o <b>Categoría 2</b> abre un selector de color. El color de Categoría 2 es el de sus barras. Los colores por defecto se definen en <a href="#/interfaz/configuracion">Configuración</a>.</p>
+
+<h2 id="fecha-estado">Fecha de estado y hoy</h2>
+<p>La capa <ui>Fecha de estado</ui> dibuja una línea vertical en la fecha de corte del proyecto, con estilo, grosor y color configurables. El botón de reloj de la barra inferior lleva la vista a la fecha de hoy.</p>
