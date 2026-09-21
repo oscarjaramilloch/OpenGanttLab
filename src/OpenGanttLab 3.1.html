@@ -5608,7 +5608,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const wPx=_dsB+6+longest*fs*0.6;
     const w=Object.create(m);
     w.__hitoBand=true;w.__bandC1=_bandOf(m);w.__m=m;
-    const a=new Date(+m.iLB-_dsB*_msPerPxB),b=new Date(+m.iLB+wPx*_msPerPxB);
+    const a=new Date(+(useLB?m.iLB:m.iRP)-_dsB*_msPerPxB),b=new Date(+(useLB?m.iLB:m.iRP)+wPx*_msPerPxB);
     w.iLB=a;w.iRP=a;w.fLB=b;w.fRP=b;
     return w;
   });
@@ -5663,7 +5663,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const lbl2=(o2.label!==undefined&&o2.label.trim()!=='')?o2.label:m.tarea;
     const longest=Math.max(...String(lbl2).split(/\r?\n/).map(l=>l.trim().length),1);
     const halfW=longest*fsz2*0.3;
-    const rawX=S.x(m.iLB);
+    const rawX=S.x((useLB?m.iLB:m.iRP));
     const needL=halfW-rawX-50; if(needL>_autoLeft)_autoLeft=needL;
     const needR=halfW-(TW-rawX)-80; if(needR>_autoRight)_autoRight=needR;
   });
@@ -5860,7 +5860,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const opt=PRES_OPTS[mitoLbKey]||{};
     if(opt.lineHide)return;
     if(opt.miAbove===false){
-      const mx2=x(m.iLB);
+      const mx2=x((useLB?m.iLB:m.iRP));
       const ds=+(document.getElementById('presDiamondSz')||{value:9}).value||9;
       const mfsz2=opt.fontSize||fsz;
       const mitoYOff2=opt.miYOffset||0;
@@ -5978,7 +5978,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
   });
 
   // ── Hitos (línea arriba desde borde sup del eje; abajo ya dibujada antes) ──
-  milestones.sort((a,b)=>a.iLB-b.iLB);
+  milestones.sort((a,b)=>(useLB?a.iLB:a.iRP)-(useLB?b.iLB:b.iRP));
   milestones.forEach((m,i)=>{
     const key=pk(m);
     const mitoLbKey=useLB?'LB|'+key:key;
@@ -5986,7 +5986,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     else if(PRES_OPTS[mitoLbKey].miAbove===undefined){PRES_OPTS[mitoLbKey].miAbove=(i%2===0);}
     const above=!!PRES_OPTS[mitoLbKey].miAbove;
     const col=m.crit?'#FF0000':(PRES_OPTS[mitoLbKey].color||CAT2_COLOR[m.c2]||'#555');
-    const mx2=x(m.iLB),ds=+(document.getElementById('presDiamondSz')||{value:9}).value||9;
+    const mx2=x((useLB?m.iLB:m.iRP)),ds=+(document.getElementById('presDiamondSz')||{value:9}).value||9;
     const mitoAttrs=` data-pres-mito="${ex(mitoLbKey)}"${mitoLbKey===_presBarKey?' class="pres-sel"':''} style="cursor:pointer"`;
     const mbold=(PRES_OPTS[mitoLbKey]&&PRES_OPTS[mitoLbKey].textBold!==false)?'bold':'normal';
     const mfsz=(PRES_OPTS[mitoLbKey]&&PRES_OPTS[mitoLbKey].fontSize)||fsz;
@@ -6022,7 +6022,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
         else if(mDatePos==='right'){xx=mx2+ds+4;yy=dY+mDateSz*0.35;anchor='start';}
         else yy=dY+ds+mDateSz+2;
       }
-      return`<text x="${xx}" y="${yy}" text-anchor="${anchor}" font-size="${mDateSz}" fill="${col}" pointer-events="none">${fD(m.iLB)}</text>`;
+      return`<text x="${xx}" y="${yy}" text-anchor="${anchor}" font-size="${mDateSz}" fill="${col}" pointer-events="none">${fD((useLB?m.iLB:m.iRP))}</text>`;
     };
     if(above){
       const dY_raw=Math.max(ds+mfsz*2+12+(mitoLines.length-1)*mitoLineH,axisY0-60)-mitoYOff;
@@ -6052,7 +6052,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
   bandPlaced.forEach(({t:w,ly})=>{
     const m=w.__m,mk=useLB?'LB|'+pk(m):pk(m),o=PRES_OPTS[mk]||{};
     const col=m.crit?'#FF0000':(o.color||CAT2_COLOR[m.c2]||'#555');
-    const mx3=x(m.iLB),cy=taskY0+ly*layerH+layerH/2,ds=_dsB;
+    const mx3=x((useLB?m.iLB:m.iRP)),cy=taskY0+ly*layerH+layerH/2,ds=_dsB;
     const mfsz=o.fontSize||fsz,lh=mfsz*1.3;
     const lines=String((o.label!==undefined&&String(o.label).trim()!=='')?o.label:m.tarea).split(/\r?\n/).map(l=>ex(l.trim())).filter(Boolean);
     const dSz=Math.max(7,mfsz-1);
@@ -6066,23 +6066,23 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const tAttrs=`text-anchor="start" font-size="${mfsz}" font-weight="${o.textBold!==false?'bold':'normal'}" font-style="${o.textItalic?'italic':'normal'}"${o.textUnder?' text-decoration="underline"':''} fill="#333" pointer-events="none"`;
     let ts=`<text ${tAttrs}>`;
     lines.forEach((ln,i)=>{ts+=`<tspan x="${tx}" ${i===0?`y="${y0}"`:`dy="${lh}"`}>${ln}</tspan>`;});
-    if(dateInline)ts+=`<tspan x="${tx}" dy="${lh}" font-size="${dSz}" font-weight="normal" fill="${col}">${fD(m.iLB)}</tspan>`;
+    if(dateInline)ts+=`<tspan x="${tx}" dy="${lh}" font-size="${dSz}" font-weight="normal" fill="${col}">${fD((useLB?m.iLB:m.iRP))}</tspan>`;
     svg+=ts+'</text>';
     if(showDate&&!dateInline){ // fecha independiente arriba / abajo / izquierda del rombo
       let xx=mx3,yy=cy+ds+dSz+2,an='middle';
       if(dPos==='top')yy=cy-ds-2;else if(dPos==='left'){xx=mx3-ds-4;yy=cy+dSz*0.35;an='end';}
-      svg+=`<text x="${xx}" y="${yy}" text-anchor="${an}" font-size="${dSz}" fill="${col}" pointer-events="none">${fD(m.iLB)}</text>`;
+      svg+=`<text x="${xx}" y="${yy}" text-anchor="${an}" font-size="${dSz}" fill="${col}" pointer-events="none">${fD((useLB?m.iLB:m.iRP))}</text>`;
     }
   });
 
   // ── Eventos: sin línea, triángulo ▼ pegado al borde superior del eje de años ──
-  eventos.sort((a,b)=>a.iLB-b.iLB);
+  eventos.sort((a,b)=>(useLB?a.iLB:a.iRP)-(useLB?b.iLB:b.iRP));
   eventos.forEach((ev,i)=>{
     const key=pk(ev);
     const evLbKey=useLB?'LB|'+key:key;
     if(!PRES_OPTS[evLbKey]){PRES_OPTS[evLbKey]={color:ev.crit?'#FF0000':(EVENTO_COLOR[key]||CAT2_COLOR[ev.c2]||'#e67e22'),textBold:true};}
     const col=ev.crit?'#FF0000':(PRES_OPTS[evLbKey].color||EVENTO_COLOR[key]||CAT2_COLOR[ev.c2]||'#e67e22');
-    const ex2=x(ev.iLB),ds=+(document.getElementById('presDiamondSz')||{value:9}).value||9;
+    const ex2=x((useLB?ev.iLB:ev.iRP)),ds=+(document.getElementById('presDiamondSz')||{value:9}).value||9;
     const evAttrs=` data-pres-evento="${ex(evLbKey)}"${evLbKey===_presBarKey?' class="pres-sel"':''} style="cursor:pointer"`;
     const mbold=(PRES_OPTS[evLbKey]&&PRES_OPTS[evLbKey].textBold!==false)?'bold':'normal';
     const efsz=(PRES_OPTS[evLbKey]&&PRES_OPTS[evLbKey].fontSize)||fsz;
@@ -6104,7 +6104,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       for(let i=1;i<evtoLines.length;i++)es+=`<tspan x="${ex2}" dy="${evtoLineH}">${evtoLines[i]}</tspan>`;
       svg+=es+'</text>';
     }
-    if(presShowDates) svg+=`<text x="${ex2}" y="${baseY-2}" text-anchor="middle" font-size="${Math.max(7,efsz-1)}" fill="${col}" pointer-events="none">${fD(ev.iLB)}</text>`;
+    if(presShowDates) svg+=`<text x="${ex2}" y="${baseY-2}" text-anchor="middle" font-size="${Math.max(7,efsz-1)}" fill="${col}" pointer-events="none">${fD((useLB?ev.iLB:ev.iRP))}</text>`;
   });
   svg+=`<text x="${W-MR}" y="${H-6}" text-anchor="end" font-size="7" fill="#ccc">OpenGanttLab \u00B7 Oscar Fernando Jaramillo Chamorro</text>`;
   // ── Cuadros de texto libres (solo en modo no-LB para no duplicar) ──
@@ -8177,10 +8177,10 @@ function presYearAutoFg(){
       const _tc1=SCEN_COLOR[t.c1]||'#444'; const _tc2=CAT2_COLOR[t.c2]||'#666';
       html+=`<div style="font-size:10px;margin-bottom:3px"><span style="color:${_tc1}">${t.c1}</span> › <span style="color:${_tc2}">${t.c2}</span></div>`;
       if(t.hito){
-        html+=`<div>&#9830; Hito: <b>${fD2(t.iLB)}</b></div>`;
+        html+=`<div>&#9830; Hito: <b>${fD2(rawKey.startsWith('LB|')?t.iLB:t.iRP)}</b></div>`;
         if(t.crit) html+=`<div style="color:#c00;font-weight:bold">⚠ Ruta Crítica</div>`;
       } else if(t.evento){
-        html+=`<div>&#9660; Evento: <b>${fD2(t.iLB)}</b></div>`;
+        html+=`<div>&#9660; Evento: <b>${fD2(rawKey.startsWith('LB|')?t.iLB:t.iRP)}</b></div>`;
         if(t.crit) html+=`<div style="color:#c00;font-weight:bold">⚠ Ruta Crítica</div>`;
       } else {
         html+=`<div>&#9646; <b>Inicio LB:</b> ${fD2(t.iLB)}</div>`;
