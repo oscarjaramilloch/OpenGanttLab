@@ -1869,6 +1869,21 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
     </div>
   </div>
 
+  <!-- Dependencias: ID + predecesoras/sucesoras (editables; escriben en la Tabla de Datos) -->
+  <div id="pbmDepRow" style="border-top:1px solid var(--grid);padding-top:6px;margin-bottom:6px;display:flex;flex-direction:column;gap:5px">
+    <button type="button" class="pop-label" onclick="pbmToggleSection('pbmDepBody',this)" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:0;cursor:pointer;font:inherit">
+      <span>Dependencias</span>
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .15s;transform:rotate(180deg)"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div id="pbmDepBody" style="display:flex;flex-direction:column;gap:5px">
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px"><span class="pop-unit" style="min-width:40px">ID:</span><b id="pbmDepId" style="font-size:11px;color:var(--ink)"></b></div>
+      <div style="display:flex;flex-direction:column;gap:3px"><span class="pop-unit">Predecesoras:</span>
+        <input id="pbmDepPreds" type="text" spellcheck="false" placeholder="12; 15CC+2 días" title="Formato de Project: id, tipo (FC, CC, FF, CF) y desfase; separa con «;». Se guarda en la Tabla de Datos." onchange="presSetLinks('preds',this.value)" onkeydown="if(event.key==='Enter')this.blur();event.stopPropagation()" style="width:100%;box-sizing:border-box;font:11px var(--ff);border:1px solid var(--line);border-radius:3px;padding:4px;background:var(--panel);color:var(--ink)"></div>
+      <div style="display:flex;flex-direction:column;gap:3px"><span class="pop-unit">Sucesoras:</span>
+        <input id="pbmDepSucs" type="text" spellcheck="false" placeholder="20; 21CC" title="Mismo formato. Edita las Predecesoras de las tareas indicadas (requiere que esta tarea tenga ID)." onchange="presSetLinks('sucs',this.value)" onkeydown="if(event.key==='Enter')this.blur();event.stopPropagation()" style="width:100%;box-sizing:border-box;font:11px var(--ff);border:1px solid var(--line);border-radius:3px;padding:4px;background:var(--panel);color:var(--ink)"></div>
+    </div>
+  </div>
+
   <!-- RECTÁNGULOS: Posición (capa) -->
   <div id="pbmLayerRow" class="pop-row" style="border-top:1px solid var(--grid);padding-top:6px;border-bottom:none;margin-bottom:2px">
     <span class="pop-label" style="margin:0">Posición</span>
@@ -3244,11 +3259,12 @@ function depChain(t){
   walk(-1);walk(1);
   return set;
 }
+function depIdTag(t){const p=depPid(t);return p?` <span style="color:#888;font-weight:400">· ID ${esc(p)}</span>`:'';}
 function depTipHtml(t){
   const e=depIndex().byT.get(t);if(!e)return'';
   const line=(ico,arr,pick)=>{
     if(!arr.length)return'';
-    const it=arr.slice(0,5).map(x=>{const o=pick(x);return esc(o.tarea)+' <span style="color:#888">('+DEP_LBL[x.type]+(x.pct?(x.pct<0?'':'+')+x.pct+'%':x.lag?(x.lag<0?'':'+')+Math.round(x.lag*100)/100+'d':'')+')</span>'+(x.bad?' <span style="color:#e67e22">⚠</span>':'');});
+    const it=arr.slice(0,5).map(x=>{const o=pick(x);return (depPid(o)?'<b>'+esc(depPid(o))+'</b> · ':'')+esc(o.tarea)+' <span style="color:#888">('+DEP_LBL[x.type]+(x.pct?(x.pct<0?'':'+')+x.pct+'%':x.lag?(x.lag<0?'':'+')+Math.round(x.lag*100)/100+'d':'')+')</span>'+(x.bad?' <span style="color:#e67e22">⚠</span>':'');});
     return `<br>${ico} ${it.join('<br>&nbsp;&nbsp;&nbsp;&nbsp;')}${arr.length>5?`<br>&nbsp;&nbsp;&nbsp;&nbsp;… y ${arr.length-5} más`:''}`;
   };
   return line('⬅ Predecesoras:',e.preds,x=>x.p)+line('➡ Sucesoras:',e.succs,x=>x.s);
@@ -3342,24 +3358,98 @@ function presDrawDeps(fresh){
         A.set(t,{l:bb.x,r:bb.x+bb.width,y:bb.y+bb.height/2,h:bb.height});
         if(dim&&!chain.has(t))el.classList.add('dep-dim');
       });
-      let base='',hi='';
+      let base='',hi='',hit='',selP='';
       ix.edges.forEach(e=>{
         const a=A.get(e.p),b=A.get(e.s);if(!a||!b)return;
+        const dk=_depKey(e);if(PRES_DEP_HIDDEN.has(dk))return;
         const exitR=e.type==='FS'||e.type==='FF',enterL=e.type==='FS'||e.type==='SS';
         const off=Math.max(a.h,b.h)/2+6;
         const d=depRoute(exitR?a.r:a.l,a.y,exitR,enterL?b.l:b.r,b.y,enterL,off);
         if(!dim){
           const c=(!lbSvg&&e.bad)?'o':(e.p.crit&&e.s.crit)?'r':'g';
           base+=`<path d="${d}" fill="none" stroke="${COL[c]}" stroke-width="1.3" stroke-linejoin="round"${c==='o'?' stroke-dasharray="4 3"':''} marker-end="url(#pdep_${c})"/>`;
+          hit+=`<path d="${d}" data-dep-key="${esc(dk)}" fill="none" stroke="transparent" stroke-width="9" pointer-events="stroke" style="cursor:pointer"/>`;
+          if(dk===_presDepSel)selP+=`<path d="${d}" fill="none" stroke="#0984e3" stroke-width="3.4" stroke-linejoin="round" opacity=".55"/>`;
         }
         if(dim&&chain.has(e.p)&&chain.has(e.s))hi+=`<path d="${d}" fill="none" stroke="${COL.b}" stroke-width="2.2" stroke-linejoin="round" marker-end="url(#pdep_b)"/>`;
       });
+      if(selP)svg.insertAdjacentHTML('beforeend',`<g class="presDepG" data-dep-tmp="1" pointer-events="none">${selP}</g>`);
       if(base)svg.insertAdjacentHTML('beforeend',`<g class="presDepG" pointer-events="none"><defs>${['g','r','o'].map(mk).join('')}</defs>${base}</g>`);
+      if(hit)svg.insertAdjacentHTML('beforeend',`<g class="presDepG" data-dep-tmp="1">${hit}</g>`);
       if(hi)svg.insertAdjacentHTML('beforeend',`<g class="presDepG" data-dep-tmp="1" pointer-events="none"><defs>${mk('b')}</defs>${hi}</g>`);
     });
   }catch(err){console.warn('presDrawDeps:',err);}
 }
-document.getElementById('presBody').addEventListener('click',()=>setTimeout(()=>presDrawDeps(false),0));
+document.getElementById('presBody').addEventListener('click',e=>{
+  // Clic sobre una línea de precedencia: la selecciona (Delete la oculta); cualquier otro clic la suelta
+  const dl=e.target.closest&&e.target.closest('[data-dep-key]');
+  _presDepSel=dl?(dl.dataset.depKey===_presDepSel?null:dl.dataset.depKey):null;
+  if(dl){
+    _presBarKey=null;_presBarIsHito=false;_presMultiSel.clear();
+    document.querySelectorAll('#presBody .pres-sel').forEach(el=>el.classList.remove('pres-sel'));
+    document.getElementById('presBarMenu').style.display='none';
+  }
+  setTimeout(()=>presDrawDeps(false),0);
+});
+/* ── Dependencias desde el panel de barra/hito: escriben en TASKS (Predecesoras) y repintan la Tabla de Datos ── */
+let _pbmDepKey=null;
+function _pbmFindTask(key){
+  const raw=key.startsWith('LB|')?key.slice(3):key;
+  return TASKS.find(x=>pkOf(x)===raw)||TASKS.find(x=>x.c1+'|'+x.c2+'|'+x.tarea===raw.split('|').slice(0,3).join('|'))||null;
+}
+function pbmFillDeps(key){
+  const row=document.getElementById('pbmDepRow');if(!row)return;
+  const t=key?_pbmFindTask(key):null;
+  if(!t){row.style.display='none';_pbmDepKey=null;return;}
+  _pbmDepKey=key;row.style.display='flex';
+  const me=depPid(t);
+  document.getElementById('pbmDepId').textContent=me||'—';
+  const pi=document.getElementById('pbmDepPreds'),si=document.getElementById('pbmDepSucs');
+  pi.value=t.preds||'';si.value=depSucText(t);
+  si.disabled=!me;si.title=me?'Mismo formato. Edita las Predecesoras de las tareas indicadas.':'Esta tarea no tiene ID: asígnalo en la Tabla de Datos para poder definir sucesoras.';
+}
+function presSetLinks(which,val){
+  const T=_pbmDepKey&&_pbmFindTask(_pbmDepKey);if(!T)return;
+  val=String(val||'').trim();
+  const r=depParse(val);
+  if(r.bad){apToast('⚠ Formato no válido. Usa el de Project, p. ej. 12; 15CC+2 días');pbmFillDeps(_pbmDepKey);return;}
+  const me=depPid(T),resolve=depResolverFor(TASKS),bad=[];
+  if(which==='sucs'&&!me){apToast('⚠ La tarea no tiene ID: asígnalo en la Tabla de Datos.');pbmFillDeps(_pbmDepKey);return;}
+  const snap=_edClone(TASKS);
+  let changed=false;
+  if(which==='preds'){
+    r.links.forEach(l=>{const p=resolve(T,l.pid);if(!p)bad.push(l.pid);else if(p===T)bad.push(l.pid+' (ella misma)');});
+    const nv=val||undefined;
+    if((T.preds||undefined)!==nv){T.preds=nv;changed=true;}
+  }else{
+    const want=new Map();
+    r.links.forEach(l=>{const s=resolve(T,l.pid);if(!s||s===T)bad.push(l.pid);else want.set(s,l);});
+    TASKS.forEach(s=>{
+      if(s===T)return;
+      const links=depParse(s.preds).links,keep=links.filter(l=>resolve(s,l.pid)!==T);
+      const w=want.get(s),nl=w?[...keep,{pid:me,type:w.type,lag:w.lag,pct:w.pct}]:keep;
+      const nv=depFmt(nl)||undefined;
+      if(depFmt(links)!==(nv||'')){s.preds=nv;changed=true;}
+    });
+  }
+  if(bad.length)apToast('⚠ Sin efecto (no existe o no es válido): '+bad.join(', '));
+  if(!changed){pbmFillDeps(_pbmDepKey);return;}
+  _edUndo.push(snap);if(_edUndo.length>100)_edUndo.shift();_edRedo=[];
+  _depIdx=null;
+  let msg='';
+  if(_edAutoSched){const mv=edSchedForward(T,which==='preds');if(mv===null)msg='⚠ Hay un ciclo de dependencias: no se reprogramó nada.';else if(mv.length)msg='↪ '+mv.length+' tarea'+(mv.length===1?'':'s')+' reprogramada'+(mv.length===1?'':'s');}
+  const key=_pbmDepKey;
+  _edApply(TASKS);          // repuebla la Tabla de Datos y marca el proyecto como modificado
+  _depIdx=null;flushEditorRender();renderPres();
+  if(msg)apToast(msg);
+  pbmFillDeps(key);
+}
+function presHideDep(){
+  if(!_presDepSel)return;
+  PRES_DEP_HIDDEN.add(_presDepSel);_presDepSel=null;
+  _presToast('Línea de precedencia oculta de la Línea de Tiempo (restaurar desde "Tareas ocultas")');
+  renderPres();
+}
 // Los exportes toman el SVG del DOM: se les quita el resaltado temporal por selección.
 function presExportSvg(){
   const svg=document.querySelector('#presBody svg');if(!svg)return null;
@@ -3564,10 +3654,10 @@ function render(){
         const dateCY=rpTop+rpH/2;
         // dibujar TODAS las instancias (misma fila, distintas posiciones X)
         tg.insts.forEach(t=>{
-          const _c1col=SCEN_COLOR[t.c1]||'#444';const _c2col=CAT2_COLOR[t.c2]||'#666';const tipLB=`<b>${esc(t.tarea)}</b><br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📐 LB: ${fmtD(t.iLB)} → ${fmtD(t.fLB)}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
+          const _c1col=SCEN_COLOR[t.c1]||'#444';const _c2col=CAT2_COLOR[t.c2]||'#666';const tipLB=`<b>${esc(t.tarea)}</b>${depIdTag(t)}<br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📐 LB: ${fmtD(t.iLB)} → ${fmtD(t.fLB)}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
           const _diasRest=Math.round((+t.fRP-Date.now())/86400000);
           const _avTxt=AP_PREFS.avanceUnidad==='dias'?`Avance: ${t.av}% · ${_diasRest>0?`faltan ${_diasRest} día${_diasRest===1?'':'s'}`:_diasRest===0?'vence hoy':`vencida hace ${-_diasRest} día${_diasRest===-1?'':'s'}`}`:`Avance: ${t.av}%`;
-          const tipRP=`<b>${esc(t.tarea)}</b><br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📊 R/P: ${fmtD(t.iRP)} → ${fmtD(t.fRP)}<br>${_avTxt}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
+          const tipRP=`<b>${esc(t.tarea)}</b>${depIdTag(t)}<br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📊 R/P: ${fmtD(t.iRP)} → ${fmtD(t.fRP)}<br>${_avTxt}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
           if(t.hito){
             const xi=S.x(t.iLB)+XPAD;
             const dBorder=t.crit?`${critW}px solid #FF0000`:`1.5px solid ${barColor}`;
@@ -3579,7 +3669,7 @@ function render(){
             const evColor=EVENTO_COLOR[t.c1+'|'+t.c2+'|'+t.tarea]||barColor;
             const strokeCol=t.crit?'#FF0000':evColor;
             const strokeW=t.crit?critW:1.5;
-            const tipEv=`<b>${esc(t.tarea)}</b><br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>▼ Evento: ${fmtD(t.iLB)}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
+            const tipEv=`<b>${esc(t.tarea)}</b>${depIdTag(t)}<br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>▼ Evento: ${fmtD(t.iLB)}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
             cnt+=`<svg style="position:absolute;left:${xi-evSz/2}px;top:${RH/2-evSz*0.1}px;width:${evSz}px;height:${evSz}px;overflow:visible;z-index:3;cursor:default" data-di="${t._di}" data-tip="${mkTip(tipEv)}" data-evento-key="${esc(t.c1+'|'+t.c2+'|'+t.tarea)}"><polygon points="${evSz/2},${evSz} 0,0 ${evSz},0" fill="${evColor}" stroke="${strokeCol}" stroke-width="${strokeW}"/></svg>`;
             cnt+=`<span class="bd-out" style="left:${xi+Math.round(10*fs)}px;top:${RH/2}px">${fmtD(t.iLB)}</span>`;
           } else {
@@ -4657,7 +4747,7 @@ function _buildShareBlob(){
     fontFamily:document.getElementById('fontFamily').value,
     fontSizes:{dates:document.getElementById('fsDates').value,months:document.getElementById('fsMonths').value,years:document.getElementById('fsYears').value,cat1:document.getElementById('fsCat1').value,cat2:document.getElementById('fsCat2').value,tasks:document.getElementById('fsTasks').value},
     estName:document.getElementById('estName').value,estDate:document.getElementById('estDate').value,
-    presExecMode:document.getElementById('presShowExecutive').checked,presDateFmt:document.getElementById('presDateFmt').value,presExecHidden:[...PRES_EXEC_HIDDEN_KEYS],
+    presExecMode:document.getElementById('presShowExecutive').checked,presDateFmt:document.getElementById('presDateFmt').value,presExecHidden:[...PRES_EXEC_HIDDEN_KEYS],presDepHidden:[...PRES_DEP_HIDDEN],
     rapAvailable:_rapAvailable,presShowRaP:(document.getElementById('presShowRaP')||{checked:false}).checked,
     rapLabelW:RAP_LABEL_W_USER,rapBandRowsOverride:RAP_BAND_ROWS_OVERRIDE,rapC1Order:RAP_C1_ORDER,
     // Toggles del ribbon de la LdT que también deben sobrevivir a "Compartir" — sin esto el
@@ -4805,6 +4895,7 @@ function loadEmbedded(){
   if(d.presOpts)PRES_OPTS=Object.assign({},d.presOpts);
   if(d.presHidden)PRES_HIDDEN_KEYS=new Set(d.presHidden);
   if(d.presExecHidden)PRES_EXEC_HIDDEN_KEYS=new Set(d.presExecHidden);
+  if(d.presDepHidden)PRES_DEP_HIDDEN=new Set(d.presDepHidden);
   if(d.presExecMode!=null)document.getElementById('presShowExecutive').checked=d.presExecMode;
   if(d.presDateFmt)document.getElementById('presDateFmt').value=d.presDateFmt;
   if(d.presTextBoxes)PRES_TEXTBOXES=d.presTextBoxes.slice();
@@ -5145,6 +5236,9 @@ let PRES_OPTS={};
 let PRES_HIDDEN_KEYS=new Set(); // claves ocultas en Línea de Tiempo (independiente del Gantt)
 let PRES_EXEC_HIDDEN_KEYS=new Set(); // claves (c1|c2|tarea) ocultas EXCLUSIVAMENTE en la vista Ejecutivo — nunca toca TASKS
 function isExecHidden(t){return PRES_EXEC_HIDDEN_KEYS.has(pkOf(t));}
+let PRES_DEP_HIDDEN=new Set(); // líneas de precedencia ocultas en la LdT: "pk(predecesora)>>pk(sucesora)" — nunca toca TASKS
+let _presDepSel=null;          // línea de precedencia seleccionada en la LdT (misma clave)
+function _depKey(e){return pkOf(e.p)+'>>'+pkOf(e.s);}
 /* ── Persistencia local mínima (fallback cuando no se usa "Compartir"): firma de proyecto vía CRC32 existente ── */
 function apProjectSignature(){
   const keys=[...new Set(TASKS.map(t=>t.c1+'|'+t.c2+'|'+t.tarea))].sort();
@@ -5155,7 +5249,7 @@ function apExecCfgKey(){return 'ap_execview_'+apProjectSignature();}
 function apSaveExecConfigLocal(){
   try{
     if(!TASKS.length)return;
-    const cfg={execMode:document.getElementById('presShowExecutive').checked,dateFmt:document.getElementById('presDateFmt').value,hidden:[...PRES_EXEC_HIDDEN_KEYS]};
+    const cfg={execMode:document.getElementById('presShowExecutive').checked,dateFmt:document.getElementById('presDateFmt').value,hidden:[...PRES_EXEC_HIDDEN_KEYS],depHidden:[...PRES_DEP_HIDDEN]};
     localStorage.setItem(apExecCfgKey(),JSON.stringify(cfg));
   }catch(e){/* localStorage no disponible (privado/bloqueado): continuar sin persistencia local */}
 }
@@ -5167,6 +5261,7 @@ function apRestoreExecConfigLocal(){
     if(cfg.execMode!=null)document.getElementById('presShowExecutive').checked=cfg.execMode;
     if(cfg.dateFmt)document.getElementById('presDateFmt').value=cfg.dateFmt;
     if(Array.isArray(cfg.hidden))PRES_EXEC_HIDDEN_KEYS=new Set(cfg.hidden);
+    if(Array.isArray(cfg.depHidden))PRES_DEP_HIDDEN=new Set(cfg.depHidden);
   }catch(e){/* localStorage no disponible o dato corrupto: continuar con valores por defecto */}
 }
 let PRES_YEAR_COLORS={};
@@ -6347,7 +6442,7 @@ function renderPres(){
   const showSeg=document.getElementById('presShowSeg').checked;
   const showLegend=document.getElementById('presShowLegend')?document.getElementById('presShowLegend').checked:true;
   const execMode=(document.getElementById('presShowExecutive')||{checked:false}).checked;
-  {const _ehBtn=document.getElementById('execHiddenBtn');if(_ehBtn){const _n=PRES_EXEC_HIDDEN_KEYS.size;_ehBtn.style.display=_n?'inline-flex':'none';_ehBtn.title=`Tareas ocultas (${_n})`;const _ehCnt=document.getElementById('execHiddenCount');if(_ehCnt){_ehCnt.style.display=_n?'block':'none';_ehCnt.textContent=_n;}}}
+  {const _ehBtn=document.getElementById('execHiddenBtn');if(_ehBtn){const _n=PRES_EXEC_HIDDEN_KEYS.size+PRES_DEP_HIDDEN.size;_ehBtn.style.display=_n?'inline-flex':'none';_ehBtn.title=`Tareas ocultas (${_n})`;const _ehCnt=document.getElementById('execHiddenCount');if(_ehCnt){_ehCnt.style.display=_n?'block':'none';_ehCnt.textContent=_n;}}}
   apSaveExecConfigLocal();
   const ff=document.getElementById('fontFamily').value||"'Segoe UI',Arial,sans-serif";
   const mainTitleOn=(document.getElementById('presMainTitleOn')||{checked:true}).checked;
@@ -6612,6 +6707,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pbmMitoRow').style.display='none';
     document.getElementById('pbmEvtoRow').style.display='none';
     document.getElementById('pbmExecHideRow').style.display='inline-flex';
+    pbmFillDeps(key);
     const pbm=document.getElementById('presBarMenu');
     pbm.style.display='block';pbm.style.left=Math.min(e.clientX+5,innerWidth-244)+'px';{const _ph=pbm.offsetHeight||400;pbm.style.top=Math.max(5,Math.min(e.clientY+5,innerHeight-_ph-8))+'px';}
   } else if(mito){
@@ -6647,6 +6743,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pbmMitoAbove').classList.toggle('active',opt.miAbove!==false);
     document.getElementById('pbmMitoBelow').classList.toggle('active',opt.miAbove===false);
     _pbmSyncMitoLoc(opt,_miTask);
+    pbmFillDeps(key);
     const _lShow=opt.lineHide!==true;
     document.getElementById('presLineShow').checked=_lShow;
     document.getElementById('presLineControls').style.display=_lShow?'flex':'none';
@@ -6686,6 +6783,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     const eib=document.getElementById('pbmEvtoItalic');if(eib)eib.classList.toggle('active',!!opt.textItalic);
     const eub=document.getElementById('pbmEvtoUnder');if(eub)eub.classList.toggle('active',!!opt.textUnder);
     _cpTarget={type:'presevento',name:key};
+    pbmFillDeps(key);
     const pbm=document.getElementById('presBarMenu');
     pbm.style.display='block';pbm.style.left=Math.min(e.clientX+5,innerWidth-244)+'px';{const _ph=pbm.offsetHeight||400;pbm.style.top=Math.max(5,Math.min(e.clientY+5,innerHeight-_ph-8))+'px';}
   } else if(yr){
@@ -7446,13 +7544,14 @@ function openExecHiddenModal(){
   // Conservar qué secciones estaban desplegadas antes de reconstruir la lista, para no
   // colapsarlas cada vez que se restaura un elemento (uno por uno) dentro de la misma sección.
   const _wasOpen={};
-  ['ehSecHitos','ehSecTareas'].forEach(id=>{const el=document.getElementById(id);if(el)_wasOpen[id]=el.style.display==='flex';});
+  ['ehSecHitos','ehSecTareas','ehSecDeps'].forEach(id=>{const el=document.getElementById(id);if(el)_wasOpen[id]=el.style.display==='flex';});
   const keys=[...PRES_EXEC_HIDDEN_KEYS];
-  const row=k=>{
-    const parts=k.split('|');const name=parts[2]!==undefined?parts[2]:k;
+  const depKeys=[...PRES_DEP_HIDDEN];
+  const row=(k,dep)=>{
+    const name=dep?k.split('>>').map(x=>x.split('|')[2]||x).join(' → '):(k.split('|')[2]!==undefined?k.split('|')[2]:k);
     return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px 6px 24px;border-bottom:1px solid #f2f2f2">
-      <span style="font-size:12px;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(k)}">${esc(name)}</span>
-      <button class="_ehRestore rb-sm" data-key="${esc(k)}" title="Restaurar (mostrar de nuevo)" style="padding:2px;color:#1a6fa0;flex-shrink:0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+      <span style="font-size:12px;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(dep?name:k)}">${esc(name)}</span>
+      <button class="_ehRestore rb-sm"${dep?' data-dep="1"':''} data-key="${esc(k)}" title="Restaurar (mostrar de nuevo)" style="padding:2px;color:#1a6fa0;flex-shrink:0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
     </div>`;
   };
   const hitos=[],tareas=[];
@@ -7461,7 +7560,7 @@ function openExecHiddenModal(){
     const t=TASKS.find(t=>t.c1===parts[0]&&t.c2===parts[1]&&t.tarea===parts[2]);
     (t&&t.hito?hitos:tareas).push(k);
   });
-  const section=(label,bodyId,arr)=>{
+  const section=(label,bodyId,arr,dep)=>{
     if(!arr.length)return'';
     const open=!!_wasOpen[bodyId];
     return `
@@ -7469,18 +7568,18 @@ function openExecHiddenModal(){
       <span>${label} (${arr.length})</span>
       <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform .15s${open?';transform:rotate(180deg)':''}"><path d="m6 9 6 6 6-6"/></svg>
     </button>
-    <div id="${bodyId}" style="display:${open?'flex':'none'};flex-direction:column">${arr.map(row).join('')}</div>`;
+    <div id="${bodyId}" style="display:${open?'flex':'none'};flex-direction:column">${arr.map(k=>row(k,dep)).join('')}</div>`;
   };
-  list.innerHTML=keys.length?(section('Hitos','ehSecHitos',hitos)+section('Tareas','ehSecTareas',tareas)):'<div style="padding:14px;color:#aaa;font-size:11px;text-align:center">No hay tareas ocultas.</div>';
+  list.innerHTML=(keys.length||depKeys.length)?(section('Hitos','ehSecHitos',hitos)+section('Tareas','ehSecTareas',tareas)+section('Líneas de precedencia','ehSecDeps',depKeys,true)):'<div style="padding:14px;color:#aaa;font-size:11px;text-align:center">No hay tareas ocultas.</div>';
   list.querySelectorAll('._ehRestore').forEach(b=>b.addEventListener('click',()=>{
-    PRES_EXEC_HIDDEN_KEYS.delete(b.dataset.key);
+    if(b.dataset.dep)PRES_DEP_HIDDEN.delete(b.dataset.key);else PRES_EXEC_HIDDEN_KEYS.delete(b.dataset.key);
     openExecHiddenModal();
     renderPres();
   }));
   document.getElementById('execHiddenModal').style.display='flex';
 }
 function presRestoreAllExecutive(){
-  PRES_EXEC_HIDDEN_KEYS.clear();
+  PRES_EXEC_HIDDEN_KEYS.clear();PRES_DEP_HIDDEN.clear();
   openExecHiddenModal();
   renderPres();
 }
@@ -7540,6 +7639,7 @@ function presOpenC1LabelMenu(c1,clientX,clientY){
   document.getElementById('pbmMitoRow').style.display='none';
   document.getElementById('pbmEvtoRow').style.display='none';
   document.getElementById('pbmExecHideRow').style.display='none';
+  pbmFillDeps(null);
   document.getElementById('pbmTextRow').style.display='flex';
   document.getElementById('pbmAlignRow').style.display='none';
   document.getElementById('pbmPosRow').style.display='none';
@@ -8039,7 +8139,7 @@ function presYearAutoFg(){
     if(!t){tip.style.display='none';_tipLastKey=null;return;}
     if(cleanKey!==_tipLastKey){
       _tipLastKey=cleanKey;
-      let html=`<div style="font-weight:bold;font-size:12px;margin-bottom:4px;border-bottom:1px solid rgba(255,255,255,.25);padding-bottom:4px">${t.tarea}</div>`;
+      let html=`<div style="font-weight:bold;font-size:12px;margin-bottom:4px;border-bottom:1px solid rgba(255,255,255,.25);padding-bottom:4px">${esc(t.tarea)}${depIdTag(t)}</div>`;
       const _tc1=SCEN_COLOR[t.c1]||'#444'; const _tc2=CAT2_COLOR[t.c2]||'#666';
       html+=`<div style="font-size:10px;margin-bottom:3px"><span style="color:${_tc1}">${t.c1}</span> › <span style="color:${_tc2}">${t.c2}</span></div>`;
       if(t.hito){
@@ -8056,6 +8156,7 @@ function presYearAutoFg(){
         if(t.av>0) html+=`<div>&#9632; <b>Avance:</b> ${t.av.toFixed(0)}%</div>`;
         if(t.crit) html+=`<div style="color:#c00;font-weight:bold">⚠ Ruta Crítica</div>`;
       }
+      html+=depTipHtml(t);
       tip.innerHTML=html;
       tip.style.display='block';
       _tipW=tip.offsetWidth;_tipH=tip.offsetHeight;
@@ -8068,7 +8169,7 @@ function presYearAutoFg(){
     if(ty+th>innerHeight-8) ty=e.clientY-th-8;
     tip.style.left=tx+'px'; tip.style.top=ty+'px';
   });
-  document.getElementById('presBody').addEventListener('mouseleave',()=>tip.style.display='none');
+  document.getElementById('presBody').addEventListener('mouseleave',()=>{tip.style.display='none';_tipLastKey=null;});
 })();
 
 /* ═══ LISTENERS ═══ */
@@ -9503,6 +9604,7 @@ document.addEventListener('keydown',e=>{
     // que _presBarIsHito=true solo bloquea si además es un evento (no un hito real).
     const tag=(document.activeElement&&document.activeElement.tagName)||'';
     if(tag==='INPUT'||tag==='TEXTAREA')return;
+    if(_presDepSel){e.preventDefault();presHideDep();return;}
     if(!_presBarKey)return;
     const _rawParts=(_presBarKey.startsWith('LB|')?_presBarKey.slice(3):_presBarKey).split('|');
     const _t=TASKS.find(t=>t.c1===_rawParts[0]&&t.c2===_rawParts[1]&&t.tarea===_rawParts[2]);
