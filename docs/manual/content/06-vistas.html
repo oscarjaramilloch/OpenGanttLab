@@ -51,15 +51,26 @@
 <p>Un doble clic sobre una barra abre su panel de edición.</p>
 <fig slug="ldt-panel-edicion" t="Panel de edición de una barra" legend="Barra seleccionada (doble clic)|Panel de edición" observe="Texto: nombre, color, tamaño, negrita, alineación y posición.|Fondo: color de la barra y trama.|Fechas: mostrar comienzo y fin, alinear y posición.|Posición: capa (arriba/abajo).">Todos los cambios del panel son visuales: nunca modifican la Tabla de Datos.</fig>
 <callout type="warn" title="Lo visual no cambia los datos">
-<p>Editar el texto o el color en la Línea de Tiempo solo afecta la presentación. El dato real de la tabla, del Gantt, del Excel y del XML no se toca.</p>
+<p>Editar el texto o el color en la Línea de Tiempo solo afecta la presentación. El dato real de la tabla, del Gantt, del Excel y del XML no se toca. La única excepción es la sección <ui>Dependencias</ui> descrita abajo.</p>
 </callout>
+
+<h3 id="panel-dependencias">Dependencias desde el panel</h3>
+<p>En tareas, hitos y eventos, el panel incluye la sección <ui>Dependencias</ui> (expandida por defecto):</p>
+<ul>
+<li><b>ID</b>: el identificador de la tarea (solo lectura).</li>
+<li><b>Predecesoras</b> y <b>Sucesoras</b>: campos editables con el formato de Project, por ejemplo <code>12; 15CC+2 días</code>. Confirme con <kbd>Enter</kbd> o saliendo del campo.</li>
+</ul>
+<p>A diferencia del resto del panel, <b>estos cambios sí modifican los datos</b>: se escriben en la columna <b>Predecesoras</b> de la Tabla de Datos (las sucesoras editan las predecesoras de las tareas indicadas) y se pueden deshacer con el deshacer de la tabla. Si la reprogramación automática está activa, las sucesoras se reprograman como al editar la tabla. Un formato no válido o un ID inexistente se avisa y se ignora. Para definir sucesoras, la tarea debe tener ID.</p>
+
+<h3 id="ocultar-precedencia">Ocultar una línea de precedencia</h3>
+<p>Con <ui>Dependencias</ui> encendido en la Línea de Tiempo, haga clic sobre una flecha: se resalta con un halo azul. Pulse <kbd>Delete</kbd> (o <kbd>Backspace</kbd>) para ocultarla; el resto de flechas no cambia. Para volver a verla, abra <ui>Tareas ocultas (N)</ui>, sección <b>Líneas de precedencia</b>, y restáurela con el ojo, o use <ui>Restaurar todas</ui>. Es solo visual: los vínculos siguen en los datos, el Gantt, el Excel y el XML, y el halo de selección no sale en los exportes. Con una barra seleccionada solo se dibuja su cadena azul y las demás flechas no se pueden seleccionar.</p>
 
 <h2 id="ejecutivo">Ejecutivo: ocultar tareas</h2>
 <ol class="steps">
 <li><b>Active Ejecutivo</b>En <ui>Capas</ui> → <ui>Modo de vista</ui>.</li>
 <li><b>Oculte una tarea de esta vista</b>Selecciónela con un clic y pulse <kbd>Delete</kbd>, o use doble clic → <ui>Ocultar de Ejecutivo</ui>.</li>
 <li><b>Recupere lo oculto</b>Aparece el botón <ui>Tareas ocultas (N)</ui>: ábralo para restaurar una tarea o todas.
-<fig slug="ldt-tareas-ocultas" t="Tareas ocultas de la Línea de Tiempo" observe="La lista muestra las tareas ocultas (3 en el ejemplo).|«Restaurar todas» las devuelve; también puede restaurarlas una a una.|Las tareas siguen existiendo en el Gantt, el Excel y el XML.">Cuadro que aparece al pulsar «Tareas ocultas (N)».</fig></li>
+<fig slug="ldt-tareas-ocultas" t="Tareas ocultas de la Línea de Tiempo" observe="La lista muestra las tareas ocultas (3 en el ejemplo).|«Restaurar todas» las devuelve; también puede restaurarlas una a una.|Las tareas siguen existiendo en el Gantt, el Excel y el XML.">Cuadro que aparece al pulsar «Tareas ocultas (N)». También lista las líneas de precedencia ocultas.</fig></li>
 </ol>
 <callout type="note" title="Persistencia">
 <p>Las tareas ocultas y el formato de fecha se guardan por proyecto en el navegador y también viajan con «Compartir».</p>
