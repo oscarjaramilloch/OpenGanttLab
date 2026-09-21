@@ -8,6 +8,8 @@
 </ul>
 </learn>
 
+<fig slug="casos-de-uso" t="Los tres casos de uso">Cada caso parte de datos ya cargados o por cargar, sigue unos pasos y termina en un resultado concreto.</fig>
+
 <h2 id="caso-linea-base">Caso 1 · ¿Cuánto se desplazó el proyecto?</h2>
 <p><b>Situación:</b> el equipo replanificó y el gerente pregunta qué tareas se corrieron respecto al plan original.</p>
 <ol class="steps">
@@ -17,7 +19,7 @@
 <li><b>Identifique lo crítico</b>Active <ui>Ruta crítica</ui> para ver solo las tareas marcadas como críticas en los datos del cronograma.</li>
 </ol>
 <callout type="result" title="Resultado">
-<p>Una vista única con lo planificado, lo proyectado y el avance de cada tarea, donde se ve de inmediato qué se desplazó y cuánto.</p>
+<p>Una vista única con lo planificado, lo proyectado y el avance de cada tarea, donde se ve de inmediato qué se desplazó y cuánto. Vea un ejemplo en <a href="#/analisis/desplazamiento">Desplazamientos entre Línea Base y proyectado</a>.</p>
 </callout>
 
 <h2 id="caso-comite">Caso 2 · Una lámina para el comité</h2>
@@ -28,6 +30,7 @@
 <li><b>Ajuste la presentación</b>Edite colores y textos con doble clic; agregue una llamada o una forma desde <ui>Editar</ui>. Active <ui>Leyenda</ui> si hace falta.</li>
 <li><b>Exporte</b><ui>Exportar</ui> → PowerPoint, o PNG para pegarlo en un informe.</li>
 </ol>
+<fig slug="ldt-lamina-comite" t="Lámina para el comité" observe="Vista C1: una banda por Categoría 1.|Leyenda de colores de Categoría 2 en el diagrama.|Línea roja de la fecha de estado.">Línea de Tiempo con Vista C1, Leyenda y Fecha de estado.</fig>
 <callout type="tip" title="Guarde su trabajo">
 <p>Use <ui>Compartir</ui> para conservar la configuración de la lámina. Al abrir el archivo compartido verá exactamente lo mismo.</p>
 </callout>
@@ -41,6 +44,7 @@
 <li><b>Revise los avisos</b>El ícono de triángulo lista predecesoras inexistentes y ciclos. Active el aviso de conflictos de fechas en <ui>Configuración</ui> si quiere comparar también las fechas.</li>
 <li><b>Siga una cadena</b>Haga clic en un hito importante para resaltar todo lo que lo precede.</li>
 </ol>
+<fig slug="gantt-xml-avisos" t="Secuencia de un XML revisada en el Gantt" observe="Las flechas muestran la secuencia de las tareas del XML.|El ícono de triángulo con el número indica los avisos pendientes (aquí, una predecesora inexistente).">Gantt de un XML cargado, con Dependencias activas y un aviso.</fig>
 <callout type="info" title="Tiempo de lectura">
 <p>Los XML grandes se leen por partes y pueden tardar según su tamaño y el equipo. Una barra muestra el avance durante la carga.</p>
 </callout>

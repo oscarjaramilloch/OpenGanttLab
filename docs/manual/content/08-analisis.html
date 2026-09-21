@@ -29,12 +29,15 @@
 
 <h2 id="ruta-critica">Ruta crítica</h2>
 <p>La ruta crítica <b>se lee de los datos</b> (columna «Ruta Crítica» del Excel o campo «Crítica» del XML): OpenGanttLab no la calcula. Las tareas marcadas como críticas se dibujan siempre con borde rojo; la capa <ui>Ruta crítica</ui> deja visibles solo esas tareas y sus opciones ajustan el grosor del borde. Con las dependencias activas, las flechas entre dos tareas críticas se dibujan en rojo.</p>
+<fig slug="gantt-ruta-critica" t="Capa Ruta crítica activa" observe="Solo se ven las tareas marcadas como críticas en los datos.|Las críticas se dibujan con borde rojo con o sin la capa.">Con la capa activa, el Gantt deja únicamente las tareas críticas.</fig>
 
 <h2 id="fecha-estado-analisis">Fecha de estado</h2>
 <p>La capa <ui>Fecha de estado</ui> dibuja una línea vertical en la fecha de corte. Todo lo que queda a su izquierda ya debería haber ocurrido; compárelo con el avance. Se configura en <ui>Capas</ui> (estilo, grosor y color); la Línea de Tiempo usa la misma fecha.</p>
+<fig slug="gantt-fecha-estado" t="Capa Fecha de estado y sus opciones" observe="Línea vertical roja en la fecha de corte, con la fecha en la parte superior.|El panel lateral de la capa ajusta la fecha, el estilo, el grosor y el color.">La capa activa y su panel de opciones, abierto desde Capas.</fig>
 
 <h2 id="desplazamiento">Desplazamientos entre Línea Base y proyectado</h2>
 <p>Con <ui>Línea base</ui> activa, la diferencia de posición entre la barra rayada y la de color es el desplazamiento. Si necesita ver las fechas exactas, active <ui>Fechas</ui>, o agregue al Gantt las columnas «Start LB», «End LB», «Start R/P» y «End R/P» con un clic derecho en un encabezado.</p>
+<fig slug="gantt-desplazamiento" t="Desplazamientos con las fechas exactas" observe="La barra rayada es la Línea Base; la de color, lo Real/Proyectado.|A la izquierda, las columnas Start LB, End LB, Start R/P y End R/P.">Barras y fechas juntas permiten medir cuánto se corrió cada tarea.</fig>
 
 <h2 id="secuencia">Calidad de la secuencia</h2>
 <p>El ícono de aviso de dependencias señala problemas que afectan la lectura del cronograma: predecesoras inexistentes, ciclos y textos con formato inválido. Opcionalmente, también los <a href="#/cronograma/conflictos">conflictos de fechas</a>. Revíselos antes de presentar un cronograma.</p>

@@ -181,3 +181,31 @@ write('diagrams', 'diag-06-ciclo-excel', svg(940, 300, [
   ].join('\n');
   write('diagrams', 'diag-07-conflicto-fechas', svg(940, 240, b, 'Conflicto de fechas', 'B empieza antes de que termine su predecesora A en un vínculo FC.'));
 }
+
+/* ── D8 · Qué conserva «Compartir» ── */
+{
+  const li = (x, y, t, c) => `<circle cx="${x}" cy="${y - 4}" r="4" fill="${c}"/>` + tx(x + 14, y, t, { size: 12.5, anchor: 'start' });
+  const ok = ['Tareas: fechas, avance, marca de ruta crítica, ID y predecesoras', 'Escenarios (Categorías 1) activos y sus colores', 'Gantt: capas Línea base, Dependencias, Fechas y Resumen', 'Gantt: escala, fuente, tamaños, orden y textos libres', 'Línea de Tiempo completa: capas y modos, tareas ocultas,', '   colores, textos, formas, títulos y formato de fecha'];
+  const no = ['Gantt: capas Avance real, Marca Activity,', '   Fecha de estado y Ruta crítica', 'Gantt: columnas agregadas con clic derecho', 'Gantt: filtros por columna', 'Preferencias de Configuración (son del navegador)', 'Columnas de mapeo personalizadas de XML'];
+  const b = [
+    tx(470, 32, 'Qué viaja en el archivo compartido', { size: 17, weight: 700, fill: NAVY }),
+    box(24, 60, 430, 250, [''], { fill: '#f3fbf6', stroke: GREEN, r: 12 }), tx(44, 86, 'SE CONSERVA', { size: 12, weight: 800, fill: GREEN, anchor: 'start' }),
+    ...ok.map((t, i) => li(44, 116 + i * 30, t.trim(), t.startsWith('   ') ? 'none' : GREEN).replace('<circle', t.startsWith('   ') ? '<circle style="display:none"' : '<circle')),
+    box(486, 60, 430, 250, [''], { fill: '#fff8ee', stroke: ORANGE, r: 12 }), tx(506, 86, 'HAY QUE VOLVER A CONFIGURARLO', { size: 12, weight: 800, fill: '#b45309', anchor: 'start' }),
+    ...no.map((t, i) => li(506, 116 + i * 30, t.trim(), t.startsWith('   ') ? 'none' : ORANGE).replace('<circle', t.startsWith('   ') ? '<circle style="display:none"' : '<circle')),
+    tx(470, 340, 'Compartir genera un HTML autónomo (OpenGanttLab_compartir.html): se abre sin el Excel ni el XML originales.', { size: 12, fill: MUTED }),
+  ].join(' ');
+  write('diagrams', 'diag-00-compartir-que-viaja', svg(940, 362, b, 'Qué conserva Compartir', 'Lo que se conserva en el archivo compartido y lo que hay que volver a configurar en el Gantt.'));
+}
+
+/* ── F4 · Casos de uso: entrada, proceso y resultado ── */
+{
+  const lane = (y, n, e, p, r, c) => badge(30, y + 32, n, c) + box(60, y, 230, 64, e, { fill: '#fff7e6', stroke: ORANGE, color: '#7a4a00', size: 12.5 }) + arrow(292, y + 32, 340, y + 32) +
+    box(342, y, 300, 64, p, { fill: TINT, stroke: BLUE, color: NAVY, size: 12.5 }) + arrow(644, y + 32, 692, y + 32) + box(694, y, 226, 64, r, { fill: '#ecfdf3', stroke: GREEN, color: '#0f5132', size: 12.5 });
+  const b = tx(470, 30, 'Los tres casos: entrada → proceso → resultado', { size: 17, weight: 700, fill: NAVY }) +
+    tx(175, 62, 'ENTRADA', { size: 11, weight: 700, fill: MUTED }) + tx(492, 62, 'PROCESO', { size: 11, weight: 700, fill: MUTED }) + tx(807, 62, 'RESULTADO', { size: 11, weight: 700, fill: MUTED }) +
+    lane(76, 1, ['Excel o XML con', 'fechas LB y R/P'], ['Línea base + Avance real', 'columnas de fechas exactas'], ['Desplazamientos', 'visibles por tarea'], BLUE) +
+    lane(160, 2, ['Cronograma', 'ya cargado'], ['Vista C1 · Leyenda · ocultar y editar', 'Exportar o Compartir'], ['Lámina lista para', 'el comité'], GREEN) +
+    lane(244, 3, ['XML de Project', 'de gran tamaño'], ['Mapeo · Dependencias · Avisos', 'resaltar la cadena de un hito'], ['Secuencia', 'revisada'], ORANGE);
+  write('flows', 'flow-00-casos-de-uso', svg(940, 330, b, 'Casos de uso', 'Tres casos con su entrada, el proceso que se sigue y el resultado.'));
+}

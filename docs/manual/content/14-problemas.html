@@ -11,12 +11,14 @@
 <p>Los XML grandes se leen por partes y pueden tardar según su tamaño y el equipo. Una barra muestra el avance durante la carga. No cierre la pestaña mientras carga.</p>
 <h3 id="xml-no-carga">El XML no pasa a la tabla</h3>
 <p>Los campos <b>Categoría 1</b>, <b>Categoría 2</b> y <b>Nombre de Tarea</b> del mapeo son obligatorios. Mientras alguno esté vacío, verá el mensaje «Completa los campos obligatorios…» y los datos no se cargan. Asigne una columna o un «Valor fijo» a cada uno.</p>
+<fig slug="xml-campos-obligatorios" t="Mapeo con campos obligatorios pendientes" observe="El mensaje superior indica qué campos faltan: Categoría 1, Categoría 2 y Nombre de Tarea.|Los campos obligatorios llevan asterisco y su etiqueta en rojo.">Mientras falte alguno, los datos no pasan a la Tabla de Datos.</fig>
 <h3 id="xml-invalido">«No parece un XML de Microsoft Project»</h3>
 <p>El archivo no contiene la sección de tareas de Project. Exporte de nuevo desde Project como XML.</p>
 
 <h2 id="visualizacion">Visualización</h2>
 <h3 id="gantt-vacio">El Gantt aparece vacío</h3>
 <p>Aún no hay datos cargados. Vaya a <ui>Datos</ui> y use <ui>Cargar archivo</ui>. Si hay datos, revise que haya Categorías 1 marcadas en <ui>Filtrar</ui> → <ui>Selección de tareas</ui> y que no haya filtros activos (<ui>Filtrar</ui> → <ui>Borrar filtros</ui>).</p>
+<fig slug="gantt-vacio-menu" t="Gantt sin datos" observe="Un clic sobre el área vacía abre el menú para cargar datos.|«Vincular Excel (.xlsx)» y «Importar Project XML» son las dos opciones.">Con el Gantt vacío, un clic sobre el área abre el menú de carga.</fig>
 <h3 id="sin-linea-base">No veo la Línea Base</h3>
 <p>Active la capa <ui>Línea base</ui> (Gantt) o <ui>Comparador</ui> (Línea de Tiempo) y compruebe que Start LB y End LB tengan fechas.</p>
 <h3 id="faltan-en-gantt">Faltan tareas en el Gantt</h3>
