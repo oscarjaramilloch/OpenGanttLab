@@ -70,7 +70,7 @@
 <table>
 <tr><th>Formato</th><th>Uso</th></tr>
 <tr><td>.xlsx</td><td>Entrada y salida de datos.</td></tr>
-<tr><td>.xml (Project)</td><td>Entrada; se lee por partes.</td></tr>
+<tr><td>.xml (Project)</td><td>Entrada (se lee por partes) y salida: «Guardar cambios en un XML de Project» crea un archivo nuevo.</td></tr>
 <tr><td>.csv</td><td>Salida de la base de XML (con líneas base 0–10).</td></tr>
 <tr><td>.png · .pdf · .pptx</td><td>Salida de la Línea de Tiempo.</td></tr>
 <tr><td>.html</td><td>«Compartir»: copia autónoma de la aplicación con los datos.</td></tr>
@@ -93,6 +93,7 @@
 <dt>LB actual</dt><dd>La línea base de Project (0–10) que se usa: la de fecha de guardado más reciente.</dd>
 <dt>Línea Base (LB)</dt><dd>Fechas planificadas originalmente.</dd>
 <dt>Marca Activity</dt><dd>Campo «Si/No» para marcar tareas de interés y mostrar solo esas.</dd>
+<dt>Programación manual</dt><dd>Modo de Project en que una tarea conserva las fechas que tiene, sin recalcularlas. OpenGanttLab lo usa al devolver fechas a un XML.</dd>
 <dt>Mapeo</dt><dd>Correspondencia entre los campos de un XML y las columnas de la tabla.</dd>
 <dt>Predecesora / Sucesora</dt><dd>La tarea que condiciona / la tarea condicionada en una dependencia.</dd>
 <dt>Reprogramación de sucesoras</dt><dd>Recalcular las fechas de las sucesoras cuando se edita una tarea en la Tabla de Datos, como Project con programación automática (días corridos).</dd>

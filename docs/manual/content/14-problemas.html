@@ -15,6 +15,14 @@
 <h3 id="xml-invalido">«No parece un XML de Microsoft Project»</h3>
 <p>El archivo no contiene la sección de tareas de Project. Exporte de nuevo desde Project como XML.</p>
 
+<h3 id="xml-no-guarda">No puedo guardar los cambios en un XML de Project</h3>
+<ul>
+<li>Use Chrome o Edge: la función necesita la API de acceso a archivos.</li>
+<li>Elija el XML <b>original</b> del mismo proyecto; si el nombre no coincide, la aplicación lo avisa porque los UID podrían no coincidir.</li>
+<li>El XML original debe estar en UTF-8; con otra codificación no se puede reescribir sin alterar los caracteres.</li>
+<li>Si el resumen dice «No devuelto», revise el motivo indicado (por ejemplo, una tarea sin elementos de programación manual o una predecesora con un ID que no existe).</li>
+</ul>
+
 <h2 id="visualizacion">Visualización</h2>
 <h3 id="gantt-vacio">El Gantt aparece vacío</h3>
 <p>Aún no hay datos cargados. Vaya a <ui>Datos</ui> y use <ui>Cargar archivo</ui>. Si hay datos, revise que haya Categorías 1 marcadas en <ui>Filtrar</ui> → <ui>Selección de tareas</ui> y que no haya filtros activos (<ui>Filtrar</ui> → <ui>Borrar filtros</ui>).</p>

@@ -4195,7 +4195,7 @@ let _edRows=[],_edVis=[],_edShown=[],_edVirt=false,_edWin=[0,0],_edRH=36,_edRaf=
 function _edModel(t){
   const dv=d=>(d instanceof Date&&!isNaN(d))?isoLocal(d):'',s=v=>v==null?'':String(v);
   const m={esc:s(t.escenario),c1:s(t.c1),c2:s(t.c2),tar:s(t.tarea),ilb:dv(t.iLB),flb:dv(t.fLB),av:s(t.av),irp:dv(t.iRP),frp:dv(t.fRP),
-    tipo:t.hito?'HITO':t.evento?'EVENTO':'TAREA',crit:t.crit?'si':'no',m2:s(t.marca2),resumen:t.summary?'si':'no',pid:s(t.pid),preds:s(t.preds),sucs:depSucText(t),ps:s(t.pscope),x:Object.assign({},t.extra||{})};
+    tipo:t.hito?'HITO':t.evento?'EVENTO':'TAREA',crit:t.crit?'si':'no',m2:s(t.marca2),resumen:t.summary?'si':'no',pid:s(t.pid),preds:s(t.preds),sucs:depSucText(t),ps:s(t.pscope),pu:s(t.puid),x:Object.assign({},t.extra||{})};
   m.dur=String(_edDurOf(m));return m;
 }
 function _edFiltered(){
@@ -4415,7 +4415,7 @@ function applyEditorChanges(silent){
     const iLB=d(f.ilb)||new Date(),fLB=d(f.flb)||new Date();
     const tarea=g(f.tar)||'(sin nombre)';
     if(tarea==='(sin nombre)')continue;
-    nt.push({escenario:g(f.esc),c1:g(f.c1),c2:g(f.c2),tarea,iLB,fLB,av:Math.max(0,Math.min(100,+g(f.av)||0)),iRP:d(f.irp)||iLB,fRP:d(f.frp)||fLB,hito:f.tipo==='HITO',evento:f.tipo==='EVENTO',crit:f.crit==='si',marca2:g(f.m2),summary:f.resumen==='si',pid:g(f.pid)||undefined,preds:g(f.preds)||undefined,pscope:f.ps||undefined,extra:(f.x&&Object.keys(f.x).length)?Object.assign({},f.x):undefined});
+    nt.push({escenario:g(f.esc),c1:g(f.c1),c2:g(f.c2),tarea,iLB,fLB,av:Math.max(0,Math.min(100,+g(f.av)||0)),iRP:d(f.irp)||iLB,fRP:d(f.frp)||fLB,hito:f.tipo==='HITO',evento:f.tipo==='EVENTO',crit:f.crit==='si',marca2:g(f.m2),summary:f.resumen==='si',pid:g(f.pid)||undefined,preds:g(f.preds)||undefined,pscope:f.ps||undefined,puid:f.pu||undefined,extra:(f.x&&Object.keys(f.x).length)?Object.assign({},f.x):undefined});
   }
   if(!nt.length){if(!silent)alert('No hay tareas válidas.');return;}
   if(!_edNoUndo&&_edSig(TASKS)!==_edSig(nt)){_edUndo.push(_edClone(TASKS));if(_edUndo.length>100)_edUndo.shift();_edRedo=[];}
@@ -8668,10 +8668,189 @@ function pxmlRefreshDb(){
         </div>
         <div style="font-size:10px;color:#888">${esc(db.fileName)} · ${db.tasks.length} tareas · LB actual: <b>${db.currentBaseline!==undefined?db.currentBaseline:'—'}</b>${db.baselineDate?' (guardada '+db.baselineDate+')':''} · ${db.customCols.length} campos custom · ${db.loaded}</div>
       </div>
+      <button onclick="pxmlWriteBack(${i})" title="Guardar los cambios de la Tabla de Datos en un XML de Project (nuevo archivo; el original no se modifica)" class="rb-flat" style="padding:.4rem .5rem"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 11v6"/><path d="m9 14 3 3 3-3"/></svg></button>
       <button onclick="pxmlDuplicate(${i})" title="Duplicar escenario" class="rb-flat" style="padding:.4rem .5rem">${PXML_COPY_SVG}</button>
       <button onclick="pxmlRemove(${i})" title="Eliminar escenario" class="rb-flat" style="padding:.4rem .5rem">${PXML_TRASH_SVG}</button>
     </div>`).join('');
 }
+/* ═══ DEVOLVER LOS CAMBIOS A PROJECT (XML) ═══
+   El usuario vuelve a elegir el XML ORIGINAL; se copia por partes (streaming, sirve para archivos de >1 GB) y solo
+   se reescriben las tareas que cambiaron en la Tabla de Datos. El resto del archivo pasa byte a byte. El original no se toca:
+   se guarda un archivo nuevo (showSaveFilePicker, Chrome/Edge). Se devuelve:
+   - Nombre (<Name>), Avance (<PercentComplete>), campos personalizados (<ExtendedAttribute>) y Categoría 1/2 si vienen de un campo personalizado.
+   - Predecesoras (<PredecessorLink>): ID → UID, tipo y desfase en días (LinkLag en décimas de minuto, 4800 = 1 día).
+   - Fechas Start/Finish: la tarea pasa a programación MANUAL (Manual=1, ManualStart/ManualFinish) para que Project no las recalcule;
+     la duración se conserva si el largo no cambia y si no se ajusta de forma proporcional (aproximada: la app usa días corridos, Project calendarios laborales).
+   No se devuelve: Línea Base, Clase/Ruta crítica/Resumen, filas nuevas o eliminadas, desfases en %, ni tareas resumen.
+   Solo se parchean elementos que YA existen en la tarea (nunca se insertan, salvo las predecesoras), para no romper el orden del esquema. */
+const _xmlEsc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function _xGet(b,name){const m=new RegExp('<'+name+'>([^<]*)</'+name+'>').exec(b);return m?m[1]:null;}
+function _xSet(b,name,val){const re=new RegExp('(<'+name+'>)[^<]*(</'+name+'>)');return re.test(b)?b.replace(re,(m,a,c)=>a+val+c):null;}
+const _xHours=s=>{const m=/^PT(?:(\d+(?:\.\d+)?)H)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)S)?$/.exec(s||'');return m?(+m[1]||0)+(+m[2]||0)/60+(+m[3]||0)/3600:0;};
+const _xDur=h=>'PT'+Math.max(0,Math.round(h))+'H0M0S';
+const _xDay=s=>Date.parse(s.slice(0,10)+'T00:00:00');
+// Desfase de un <PredecessorLink> en días (misma conversión que al importar); los % se leen como 0.
+function _xLinkLag(raw){
+  const fm=+_xGet(raw,'LagFormat'),pct=fm===19||fm===20,el=[4,6,8,10,12,20].includes(fm);
+  return pct?0:Math.round(((parseFloat(_xGet(raw,'LinkLag'))||0)/10/(el?1440:480))*100)/100;
+}
+function pxmlBuildWriteCtx(i){
+  const db=PXML_DB[i];if(!db||!db.mapping)return null;
+  const scope=db.variantName||db.projectName,byUid=new Map();
+  TASKS.forEach(t=>{if(t.puid&&t.pscope===scope&&!byUid.has(t.puid))byUid.set(t.puid,t);}); // la 1.ª aparición es el original; las copias de «Duplicar escenario» vienen después
+  const puidByPid=new Map();byUid.forEach((t,u)=>{const p=depPid(t);if(p&&!puidByPid.has(p))puidByPid.set(p,u);});
+  return{db,map:db.mapping,byUid,puidByPid,rowByUid:new Map(db.tasks.map(r=>[String(r.UID),r]))};
+}
+// Devuelve null si la tarea no cambió; si no, {block,st,skip}. Nunca lanza: ante un XML mal formado devuelve err.
+function pxmlPatchTask(block,ctx){
+  const uid=_xGet(block,'UID');if(uid==null)return null;
+  const t=ctx.byUid.get(uid),row=ctx.rowByUid.get(uid);if(!t||!row)return null;
+  const map=ctx.map,st={nm:0,av:0,f:0,dur:0,c:0,p:0},skip=[];let b=block,r;
+  // Nombre
+  if(map.tarea==='Name'){const o=(row.Name||'').trim(),n=(t.tarea||'').trim();if(n&&n!==o&&(r=_xSet(b,'Name',_xmlEsc(n)))){b=r;st.nm++;}}
+  // Avance (0–100)
+  if(map.av==='PercentComplete'){
+    const o=parseFloat(row.PercentComplete),n=Math.round(+t.av||0);
+    if(Math.abs((isNaN(o)?0:o)-n)>=.5&&(r=_xSet(b,'PercentComplete',n))){b=r;st.av++;const r2=_xSet(b,'PercentWorkComplete',n);if(r2)b=r2;}
+  }
+  // Fechas → programación manual
+  const dchg=(field,col,d)=>{
+    if(map[col]!==field||!(d instanceof Date)||isNaN(d))return null;
+    const raw=_xGet(b,field);if(!raw||!/^\d{4}-\d{2}-\d{2}/.test(raw))return null;
+    const nd=isoLocal(d);return nd!==raw.slice(0,10)?nd+raw.slice(10):null;
+  };
+  const nS=dchg('Start','iRP',t.iRP),nF=dchg('Finish','fRP',t.fRP);
+  if(nS||nF){
+    if(t.summary||_xGet(b,'Summary')==='1')skip.push('fechas de resumen');
+    else if(['Manual','ManualStart','ManualFinish','ManualDuration','Duration'].some(n=>_xGet(b,n)==null))skip.push('fechas: faltan elementos de programación manual');
+    else{
+      const oS=_xGet(b,'Start'),oF=_xGet(b,'Finish'),ns=nS||oS,nf=nF||oF;
+      if(_xDay(nf)<_xDay(ns))skip.push('fechas: el fin queda antes del inicio');
+      else{
+        const day=864e5,spO=(_xDay(oF)-_xDay(oS))/day,spN=(_xDay(nf)-_xDay(ns))/day,oldH=_xHours(_xGet(b,'Duration'));
+        let h=oldH;
+        if(_xGet(b,'Milestone')==='1')h=0;
+        else if(Math.abs(spN-spO)>=.5)h=spO>0?oldH*spN/spO:8*spN;
+        const pct=parseFloat(_xGet(b,'PercentComplete'))||0;
+        b=_xSet(b,'Manual','1');b=_xSet(b,'Start',ns);b=_xSet(b,'Finish',nf);b=_xSet(b,'ManualStart',ns);b=_xSet(b,'ManualFinish',nf);
+        b=_xSet(b,'Duration',_xDur(h));b=_xSet(b,'ManualDuration',_xDur(h));
+        r=_xSet(b,'RemainingDuration',_xDur(h*(1-pct/100)));if(r)b=r;
+        r=_xSet(b,'ActualDuration',_xDur(h*pct/100));if(r)b=r;
+        st.f++;if(Math.round(h)!==Math.round(oldH))st.dur++;
+      }
+    }
+  }
+  // Categorías y campos personalizados (solo los que vienen de un campo personalizado del proyecto)
+  const fields=[['c1',t.c1,false],['c2',t.c2,false],...PXML_CUSTOM.map(c=>[c.key,(t.extra&&t.extra[c.key])||'',true])];
+  fields.forEach(([key,val,isExtra])=>{
+    const col=map[key];if(!col||!String(col).startsWith('_c_'))return;
+    const cc=ctx.db.customCols.find(x=>x.id===col);if(!cc)return;
+    const oldRaw=row[col]||'',oldCmp=isExtra?pxmlFmtExtra(oldRaw):oldRaw;
+    if(String(val||'')===String(oldCmp||''))return;
+    let nv=String(val||'');
+    if(isExtra&&/^\d{4}-\d{2}-\d{2}$/.test(nv)&&/^\d{4}-\d{2}-\d{2}T/.test(oldRaw))nv+=oldRaw.slice(10);
+    const re=new RegExp('(<FieldID>'+cc.fid+'</FieldID>\\s*<Value>)[^<]*(</Value>)');
+    if(re.test(b)){b=b.replace(re,(m,a,c)=>a+_xmlEsc(nv)+c);st.c++;}else skip.push('campo «'+(cc.alias||cc.fname)+'» sin valor en la tarea');
+  });
+  // Predecesoras
+  if(map.preds==='Predecessors'){
+    const cur=depFmt(depParse(t.preds||'').links),orig=depFmt(depParse(row.Predecessors||'').links);
+    if(cur!==orig){
+      const old=[...b.matchAll(/<PredecessorLink>[\s\S]*?<\/PredecessorLink>/g)].map(m=>({raw:m[0],key:_xGet(m[0],'PredecessorUID')+'|'+_xGet(m[0],'Type')+'|'+_xLinkLag(m[0])}));
+      const TY={FF:0,FS:1,SF:2,SS:3},out=[];
+      depParse(t.preds||'').links.forEach(l=>{
+        const u=ctx.puidByPid.get(l.pid);if(!u){skip.push('predecesora ID '+l.pid+' no existe');return;}
+        const key=u+'|'+TY[l.type]+'|'+(Math.round(l.lag*100)/100),same=old.find(o=>o.key===key);
+        if(l.pct)skip.push('desfase en % de la predecesora '+l.pid+' (se escribe sin desfase)');
+        out.push(same&&!l.pct?same.raw:'<PredecessorLink><PredecessorUID>'+u+'</PredecessorUID><Type>'+TY[l.type]+'</Type><CrossProject>0</CrossProject><LinkLag>'+Math.round((l.pct?0:l.lag)*4800)+'</LinkLag><LagFormat>7</LagFormat></PredecessorLink>');
+      });
+      const tok='@@PL@@',first=b.search(/<PredecessorLink>/);
+      if(first>=0){let k=0;b=b.replace(/\s*<PredecessorLink>[\s\S]*?<\/PredecessorLink>/g,()=>k++?'':tok);}
+      else{const ix=b.search(/<TimephasedData>|<\/Task>/);b=b.slice(0,ix)+tok+b.slice(ix);}
+      b=b.replace(tok,out.join('\n\t\t'));
+      st.p++;
+    }
+  }
+  if(!(st.nm+st.av+st.f+st.c+st.p)){return skip.length?{block,st,skip,same:true}:null;}
+  // Validación: cada tarea modificada debe seguir siendo XML bien formado; si no, se deja como estaba.
+  try{
+    const d=new DOMParser().parseFromString('<r xmlns="http://schemas.microsoft.com/project">'+b+'</r>','text/xml');
+    if(d.getElementsByTagName('parsererror').length)return{block,st:{nm:0,av:0,f:0,dur:0,c:0,p:0},skip:[...skip,'tarea UID '+uid+' descartada: el XML resultante no era válido'],err:true};
+  }catch(e){return{block,st:{nm:0,av:0,f:0,dur:0,c:0,p:0},skip:[...skip,'tarea UID '+uid+' descartada'],err:true};}
+  return{block:b,st,skip};
+}
+// sink.write(texto) recibe el archivo nuevo por partes. Devuelve estadísticas.
+async function pxmlPatchStream(file,ctx,sink,onProgress){
+  let enc='utf-8';
+  try{const head=new TextDecoder('latin1').decode(await file.slice(0,300).arrayBuffer());const m=/<\?xml[^>]*encoding=["']([\w.-]+)["']/i.exec(head);if(m)enc=m[1];}catch(e){}
+  if(enc.toLowerCase().replace(/[^a-z0-9]/g,'')!=='utf8')throw new Error('El XML está en '+enc+', no en UTF-8: no se puede reescribir sin alterar los caracteres.');
+  const dec=new TextDecoder('utf-8'),reader=file.stream().getReader();
+  const S={tareas:0,cambiadas:0,nm:0,av:0,f:0,dur:0,c:0,p:0,err:0,omitidos:[]};
+  let buf='',read=0,pending='';
+  for(;;){
+    const {value,done}=await reader.read();
+    if(value){read+=value.length;buf+=dec.decode(value,{stream:true});}else if(done)buf+=dec.decode();
+    let pos=0,out='';
+    for(;;){
+      const s=buf.indexOf('<Task>',pos);if(s<0)break;
+      const e=buf.indexOf('</Task>',s);if(e<0)break;
+      out+=buf.slice(pos,s);
+      const blk=buf.slice(s,e+7);S.tareas++;
+      const r=pxmlPatchTask(blk,ctx);
+      if(r){
+        if(r.skip)r.skip.forEach(x=>{if(S.omitidos.length<25)S.omitidos.push(x);});
+        if(r.err)S.err++;
+        if(!r.same&&!r.err){S.cambiadas++;['nm','av','f','dur','c','p'].forEach(k=>S[k]+=r.st[k]);}
+        out+=r.block;
+      }else out+=blk;
+      pos=e+7;
+    }
+    let keep;
+    if(done)keep=buf.length;
+    else{const lo=buf.lastIndexOf('<Task>');keep=lo>=pos?lo:Math.max(pos,buf.length-8);}
+    out+=buf.slice(pos,keep);buf=buf.slice(keep);
+    if(out)await sink.write(out);
+    if(onProgress)onProgress(Math.min(100,Math.round(read/Math.max(1,file.size)*100)),S);
+    if(done)break;
+  }
+  return S;
+}
+function pxmlWriteSummary(S){
+  const l=[`${S.cambiadas} de ${S.tareas} tareas modificadas.`];
+  const p=[];if(S.nm)p.push(S.nm+' nombre(s)');if(S.av)p.push(S.av+' avance(s)');if(S.f)p.push(S.f+' fecha(s)'+(S.dur?' (duración aproximada en '+S.dur+')':''));if(S.p)p.push(S.p+' tarea(s) con predecesoras');if(S.c)p.push(S.c+' campo(s)');
+  if(p.length)l.push('Cambios: '+p.join(', ')+'.');
+  if(S.err)l.push(S.err+' tarea(s) no se modificaron porque el XML resultante no era válido.');
+  if(S.omitidos.length)l.push('No devuelto: '+[...new Set(S.omitidos)].slice(0,6).join('; ')+(S.omitidos.length>6?'…':'')+'.');
+  l.push('No se devuelven la Línea Base, Clase, Ruta crítica, Resumen, filas nuevas o eliminadas. Abra el archivo en Project para comprobarlo.');
+  return l.join('\n');
+}
+async function pxmlWriteBack(i){
+  const db=PXML_DB[i];if(!db)return;
+  if(!window.showOpenFilePicker||!window.showSaveFilePicker){await ogDialog({title:'Función no disponible',msg:'Guardar un XML nuevo necesita Chrome o Edge (API de acceso a archivos).',ok:'Entendido',cancel:false});return;}
+  const ctx=pxmlBuildWriteCtx(i);
+  if(!ctx||!ctx.byUid.size){await ogDialog({title:'No hay tareas para devolver',msg:'La Tabla de Datos no tiene tareas de este XML con su UID de Project. Vuelva a importar el archivo y compruebe el mapeo.',ok:'Entendido',cancel:false});return;}
+  const go=await ogDialog({title:'Guardar cambios en un XML de Project',msg:'1) Elija el XML ORIGINAL de "'+(db.variantName||db.projectName)+'" ('+db.fileName+').\n2) Elija dónde guardar el XML nuevo. El original no se modifica.\n\nSe devuelven nombres, avance, fechas (como programación manual), predecesoras y campos personalizados. Es una función nueva: compruebe el resultado en Project.',ok:'Continuar'});
+  if(!go)return;
+  const st=document.getElementById('pxmlApplyStatus');
+  try{
+    const [inH]=await window.showOpenFilePicker({multiple:false,types:[{description:'Project XML',accept:{'text/xml':['.xml']}}]});
+    const file=await inH.getFile();
+    const head=new TextDecoder('utf-8').decode(await file.slice(0,400000).arrayBuffer()),nm=/<Name>([\s\S]*?)<\/Name>/.exec(head);
+    if(nm&&db.projectName&&nm[1].trim()!==db.projectName&&!(await ogDialog({title:'¿Es el mismo proyecto?',msg:'El archivo elegido se llama "'+nm[1].trim()+'" y el importado "'+db.projectName+'". Los UID podrían no coincidir.',ok:'Continuar de todos modos'})))return;
+    const outH=await window.showSaveFilePicker({suggestedName:file.name.replace(/\.xml$/i,'')+'_editado.xml',types:[{description:'Project XML',accept:{'text/xml':['.xml']}}]});
+    const w=await outH.createWritable();
+    let S;
+    try{S=await pxmlPatchStream(file,ctx,w,(p,s)=>{if(st)st.textContent='Escribiendo XML… '+p+'% · '+s.cambiadas+' tareas modificadas';});await w.close();}
+    catch(e){try{await w.abort();}catch(_){}throw e;}
+    if(st)st.textContent='✓ XML guardado: '+S.cambiadas+' tareas modificadas.';
+    await ogDialog({title:'XML guardado',msg:pxmlWriteSummary(S),ok:'Aceptar',cancel:false});
+  }catch(e){
+    if(e&&e.name==='AbortError')return;
+    if(st)st.textContent='❌ '+(e.message||e);
+    await ogDialog({title:'No se pudo guardar el XML',msg:String(e.message||e),ok:'Entendido',cancel:false});
+  }
+}
+
 function pxmlRemove(i){
   const db=PXML_DB[i];if(!db)return;
   if(!confirm(`¿Eliminar "${db.variantName||db.projectName}"? Se quitan también sus tareas de la Tabla de Datos.`))return;
@@ -9026,7 +9205,7 @@ function pxmlApplyMapping(silent){
           extra[c.key]=pxmlFmtExtra(col==='__ARCHIVO__'?fileVariant:pxmlGetVal(row,col,m[c.key+'_fixed']||''));
         });
       }
-      newTasks.push({id,escenario:_escxml,c1:t.c1,c2:t.c2,tarea:t.tarea,iLB,fLB,iRP,fRP,av,hito,evento,crit,marca2:_m2xml,summary,pid:String(t.pid||'').trim()||undefined,preds:String(t.preds||'').trim()||undefined,pscope:fileVariant,extra,_fromXml:true,_dbIdx:dbIdx});
+      newTasks.push({id,escenario:_escxml,c1:t.c1,c2:t.c2,tarea:t.tarea,iLB,fLB,iRP,fRP,av,hito,evento,crit,marca2:_m2xml,summary,pid:String(t.pid||'').trim()||undefined,preds:String(t.preds||'').trim()||undefined,pscope:fileVariant,puid:String(row.UID||'').trim()||undefined,extra,_fromXml:true,_dbIdx:dbIdx});
     });
   });
   if(!newTasks.length){if(!silent)alert(`No se generaron tareas. (${skipped} omitidas)`);return false;}
@@ -9754,6 +9933,19 @@ document.addEventListener('keydown',e=>{
       <div id="docHist" style="display:none">
       <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px;margin-top:0">&#128196; Historial de cambios</h2>
       <div style="display:flex;flex-direction:column;gap:14px">
+
+        <div style="border:1px solid #e0e7ef;border-radius:7px;overflow:hidden">
+          <div style="background:#0b7285;color:#fff;padding:7px 14px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:10px">
+            <span style="background:rgba(255,255,255,.2);border-radius:3px;padding:1px 8px">v3.1.3</span>
+            <span>2026-09-21</span>
+            <span style="font-weight:400;font-size:11px;opacity:.85">Devolver los cambios a Project (XML)</span>
+          </div>
+          <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
+            <li><b>Guardar cambios en un XML de Project:</b> desde Datos → Gestión de XML → Base de datos, escribe un XML nuevo a partir del original (lectura por partes, sirve para archivos de más de 1 GB). Solo cambian las tareas editadas; el resto del archivo pasa igual.</li>
+            <li><b>Qué se devuelve:</b> nombre, avance, fechas (la tarea pasa a programación manual; duración proporcional si cambia el largo), predecesoras (ID → UID, tipo y desfase en días) y campos personalizados. No se devuelven Línea Base, Clase, Ruta crítica, Resumen ni filas nuevas o eliminadas. Requiere Chrome o Edge y un XML en UTF-8.</li>
+            <li><b>Verificación:</b> cada tarea modificada se valida como XML bien formado; se comprobó con los XML de ejemplo (hasta 1,7 GB) reimportando el resultado. Aún no se ha abierto en Microsoft Project.</li>
+          </ul>
+        </div>
 
         <div style="border:1px solid #e0e7ef;border-radius:7px;overflow:hidden">
           <div style="background:#b5651d;color:#fff;padding:7px 14px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:10px">

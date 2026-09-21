@@ -644,6 +644,32 @@ FIGS['69'] = async b => {           // Selección de barras (una y varias)
   await p.close();
 };
 
+
+/* ══ Devolver los cambios a Project (XML) ══ */
+FIGS['70'] = async b => {           // Botón en la Base de datos de XML (anotada)
+  const p = await conXml(b); await p.evaluate(() => pxmlTab('db')); await sleep(500);
+  const r = await rectOf(p, '#pxmlDbList button[onclick^="pxmlWriteBack"]');
+  await shot(p, 'fig-70-xml-guardar-cambios', { clip: C(NAV, 0, W - NAV, 420), ann: [{ n: 1, rect: r, at: 'tc', dy: -6, pad: 3 }] });
+  await p.close();
+};
+FIGS['71'] = async b => {           // Cuadro de confirmación previo
+  const p = await conXml(b); await p.evaluate(() => { pxmlWriteBack(0); }); await sleep(700);
+  await modalShot(p, 'fig-71-xml-guardar-dialogo', '#ogDlg .og-card');
+  await p.close();
+};
+FIGS['72'] = async b => {           // Resumen tras guardar (estadísticas de una escritura real de prueba)
+  const p = await conXml(b);
+  await p.evaluate(async xml => {
+    const leaf = TASKS.filter(t => t.puid && !t.summary && !t.hito);
+    leaf[1].av = 60; leaf[2].tarea = leaf[2].tarea + ' (revisada)'; leaf[3].preds = '2;1CC+2 días';
+    const ctx = pxmlBuildWriteCtx(0), S = await pxmlPatchStream(new File([xml], 'Planta_ejemplo.xml'), ctx, { write: async () => {} }, null);
+    ogDialog({ title: 'XML guardado', msg: pxmlWriteSummary(S), ok: 'Aceptar', cancel: false });
+  }, demoXml('Planta de ejemplo'));
+  await sleep(700);
+  await modalShot(p, 'fig-72-xml-guardado-resumen', '#ogDlg .og-card');
+  await p.close();
+};
+
 (async () => {
   const want = process.argv.slice(2);
   const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new' });
