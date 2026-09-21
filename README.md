@@ -2,7 +2,7 @@
 
 **OpenGanttLab — Plataforma abierta para planificación, análisis y visualización de cronogramas**
 
-Herramienta HTML standalone para comparar escenarios de plan de actividades, con Gantt interactivo y Línea de Tiempo ejecutiva exportable (PNG/PDF/PPTX).
+Aplicación web HTML standalone para comparar escenarios de plan de actividades, con Gantt interactivo y Línea de Tiempo ejecutiva exportable (PNG/PDF/PPTX).
 
 ## Archivos
 
