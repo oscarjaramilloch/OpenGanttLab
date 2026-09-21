@@ -4422,6 +4422,16 @@ function addEditorRow(){
   sc.scrollTop=sc.scrollHeight;
   if(_edVirt)edRender(true);
 }
+// Filas del modelo de la tabla que forman parte de un ciclo de dependencias (Kahn sobre Predecesoras)
+function _edCycNodes(){
+  const L=_edRows.filter(f=>((f.tar||'').trim()||'(sin nombre)')!=='(sin nombre)').map(f=>({f,pid:String(f.pid||'').trim()||undefined,preds:String(f.preds||'').trim()||undefined,escenario:String(f.esc||'').trim(),pscope:f.ps||undefined,c1:String(f.c1||'').trim()}));
+  const res=depResolverFor(L),indeg=new Map(),out=new Map();
+  L.forEach(t=>{indeg.set(t,0);out.set(t,[]);});
+  L.forEach(t=>{if(!t.preds)return;depParse(t.preds).links.forEach(l=>{const p=res(t,l.pid);if(!p||p===t)return;out.get(p).push(t);indeg.set(t,indeg.get(t)+1);});});
+  const q=[...indeg].filter(([,n])=>!n).map(([t])=>t);
+  while(q.length){const t=q.pop();out.get(t).forEach(x=>{const n=indeg.get(x)-1;indeg.set(x,n);if(!n)q.push(x);});}
+  return new Set(L.filter(t=>indeg.get(t)>0).map(t=>t.f));
+}
 // Delegación de eventos: cada control escribe su valor en el modelo de su fila (las filas fuera
 // de la ventana visible no existen en el DOM, así que el modelo es la fuente de verdad).
 (function(){
@@ -4431,6 +4441,18 @@ function addEditorRow(){
     if(el.dataset&&el.dataset.x!==undefined){(tr._m.x||(tr._m.x={}))[el.dataset.x]=el.value;return;}
     for(const c of el.classList){if(ED_CLS_KEY[c]){tr._m[ED_CLS_KEY[c]]=el.value;break;}}
   };
+  // Predecesoras: una relación que cierre un ciclo no se acepta (se restaura el valor anterior, sin propagar el cambio)
+  b.addEventListener('focusin',e=>{const el=e.target,tr=el.closest&&el.closest('tr');if(tr&&tr._m&&el.classList&&el.classList.contains('epreds'))tr._m._predPrev=tr._m.preds;});
+  b.addEventListener('change',e=>{
+    const el=e.target,tr=el.closest&&el.closest('tr'),m=tr&&tr._m;
+    if(!m||!el.classList||!el.classList.contains('epreds')||m._predPrev===undefined)return;
+    const nv=m.preds,prev=m._predPrev;
+    m.preds=prev;const before=_edCycNodes();m.preds=nv;
+    if([..._edCycNodes()].some(f=>!before.has(f))){
+      m.preds=prev;el.value=prev;e.stopImmediatePropagation();
+      apToast('⚠ Esa relación crearía un ciclo de dependencias: no se guardó.');
+    }else m._predPrev=nv;
+  });
   b.addEventListener('input',sync);b.addEventListener('change',sync);
   b.addEventListener('focusin',edSchedSnap);b.addEventListener('change',edSchedOnChange);
   b.addEventListener('click',e=>{

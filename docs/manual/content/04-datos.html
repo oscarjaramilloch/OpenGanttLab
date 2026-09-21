@@ -135,6 +135,7 @@
 <p>Las tres últimas columnas de la tabla sirven para las dependencias. <b>ID</b> identifica la tarea, <b>Predecesoras</b> se escribe a mano o viene del XML, y <b>Sucesoras</b> se calcula sola (es la inversa de las predecesoras).</p>
 <fig slug="tabla-dependencias" t="Columnas de dependencias" legend="ID, Predecesoras (editable) y Sucesoras (calculada)">Las columnas ID, Predecesoras y Sucesoras.</fig>
 <p>La columna <b>Predecesoras</b> usa el mismo formato que Microsoft Project: el número de la predecesora, el tipo de vínculo y un desfase opcional.</p>
+<p>Si el valor que escribe en <b>Predecesoras</b> cerraría un <b>ciclo</b> de dependencias, la tabla no lo acepta: restaura el valor anterior y muestra un aviso.</p>
 <fig slug="formato-predecesoras" t="Cómo se escribe una predecesora" observe="Se aceptan las siglas en español (FC, CC, FF, CF) y en inglés (FS, SS, FF, SF).|El desfase admite días, semanas, horas y minutos (por ejemplo +2 días, -1d, +3w).|Sin tipo ni desfase, el vínculo es Fin a Comienzo.">Anatomía de una predecesora.</fig>
 <table>
 <tr><th>Ejemplo</th><th>Significado</th></tr>
