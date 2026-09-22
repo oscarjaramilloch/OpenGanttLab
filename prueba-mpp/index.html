@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Prueba lector MPP</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{font:14px/1.4 system-ui,Segoe UI,sans-serif;margin:24px;color:#1a1a1a;background:#fafafa}
+  h1{font-size:20px;margin:0 0 4px}
+  .sub{color:#666;margin-bottom:16px}
+  #drop{border:2px dashed #999;border-radius:10px;padding:36px;text-align:center;background:#fff;cursor:pointer}
+  #drop.over{border-color:#0a7;background:#eefaf5}
+  #log{font:12px/1.5 Consolas,monospace;background:#111;color:#cfe;padding:10px;border-radius:8px;margin:14px 0;max-height:180px;overflow:auto;white-space:pre-wrap}
+  .err{color:#f88}
+  table{border-collapse:collapse;width:100%;background:#fff;font-size:13px}
+  th,td{border:1px solid #ddd;padding:3px 8px;text-align:left}
+  th{background:#f0f0f0;position:sticky;top:0}
+  #wrap{max-height:60vh;overflow:auto;margin-top:10px}
+  button{padding:6px 14px;margin-right:8px}
+</style>
+</head>
+<body>
+<h1>Prueba: leer .mpp con MPXJ + CheerpJ</h1>
+<div class="sub">MPXJ 16.7.0 corre dentro del navegador; el archivo no sale de tu equipo. Esta página no toca OpenGanttLab.</div>
+
+<div id="drop">Arrastra aquí un archivo <b>.mpp</b> (o .xml / .mpx / .xer) o haz clic para elegirlo
+  <input id="file" type="file" accept=".mpp,.mpt,.mpx,.xml,.xer,.pmxml,.planner" hidden>
+</div>
+<div id="log"></div>
+<div id="acts" hidden><button id="dl">Descargar XML (MSPDI)</button><span id="info"></span></div>
+<div id="wrap"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const t0=performance.now();
+const log=(m,err)=>{const d=document.createElement('div');if(err)d.className='err';
+  d.textContent='['+((performance.now()-t0)/1000).toFixed(1)+'s] '+m;$('log').appendChild(d);$('log').scrollTop=1e9};
+
+if(location.protocol==='file:')log('Abre esta página con servir.bat (http://localhost:8000). CheerpJ no funciona desde file://.',1);
+
+let libPromise=null;
+function getLib(){
+  if(libPromise)return libPromise;
+  libPromise=(async()=>{
+    log('Cargando CheerpJ (JVM en WebAssembly)...');
+    await new Promise((ok,ko)=>{const s=document.createElement('script');
+      s.src='https://cjrtnc.leaningtech.com/4.2/loader.js';s.onload=ok;s.onerror=()=>ko(new Error('No se pudo cargar CheerpJ (¿sin internet?)'));document.head.appendChild(s)});
+    await cheerpjInit({version:8});
+    log('JVM lista. Cargando MPXJ...');
+    const jars=['conv','mpxj-16.7.0','poi-5.5.1','commons-io-2.21.0','commons-codec-1.20.0','commons-collections4-4.5.0',
+      'commons-lang3-3.18.0','commons-math3-3.6.1','log4j-api-2.24.3','SparseBitSet-1.3','commons-logging-1.2',
+      'jakarta.xml.bind-api-3.0.1','jakarta.activation-2.0.1','jaxb-core-3.0.2','jaxb-runtime-3.0.2',
+      'istack-commons-runtime-4.0.1','txw2-3.0.2','jsoup-1.22.2','rtfparserkit-1.16.0'];
+    const lib=await cheerpjRunLibrary(jars.map(j=>'/app/lib/'+j+'.jar').join(':'));
+    return await lib.Conv;
+  })();
+  return libPromise;
+}
+
+let lastXml='',lastName='';
+async function convertir(f){
+  try{
+    $('acts').hidden=true;$('wrap').innerHTML='';
+    log('Archivo: '+f.name+' ('+(f.size/1024).toFixed(0)+' KB)');
+    const Conv=await getLib();
+    const buf=new Uint8Array(await f.arrayBuffer());
+    const path='/str/'+f.name.replace(/[^\w.\-]/g,'_');
+    cheerpOSAddStringFile(path,buf);
+    const t=performance.now();
+    log('Convirtiendo con MPXJ...');
+    const xml=await Conv.toXml(path);
+    log('Conversión OK en '+((performance.now()-t)/1000).toFixed(1)+'s, XML de '+(xml.length/1024).toFixed(0)+' KB');
+    lastXml=xml;lastName=f.name.replace(/\.[^.]+$/,'')+'.xml';
+    mostrar(xml);
+  }catch(e){log('ERROR: '+(e&&(e.message||e))+(e&&e.stack?'\n'+e.stack.split('\n').slice(0,4).join('\n'):''),1)}
+}
+
+function mostrar(xml){
+  const d=new DOMParser().parseFromString(xml,'application/xml');
+  const q=(n,s)=>{const e=n.getElementsByTagName(s)[0];return e?e.textContent:''};
+  const ts=[...d.getElementsByTagName('Task')].filter(t=>t.parentNode.nodeName==='Tasks');
+  const fmt=s=>s?s.replace('T',' ').slice(0,16):'';
+  const rows=ts.slice(0,500).map(t=>'<tr><td>'+q(t,'UID')+'</td><td>'+q(t,'WBS')+'</td><td style="padding-left:'+(8+12*(+q(t,'OutlineLevel')||0))+'px">'+
+    q(t,'Name').replace(/</g,'&lt;')+'</td><td>'+fmt(q(t,'Start'))+'</td><td>'+fmt(q(t,'Finish'))+'</td><td>'+q(t,'PercentComplete')+'</td><td>'+t.getElementsByTagName('PredecessorLink').length+'</td></tr>').join('');
+  $('wrap').innerHTML='<table><tr><th>UID</th><th>WBS</th><th>Tarea</th><th>Inicio</th><th>Fin</th><th>% av.</th><th>Pred.</th></tr>'+rows+'</table>';
+  $('info').textContent=ts.length+' tareas'+(ts.length>500?' (se muestran 500)':'')+', '+d.getElementsByTagName('Resource').length+' recursos';
+  $('acts').hidden=false;
+}
+
+$('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([lastXml],{type:'application/xml'}));a.download=lastName;a.click()};
+const dz=$('drop');
+dz.onclick=()=>$('file').click();
+$('file').onchange=e=>e.target.files[0]&&convertir(e.target.files[0]);
+dz.ondragover=e=>{e.preventDefault();dz.classList.add('over')};
+dz.ondragleave=()=>dz.classList.remove('over');
+dz.ondrop=e=>{e.preventDefault();dz.classList.remove('over');e.dataTransfer.files[0]&&convertir(e.dataTransfer.files[0])};
+</script>
+</body>
+</html>
