@@ -3145,10 +3145,10 @@ function depUnitDays(u){
   u=(u||'').toLowerCase();
   if(u.length===2&&u[0]==='e')u=u.slice(1); // ed/eh/ew/em: "transcurrido" → se trata igual
   if(!u||u[0]==='d')return 1;
-  if(/^(w|sem|s$)/.test(u))return 5;
-  if(/^h/.test(u))return 1/8;
-  if(/^(mo|mes)/.test(u))return 20;
-  if(/^m/.test(u))return 1/480;
+  if(/^(w|sem|s$)/.test(u))return 7;
+  if(/^h/.test(u))return 1/24;
+  if(/^(mo|mes)/.test(u))return 30;
+  if(/^m/.test(u))return 1/1440;
   return 1;
 }
 function depParse(txt){
@@ -3167,8 +3167,7 @@ function depParse(txt){
 }
 function depFmt(links){
   return links.map(l=>{
-    const has=l.pct||l.lag;
-    let s=String(l.pid)+((l.type&&l.type!=='FS')||has?DEP_LBL[l.type||'FS']:'');
+    let s=String(l.pid)+DEP_LBL[l.type||'FS'];
     if(l.pct)s+=(l.pct<0?'-':'+')+Math.abs(l.pct)+'%';
     else if(l.lag){const n=Math.round(Math.abs(l.lag)*100)/100;s+=(l.lag<0?'-':'+')+String(n).replace('.',',')+' '+(n===1?'día':'días');}
     return s;
@@ -3179,18 +3178,17 @@ function depPid(t){return t.pid==null?'':String(t.pid).trim();}
 // archivo XML (t.pscope, fijada al importar) o, en Excel, la Categoría 1.
 function depScope(t){return t.escenario?'s:'+t.escenario:t.pscope?'p:'+t.pscope:'c:'+t.c1;}
 function depResolverFor(list){
-  const scoped=new Map(),byFile=new Map(),glob=new Map();
+  const scoped=new Map(),byFile=new Map();
   list.forEach(t=>{
     const p=depPid(t);if(!p)return;
     const k=depScope(t)+'\x00'+p;
     if(!scoped.has(k))scoped.set(k,t);
     if(t.pscope){const kf=t.pscope+'\x00'+p;if(!byFile.has(kf))byFile.set(kf,t);}
-    else glob.set(p,glob.has(p)?null:t); // null = id repetido en varios escenarios: ambiguo
   });
   return(from,pid)=>{
     const a=scoped.get(depScope(from)+'\x00'+pid);if(a)return a;
-    if(from.pscope)return byFile.get(from.pscope+'\x00'+pid)||null; // XML: los ids son únicos por archivo
-    const g=glob.get(pid);return g||null;
+    if(from.pscope)return byFile.get(from.pscope+'\x00'+pid)||null; // XML: los ids son únicos por archivo/variante
+    return null; // sin escenario/archivo en común: no se cruza (cada escenario tiene su propio espacio de ids)
   };
 }
 // Excel con columna "Sucesoras": se pliega en la "Predecesoras" de cada sucesora (así solo hay una fuente de verdad).
@@ -3210,6 +3208,25 @@ function depFoldSuccessors(list){
   list.forEach(t=>{delete t.sucs;});
 }
 let _depIdx=null,_depSel=null;
+// Restricción de una arista sobre su sucesora, en día calendario (0=1970-01-01, ver _dn/_fromDn
+// más abajo): día mínimo de INICIO de la sucesora que exige el vínculo e. Único punto de cálculo:
+// lo usan tanto el validador de conflictos (depIndex) como el planificador (edSchedForward).
+//   FC: inicio_suc >= fin_pred + lag        (+1 día salvo que la predecesora o la sucesora sea
+//       hito/evento: un hito puede ocurrir el mismo día, a otra hora, que el fin de la predecesora)
+//   CC: inicio_suc >= inicio_pred + lag
+//   FF: fin_suc    >= fin_pred + lag        → inicio_suc = eso - duración de la sucesora
+//   CF: fin_suc    >= inicio_pred + lag     → inicio_suc = eso - duración de la sucesora
+// El lag porcentual (l.pct) es un % de la duración de la PREDECESORA (como en Microsoft Project):
+// se resuelve a días antes de aplicar la fórmula. Si la predecesora aún no tiene fechas R/P válidas
+// (duración 0 o negativa) el % equivale a un lag de 0 días.
+function depReqStartDn(e,succDur){
+  const p=e.p,succPoint=succDur<=0;
+  const lag=e.lag+(e.pct?e.pct/100*Math.max(0,(_dn(p.fRP)-_dn(p.iRP))):0);
+  if(e.type==='FS'){const off=(succPoint||p.hito||p.evento)?0:1;return _dn(p.fRP)+off+lag;}
+  if(e.type==='SS')return _dn(p.iRP)+lag;
+  if(e.type==='FF')return _dn(p.fRP)+lag-succDur;
+  const off=succPoint?0:1;return _dn(p.iRP)-off+lag-succDur;
+}
 function depIndex(){
   if(_depIdx)return _depIdx;
   const ix=_depIdx={byT:new Map(),edges:[],issues:[],has:false};
@@ -3232,13 +3249,12 @@ function depIndex(){
     });
   });
   ix.has=ix.edges.length>0;
-  // conflictos de fechas (R/P): la sucesora empieza/termina antes de lo que permite el vínculo (tolerancia 1 día)
+  // Conflictos de fechas (R/P): la sucesora empieza antes de lo que exige el vínculo — misma
+  // fórmula que el planificador (depReqStartDn), sin tolerancia: cualquier día de diferencia cuenta.
   if(AP_PREFS.depConflicts)ix.edges.forEach(e=>{
-    const p=e.p,s=e.s;
-    const lagMs=(e.lag+(e.pct?e.pct/100*Math.max(0,(+p.fRP-+p.iRP)/DEP_DAY):0))*DEP_DAY;
-    let gap=e.type==='FS'?+s.iRP-+p.fRP:e.type==='SS'?+s.iRP-+p.iRP:e.type==='FF'?+s.fRP-+p.fRP:+s.fRP-+p.iRP;
-    gap-=lagMs;
-    if(gap<-DEP_DAY){e.bad=true;ix.issues.push({k:'conf',e,days:Math.round(-gap/DEP_DAY)});}
+    const s=e.s,dd=_dn(s.fRP)-_dn(s.iRP);
+    const gap=_dn(s.iRP)-depReqStartDn(e,dd);
+    if(gap<0){e.bad=true;ix.issues.push({k:'conf',e,days:-gap});}
   });
   // ciclos (Kahn): lo que no se puede ordenar forma parte de un ciclo
   if(ix.has){
@@ -8412,18 +8428,10 @@ function edSchedForward(root,self){
   const q=[...S].filter(t=>indeg.get(t)===0),moved=[];
   while(q.length){
     const t=q.shift(),ent=ix.byT.get(t);
-    if(ent&&ent.preds.length&&!(t.av>=100)&&!t.summary){
+    if(ent&&ent.preds.length&&!(t.av>0)&&!t.summary){
       const dd=_dn(t.fRP)-_dn(t.iRP);
       let best=-Infinity;
-      ent.preds.forEach(e=>{
-        const p=e.p,lag=e.lag+(e.pct?e.pct/100*Math.max(0,(+p.fRP-+p.iRP)/DEP_DAY):0);
-        let s;
-        if(e.type==='FS')s=_dn(p.fRP)+(p.hito||p.evento?0:1)+lag;
-        else if(e.type==='SS')s=_dn(p.iRP)+lag;
-        else if(e.type==='FF')s=_dn(p.fRP)+lag-dd;
-        else s=_dn(p.iRP)-1+lag-dd;
-        if(s>best)best=s;
-      });
+      ent.preds.forEach(e=>{const s=depReqStartDn(e,dd);if(s>best)best=s;});
       best=Math.round(best);
       if(isFinite(best)&&best!==_dn(t.iRP)){t.iRP=_fromDn(best);t.fRP=_fromDn(best+dd);moved.push(t);}
     }

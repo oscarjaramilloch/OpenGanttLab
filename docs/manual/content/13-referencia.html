@@ -39,11 +39,23 @@
 <div>Estructura</div><div><code>ID[tipo][+/−desfase]</code>, separadas por «;» o «,»</div>
 <div>Tipos (español)</div><div>FC, CC, FF, CF</div>
 <div>Tipos (inglés)</div><div>FS, SS, FF, SF</div>
-<div>Unidades de desfase</div><div>d / día(s) · w / sem · h / hora(s) · min · mes; «e» delante = transcurrido (ed, eh)</div>
-<div>Ejemplos</div><div><code>12</code> · <code>12CC+2 días</code> · <code>7FF-1d</code> · <code>12;15FC+3d</code></div>
+<div>Unidades de desfase</div><div>d / día(s) (1) · w / sem (7 días) · h / hora(s) (1/24 día) · min (1/1440 día) · mes (30 días); «e» delante = transcurrido (ed, eh), se trata igual</div>
+<div>Ejemplos</div><div><code>12FC</code> · <code>12CC+2 días</code> · <code>7FF-1d</code> · <code>12FC;15FC+3d</code></div>
 </div>
-<callout type="note" title="Desfases en porcentaje">
-<p>Los desfases en porcentaje que vienen de un XML no se convierten (se leen como 0). Al escribirlos a mano (<code>12FC+50%</code>) sí se conservan.</p>
+<callout type="note" title="Días calendario, no laborables">
+<p>OpenGanttLab no tiene un calendario de proyecto (fines de semana, feriados, jornada laboral): todas las unidades de desfase se convierten a días <b>calendario</b>. Una semana son 7 días corridos, no 5 días hábiles, y un mes son 30 días corridos. Un XML de Microsoft Project con un desfase en días laborables (jornada de 8&nbsp;h) se convierte a días corridos con esa misma equivalencia (8&nbsp;h = 1 día), lo que puede dar una fecha distinta a la que muestra Project si el proyecto usa un calendario distinto.</p>
+</callout>
+<callout type="note" title="Desfase en porcentaje">
+<p>Un desfase en porcentaje (<code>12FC+50%</code>) es un porcentaje de la <b>duración de la predecesora</b>: la sucesora puede empezar cuando ha transcurrido esa fracción de los días de la predecesora (como el lag en porcentaje de Microsoft Project). Se conserva al escribirlo a mano y se usa igual en los avisos de conflicto y en «Reprogramar sucesoras». Los que vienen de un XML no se convierten (se leen como 0), y al exportar a XML un desfase en porcentaje se escribe sin desfase, con aviso.</p>
+</callout>
+<callout type="note" title="Hitos y actividades de duración cero">
+<p>Cuando la <b>sucesora</b> de una FC o una CF es un hito, un evento o una tarea de duración cero, no se le suma el día adicional que sí se aplica a una tarea normal: puede ocurrir el mismo día en que termina (o empieza) la predecesora, ya que un hito no ocupa un día completo.</p>
+</callout>
+<callout type="note" title="Actividades iniciadas">
+<p>«Reprogramar sucesoras» no mueve una actividad con avance mayor a 0&nbsp;%, esté o no al 100&nbsp;%: una actividad que ya empezó no cambia de fecha por un cambio en sus predecesoras.</p>
+</callout>
+<callout type="note" title="IDs por escenario">
+<p>Los IDs de las predecesoras se resuelven dentro del mismo escenario (o, en un XML sin columna Escenario, dentro del mismo archivo/variante). Dos escenarios distintos pueden repetir el mismo ID sin que sus dependencias se crucen.</p>
 </callout>
 
 <h2 id="colores-estados">Colores y símbolos</h2>
