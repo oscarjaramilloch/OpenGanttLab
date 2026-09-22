@@ -2264,7 +2264,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
     <span id="pymFgSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#fff"></span>
     <button id="pymFgAuto" onclick="presYearAutoFg()" style="font-size:8px;padding:1px 4px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">Auto</button>
   </div>
-  <div style="display:flex;align-items:center;gap:8px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
     <span style="font-size:10px;color:#666;min-width:42px">Escala:</span>
     <select id="pymScaleSel" onchange="presSetYearSz(this.value)" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1">
       <option value="8">8</option><option value="9">9</option><option value="10">10</option>
@@ -2272,6 +2272,14 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <option value="14">14</option><option value="15" selected>15</option><option value="16">16</option>
       <option value="18">18</option><option value="20">20</option><option value="24">24</option>
     </select>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <span style="font-size:10px;color:#666;min-width:42px">Ancho:</span>
+    <input type="number" id="pymWidthMul" min="0.2" max="4" step="0.1" value="1" oninput="presSetYearWidthMul(this.value,false)" onchange="presSetYearWidthMul(this.value,true)" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;width:52px">
+    <span style="font-size:9px;color:#aaa">×</span>
+    <button type="button" onclick="presResetYearWidthMul()" title="Restablecer ancho de este año" style="margin-left:auto;width:20px;height:20px;padding:0;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer;display:flex;align-items:center;justify-content:center">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+    </button>
   </div>
 </div>
 
@@ -3087,15 +3095,24 @@ function fmtD(d,forPres){
   return fmtDWith(d,getFmt(forPres?'presDateFmt':'dateFmt'));
 }
 const SCALE_CFG={dias:{px:14,minor:'day'},semanas:{px:4.2,minor:'week'},meses:{px:1.9,minor:'month'},trimestres:{px:1.0,minor:'quarter'},anios:{px:0.5,minor:'year'}};
-function buildScale(k,mn,mx,pxMul){
+function buildScale(k,mn,mx,pxMul,yearMul){
   const c=pxMul&&pxMul!==1?{...SCALE_CFG[k],px:SCALE_CFG[k].px*pxMul}:SCALE_CFG[k];let t0,t1;
   if(c.minor==='day'){t0=new Date(mn.getFullYear(),mn.getMonth(),mn.getDate());t1=addD(mx,1);}
   else if(c.minor==='week'){t0=weekStart(mn);t1=addD(weekStart(mx),7);}
   else if(c.minor==='month'){t0=new Date(mn.getFullYear(),mn.getMonth(),1);t1=new Date(mx.getFullYear(),mx.getMonth()+1,1);}
   else if(c.minor==='quarter'){t0=new Date(mn.getFullYear(),Math.floor(mn.getMonth()/3)*3,1);t1=new Date(mx.getFullYear(),Math.floor(mx.getMonth()/3)*3+3,1);}
   else{t0=soy(mn);t1=soy(new Date(mx.getFullYear()+1,0,1));}
-  const td=Math.max(1,(t1-t0)/DAY),tp=Math.round(td*c.px);
-  const x=d=>Math.round((d-t0)/DAY*c.px*10)/10;
+  // Segmentos por año calendario: cada uno puede tener su propio px/día (yearMul[año]) para
+  // permitir que un año seleccionado tenga una escala de ancho distinta a los demás; con
+  // yearMul vacío/sin overrides esto colapsa exactamente en la escala lineal de siempre.
+  const ySegs=[];{let cur=new Date(t0),cum=0;
+    while(cur<t1){const yEnd=new Date(cur.getFullYear()+1,0,1),segEnd=yEnd<t1?yEnd:t1;
+      const mul=(yearMul&&yearMul[cur.getFullYear()])||1,pxDay=c.px*mul;
+      ySegs.push({start:new Date(cur),end:segEnd,pxDay,cum});
+      cum+=(segEnd-cur)/DAY*pxDay;cur=segEnd;}
+    ySegs._total=cum;}
+  const tp=Math.round(ySegs._total);
+  const x=d=>{for(let i=0;i<ySegs.length;i++){const s=ySegs[i];if(d<s.end||i===ySegs.length-1)return Math.round((s.cum+(d-s.start)/DAY*s.pxDay)*10)/10;}return 0;};
   // Semana: avanza al inicio de la siguiente semana del año; si la semana 52 aún no llegó
   // al 31-dic, la extiende hasta ahí en vez de saltar a una semana 53
   const step=d=>{if(c.minor==='day')return addD(d,1);if(c.minor==='week'){return weekOfYear(d)<52?addD(d,7):new Date(d.getFullYear()+1,0,1);}if(c.minor==='month')return new Date(d.getFullYear(),d.getMonth()+1,1);if(c.minor==='quarter')return new Date(d.getFullYear(),d.getMonth()+3,1);return new Date(d.getFullYear()+1,0,1);};
@@ -5316,6 +5333,7 @@ function apRestoreExecConfigLocal(){
 }
 let PRES_YEAR_COLORS={};
 let PRES_YEAR_TEXT_COLORS={};
+let PRES_YEAR_WIDTH_MUL={}; // año (número) → multiplicador de ancho individual (0.5–4), aparte del multiplicador global "presYearWMul"
 let PRES_LB_YEAR_COLORS={};
 let PRES_LB_YEAR_TEXT_COLORS={};
 let PRES_LEGEND_POS={x:null,y:null}; // posición manual arrastrada de la leyenda (null=posición automática)
@@ -5347,6 +5365,7 @@ function _presSnap(){
     ytc:JSON.stringify(PRES_YEAR_TEXT_COLORS),
     lyc:JSON.stringify(PRES_LB_YEAR_COLORS),
     lytc:JSON.stringify(PRES_LB_YEAR_TEXT_COLORS),
+    ywm:JSON.stringify(PRES_YEAR_WIDTH_MUL),
     lp:JSON.stringify(PRES_LEGEND_POS),
     ls:JSON.stringify(PRES_LEGEND_SIZE)
   });
@@ -5362,6 +5381,7 @@ function _presCurrentSnap(){
     ytc:JSON.stringify(PRES_YEAR_TEXT_COLORS),
     lyc:JSON.stringify(PRES_LB_YEAR_COLORS),
     lytc:JSON.stringify(PRES_LB_YEAR_TEXT_COLORS),
+    ywm:JSON.stringify(PRES_YEAR_WIDTH_MUL),
     lp:JSON.stringify(PRES_LEGEND_POS),
     ls:JSON.stringify(PRES_LEGEND_SIZE)
   };
@@ -5373,6 +5393,7 @@ function _presRestoreSnap(snap){
   PRES_YEAR_TEXT_COLORS=JSON.parse(snap.ytc);
   PRES_LB_YEAR_COLORS=JSON.parse(snap.lyc);
   PRES_LB_YEAR_TEXT_COLORS=JSON.parse(snap.lytc);
+  PRES_YEAR_WIDTH_MUL=snap.ywm?JSON.parse(snap.ywm):{};
   PRES_LEGEND_POS=snap.lp?JSON.parse(snap.lp):{x:null,y:null};
   PRES_LEGEND_SIZE=snap.ls?JSON.parse(snap.ls):{w:null,h:null};
 }
@@ -6524,7 +6545,7 @@ function renderPres(){
     if(showLBMode){if(t.iLB<mn)mn=t.iLB;if(t.fLB>mx)mx=t.fLB;}
   });
   const yrWidthMul=+(document.getElementById('presYearWMul')||{value:'1'}).value||1;
-  const S=buildScale(scaleKey,mn,mx,yrWidthMul),TW=S.totalPx;
+  const S=buildScale(scaleKey,mn,mx,yrWidthMul,PRES_YEAR_WIDTH_MUL),TW=S.totalPx;
   const _rapCb=document.getElementById('presShowRaP');
   const groupByC1=!!(_rapCb&&_rapCb.checked&&_rapAvailable);
   _presLastGroupByC1=groupByC1;
@@ -6846,6 +6867,8 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pymFgSwatch').style.background=_ytDict[yrKey]||'#fff';
     const scSel=document.getElementById('pymScaleSel');
     if(scSel) scSel.value=document.getElementById('presYearSz').value||'15';
+    const wmSel=document.getElementById('pymWidthMul');
+    if(wmSel) wmSel.value=PRES_YEAR_WIDTH_MUL[yrKey]||1;
     const pym=document.getElementById('presYearMenu');
     pym.style.display='block';pym.style.left=Math.min(e.clientX+5,innerWidth-210)+'px';pym.style.top=Math.min(e.clientY+5,innerHeight-150)+'px';
   }
@@ -8151,6 +8174,23 @@ function presToggleEvtoStyle(style){
 // Tamaño escala de año desde menú
 function presSetYearSz(val){
   const el=document.getElementById('presYearSz');if(el)el.value=val;renderPres();
+}
+// Ancho individual del año seleccionado en el menú (aparte del multiplicador global de la LdT).
+// snapForUndo=false mientras se escribe (live, sin apilar historial por cada dígito); true al
+// confirmar (change/blur), donde sí se registra un único paso de Deshacer.
+function presSetYearWidthMul(val,snapForUndo){
+  if(!_presYearKey)return;
+  const v=Math.max(0.2,Math.min(4,+val||1));
+  if(snapForUndo)_presSnap();
+  PRES_YEAR_WIDTH_MUL[_presYearKey]=v;
+  renderPres();
+}
+function presResetYearWidthMul(){
+  if(!_presYearKey)return;
+  _presSnap();
+  delete PRES_YEAR_WIDTH_MUL[_presYearKey];
+  const el=document.getElementById('pymWidthMul');if(el)el.value=1;
+  renderPres();
 }
 // Auto contraste fuente de año
 function presYearAutoFg(){
