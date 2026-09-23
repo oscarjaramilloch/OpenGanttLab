@@ -753,6 +753,10 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
           </div>
         </div>
       </div>
+      <button class="tb-btn" id="btnSaveSessionGantt" data-tb="save" title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+        <span class="tb-lbl">Guardar sesión</span>
+      </button>
       <button class="tb-btn dirty-save-btn" id="btnSaveGantt" data-tb="share" title="Compartir" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
         <span class="tb-lbl">Compartir</span>
@@ -767,6 +771,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button type="button" class="filtro-menu-item" role="menuitem" data-mas="filter" data-open="filtroMenuPanel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>Filtrar</button>
         <button type="button" class="filtro-menu-item" role="menuitem" data-mas="edit" data-open="edicionMenuPanel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Editar</button>
         <button type="button" class="filtro-menu-item" role="menuitem" data-mas="font" data-open="fontMenuPanel" data-display="flex" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>Ajustes</button>
+        <button type="button" class="filtro-menu-item" role="menuitem" data-mas="save" data-click="btnSaveSessionGantt" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>Guardar sesión</button>
         <button type="button" class="filtro-menu-item" role="menuitem" data-mas="share" data-click="btnSaveGantt" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>Compartir</button>
       </div>
     </div>
@@ -1029,6 +1034,9 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
             </button>
           </div>
         </div>
+        <button class="rb-flat" id="btnSaveSession" title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+        </button>
         <button class="rb-flat dirty-save-btn" id="btnSave" title="Compartir" style="position:relative">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
           <span class="dirty-dot" title="Cambios sin compartir" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:#e8622c;border:1.5px solid #fff"></span>
@@ -1656,6 +1664,10 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
           </button>
         </div>
       </div>
+      <button class="tb-btn" id="btnSaveSessionPres" data-tb="save" title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+        <span class="tb-lbl">Guardar sesión</span>
+      </button>
       <button class="tb-btn dirty-save-btn" id="btnSavePres" data-tb="share" title="Compartir" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
         <span class="tb-lbl">Compartir</span>
@@ -1670,6 +1682,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button type="button" class="filtro-menu-item" role="menuitem" data-mas="edit" data-open="presEdicionMenuPanel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Editar</button>
         <button type="button" class="filtro-menu-item" role="menuitem" data-mas="font" data-open="presAreaMenuPanel" data-display="flex" hidden><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>Ajustes</button>
         <button type="button" class="filtro-menu-item" role="menuitem" data-mas="export" data-open="presExportMenuPanel" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Exportar</button>
+        <button type="button" class="filtro-menu-item" role="menuitem" data-mas="save" data-click="btnSaveSessionPres" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>Guardar sesión</button>
         <button type="button" class="filtro-menu-item" role="menuitem" data-mas="share" data-click="btnSavePres" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>Compartir</button>
       </div>
     </div>
@@ -2786,9 +2799,9 @@ document.addEventListener('keydown',e=>{
   if(btn&&btn.offsetParent!==null)btn.focus();
 });
 tbInit({ribbon:'mainRibbon',bar:'tbBar',masWrap:'tbMasWrap',capasBtn:'btnCapasMenu',capasPanel:'capasMenuPanel',masBtn:'btnMasMenu',masPanel:'masMenuPanel',
-  order:['share','font','edit','filter','sort']});
+  order:['share','save','font','edit','filter','sort']});
 tbInit({ribbon:'presRibbon',bar:'presTbBar',masWrap:'presTbMasWrap',capasBtn:'btnPresCapasMenu',capasPanel:'presCapasMenuPanel',masBtn:'btnPresMasMenu',masPanel:'presMasMenuPanel',
-  order:['share','export','font','edit','filter','escenario']});
+  order:['share','save','export','font','edit','filter','escenario']});
 
 /* ═══ ESCALA DE TIEMPO ═══ */
 const DAY=86400000;
@@ -4806,13 +4819,14 @@ function apRenderConfigUI(){
     });
   }
 }
-// Handle del archivo elegido la primera vez que se usó "Compartir" con la File System
-// Access API — lo reutiliza el autoguardado (ver autoSaveSilent) para reescribir el mismo
-// archivo sin volver a pedir selector cada 5 minutos.
-let _shareFileHandle=null;
-function _buildShareBlob(){
+// Handle del archivo elegido la primera vez que se usó "Guardar sesión de trabajo" con la File
+// System Access API — lo reutiliza el autoguardado (ver autoSaveSilent) para reescribir el mismo
+// archivo sin volver a pedir selector cada 5 minutos. Nunca se asigna desde "Compartir": esa
+// copia queda bloqueada (AP_SHARED) y no debe recibir escrituras silenciosas posteriores.
+let _workFileHandle=null;
+function _buildShareBlob(shared){
   closeAllDropMenus(); // que ningún popover (Capas, Más…) quede congelado abierto en el snapshot
-  const data={tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||'',preds:t.preds||'',pscope:t.pscope||''})),
+  const data={shared:!!shared,tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||'',preds:t.preds||'',pscope:t.pscope||''})),
     scenarios:SCENARIOS,on:SCEN_ON,color:SCEN_COLOR,escColor:ESC_COLOR,cat2color:CAT2_COLOR,eventocolor:EVENTO_COLOR,presOpts:PRES_OPTS,presHidden:[...PRES_HIDDEN_KEYS],presTextBoxes:PRES_TEXTBOXES,presShapes:PRES_SHAPES,ganttTextBoxes:GANTT_TEXTBOXES,ganttOrder:GANTT_ORDER,ganttC2Order:GANTT_C2_ORDER,ganttTaskOrder:GANTT_TASK_ORDER,
     scale:document.getElementById('scale').value,mode:document.querySelector('input[name=mode]:checked').value,
     showLB:document.getElementById('showLB').checked,showDeps:document.getElementById('showDeps').checked,showDates:document.getElementById('showDates').checked,presShowDates:document.getElementById('presShowDates').checked,
@@ -4900,28 +4914,34 @@ function _buildShareBlob(){
   const out=_src.slice(0,_si)+_openTag+safe+_SCLT+_src.slice(_eo);
   return new Blob([out],{type:'text/html;charset=utf-8'});
 }
-async function saveShare(){
+// shared=false → "Guardar sesión de trabajo": copia completa, sin restricciones al reabrir.
+// shared=true  → "Compartir": misma copia pero marcada; al reabrir bloquea el motor de
+// precedencias y las celdas de Predecesoras/Sucesoras/Línea Base (ver AP_SHARED/loadEmbedded).
+async function _doSave(shared,suggestedName){
   if(!TASKS.length){alert('Primero carga datos.');return;}
-  const blob=_buildShareBlob();if(!blob)return;
+  const blob=_buildShareBlob(shared);if(!blob)return;
   // Usar File System Access API si está disponible (muestra selector de carpeta)
   if(window.showSaveFilePicker){
     try{
-      const fh=await window.showSaveFilePicker({suggestedName:'OpenGanttLab_compartir.html',startIn:'downloads',types:[{description:'Archivo HTML',accept:{'text/html':['.html']}}]});
+      const fh=await window.showSaveFilePicker({suggestedName,startIn:'downloads',types:[{description:'Archivo HTML',accept:{'text/html':['.html']}}]});
       const ws=await fh.createWritable();await ws.write(blob);await ws.close();
-      _shareFileHandle=fh;
+      if(!shared)_workFileHandle=fh; // solo la sesión de trabajo se reescribe en autoguardado
       document.getElementById('status').textContent='Archivo guardado correctamente.';_dirty=false;updateDirtyIndicator();return;
     }catch(e){if(e.name==='AbortError')return;/* fallback si falla */}
   }
   // Fallback: descarga directa
   const burl=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=burl;a.download='OpenGanttLab_compartir.html';document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(burl),5000);
+  const a=document.createElement('a');a.href=burl;a.download=suggestedName;document.body.appendChild(a);a.click();document.body.removeChild(a);setTimeout(()=>URL.revokeObjectURL(burl),5000);
   _dirty=false;updateDirtyIndicator();
 }
+function saveShare(){return _doSave(true,'OpenGanttLab_compartir.html');}
+function saveSession(){return _doSave(false,'OpenGanttLab_sesion.html');}
 /* ═══ AUTOGUARDADO (cada 5 min) ═══
    Silencioso: solo actúa si ya existe un destino con permiso ya concedido — el Excel
-   vinculado (FILE_HANDLE) o el archivo elegido la primera vez que se usó "Compartir"
-   (_shareFileHandle) — para no interrumpir con selectores de archivo ni descargas
-   forzadas cada 5 minutos. Si no hay ningún destino vinculado, no hace nada; el aviso de
+   vinculado (FILE_HANDLE) o el archivo elegido la primera vez que se usó "Guardar sesión de
+   trabajo" (_workFileHandle) — para no interrumpir con selectores de archivo ni descargas
+   forzadas cada 5 minutos. Nunca reescribe una copia creada con "Compartir" (esa queda fija,
+   marcada como restringida). Si no hay ningún destino vinculado, no hace nada; el aviso de
    "cambios sin compartir" (Configuración) sigue siendo la única señal en ese caso. */
 async function autoSaveSilent(){
   if(!_dirty||!TASKS.length)return;
@@ -4930,11 +4950,11 @@ async function autoSaveSilent(){
       await saveChangesToExcel(true);
       return;
     }
-    if(_shareFileHandle){
-      const perm=await _shareFileHandle.queryPermission({mode:'readwrite'});
+    if(_workFileHandle){
+      const perm=await _workFileHandle.queryPermission({mode:'readwrite'});
       if(perm!=='granted')return; // no forzar el diálogo de permiso en segundo plano
-      const blob=_buildShareBlob();if(!blob)return;
-      const ws=await _shareFileHandle.createWritable();await ws.write(blob);await ws.close();
+      const blob=_buildShareBlob(false);if(!blob)return;
+      const ws=await _workFileHandle.createWritable();await ws.write(blob);await ws.close();
       _dirty=false;updateDirtyIndicator();
       apToast('Guardado automático realizado ('+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})+').');
     }
@@ -4950,9 +4970,12 @@ function downloadTemplate(){
 function loadEmbedded(){
   const _emEl=document.getElementById('ap_embed');
   if(!_emEl||!_emEl.textContent.trim())return false;
-  AP_SHARED=true;
   document.getElementById('splashModal').style.display='none';
   const d=JSON.parse(_emEl.textContent);
+  // d.shared===false → viene de "Guardar sesión de trabajo": archivo propio, edición normal.
+  // d.shared===true, o ausente (archivos "Compartir" guardados antes de esta distinción) → se
+  // trata como copia compartida y se bloquea el motor de precedencias y las celdas sensibles.
+  AP_SHARED=d.shared!==false;
   TASKS=d.tasks.map(t=>({id:t.id||null,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:parseLocal(t.iLB),fLB:parseLocal(t.fLB),iRP:parseLocal(t.iRP),fRP:parseLocal(t.fRP),av:t.av,hito:t.hito,evento:!!t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||undefined,preds:t.preds||undefined,pscope:t.pscope||undefined}));
   fillSplitTaskNames(TASKS);
   assignDupSeq(TASKS);
@@ -8277,6 +8300,9 @@ document.getElementById('showLB').addEventListener('change',render);
 document.getElementById('btnSave').addEventListener('click',saveShare);
 document.getElementById('btnSaveGantt').addEventListener('click',saveShare);
 document.getElementById('btnSavePres').addEventListener('click',saveShare);
+document.getElementById('btnSaveSession').addEventListener('click',saveSession);
+document.getElementById('btnSaveSessionGantt').addEventListener('click',saveSession);
+document.getElementById('btnSaveSessionPres').addEventListener('click',saveSession);
 // Exportar via modal (btnPng y btnPrint removidos del toolbar)
 document.getElementById('btnRefresh').addEventListener('click',refreshFromFile);
 document.getElementById('btnFilter').addEventListener('click',openFilter);
