@@ -94,7 +94,8 @@
 <tr><td>Predecesoras</td><td>Los vínculos con su tipo y desfase en días; el ID se convierte al UID de Project.</td></tr>
 <tr><td>Campos personalizados</td><td>El valor del campo. Las Categorías 1 y 2 solo si vienen de un campo personalizado del proyecto.</td></tr>
 </table>
-<p><b>No se devuelve:</b> la Línea Base, Clase, Ruta crítica y Resumen (incluidas las fechas de las tareas resumen), las filas nuevas o eliminadas en la tabla, los desfases en porcentaje y los escenarios creados con «Duplicar escenario».</p>
+<p><b>También se devuelve:</b> las fechas de la Línea Base que la tarea ya tiene en el XML (no se crean líneas base nuevas), las marcas de hito, ruta crítica y resumen, las <b>filas nuevas</b> de la tabla (se agregan al final del proyecto con un UID nuevo, como tareas de nivel 1 con programación manual) y las <b>filas eliminadas</b> (se quita la tarea, sus asignaciones y los vínculos de otras tareas que la referenciaban; antes de guardar se pide confirmación con la lista).</p>
+<p><b>No se devuelve:</b> los eventos, las fechas de las tareas resumen, los desfases en porcentaje y los escenarios creados con «Duplicar escenario». Project puede recalcular Ruta crítica y Resumen al abrir el archivo.</p>
 <callout type="warn" title="Fechas: programación manual y duración aproximada">
 <p>Project recalcula las fechas de las tareas con programación automática, por lo que OpenGanttLab marca como <b>manual</b> cada tarea cuyas fechas cambió. La duración se conserva si el largo de la tarea no cambia; si cambia, se ajusta de forma <b>proporcional</b> (aproximada), porque la aplicación cuenta días corridos y Project usa calendarios laborales. Si una tarea no trae los elementos de programación manual, sus fechas no se devuelven y el resumen lo indica.</p>
 </callout>
