@@ -9061,7 +9061,7 @@ function pxmlWriteSummary(S){
   if(p.length)l.push('Cambios: '+p.join(', ')+'.');
   if(S.err)l.push(S.err+' tarea(s) no se modificaron porque el XML resultante no era válido.');
   if(S.omitidos.length)l.push('No devuelto: '+[...new Set(S.omitidos)].slice(0,6).join('; ')+(S.omitidos.length>6?'…':'')+'.');
-  l.push('No se devuelven la Línea Base, Clase, Ruta crítica, Resumen, filas nuevas o eliminadas. Abra el archivo en Project para comprobarlo.');
+  l.push('El resto del XML original (Línea Base, calendarios, recursos, asignaciones y demás tareas) se conserva sin cambios. Los cambios de Línea Base, Clase, Ruta crítica, Resumen y las filas nuevas o eliminadas hechos en la app no se escriben en el XML.');
   return l.join('\n');
 }
 async function pxmlWriteBack(i){
