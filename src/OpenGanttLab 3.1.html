@@ -5926,8 +5926,9 @@ function _presSVG(all,S,TW,mn,mx,opts){
     rapBands.forEach(b=>{
       const by0=taskY0+b.startLy*layerH, by1=taskY0+(b.startLy+b.rows)*layerH;
       const c1col=presGroupColor(b.c1);
+      const _ix0=_outerSum+(_outerSum?0:2); // con niveles externos, la caja de la banda interna empieza después de su columna (que queda entera)
       const bandSelCls=(b.c1===_presRapSelC1)?' class="pres-sel"':'';
-      svg+=`<rect x="2" y="${by0}" width="${ML+TW+MR-4}" height="${by1-by0}" rx="8" ry="8" fill="none" stroke="${bandGray}" stroke-width="1.5" data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;
+      svg+=`<rect x="${_ix0}" y="${by0}" width="${ML+TW+MR-2-_ix0}" height="${by1-by0}" rx="${_outerSum?0:8}" ry="${_outerSum?0:8}" fill="none" stroke="${bandGray}" stroke-width="1.5" data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;
       // Divisor vertical entre la columna de nombres de Categoría 1 y el Gantt
       svg+=`<line x1="${_rapLblEnd}" y1="${by0}" x2="${_rapLblEnd}" y2="${by1}" stroke="${bandGray}" stroke-width="1.5"/>`;
       // Estilo/texto editable de la etiqueta de Categoría 1 — guardado en PRES_OPTS bajo una
@@ -5937,7 +5938,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const c1OptKey='RAPC1|'+b.c1;
       const c1Opt=PRES_OPTS[c1OptKey]||{};
       const labelFsz=c1Opt.fontSize||Math.max(fsz+2,13);
-      const _ix0=_outerSum+(_outerSum?0:2),lx=(_ix0+_rapLblEnd)/2,cy=(by0+by1)/2;
+      const lx=(_ix0+_rapLblEnd)/2,cy=(by0+by1)/2;
       const availH=Math.max(0,(by1-by0)-10);
       const charW=labelFsz*0.62;
       const labelRaw=(c1Opt.label!==undefined&&c1Opt.label!=='')?c1Opt.label:String(presGroupLeaf(b.c1)||'');
@@ -5969,7 +5970,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       svg+=`<rect x="${_ix0}" y="${by0}" width="${_rapLblEnd-5-_ix0+2}" height="${by1-by0}" fill="transparent" data-rap-reorder="1" data-c1="${ex(String(b.c1||''))}" style="cursor:move"/>`;
       svg+=`<text x="${lx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${labelFsz}" font-weight="${labelWeight}" font-style="${labelStyle}" text-decoration="${labelDeco}" fill="${labelFill}" transform="rotate(-90 ${lx} ${cy})" pointer-events="none">${tspans}</text>`;
       // Asa de arrastre: borde inferior de la banda → ajustar su alto (filas) manualmente
-      svg+=`<rect x="2" y="${by1-3}" width="${ML+TW+MR-4}" height="6" fill="transparent" data-rap-resize="h" data-c1="${ex(String(b.c1||''))}" data-rows="${b.rows}" style="cursor:ns-resize"/>`;
+      svg+=`<rect x="${_ix0}" y="${by1-3}" width="${ML+TW+MR-2-_ix0}" height="6" fill="transparent" data-rap-resize="h" data-c1="${ex(String(b.c1||''))}" data-rows="${b.rows}" style="cursor:ns-resize"/>`;
     });
     // Niveles externos: caja y etiqueta por cada tramo continuo de bandas que comparten la misma ruta
     for(let l=0;l<_lvN-1;l++){
