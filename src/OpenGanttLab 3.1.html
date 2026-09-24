@@ -5769,7 +5769,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
         })
       : _presLayers(tasks));
   const bandPlaced=layeredAll.filter(l=>l.t.__hitoBand),layered=layeredAll.filter(l=>!l.t.__hitoBand);
-  const numLy=layeredAll.length?Math.max(...layeredAll.map(l=>l.ly))+1:0;
+  const numLy=Math.max(layeredAll.length?Math.max(...layeredAll.map(l=>l.ly))+1:0,(rapBands&&rapBands.length)?rapBands[rapBands.length-1].startLy+rapBands[rapBands.length-1].rows:0); // la última banda puede tener más filas que sus tareas (alto mínimo por etiqueta)
   // Ancho mínimo de la columna de etiquetas: la más ancha de todas (más líneas o fuente más
   // grande necesita más columnas lado a lado) — RAP_LABEL_W_USER (arrastre manual del borde)
   // solo puede agrandarlo más, nunca lo deja por debajo de lo que el texto necesita.
@@ -5929,7 +5929,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     rapBands.forEach(b=>{
       const by0=taskY0+b.startLy*layerH, by1=taskY0+(b.startLy+b.rows)*layerH;
       const c1col=presGroupColor(b.c1);
-      const _ix0=_outerSum+(_outerSum?0:2); // con niveles externos, la caja de la banda interna empieza después de su columna (que queda entera)
+      const _ix0=_outerSum+2; // con niveles externos, la caja de la banda interna empieza después de su columna (que queda entera)
       const bandSelCls=(b.c1===_presRapSelC1)?' class="pres-sel"':'';
       svg+=`<rect x="${_ix0}" y="${by0}" width="${ML+TW+MR-2-_ix0}" height="${by1-by0}" rx="${_outerSum?0:8}" ry="${_outerSum?0:8}" fill="none" stroke="${bandGray}" stroke-width="1.5" data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;
       // Divisor vertical entre la columna de nombres de Categoría 1 y el Gantt
