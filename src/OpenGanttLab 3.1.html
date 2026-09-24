@@ -6291,7 +6291,6 @@ function _presSVG(all,S,TW,mn,mx,opts){
     }
     if(presShowDates) svg+=`<text x="${ex2}" y="${baseY-2}" text-anchor="middle" font-size="${Math.max(7,efsz-1)}" fill="${col}" pointer-events="none">${fD((useLB?ev.iLB:ev.iRP))}</text>`;
   });
-  svg+=`<text x="${W-MR}" y="${H-6}" text-anchor="end" font-size="7" fill="#ccc">OpenGanttLab \u00B7 Oscar Fernando Jaramillo Chamorro</text>`;
   // ── Cuadros de texto libres (solo en modo no-LB para no duplicar) ──
   if(!useLB){
     PRES_TEXTBOXES.forEach(tb=>{
