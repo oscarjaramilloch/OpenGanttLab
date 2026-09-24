@@ -309,6 +309,7 @@ th,td{padding:0}
 .btn-solid:hover{filter:brightness(1.08)}
 .btn-outline{background:#fff;border:1.5px solid var(--accent);color:var(--accent-fg)}
 .rb-act{padding:.4rem .7rem;font-size:11px;margin:2px}
+.epreds::placeholder,#pbmDepPreds::placeholder{font-style:italic;opacity:.55}
 .filtro-menu-item{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:none;background:none;border-radius:6px;cursor:pointer;font:inherit;font-size:12px;color:var(--ink);text-align:left}
 .filtro-menu-item svg{width:16px;height:16px;flex-shrink:0;color:var(--muted)}
 .filtro-menu-item:hover{background:var(--bg)}
@@ -1905,7 +1906,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
     <div id="pbmDepBody" style="display:flex;flex-direction:column;gap:5px">
       <div style="display:flex;align-items:center;gap:6px;font-size:10px"><span class="pop-unit" style="min-width:40px">ID:</span><b id="pbmDepId" style="font-size:11px;color:var(--ink)"></b></div>
       <div style="display:flex;flex-direction:column;gap:3px"><span class="pop-unit">Predecesoras:</span>
-        <input id="pbmDepPreds" type="text" spellcheck="false" placeholder="12; 15CC+2 días" title="Formato de Project: id, tipo (FC, CC, FF, CF) y desfase; separa con «;». Se guarda en la Tabla de Datos." onchange="presSetLinks('preds',this.value)" onkeydown="if(event.key==='Enter')this.blur();event.stopPropagation()" style="width:100%;box-sizing:border-box;font:11px var(--ff);border:1px solid var(--line);border-radius:3px;padding:4px;background:var(--panel);color:var(--ink)"></div>
+        <input id="pbmDepPreds" type="text" spellcheck="false" placeholder="Sin predecesoras" title="Formato de Project: id, tipo (FC, CC, FF, CF) y desfase; separa con «;». Se guarda en la Tabla de Datos." onchange="presSetLinks('preds',this.value)" onkeydown="if(event.key==='Enter')this.blur();event.stopPropagation()" style="width:100%;box-sizing:border-box;font:11px var(--ff);border:1px solid var(--line);border-radius:3px;padding:4px;background:var(--panel);color:var(--ink)"></div>
       <div style="display:flex;flex-direction:column;gap:3px"><span class="pop-unit">Sucesoras:</span>
         <input id="pbmDepSucs" type="text" spellcheck="false" placeholder="20; 21CC" title="Mismo formato. Edita las Predecesoras de las tareas indicadas (requiere que esta tarea tenga ID)." onchange="presSetLinks('sucs',this.value)" onkeydown="if(event.key==='Enter')this.blur();event.stopPropagation()" style="width:100%;box-sizing:border-box;font:11px var(--ff);border:1px solid var(--line);border-radius:3px;padding:4px;background:var(--panel);color:var(--ink)"></div>
     </div>
@@ -4472,7 +4473,7 @@ function makeEditorRow(m){
     `<td><input type="text" class="em2" value="${esc(m.m2)}" style="min-width:60px"></td>`+
     `<td>${sel('eresumen',['no','si'],m.resumen)}</td>`+
     `<td><input type="text" class="epid" value="${esc(m.pid)}" style="min-width:44px;width:100%"></td>`+
-    `<td><input type="text" class="epreds" value="${esc(m.preds)}" placeholder="12; 15CC+2 días" title="${AP_SHARED?'Solo lectura: archivo compartido':'Formato de Project: id, tipo (FC, CC, FF, CF) y desfase. Separa con «;»'}"${AP_SHARED?' readonly':''} style="min-width:110px;width:100%${AP_SHARED?';background:transparent;color:var(--muted)':''}"></td>`+
+    `<td><input type="text" class="epreds" value="${esc(m.preds)}" placeholder="Sin predecesoras" title="${AP_SHARED?'Solo lectura: archivo compartido':'Vacía = sin predecesoras. Formato de Project: id, tipo (FC, CC, FF, CF) y desfase; separa con «;». Ej.: 12; 15CC+2 días'}"${AP_SHARED?' readonly':''} style="min-width:110px;width:100%${AP_SHARED?';background:transparent;color:var(--muted)':''}"></td>`+
     `<td><input type="text" class="esucs" value="${esc(m.sucs)}" readonly tabindex="-1" title="Se calcula a partir de las Predecesoras de las demás tareas" style="min-width:110px;width:100%;background:transparent;color:var(--muted)"></td>`+
     PXML_CUSTOM.map(c=>`<td><input type="${_edXType[c.key]==='date'?'date':'text'}" class="eext" data-x="${esc(c.key)}" value="${esc((m.x&&m.x[c.key])||'')}" style="min-width:80px"></td>`).join('')+
     `<td><button class="edel" title="Eliminar fila"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button></td>`;
