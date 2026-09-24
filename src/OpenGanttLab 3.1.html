@@ -1445,7 +1445,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="1.5"/><path d="M9 9v6"/><path d="M15 9v6"/></svg><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" id="presRapToggleWrap" title="Agrupa las barras en bandas por la columna que elijas (Categoría 1 por defecto), con el color de Categoría 2."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span class="tg-label">Agrupador</span><input type="checkbox" id="presShowRaP" onchange="togglePresRaP()" data-noreset><span class="tg-track"></span></label></div>
-        <div class="tb-lrow-wrap" id="presGroupFieldWrap" style="display:none;align-items:center;gap:6px;padding:2px 8px 4px 34px"><span class="pop-unit">Agrupar por</span><select id="presGroupField" onchange="presSetGroupField(this.value)" style="flex:1;min-width:0;font:inherit;font-size:12px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--panel,#fff);color:var(--ink)"></select></div>
+        <div class="tb-lrow-wrap" id="presGroupFieldWrap" style="display:none;flex-direction:column;align-items:stretch;gap:4px;padding:2px 8px 6px 34px"></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Muestra únicamente los hitos de la Línea de Tiempo — oculta todas las tareas y filas de resumen."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"/></svg><span class="tg-label">Vista Hitos</span><input type="checkbox" id="presShowHitos" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-pop-sep"></div>
         <button type="button" class="filtro-menu-item" id="btnPresResetLayers" title="Restablece el contenido (no cambia el modo de vista)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>Restablecer capas</button>
@@ -2876,34 +2876,49 @@ let RAP_BAND_ROWS_OVERRIDE={};
 // _presRapDrag) — sin entrada aquí, el orden por defecto es cronológico (fecha más temprana
 // de sus tareas).
 let RAP_C1_ORDER={};
-// Agrupador (antes «Vista C1»): columna por la que la LdT agrupa las bandas. 'c1' (Categoría 1) por defecto;
-// también 'escenario', 'c2' o la clave de una columna adicional (PXML_CUSTOM: importada del XML o creada en la tabla).
-let PRES_GROUP_FIELD='c1';
+// Agrupador (antes «Vista C1»): columnas por las que la LdT agrupa las bandas, de la más externa a la más interna.
+// 'c1' (Categoría 1) por defecto; también 'escenario', 'c2' o la clave de una columna adicional (PXML_CUSTOM: importada
+// del XML o creada en la tabla). Con varios niveles, la clave de una banda interna es la ruta unida por PG_SEP.
+let PRES_GROUP_FIELDS=['c1'];
+const PG_SEP='\u0001',PG_MAX=4;
 function presGroupOptions(){return[{k:'c1',l:'Categoría 1'},{k:'escenario',l:'Escenario'},{k:'c2',l:'Categoría 2'},...PXML_CUSTOM.map(c=>({k:c.key,l:c.label||c.key}))];}
-function presGroupVal(t){
-  const f=PRES_GROUP_FIELD;
+function presFieldVal(t,f){
   if(f==='c1')return t.c1;
   if(f==='escenario')return t.escenario||'';
   if(f==='c2')return t.c2;
   return(t.extra&&t.extra[f])||'';
 }
-function presGroupColor(v){
-  const f=PRES_GROUP_FIELD;
+function presGroupVal(t){return PRES_GROUP_FIELDS.length===1?presFieldVal(t,PRES_GROUP_FIELDS[0]):PRES_GROUP_FIELDS.map(f=>String(presFieldVal(t,f)??'')).join(PG_SEP);}
+const presGroupPath=k=>String(k??'').split(PG_SEP);
+const presGroupLeaf=k=>{const a=presGroupPath(k);return a[a.length-1];};
+function presGroupColor(k){
+  const a=presGroupPath(k),f=PRES_GROUP_FIELDS[a.length-1],v=a[a.length-1];
   return(f==='c1'?SCEN_COLOR[v]:f==='escenario'?ESC_COLOR[v]:f==='c2'?CAT2_COLOR[v]:null)||'#334155';
 }
+function presGroupFieldLabel(f){const o=presGroupOptions().find(x=>x.k===f);return o?o.l:f;}
 function presSyncGroupUI(){
-  const cb=document.getElementById('presShowRaP'),wrap=document.getElementById('presGroupFieldWrap'),sel=document.getElementById('presGroupField');
-  if(!sel||!wrap)return;
+  const cb=document.getElementById('presShowRaP'),wrap=document.getElementById('presGroupFieldWrap');
+  if(!wrap)return;
   const opts=presGroupOptions();
-  if(!opts.some(o=>o.k===PRES_GROUP_FIELD))PRES_GROUP_FIELD='c1'; // la columna ya no existe
-  sel.innerHTML=opts.map(o=>`<option value="${esc(o.k)}"${o.k===PRES_GROUP_FIELD?' selected':''}>${esc(o.l)}</option>`).join('');
+  PRES_GROUP_FIELDS=PRES_GROUP_FIELDS.filter((f,i,a)=>opts.some(o=>o.k===f)&&a.indexOf(f)===i);
+  if(!PRES_GROUP_FIELDS.length)PRES_GROUP_FIELDS=['c1'];
+  const n=PRES_GROUP_FIELDS.length;
   wrap.style.display=cb&&cb.checked?'flex':'none';
+  wrap.innerHTML='<span class="pop-unit">Agrupar por</span>'+PRES_GROUP_FIELDS.map((f,i)=>{
+    const free=opts.filter(o=>o.k===f||!PRES_GROUP_FIELDS.includes(o.k));
+    return`<div style="display:flex;align-items:center;gap:4px"><span class="pop-unit" style="min-width:52px">${n>1?(i===0?'Nivel 1':'Nivel '+(i+1)):'Columna'}</span><select onchange="presSetGroupLevel(${i},this.value)" style="flex:1;min-width:0;font:inherit;font-size:12px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--panel,#fff);color:var(--ink)">${free.map(o=>`<option value="${esc(o.k)}"${o.k===f?' selected':''}>${esc(o.l)}</option>`).join('')}</select>${n>1?`<button type="button" class="rb-flat" style="padding:2px 4px" title="Quitar este nivel" onclick="presRemoveGroupLevel(${i})"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>`:''}</div>`;
+  }).join('')+(n<PG_MAX&&opts.length>n?'<button type="button" class="filtro-menu-item" style="padding:4px 6px" onclick="presAddGroupLevel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar nivel</button>':'');
 }
-function presSetGroupField(v){
-  PRES_GROUP_FIELD=v||'c1';
-  RAP_C1_ORDER={};RAP_BAND_ROWS_OVERRIDE={};_presRapSelC1=null; // el orden y el alto manual de bandas eran de la columna anterior
+function presGroupChanged(){
+  RAP_C1_ORDER={};RAP_BAND_ROWS_OVERRIDE={};_presRapSelC1=null; // el orden y el alto manual de bandas eran de la agrupación anterior
   renderPres();
 }
+function presSetGroupLevel(i,v){PRES_GROUP_FIELDS[i]=v||'c1';presGroupChanged();}
+function presAddGroupLevel(){
+  const free=presGroupOptions().find(o=>!PRES_GROUP_FIELDS.includes(o.k));
+  if(free&&PRES_GROUP_FIELDS.length<PG_MAX){PRES_GROUP_FIELDS.push(free.k);presGroupChanged();}
+}
+function presRemoveGroupLevel(i){if(PRES_GROUP_FIELDS.length>1){PRES_GROUP_FIELDS.splice(i,1);presGroupChanged();}}
 // Última lista de bandas [{c1,startLy,rows}] dibujada en Vista RaP — usada solo para el
 // hit-test del arrastre de reordenamiento (ver data-rap-reorder), no se persiste.
 let _presLastRapBands=null;
@@ -4884,7 +4899,7 @@ function _buildShareBlob(shared){
     estName:document.getElementById('estName').value,estDate:document.getElementById('estDate').value,
     presExecMode:document.getElementById('presShowExecutive').checked,presDateFmt:document.getElementById('presDateFmt').value,presExecHidden:[...PRES_EXEC_HIDDEN_KEYS],presDepHidden:[...PRES_DEP_HIDDEN],
     rapAvailable:_rapAvailable,presShowRaP:(document.getElementById('presShowRaP')||{checked:false}).checked,
-    presGroupField:PRES_GROUP_FIELD,rapLabelW:RAP_LABEL_W_USER,rapBandRowsOverride:RAP_BAND_ROWS_OVERRIDE,rapC1Order:RAP_C1_ORDER,
+    presGroupFields:PRES_GROUP_FIELDS,rapLabelW:RAP_LABEL_W_USER,rapBandRowsOverride:RAP_BAND_ROWS_OVERRIDE,rapC1Order:RAP_C1_ORDER,
     // Toggles del ribbon de la LdT que también deben sobrevivir a "Compartir" — sin esto el
     // archivo compartido reabre con Comparador/Segmentación/Marca Activity/Resumen/Leyenda/
     // Fecha de estado/Ruta Crítica en su valor por defecto del HTML en vez del configurado.
@@ -5090,7 +5105,7 @@ function loadEmbedded(){
   if(d.rapLabelW!=null)RAP_LABEL_W_USER=+d.rapLabelW||24;
   RAP_BAND_ROWS_OVERRIDE=d.rapBandRowsOverride||{};
   RAP_C1_ORDER=d.rapC1Order||{};
-  if(d.presGroupField)PRES_GROUP_FIELD=d.presGroupField;
+  if(d.presGroupFields&&d.presGroupFields.length)PRES_GROUP_FIELDS=d.presGroupFields.slice(0,PG_MAX);else if(d.presGroupField)PRES_GROUP_FIELDS=[d.presGroupField];
   if(typeof apUpdateRapAvailability==='function')apUpdateRapAvailability();
   // Toggles del ribbon de la LdT (ver _buildShareBlob) — restaurarlos aquí es lo que hace que
   // el archivo compartido reabra con el mismo Comparador/Segmentación/Marca Activity/Resumen/
@@ -5625,6 +5640,11 @@ function _presLayersRaP(tasks,useLB,minRowsForC1){
     const ob=RAP_C1_ORDER[b]!==undefined?RAP_C1_ORDER[b]:1000+defaultC1Order.indexOf(b);
     return oa-ob;
   });
+  // Con varios niveles, las bandas internas de un mismo grupo externo van juntas (el orden entre grupos externos sigue al de su primera banda)
+  if(PRES_GROUP_FIELDS.length>1){
+    const outer=k=>presGroupPath(k).slice(0,-1).join(PG_SEP),oi=[...new Set(c1order.map(outer))];
+    c1order.sort((a,b)=>oi.indexOf(outer(a))-oi.indexOf(outer(b)));
+  }
   const byC1=new Map();
   tasks.forEach(t=>{const b=bc(t),arr=byC1.get(b);if(arr)arr.push(t);else byC1.set(b,[t]);});
   const result=[],bands=[];
@@ -5709,7 +5729,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
   const _rapLabelInfo=c1=>{
     const o=PRES_OPTS['RAPC1|'+c1]||{};
     const fsz2=o.fontSize||_rapLabelFsz;
-    const raw=(o.label!==undefined&&o.label!=='')?o.label:String(c1||'');
+    const raw=(o.label!==undefined&&o.label!=='')?o.label:String(presGroupLeaf(c1)||'');
     const lines=raw.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
     return{lines:lines.length?lines:[''],fontSize:fsz2};
   };
@@ -5764,10 +5784,26 @@ function _presSVG(all,S,TW,mn,mx,opts){
     return maxW;
   })();
   const RAP_LABEL_W=groupByC1?Math.max(RAP_LABEL_W_USER,_rapAutoLabelW):32;
+  // Niveles externos del Agrupador: una columna de etiquetas a la izquierda por cada uno (la más externa, la más a la izquierda).
+  const _lvN=groupByC1?PRES_GROUP_FIELDS.length:1;
+  const _outerW=[];
+  if(_lvN>1){
+    const keysAll=[...new Set(tasks.concat(bandWrappers).map(t=>t.__bandC1!==undefined?t.__bandC1:presGroupVal(t)))];
+    for(let l=0;l<_lvN-1;l++){
+      let mw=6;
+      new Set(keysAll.map(k=>presGroupPath(k).slice(0,l+1).join(PG_SEP))).forEach(pk=>{
+        const{lines,fontSize}=_rapLabelInfo(pk);
+        const w=lines.length<=1?Math.ceil(fontSize*0.85)+2:Math.ceil(lines.length*fontSize*1.15)+2;
+        if(w>mw)mw=w;
+      });
+      _outerW.push(mw+12);
+    }
+  }
+  const _outerSum=_outerW.reduce((a,b)=>a+b,0);
   // Borde derecho del rectángulo del nombre de Categoría 1 (Vista C1): ceñido al texto. El margen de 50px que dejaba
   // ese rectángulo enorme con una sola línea (pensado para las fechas a la izquierda de las barras) pasa a ser
   // espacio interior de la banda, entre el divisor y el inicio del gráfico.
-  const _rapLblEnd=groupByC1?RAP_LABEL_W+12:0;
+  const _rapLblEnd=groupByC1?_outerSum+RAP_LABEL_W+12:0;
   // Margen extra manual (controles del ribbon) — declarado antes de ML/MR porque el margen
   // izquierdo/derecho debe sumarse directamente a esos anchos, no solo al lienzo total.
   const _extraTop=+(document.getElementById('presExtraTop')||{value:0}).value||0;
@@ -5901,10 +5937,10 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const c1OptKey='RAPC1|'+b.c1;
       const c1Opt=PRES_OPTS[c1OptKey]||{};
       const labelFsz=c1Opt.fontSize||Math.max(fsz+2,13);
-      const lx=(2+_rapLblEnd)/2,cy=(by0+by1)/2;
+      const _ix0=_outerSum+(_outerSum?0:2),lx=(_ix0+_rapLblEnd)/2,cy=(by0+by1)/2;
       const availH=Math.max(0,(by1-by0)-10);
       const charW=labelFsz*0.62;
-      const labelRaw=(c1Opt.label!==undefined&&c1Opt.label!=='')?c1Opt.label:String(b.c1||'');
+      const labelRaw=(c1Opt.label!==undefined&&c1Opt.label!=='')?c1Opt.label:String(presGroupLeaf(b.c1)||'');
       // Saltos de línea (Enter en el textarea del menú) → columnas verticales una junto a la
       // otra dentro del texto rotado (mismo truco que un <text> rotado con varios <tspan>: lo
       // que antes de rotar es "línea 2 debajo de la línea 1" queda, tras rotar -90°, como
@@ -5930,11 +5966,33 @@ function _presSVG(all,S,TW,mn,mx,opts){
       // verticalmente (antes del texto, que va encima con pointer-events:none para no robarle
       // el arrastre al hacer clic justo sobre las letras) — el doble clic sobre esta misma
       // asa abre el menú de edición de texto.
-      svg+=`<rect x="2" y="${by0}" width="${_rapLblEnd-5}" height="${by1-by0}" fill="transparent" data-rap-reorder="1" data-c1="${ex(String(b.c1||''))}" style="cursor:move"/>`;
+      svg+=`<rect x="${_ix0}" y="${by0}" width="${_rapLblEnd-5-_ix0+2}" height="${by1-by0}" fill="transparent" data-rap-reorder="1" data-c1="${ex(String(b.c1||''))}" style="cursor:move"/>`;
       svg+=`<text x="${lx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${labelFsz}" font-weight="${labelWeight}" font-style="${labelStyle}" text-decoration="${labelDeco}" fill="${labelFill}" transform="rotate(-90 ${lx} ${cy})" pointer-events="none">${tspans}</text>`;
       // Asa de arrastre: borde inferior de la banda → ajustar su alto (filas) manualmente
       svg+=`<rect x="2" y="${by1-3}" width="${ML+TW+MR-4}" height="6" fill="transparent" data-rap-resize="h" data-c1="${ex(String(b.c1||''))}" data-rows="${b.rows}" style="cursor:ns-resize"/>`;
     });
+    // Niveles externos: caja y etiqueta por cada tramo continuo de bandas que comparten la misma ruta
+    for(let l=0;l<_lvN-1;l++){
+      const cx0=2+_outerW.slice(0,l).reduce((a,b)=>a+b,0),cx1=cx0+_outerW[l];
+      let i=0;
+      while(i<rapBands.length){
+        const pk=presGroupPath(rapBands[i].c1).slice(0,l+1).join(PG_SEP);
+        let j=i;while(j+1<rapBands.length&&presGroupPath(rapBands[j+1].c1).slice(0,l+1).join(PG_SEP)===pk)j++;
+        const oy0=taskY0+rapBands[i].startLy*layerH,oy1=taskY0+(rapBands[j].startLy+rapBands[j].rows)*layerH;
+        const oo=PRES_OPTS['RAPC1|'+pk]||{};
+        const ofs=oo.fontSize||Math.max(fsz+2,13),oCharW=ofs*0.62,oAvail=Math.max(0,(oy1-oy0)-10);
+        const oRaw=(oo.label!==undefined&&oo.label!=='')?oo.label:String(presGroupLeaf(pk)||'');
+        const oLines=oRaw.split(/\r?\n/).map(x=>{let t=x.trim();if(t.length*oCharW>oAvail){t=t.slice(0,Math.max(1,Math.floor(oAvail/oCharW)-1))+'…';}return t;}).filter(Boolean);
+        if(!oLines.length)oLines.push('');
+        const oGap=ofs*1.15,olx=(cx0+cx1)/2,ocy=(oy0+oy1)/2;
+        const oFill=oo._textManual?oo.textColor:presGroupColor(pk);
+        svg+=`<rect x="2" y="${oy0}" width="${ML+TW+MR-4}" height="${oy1-oy0}" rx="8" ry="8" fill="none" stroke="#6b7785" stroke-width="2" pointer-events="none"/>`;
+        svg+=`<line x1="${cx1}" y1="${oy0}" x2="${cx1}" y2="${oy1}" stroke="#6b7785" stroke-width="1.5"/>`;
+        svg+=`<rect x="${cx0}" y="${oy0}" width="${cx1-cx0}" height="${oy1-oy0}" fill="transparent" data-rap-olbl="1" data-c1="${ex(pk)}"/>`;
+        svg+=`<text x="${olx}" y="${ocy}" text-anchor="middle" dominant-baseline="middle" font-size="${ofs}" font-weight="${oo.textBold===false?'400':'700'}" font-style="${oo.textItalic?'italic':'normal'}" text-decoration="${oo.textUnder?'underline':'none'}" fill="${oFill}" transform="rotate(-90 ${olx} ${ocy})" pointer-events="none">${oLines.map((ln,q)=>`<tspan x="${olx}" dy="${q===0?-(oLines.length-1)*oGap/2:oGap}">${ex(ln)}</tspan>`).join('')}</text>`;
+        i=j+1;
+      }
+    }
     // Asa de arrastre: divisor entre la columna de Categoría 1 y el Gantt → ajustar su ancho
     const _rapLastBand=rapBands[rapBands.length-1];
     const _rapTotalRows=_rapLastBand.startLy+_rapLastBand.rows;
@@ -6711,7 +6769,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
   // Editar el texto/estilo de la etiqueta de Categoría 1 en Vista RaP → mismo menú
   // (#presBarMenu) que una barra de tarea, guardado en PRES_OPTS["RAPC1|"+c1] (solo afecta
   // el render de la LdT, nunca TASKS.c1 / Tabla de Datos / Gantt / Editor).
-  const rapLbl=e.target.closest('[data-rap-reorder]');
+  const rapLbl=e.target.closest('[data-rap-reorder],[data-rap-olbl]');
   if(rapLbl){
     // stopImmediatePropagation (no solo stopPropagation): hay un segundo listener 'dblclick'
     // registrado sobre este mismo #presBody (el de barras/hitos/eventos, más abajo) que oculta
@@ -6977,7 +7035,7 @@ document.getElementById('pbmSwatch').addEventListener('click',e=>{
 document.getElementById('pbmTextSwatch').addEventListener('click',e=>{
   e.stopPropagation();if(!_presBarKey)return;
   _cpTarget={type:'prestextcolor',name:_presBarKey};
-  document.getElementById('cpLabel').textContent='Color texto: '+(_presBarKey.startsWith('RAPC1|')?_presBarKey.slice(6):_presBarKey.split('|')[2]);
+  document.getElementById('cpLabel').textContent='Color texto: '+(_presBarKey.startsWith('RAPC1|')?presGroupLeaf(_presBarKey.slice(6)):_presBarKey.split('|')[2]);
   const cp=document.getElementById('colorPicker'),r=e.target.getBoundingClientRect();
   cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 });
@@ -6986,7 +7044,7 @@ document.getElementById('pbmTextReset').addEventListener('click',()=>{
   _presSnap();delete PRES_OPTS[_presBarKey].textColor;
   delete PRES_OPTS[_presBarKey]._textManual;
   const _rapC1=_presBarKey.startsWith('RAPC1|')?_presBarKey.slice(6):null;
-  document.getElementById('pbmTextSwatch').style.background=_rapC1?(SCEN_COLOR[_rapC1]||'#334155'):'#ffffff';
+  document.getElementById('pbmTextSwatch').style.background=_rapC1?presGroupColor(_rapC1):'#ffffff';
   renderPres();
 });
 document.getElementById('pbmFull').addEventListener('change',e=>{
@@ -7623,7 +7681,7 @@ function _pbmSyncMitoLoc(opt,task){
       const own=task?presGroupVal(task):'';
       const cur=opt.miBand===true?own:opt.miBand;
       const c1s=[...new Set(TASKS.filter(t=>!t.hito&&!t.evento).map(presGroupVal).concat(own,cur).filter(Boolean))];
-      sel.innerHTML=c1s.map(c=>`<option value="${esc(c)}"${c===cur?' selected':''}>${esc(c)}</option>`).join('');
+      sel.innerHTML=c1s.map(c=>`<option value="${esc(c)}"${c===cur?' selected':''}>${esc(presGroupPath(c).join(' › '))}</option>`).join('');
     }
   }
   // Dentro de banda no hay línea al eje ni "Distancia al eje": se ocultan esas secciones
@@ -7763,7 +7821,7 @@ function presLabelReset(){
   _presSnap();
   if(PRES_OPTS[_presBarKey])delete PRES_OPTS[_presBarKey].label;
   if(_presBarKey.startsWith('RAPC1|')){
-    document.getElementById('pbmNombre').value=_presBarKey.slice(6);
+    document.getElementById('pbmNombre').value=presGroupLeaf(_presBarKey.slice(6));
     renderPres();return;
   }
   const rawKey=_presBarKey.startsWith('LB|')?_presBarKey.slice(3):_presBarKey;
@@ -7781,11 +7839,12 @@ function presOpenC1LabelMenu(c1,clientX,clientY){
   _presMultiSel.clear();_presBarKey=key;_presBarIsHito=false;_presLabelSnapDone=false;
   if(!PRES_OPTS[key])PRES_OPTS[key]={};
   const opt=PRES_OPTS[key];
-  document.getElementById('pbmTitle').textContent=c1;
-  document.getElementById('pbmClase').textContent='Categoría 1';
-  document.getElementById('pbmClase').style.background=SCEN_COLOR[c1]||'#334155';
-  document.getElementById('pbmNombre').value=opt.label!==undefined?opt.label:c1;
-  document.getElementById('pbmTextSwatch').style.background=opt._textManual?opt.textColor:(SCEN_COLOR[c1]||'#334155');
+  const _gl=presGroupLeaf(c1),_gc=presGroupColor(c1);
+  document.getElementById('pbmTitle').textContent=_gl;
+  document.getElementById('pbmClase').textContent=presGroupFieldLabel(PRES_GROUP_FIELDS[presGroupPath(c1).length-1]);
+  document.getElementById('pbmClase').style.background=_gc;
+  document.getElementById('pbmNombre').value=opt.label!==undefined?opt.label:_gl;
+  document.getElementById('pbmTextSwatch').style.background=opt._textManual?opt.textColor:_gc;
   const fszSel=document.getElementById('pbmFontSzSel');
   if(fszSel)fszSel.value=String(opt.fontSize||13);
   const ibtn=document.getElementById('pbmItalic');if(ibtn)ibtn.classList.toggle('active',!!opt.textItalic);
