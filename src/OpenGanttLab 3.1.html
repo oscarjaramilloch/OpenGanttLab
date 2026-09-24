@@ -2371,6 +2371,10 @@ let TASKS=[], SCENARIOS=[], SCEN_ON={};
 // precedencias (edSchedForward) no debe mover fechas de sucesoras, aunque el resto de la edición
 // (LdT, Gantt, Gestión de escenarios, incluso preds/sucs/ID del panel) siga funcionando igual.
 let AP_SHARED=false;
+// Nombre de la sesión de trabajo: se muestra al inicio del título de la pestaña para distinguir varias instancias abiertas.
+let AP_SESSION_NAME='';
+const AP_BASE_TITLE='OpenGanttLab — Plataforma abierta para planificación, análisis y visualización de cronogramas';
+function apSetSessionName(n){AP_SESSION_NAME=String(n||'').trim();document.title=AP_SESSION_NAME?AP_SESSION_NAME+' · OpenGanttLab':AP_BASE_TITLE;}
 let GANTT_ORDER={};    // "escenario\x00c1" → posición
 let GANTT_C2_ORDER={}; // "escenario\x00c1\x00c2" → posición
 let GANTT_TASK_ORDER='chrono'; // 'chrono' (por fecha) | 'original' (orden del archivo Excel/XML)
@@ -4841,7 +4845,7 @@ function apRenderConfigUI(){
 let _workFileHandle=null;
 function _buildShareBlob(shared){
   closeAllDropMenus(); // que ningún popover (Capas, Más…) quede congelado abierto en el snapshot
-  const data={shared:!!shared,tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||'',preds:t.preds||'',pscope:t.pscope||''})),
+  const data={shared:!!shared,sessionName:AP_SESSION_NAME,tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||'',preds:t.preds||'',pscope:t.pscope||''})),
     scenarios:SCENARIOS,on:SCEN_ON,color:SCEN_COLOR,escColor:ESC_COLOR,cat2color:CAT2_COLOR,eventocolor:EVENTO_COLOR,presOpts:PRES_OPTS,presHidden:[...PRES_HIDDEN_KEYS],presTextBoxes:PRES_TEXTBOXES,presShapes:PRES_SHAPES,ganttTextBoxes:GANTT_TEXTBOXES,ganttOrder:GANTT_ORDER,ganttC2Order:GANTT_C2_ORDER,ganttTaskOrder:GANTT_TASK_ORDER,
     scale:document.getElementById('scale').value,mode:document.querySelector('input[name=mode]:checked').value,
     showLB:document.getElementById('showLB').checked,showDeps:document.getElementById('showDeps').checked,showDates:document.getElementById('showDates').checked,presShowDates:document.getElementById('presShowDates').checked,
@@ -4950,7 +4954,13 @@ async function _doSave(shared,suggestedName){
   _dirty=false;updateDirtyIndicator();
 }
 function saveShare(){return _doSave(true,'OpenGanttLab_compartir.html');}
-function saveSession(){return _doSave(false,'OpenGanttLab_sesion.html');}
+async function saveSession(){
+  if(!TASKS.length){alert('Primero carga datos.');return;}
+  const n=await ogDialog({title:'Guardar sesión de trabajo',msg:'Nombre de la sesión. Se muestra en la pestaña del navegador para distinguirla de otras ventanas de OpenGanttLab abiertas.',input:{value:AP_SESSION_NAME,placeholder:'Ej.: RaP SubB — escenario P50',validate:v=>v?'':'Escribe un nombre para la sesión.'},ok:'Guardar'});
+  if(n==null)return;
+  apSetSessionName(n);
+  return _doSave(false,n.replace(/[\/:*?"<>|]+/g,'_').slice(0,80)+'.html');
+}
 /* ═══ AUTOGUARDADO (cada 5 min) ═══
    Silencioso: solo actúa si ya existe un destino con permiso ya concedido — el Excel
    vinculado (FILE_HANDLE) o el archivo elegido la primera vez que se usó "Guardar sesión de
@@ -4991,6 +5001,7 @@ function loadEmbedded(){
   // d.shared===true, o ausente (archivos "Compartir" guardados antes de esta distinción) → se
   // trata como copia compartida y se bloquea el motor de precedencias y las celdas sensibles.
   AP_SHARED=d.shared!==false;
+  if(d.sessionName)apSetSessionName(d.sessionName);
   TASKS=d.tasks.map(t=>({id:t.id||null,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:parseLocal(t.iLB),fLB:parseLocal(t.fLB),iRP:parseLocal(t.iRP),fRP:parseLocal(t.fRP),av:t.av,hito:t.hito,evento:!!t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||undefined,preds:t.preds||undefined,pscope:t.pscope||undefined}));
   fillSplitTaskNames(TASKS);
   assignDupSeq(TASKS);
