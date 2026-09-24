@@ -5712,7 +5712,10 @@ function _presSVG(all,S,TW,mn,mx,opts){
   const _allMs=all.filter(t=>t.hito&&!isExecHidden(t));
   const _bandOf=m=>{
     const o=PRES_OPTS[useLB?'LB|'+pkOf(m):pkOf(m)];
-    if(!groupByC1||hitosOnly||execMode||!o||!o.miBand)return null;
+    if(!groupByC1||execMode)return null;
+    // Vista Hitos + Agrupador: todos los hitos van dentro de la banda de su grupo (o la que tengan asignada)
+    if(hitosOnly)return(o&&o.miBand&&o.miBand!==true)?o.miBand:presGroupVal(m);
+    if(!o||!o.miBand)return null;
     return o.miBand===true?presGroupVal(m):o.miBand;
   };
   const milestones=_allMs.filter(m=>_bandOf(m)===null),bandMs=_allMs.filter(m=>_bandOf(m)!==null);
