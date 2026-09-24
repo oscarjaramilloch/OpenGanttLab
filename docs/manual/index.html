@@ -59,7 +59,8 @@
 <tr><td>Entender qué depende de qué</td><td>Las dependencias se dibujan como flechas y se resalta la cadena completa de una tarea.</td></tr>
 <tr><td>Presentar el cronograma a un comité</td><td>La Línea de Tiempo permite editar colores, textos, hitos y formas, y exportar a PNG, PDF o PowerPoint.</td></tr>
 <tr><td>Abrir un XML enorme de Project</td><td>El archivo se lee por partes y solo se conserva lo necesario.</td></tr>
-<tr><td>Enviar el resultado sin enviar el Excel</td><td>«Compartir» genera un HTML autónomo con los datos embebidos.</td></tr>
+<tr><td>Guardar mi trabajo y seguir después</td><td>«Guardar sesión» genera un HTML autónomo que al reabrirlo permite seguir editando con normalidad.</td></tr>
+<tr><td>Enviar el resultado sin enviar el Excel</td><td>«Compartir» genera un HTML autónomo con los datos embebidos, con la edición sensible bloqueada.</td></tr>
 </table></div>
 
 <h2 id="introduccion--arquitectura">Cómo funciona por dentro</h2>
@@ -122,8 +123,8 @@
 <ol class="steps">
 <li><b>Gantt</b>Active <span class="ui">Línea base</span> para ver las barras rayadas junto a las de color, y <span class="ui">Avance real</span> para el relleno de avance. Detalles en <a href="#/cronograma">Cronograma</a>.</li>
 <li><b>Dependencias</b>En <span class="ui">Capas</span> active <span class="ui">Dependencias</span> y haga clic en una barra para resaltar su cadena.</li>
-<li><b>Línea de Tiempo</b>Pulse <span class="ui">Línea de Tiempo</span> en el riel. Pruebe <span class="ui">Vista C1</span>, <span class="ui">Ejecutivo</span> y <span class="ui">Vista Hitos</span>. Detalles en <a href="#/vistas">Vistas</a>.</li>
-<li><b>Exporte</b>Use <span class="ui">Exportar</span> (PNG, PDF o PPTX) o <span class="ui">Compartir</span> para guardar un HTML autónomo. Detalles en <a href="#/exportacion">Exportar y compartir</a>.</li>
+<li><b>Línea de Tiempo</b>Pulse <span class="ui">Línea de Tiempo</span> en el riel. Pruebe <span class="ui">Agrupador</span>, <span class="ui">Ejecutivo</span> y <span class="ui">Vista Hitos</span>. Detalles en <a href="#/vistas">Vistas</a>.</li>
+<li><b>Exporte</b>Use <span class="ui">Exportar</span> (PNG, PDF o PPTX) <span class="ui">Guardar sesión</span> para continuar su trabajo más tarde, o <span class="ui">Compartir</span> para enviar un HTML autónomo a otra persona. Detalles en <a href="#/exportacion">Exportar y compartir</a>.</li>
 </ol>
 
 <div class="callout result" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg><div class="cb"><div class="ct">Resultado esperado</div><p>Al terminar debería ver su cronograma en el Gantt, con los colores de cada Categoría 1 y Categoría 2, y poder pasar a la Línea de Tiempo sin volver a cargar nada.</p></div></div>
@@ -226,12 +227,12 @@
 <tr><td>Predecesoras · Sucesoras</td><td>Dependencias en el formato de Project (ver <a href="#/datos/dependencias-datos">más abajo</a>).</td><td>No</td></tr>
 </table></div>
 <div class="callout warn" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="cb"><div class="ct">Filas que se omiten</div><p>Una fila se omite si le falta el <b>Nombre de Tarea</b>, la <b>Categoría 1</b> o alguna fecha de <b>Línea Base</b>. Si faltan tareas después de cargar, revise primero esas tres columnas.</p></div></div>
-<p>Puede partir de una plantilla vacía con el ícono <span class="ui">Descargar plantilla</span> de la barra de la Tabla de Datos.</p>
+<p>Puede partir de una plantilla vacía con <span class="ui">Descargar</span> → <span class="ui">Planilla</span> en la barra de la Tabla de Datos.</p>
 
 <h3 id="datos--excel-vinculado">Excel vinculado</h3>
 <p>Cuando el navegador lo permite (Chrome o Edge), el Excel queda <b>vinculado</b>. Aparecen entonces dos botones nuevos: <span class="ui">Actualizar</span>, que recarga el archivo con los últimos cambios guardados en Excel, y <span class="ui">Guardar cambios en el Excel vinculado</span>, que escribe la tabla en el mismo archivo.</p>
-<figure class="fig" id="figura-13"><div class="imgbox"><img src="images/diagrams/diag-13-ciclo-excel.svg" width="940" height="300" alt="Ciclo de trabajo con un Excel vinculado" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 13 — Ciclo de trabajo con un Excel vinculado</span><span class="fd">Actualizar trae datos del Excel; Guardar cambios los devuelve. Descargar y Compartir generan archivos nuevos.</span></figcaption></figure>
-<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Autoguardado</div><p>Si hay un Excel vinculado (o un archivo elegido con «Compartir») y ya concedió permiso de escritura, la aplicación guarda los cambios sola cada 5 minutos. Sin destino vinculado no guarda nada: el aviso de «cambios sin compartir» es la única señal.</p></div></div>
+<figure class="fig" id="figura-13"><div class="imgbox"><img src="images/diagrams/diag-13-ciclo-excel.svg" width="940" height="300" alt="Ciclo de trabajo con un Excel vinculado" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 13 — Ciclo de trabajo con un Excel vinculado</span><span class="fd">Actualizar trae datos del Excel; Guardar cambios los devuelve. Descargar, Guardar sesión y Compartir generan archivos nuevos.</span></figcaption></figure>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Autoguardado</div><p>Si hay un Excel vinculado (o un archivo elegido con <span class="ui">Guardar sesión</span>) y ya concedió permiso de escritura, la aplicación guarda los cambios sola cada 5 minutos. Nunca reescribe una copia creada con «Compartir». Sin destino vinculado no guarda nada: el aviso de «cambios sin guardar» es la única señal.</p></div></div>
 
 <h2 id="datos--xml">Importar desde Project XML</h2>
 <p>El XML de Project se gestiona en <span class="ui">Datos</span> → <span class="ui">Gestión de XML</span> (la tercera pestaña de la sección). Tiene cuatro pestañas: <b>Cargar XML</b>, <b>Base de datos</b>, <b>Mapeo de columnas</b> y <b>Vista previa</b>.</p>
@@ -268,10 +269,10 @@
 <h2 id="datos--devolver-xml">Devolver los cambios a Project (XML)</h2>
 <p>Los cambios que haga en la Tabla de Datos se pueden llevar de vuelta a Microsoft Project. OpenGanttLab no reemplaza el archivo: vuelve a leer el <b>XML original</b> por partes y crea un <b>XML nuevo</b> en el que solo cambian las tareas que usted editó. El resto del archivo pasa sin alteraciones y funciona también con archivos de más de 1 GB.</p>
 <ol class="steps">
-<li><b>Edite en la Tabla de Datos</b>Cambie nombres, avance, fechas, predecesoras o campos personalizados de las tareas del XML.</li>
-<li><b>Pulse «Guardar cambios en un XML de Project»</b>Está en <span class="ui">Datos</span> → <span class="ui">Gestión de XML</span> → <span class="ui">Base de datos</span>, en la fila del archivo (ícono de documento con flecha).
+<li><b>Edite en la Tabla de Datos</b>Cambie nombres, avance, fechas, predecesoras, línea base, campos personalizados, agregue filas o elimine tareas del XML.</li>
+<li><b>Pulse «XML modificado»</b>Está en el menú <span class="ui">Descargar</span> de la barra de la Tabla de Datos (aparece cuando hay un XML cargado). Con varios XML cargados use el ícono de la fila del archivo en <span class="ui">Gestión de XML</span> → <span class="ui">Base de datos</span>.
 <figure class="fig" id="figura-18"><div class="imgbox"><img src="images/annotated/fig-18-xml-guardar-cambios.webp" width="1188" height="420" alt="Botón para guardar los cambios en un XML" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 18 — Botón para guardar los cambios en un XML</span><span class="fd">Cada archivo cargado tiene su propio botón.</span><ol class="legend"><li>Guardar cambios en un XML de Project (junto a Duplicar y Eliminar)</li></ol></figcaption></figure></li>
-<li><b>Elija el XML original y el destino</b>Lea el aviso y pulse <span class="ui">Continuar</span>. Elija el XML original del proyecto y luego dónde guardar el nuevo (propone «…_editado.xml»).
+<li><b>Elija el destino</b>Lea el aviso y pulse <span class="ui">Continuar</span>. La aplicación usa como base <b>el mismo XML que importó</b> (no hay que volver a elegirlo; si ya no está accesible se lo pide) y solo pregunta dónde guardar el nuevo (propone «…_editado.xml»). Si hay filas nuevas o tareas eliminadas, antes muestra la lista y pide confirmación.
 <figure class="fig" id="figura-19"><div class="imgbox"><img src="images/screenshots/fig-19-xml-guardar-dialogo.webp" width="476" height="306" alt="Aviso previo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 19 — Aviso previo</span><span class="fd">Cuadro que aparece antes de elegir los archivos.</span><div class="observe"><b>Qué observar</b><ul><li>Indica qué archivo debe elegir y que el original no se modifica.</li><li>Resume lo que se devuelve.</li></ul></div></figcaption></figure></li>
 <li><b>Revise el resumen y abra el resultado en Project</b>La aplicación indica cuántas tareas se modificaron y qué no se pudo devolver.
 <figure class="fig" id="figura-20"><div class="imgbox"><img src="images/screenshots/fig-20-xml-guardado-resumen.webp" width="476" height="288" alt="Resumen del guardado" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 20 — Resumen del guardado</span><span class="fd">Ejemplo con un nombre, un avance y unas predecesoras modificados.</span><div class="observe"><b>Qué observar</b><ul><li>Cuántas tareas se modificaron de las del archivo.</li><li>Qué tipo de cambios se escribieron.</li><li>Lo que no se devuelve.</li></ul></div></figcaption></figure></li>
@@ -285,14 +286,16 @@
 <tr><td>Predecesoras</td><td>Los vínculos con su tipo y desfase en días; el ID se convierte al UID de Project.</td></tr>
 <tr><td>Campos personalizados</td><td>El valor del campo. Las Categorías 1 y 2 solo si vienen de un campo personalizado del proyecto.</td></tr>
 </table></div>
-<p><b>No se devuelve:</b> la Línea Base, Clase, Ruta crítica y Resumen (incluidas las fechas de las tareas resumen), las filas nuevas o eliminadas en la tabla, los desfases en porcentaje y los escenarios creados con «Duplicar escenario».</p>
+<p><b>También se devuelve:</b> las fechas de la Línea Base que la tarea ya tiene en el XML (no se crean líneas base nuevas), las marcas de hito, ruta crítica y resumen, las <b>filas nuevas</b> de la tabla (se agregan al final del proyecto con un UID nuevo, como tareas de nivel 1 con programación manual) y las <b>filas eliminadas</b> (se quita la tarea, sus asignaciones y los vínculos de otras tareas que la referenciaban; antes de guardar se pide confirmación con la lista).</p>
+<p><b>No se devuelve:</b> los eventos, las fechas de las tareas resumen, los desfases en porcentaje y los escenarios creados con «Duplicar escenario». Project puede recalcular Ruta crítica y Resumen al abrir el archivo.</p>
+<div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Aviso de Chrome sobre archivos .xml</div><p>Al guardar, Chrome puede mostrar «Este tipo de archivo (.xml) puede ser peligroso». Es un aviso estándar del navegador para cualquier archivo .xml, no de OpenGanttLab: el archivo lo genera usted a partir del suyo. Elija <b>Guardar</b>.</p></div></div>
 <div class="callout warn" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="cb"><div class="ct">Fechas: programación manual y duración aproximada</div><p>Project recalcula las fechas de las tareas con programación automática, por lo que OpenGanttLab marca como <b>manual</b> cada tarea cuyas fechas cambió. La duración se conserva si el largo de la tarea no cambia; si cambia, se ajusta de forma <b>proporcional</b> (aproximada), porque la aplicación cuenta días corridos y Project usa calendarios laborales. Si una tarea no trae los elementos de programación manual, sus fechas no se devuelven y el resumen lo indica.</p></div></div>
 <div class="callout danger" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg><div class="cb"><div class="ct">Compruebe el resultado en Project</div><p>La aplicación verifica que cada tarea modificada siga siendo XML válido y que solo cambien las tareas editadas, pero <b>aún no se ha comprobado abriendo el resultado en Microsoft Project</b>. Ábralo y revíselo antes de usarlo. No cambie el mapeo entre editar y guardar.</p></div></div>
 <div class="callout info" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg><div class="cb"><div class="ct">Requisitos</div><p>Necesita Chrome o Edge (API de acceso a archivos). El XML original debe estar en UTF-8; el de destino es un archivo nuevo, y el original no se modifica.</p></div></div>
 
 <h2 id="datos--tabla-de-datos">La Tabla de Datos</h2>
 <p>La tabla contiene todas las tareas y es el lugar para corregir datos. Los cambios se aplican solos.</p>
-<figure class="fig" id="figura-21"><div class="imgbox"><img src="images/annotated/fig-21-tabla-datos.webp" width="1188" height="520" alt="Tabla de Datos" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 21 — Tabla de Datos</span><span class="fd">La barra y las columnas de la Tabla de Datos.</span><ol class="legend"><li>Restaurar datos originales del XML, Deshacer y Rehacer</li><li>Cargar archivo y más opciones de carga</li><li>Descargar plantilla</li><li>Descargar .xlsx</li><li>Agregar fila</li><li>Filtro por columna</li><li>Compartir</li><li>Pestañas: Tabla de Datos, Gestión de escenarios y Gestión de XML</li><li>Reprogramar sucesoras (interruptor)</li><li>Segmentador de escenario</li><li>Encabezados con botón de filtro</li></ol><div class="observe"><b>Qué observar</b><ul><li>Con un Excel vinculado aparecen además «Actualizar» y «Guardar cambios».</li><li>La columna «Duración (d)» está a la derecha de End R/P.</li></ul></div></figcaption></figure>
+<figure class="fig" id="figura-21"><div class="imgbox"><img src="images/annotated/fig-21-tabla-datos.webp" width="1188" height="520" alt="Tabla de Datos" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 21 — Tabla de Datos</span><span class="fd">La barra y las columnas de la Tabla de Datos.</span><ol class="legend"><li>Restaurar datos originales del XML, Deshacer y Rehacer</li><li>Cargar archivo y más opciones de carga</li><li>Descargar (Planilla, XLSX y XML modificado)</li><li>Agregar fila</li><li>Filtro por columna</li><li>Guardar sesión y Compartir</li><li>Pestañas: Tabla de Datos, Gestión de escenarios y Gestión de XML</li><li>Reprogramar sucesoras (interruptor)</li><li>Segmentador de escenario</li><li>Encabezados con botón de filtro</li></ol><div class="observe"><b>Qué observar</b><ul><li>Con un Excel vinculado aparecen además «Actualizar» y «Guardar cambios».</li><li>La columna «Duración (d)» está a la derecha de End R/P.</li></ul></div></figcaption></figure>
 <ul>
 <li><b>Editar:</b> haga clic en una celda y escriba. El Gantt y la Línea de Tiempo se actualizan al salir de la tabla, no en cada tecla.</li>
 <li><b>Agregar o eliminar filas:</b> <span class="ui">Agregar fila</span> al final; el ícono de papelera al final de cada fila la elimina.</li>
@@ -410,7 +413,7 @@
 <article data-slug="vistas" id="vistas" hidden aria-labelledby="vistas--h1"><p class="kicker">Capítulo 6 · Visualizar</p><h1 id="vistas--h1">Vistas: la Línea de Tiempo</h1><p class="lead">La Línea de Tiempo presenta el cronograma para un comité: cuatro modos de vista, edición libre de colores y textos, formas, dependencias y exportación.</p>
 
 <div class="learn"><b>En este capítulo aprenderás a:</b><ul>
-<li>Elegir el modo de vista adecuado: Comparador, Segmentación, Ejecutivo, Vista C1 o Vista Hitos.</li>
+<li>Elegir el modo de vista adecuado: Comparador, Segmentación, Ejecutivo, Agrupador o Vista Hitos.</li>
 <li>Editar barras, hitos y textos sin alterar los datos.</li>
 <li>Insertar textos y formas libres.</li>
 <li>Mostrar dependencias en la Línea de Tiempo.</li>
@@ -418,12 +421,12 @@
 
 <h2 id="vistas--modos">Los modos de vista</h2>
 <p>En <span class="ui">Capas</span>, la sección <b>Contenido</b> decide qué elementos se muestran y la sección <b>Modo de vista</b> decide cómo se dibuja el diagrama. Todos usan los mismos datos. Sin ningún modo activo, la Línea de Tiempo muestra su <b>vista base</b>: una barra por tarea sobre el eje de años, con los hitos sobre el eje.</p>
-<figure class="fig" id="figura-34"><div class="imgbox"><img src="images/screenshots/fig-34-capas-ldt.webp" width="348" height="578" alt="Menú Capas de la Línea de Tiempo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 34 — Menú Capas de la Línea de Tiempo</span><span class="fd">Contenido y modo de vista.</span><div class="observe"><b>Qué observar</b><ul><li>CONTENIDO: qué elementos se muestran (Marca Activity, Resumen, Leyenda, Fechas, Dependencias, Fecha de estado, Ruta crítica).</li><li>MODO DE VISTA: Comparador, Segmentación, Ejecutivo, Vista C1 y Vista Hitos.</li></ul></div></figcaption></figure>
+<figure class="fig" id="figura-34"><div class="imgbox"><img src="images/screenshots/fig-34-capas-ldt.webp" width="348" height="578" alt="Menú Capas de la Línea de Tiempo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 34 — Menú Capas de la Línea de Tiempo</span><span class="fd">Contenido y modo de vista.</span><div class="observe"><b>Qué observar</b><ul><li>CONTENIDO: qué elementos se muestran (Marca Activity, Resumen, Leyenda, Fechas, Dependencias, Fecha de estado, Ruta crítica).</li><li>MODO DE VISTA: Comparador, Segmentación, Ejecutivo, Agrupador y Vista Hitos.</li></ul></div></figcaption></figure>
 <div class="table-wrap"><table>
 <tr><th>Modo de vista</th><th>Qué hace</th><th>Cuándo usarlo</th></tr>
 <tr><td>Comparador</td><td>Dos secciones: la Línea Base arriba y lo Real/Proyectado abajo.</td><td>Mostrar cuánto se desplazó el plan.</td></tr>
 <tr><td>Ejecutivo</td><td>Cada tarea es un rombo en su fecha fin, con nombre y fecha debajo.</td><td>Láminas de alto nivel, solo con fechas de entrega.</td></tr>
-<tr><td>Vista C1</td><td>Agrupa las barras en bandas por Categoría 1, con el color de Categoría 2.</td><td>Presentar el cronograma por disciplina o frente.</td></tr>
+<tr><td>Agrupador</td><td>Agrupa las barras en bandas por la columna (o columnas anidadas) que elija; por defecto Categoría 1, con el color de Categoría 2.</td><td>Presentar el cronograma por disciplina o frente.</td></tr>
 <tr><td>Segmentación</td><td>Agrega bajo los años una fila con el subperíodo de la escala (trimestres, meses o semanas). No tiene efecto con la escala Años.</td><td>Ubicar las fechas con más precisión.</td></tr>
 <tr><td>Vista Hitos</td><td>Solo los rombos de hito; oculta las barras.</td><td>Un comité que solo quiere ver los hitos.</td></tr>
 </table></div>
@@ -432,7 +435,7 @@
 <div class="figgrid">
 <figure class="fig" id="figura-35"><div class="imgbox"><img src="images/screenshots/fig-35-ldt-normal.webp" width="1188" height="1033" alt="Vista base (sin modos)" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 35 — Vista base (sin modos)</span><span class="fd">El cronograma completo.</span><div class="observe"><b>Qué observar</b><ul><li>Barras con nombre y fechas.</li><li>Hitos sobre el eje con línea punteada.</li></ul></div></figcaption></figure>
 <figure class="fig" id="figura-36"><div class="imgbox"><img src="images/screenshots/fig-36-ldt-ejecutivo.webp" width="890" height="1010" alt="Modo Ejecutivo" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 36 — Modo Ejecutivo</span><span class="fd">Solo entregas.</span><div class="observe"><b>Qué observar</b><ul><li>Un rombo por tarea, en su fecha fin.</li></ul></div></figcaption></figure>
-<figure class="fig" id="figura-37"><div class="imgbox"><img src="images/screenshots/fig-37-ldt-vista-c1.webp" width="1188" height="991" alt="Vista C1" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 37 — Vista C1</span><span class="fd">Agrupado por Categoría 1.</span><div class="observe"><b>Qué observar</b><ul><li>Una banda por Categoría 1.</li><li>Etiqueta vertical con el nombre.</li></ul></div></figcaption></figure>
+<figure class="fig" id="figura-37"><div class="imgbox"><img src="images/screenshots/fig-37-ldt-vista-c1.webp" width="1188" height="991" alt="Agrupador" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 37 — Agrupador</span><span class="fd">Agrupado por Categoría 1.</span><div class="observe"><b>Qué observar</b><ul><li>Una banda por Categoría 1.</li><li>Etiqueta vertical con el nombre.</li></ul></div></figcaption></figure>
 <figure class="fig" id="figura-38"><div class="imgbox"><img src="images/screenshots/fig-38-ldt-hitos.webp" width="890" height="282" alt="Vista Hitos" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 38 — Vista Hitos</span><span class="fd">Solo hitos.</span><div class="observe"><b>Qué observar</b><ul><li>Solo hitos, arriba y abajo del eje.</li></ul></div></figcaption></figure>
 </div>
 
@@ -480,14 +483,19 @@
 </ol>
 <div class="callout note" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17v5"/><path d="M9 3h6l-1 6 3 3H7l3-3z"/></svg><div class="cb"><div class="ct">Persistencia</div><p>Las tareas ocultas y el formato de fecha se guardan por proyecto en el navegador y también viajan con «Compartir».</p></div></div>
 
-<h2 id="vistas--vista-c1">Vista C1: bandas por Categoría 1</h2>
+<h2 id="vistas--vista-c1">Agrupador: bandas por una o varias columnas</h2>
+<p>El <span class="ui">Agrupador</span> (antes «Vista C1») agrupa las barras en bandas. Al activarlo, el menú <span class="ui">Capas</span> muestra <b>Agrupar por</b>:</p>
 <ul>
-<li>Cada banda tiene una etiqueta vertical con el nombre de su Categoría 1.</li>
-<li>La etiqueta se puede seleccionar y <b>arrastrar hacia arriba o abajo</b> para reordenar las bandas, con una vista previa en vivo.</li>
+<li>Elija la columna de agrupación: <b>Categoría 1</b> (por defecto), <b>Escenario</b>, <b>Categoría 2</b> o cualquier columna adicional importada del XML o creada en la Tabla de Datos.</li>
+<li><b>Agregar nivel</b> añade hasta 4 niveles anidados (sin repetir columna); la ✕ quita un nivel. Cada nivel externo se dibuja como una columna de etiqueta a la izquierda, en un solo recuadro que abarca todas sus bandas internas.</li>
+<li>Al cambiar de columnas se reinician el orden y el alto manuales de las bandas.</li>
+<li>Con <span class="ui">Vista Hitos</span> activa a la vez, se dibujan los recuadros y cada hito queda <b>dentro de la banda de su grupo</b>.</li>
+<li>Cada banda tiene una etiqueta vertical con el nombre de su grupo.</li>
+<li>La etiqueta de la banda interna se puede seleccionar y <b>arrastrar hacia arriba o abajo</b> para reordenar las bandas, con una vista previa en vivo (los grupos externos se ordenan por la fecha de su primera tarea).</li>
 <li>El borde derecho de la columna de etiquetas y el borde inferior de cada banda se arrastran para ajustar su ancho y alto.</li>
-<li>Un doble clic en la etiqueta abre el panel de edición del texto (solo visual).</li>
+<li>Un doble clic en la etiqueta de cualquier nivel abre el panel de edición del texto (solo visual; se guarda por valor, así que dos columnas con el mismo valor comparten el texto).</li>
 </ul>
-<figure class="fig" id="figura-43"><div class="imgbox"><img src="images/annotated/fig-43-ldt-c1-bandas.webp" width="905" height="721" alt="Bandas de la Vista C1" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 43 — Bandas de la Vista C1</span><span class="fd">Cada Categoría 1 es una banda con su etiqueta.</span><ol class="legend"><li>Etiqueta vertical de la banda: se selecciona y se arrastra para reordenar</li><li>Banda de Categoría 1: su borde inferior se arrastra para ajustar el alto</li></ol></figcaption></figure>
+<figure class="fig" id="figura-43"><div class="imgbox"><img src="images/annotated/fig-43-ldt-c1-bandas.webp" width="905" height="721" alt="Bandas del Agrupador" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 43 — Bandas del Agrupador</span><span class="fd">Cada Categoría 1 es una banda con su etiqueta.</span><ol class="legend"><li>Etiqueta vertical de la banda: se selecciona y se arrastra para reordenar</li><li>Banda de Categoría 1: su borde inferior se arrastra para ajustar el alto</li></ol></figcaption></figure>
 
 <h2 id="vistas--edicion">Edición: textos y formas libres</h2>
 <p>El menú <span class="ui">Editar</span> agrega elementos propios sobre el diagrama.</p>
@@ -670,8 +678,9 @@
 <tr><td>Una imagen para un informe</td><td>PNG</td><td>Línea de Tiempo → <span class="ui">Exportar</span></td></tr>
 <tr><td>Un documento para imprimir</td><td>PDF</td><td>Línea de Tiempo → <span class="ui">Exportar</span></td></tr>
 <tr><td>Una diapositiva</td><td>PPTX (PowerPoint)</td><td>Línea de Tiempo → <span class="ui">Exportar</span></td></tr>
-<tr><td>Llevar la tabla a Excel</td><td>Descargar .xlsx o Guardar cambios</td><td>Datos</td></tr>
-<tr><td>Devolver los cambios a Project</td><td>Guardar cambios en un XML de Project</td><td>Datos › Gestión de XML › Base de datos</td></tr>
+<tr><td>Llevar la tabla a Excel</td><td>Descargar → XLSX de la Tabla de Datos, o Guardar cambios</td><td>Gestión de escenarios / Tabla de Datos</td></tr>
+<tr><td>Devolver los cambios a Project</td><td>Descargar → XML modificado</td><td>Barra de la Tabla de Datos</td></tr>
+<tr><td>Guardar mi trabajo para seguir después</td><td>Guardar sesión</td><td>Barra de herramientas</td></tr>
 <tr><td>Enviar todo a otra persona</td><td>Compartir</td><td>Barra de herramientas</td></tr>
 </table></div>
 
@@ -687,16 +696,29 @@
 
 <h2 id="exportacion--excel">Excel</h2>
 <ul>
-<li><span class="ui">Descargar .xlsx</span> genera un Excel con todas las tareas, incluidas las columnas de Predecesoras y Sucesoras.</li>
+<li><span class="ui">Descargar</span> → <span class="ui">XLSX de la Tabla de Datos</span> genera un Excel con todas las tareas, incluidas las columnas de Predecesoras y Sucesoras.</li>
 <li><span class="ui">Guardar cambios en el Excel vinculado</span> escribe la tabla en el mismo archivo (Chrome o Edge).</li>
 <li>Desde la Gestión de XML, el ícono <span class="ui">Exportar a Excel</span> descarga toda la base como un archivo <code>.csv</code> (que Excel abre), con las líneas base 0–10.</li>
 </ul>
 
 <h2 id="exportacion--xml">XML de Project</h2>
-<p>Desde la Gestión de XML puede crear un <b>XML nuevo</b> con los cambios de la Tabla de Datos (nombres, avance, fechas, predecesoras y campos personalizados) para abrirlo en Microsoft Project. El original no se modifica. Se explica, con sus límites, en <a href="#/datos/devolver-xml">Devolver los cambios a Project (XML)</a>.</p>
+<p>Con <span class="ui">Descargar</span> → <span class="ui">XML modificado</span> obtiene el <b>XML original con los cambios hechos en la app</b> (nombres, avance, fechas, predecesoras, línea base, hito/ruta crítica/resumen, filas nuevas y eliminadas y campos personalizados) para abrirlo en Microsoft Project. El original no se modifica. Se explica, con sus límites, en <a href="#/datos/devolver-xml">Devolver los cambios a Project (XML)</a>.</p>
+
+<h2 id="exportacion--guardar-sesion">Guardar sesión de trabajo</h2>
+<p><span class="ui">Guardar sesión</span> (ícono de disco, junto a Compartir) guarda una <b>copia completa</b> de la aplicación con sus datos para continuar su trabajo más tarde: al reabrir el archivo todo se puede editar con normalidad.</p>
+<ul>
+<li>Pide un <b>nombre de sesión</b>. Ese nombre se muestra al inicio del título de la pestaña del navegador («Mi sesión · OpenGanttLab») para distinguir varias ventanas abiertas, y sirve como nombre sugerido del archivo. Al reabrirlo, la pestaña vuelve a llevar el nombre.</li>
+<li>El selector de carpeta abre por defecto en <b>Descargas</b>.</li>
+<li>El <b>autoguardado</b> (cada 5 minutos, si ya se concedió permiso) reescribe este mismo archivo. Nunca reescribe una copia creada con Compartir.</li>
+</ul>
 
 <h2 id="exportacion--compartir">Compartir</h2>
-<p><span class="ui">Compartir</span> genera un único archivo HTML —una copia de la aplicación con sus datos embebidos— que se abre en cualquier navegador sin el Excel ni el XML originales. Se guarda por defecto como <code>OpenGanttLab_compartir.html</code>.</p>
+<p><span class="ui">Compartir</span> genera un único archivo HTML —una copia de la aplicación con sus datos embebidos— que se abre en cualquier navegador sin el Excel ni el XML originales. Se guarda por defecto como <code>OpenGanttLab_compartir.html</code>. A diferencia de <span class="ui">Guardar sesión</span>, la copia compartida se abre con <b>restricciones</b>.</p>
+<div class="callout warn" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="cb"><div class="ct">Restricciones de un archivo compartido</div><ul>
+<li>El <b>motor de precedencias</b> queda bloqueado: no se reprograman sucesoras y el interruptor «Reprogramar sucesoras» aparece deshabilitado.</li>
+<li>Las celdas de <b>Predecesoras, Sucesoras y Línea Base</b> (Start LB y End LB) de la Tabla de Datos, y los campos de vínculos del panel de las barras, son de solo lectura.</li>
+<li>Se mantienen la Línea de Tiempo, el Gantt y la Gestión de escenarios. Los archivos compartidos antes de esta distinción también se abren con estas restricciones.</li>
+</ul></div></div>
 <ol class="steps">
 <li><b>Prepare el resultado</b>Deje el Gantt y la Línea de Tiempo como quiere que se vean.</li>
 <li><b>Pulse Compartir</b>En Chrome o Edge se abre el selector de carpeta; en otros navegadores el archivo se descarga.</li>
@@ -706,10 +728,10 @@
 <div class="callout result" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 9.5"/></svg><div class="cb"><div class="ct">Qué conserva el archivo compartido</div><ul>
 <li>Las tareas y sus fechas, avance, marca de ruta crítica, ID y predecesoras, y los escenarios (Categorías 1) activos con sus colores.</li>
 <li>En el Gantt: las capas Línea base, Dependencias, Fechas y Resumen; la escala, la fuente y los tamaños; el orden de los grupos y de las tareas; y los textos libres.</li>
-<li>En la Línea de Tiempo: las capas y modos activos (Comparador, Segmentación, Ejecutivo, Vista C1, Vista Hitos, Marca Activity, Resumen, Leyenda, Fecha de estado, Ruta crítica y Dependencias), las tareas ocultas, los colores, textos y formas editados, los títulos, el orden de las bandas y el formato de fecha.</li>
+<li>En la Línea de Tiempo: las capas y modos activos (Comparador, Segmentación, Ejecutivo, Agrupador, Vista Hitos, Marca Activity, Resumen, Leyenda, Fecha de estado, Ruta crítica y Dependencias), las tareas ocultas, los colores, textos y formas editados, los títulos, el orden de las bandas y el formato de fecha.</li>
 </ul></div></div>
 <div class="callout warn" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><div class="cb"><div class="ct">Lo que no viaja</div><p>En el Gantt no se guardan las capas Avance real, Marca Activity, Fecha de estado y Ruta crítica, las columnas que agregó con clic derecho ni los filtros por columna: al abrir el archivo compartido hay que volver a configurarlos. Tampoco viajan las preferencias de <span class="ui">Configuración</span> (por ejemplo el aviso de conflictos de fechas) son del navegador de cada persona, y las columnas de mapeo personalizadas de XML duran solo la sesión.</p></div></div>
-<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Cambios sin compartir</div><p>El botón <span class="ui">Compartir</span> se resalta cuando hay cambios sin guardar. En <span class="ui">Configuración</span> puede activar un recordatorio cada N minutos.</p></div></div>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Cambios sin compartir</div><p>El botón <span class="ui">Compartir</span> se resalta cuando hay cambios sin guardar (se apaga también al usar Guardar sesión). En <span class="ui">Configuración</span> puede activar un recordatorio cada N minutos.</p></div></div>
 </article>
 
 <article data-slug="avanzadas" id="avanzadas" hidden aria-labelledby="avanzadas--h1"><p class="kicker">Capítulo 11 · Producir</p><h1 id="avanzadas--h1">Funciones avanzadas</h1><p class="lead">Herramientas para ajustar el diagrama a la medida: mover fechas en bloque, reordenar grupos, texto libre, columnas personalizadas y más.</p>
@@ -732,7 +754,7 @@
 <li><b>Elija el grupo y las fechas</b>Seleccione «Agrupar por», el valor y qué fechas mover (LB, R/P o ambas).</li>
 <li><b>Indique los días y aplique</b>Un número negativo mueve hacia atrás.</li>
 </ol>
-<div class="callout danger" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg><div class="cb"><div class="ct">Modifica los datos</div><p>Mover en bloque cambia las fechas de las tareas y <b>no se puede deshacer</b> con el botón Deshacer. Guarde una copia antes de usarlo (por ejemplo con <span class="ui">Compartir</span> o <span class="ui">Descargar .xlsx</span>). Si cargó un XML, <span class="ui">Restaurar</span> en la Tabla de Datos vuelve a los datos originales.</p></div></div>
+<div class="callout danger" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2h8l6 6v8l-6 6H8l-6-6V8z"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg><div class="cb"><div class="ct">Modifica los datos</div><p>Mover en bloque cambia las fechas de las tareas y <b>no se puede deshacer</b> con el botón Deshacer. Guarde una copia antes de usarlo (por ejemplo con <span class="ui">Guardar sesión</span> o <span class="ui">Descargar</span> → <span class="ui">XLSX</span>). Si cargó un XML, <span class="ui">Restaurar</span> en la Tabla de Datos vuelve a los datos originales.</p></div></div>
 
 <h2 id="avanzadas--reordenar-grupos">Reordenar grupos</h2>
 <p>Cambia el orden visual de los grupos con las flechas ▲▼: primero los Escenarios o Categoría 1 y, dentro de cada uno, sus Categoría 2.</p>
@@ -755,9 +777,9 @@
 <h2 id="avanzadas--seleccion-multiple">Selección múltiple en la Línea de Tiempo</h2>
 <p>Con <kbd>Ctrl</kbd> o <kbd>Shift</kbd> + clic agrega barras a la selección. Un doble clic abre el panel y los cambios (color, texto, fechas, trama, ocultar) se aplican a todas; arrastrar una mueve el grupo conservando el desplazamiento relativo entre filas.</p>
 
-<h2 id="avanzadas--hito-banda">Ubicación de un hito en la Vista C1</h2>
-<p>En el panel de edición de un hito, la opción <b>Ubicación</b> permite colocarlo dentro de una banda de Categoría 1 (con un selector de banda). Requiere la <span class="ui">Vista C1</span> activa y no funciona en Ejecutivo ni en Vista Hitos. Por defecto, el hito sigue sobre el eje.</p>
-<figure class="fig" id="figura-65"><div class="imgbox"><img src="images/screenshots/fig-65-ldt-hito-ubicacion.webp" width="348" height="535" alt="Ubicación de un hito" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 65 — Ubicación de un hito</span><span class="fd">Panel de edición de un hito en Vista C1.</span><div class="observe"><b>Qué observar</b><ul><li>Sección «Ubicación» del panel de edición de un hito.</li><li>Requiere la Vista C1 activa; no funciona en Ejecutivo ni en Vista Hitos.</li></ul></div></figcaption></figure>
+<h2 id="avanzadas--hito-banda">Ubicación de un hito en el Agrupador</h2>
+<p>En el panel de edición de un hito, la opción <b>Ubicación</b> permite colocarlo dentro de una banda del Agrupador (con un selector de banda). Requiere el <span class="ui">Agrupador</span> activo y no funciona en Ejecutivo. Por defecto, el hito sigue sobre el eje. Con <span class="ui">Vista Hitos</span> activa junto al Agrupador, todos los hitos van dentro de la banda de su grupo (o la que tengan asignada).</p>
+<figure class="fig" id="figura-65"><div class="imgbox"><img src="images/screenshots/fig-65-ldt-hito-ubicacion.webp" width="348" height="535" alt="Ubicación de un hito" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 65 — Ubicación de un hito</span><span class="fd">Panel de edición de un hito con el Agrupador.</span><div class="observe"><b>Qué observar</b><ul><li>Sección «Ubicación» del panel de edición de un hito.</li><li>Requiere el Agrupador activo; no funciona en Ejecutivo.</li></ul></div></figcaption></figure>
 </article>
 
 <article data-slug="casos-de-uso" id="casos-de-uso" hidden aria-labelledby="casos-de-uso--h1"><p class="kicker">Capítulo 12 · Consultar</p><h1 id="casos-de-uso--h1">Casos de uso</h1><p class="lead">Tres situaciones típicas resueltas de principio a fin. Todas usan el proyecto de ejemplo del manual (una planta industrial ficticia).</p>
@@ -783,13 +805,13 @@
 <h2 id="casos-de-uso--caso-comite">Caso 2 · Una lámina para el comité</h2>
 <p><b>Situación:</b> hay que presentar el cronograma a un comité en una sola lámina, con foco en los hitos.</p>
 <ol class="steps">
-<li><b>Abra la Línea de Tiempo</b>Elija el modo de vista: <span class="ui">Vista C1</span> para agrupar por disciplina, o <span class="ui">Ejecutivo</span> para mostrar solo entregas.</li>
+<li><b>Abra la Línea de Tiempo</b>Elija el modo de vista: <span class="ui">Agrupador</span> para agrupar por disciplina, o <span class="ui">Ejecutivo</span> para mostrar solo entregas.</li>
 <li><b>Depure lo que se ve</b>Oculte con <kbd>Delete</kbd> las tareas que no aporten, o use <span class="ui">Selección de tareas</span>.</li>
 <li><b>Ajuste la presentación</b>Edite colores y textos con doble clic; agregue una llamada o una forma desde <span class="ui">Editar</span>. Active <span class="ui">Leyenda</span> si hace falta.</li>
 <li><b>Exporte</b><span class="ui">Exportar</span> → PowerPoint, o PNG para pegarlo en un informe.</li>
 </ol>
-<figure class="fig" id="figura-67"><div class="imgbox"><img src="images/screenshots/fig-67-ldt-lamina-comite.webp" width="1188" height="991" alt="Lámina para el comité" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 67 — Lámina para el comité</span><span class="fd">Línea de Tiempo con Vista C1, Leyenda y Fecha de estado.</span><div class="observe"><b>Qué observar</b><ul><li>Vista C1: una banda por Categoría 1.</li><li>Leyenda de colores de Categoría 2 en el diagrama.</li><li>Línea roja de la fecha de estado.</li></ul></div></figcaption></figure>
-<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Guarde su trabajo</div><p>Use <span class="ui">Compartir</span> para conservar la configuración de la lámina. Al abrir el archivo compartido verá exactamente lo mismo.</p></div></div>
+<figure class="fig" id="figura-67"><div class="imgbox"><img src="images/screenshots/fig-67-ldt-lamina-comite.webp" width="1188" height="991" alt="Lámina para el comité" loading="lazy" decoding="async"></div><figcaption><span class="fn">Figura 67 — Lámina para el comité</span><span class="fd">Línea de Tiempo con Agrupador, Leyenda y Fecha de estado.</span><div class="observe"><b>Qué observar</b><ul><li>Agrupador: una banda por Categoría 1.</li><li>Leyenda de colores de Categoría 2 en el diagrama.</li><li>Línea roja de la fecha de estado.</li></ul></div></figcaption></figure>
+<div class="callout tip" role="note"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg><div class="cb"><div class="ct">Guarde su trabajo</div><p>Use <span class="ui">Guardar sesión</span> para seguir trabajando la lámina más tarde, o <span class="ui">Compartir</span> para enviarla: al abrir el archivo compartido se ve exactamente lo mismo (con las restricciones de edición descritas en Exportar y compartir).</p></div></div>
 
 <h2 id="casos-de-uso--caso-secuencia">Caso 3 · Revisar la secuencia de un XML de Project</h2>
 <p><b>Situación:</b> llega un XML de Project de varios cientos de megabytes y hay que revisar si la lógica está bien enlazada.</p>
@@ -881,12 +903,13 @@
 <tr><td>.xml (Project)</td><td>Entrada (se lee por partes) y salida: «Guardar cambios en un XML de Project» crea un archivo nuevo.</td></tr>
 <tr><td>.csv</td><td>Salida de la base de XML (con líneas base 0–10).</td></tr>
 <tr><td>.png · .pdf · .pptx</td><td>Salida de la Línea de Tiempo.</td></tr>
-<tr><td>.html</td><td>«Compartir»: copia autónoma de la aplicación con los datos.</td></tr>
+<tr><td>.html</td><td>«Guardar sesión» (editable al reabrir) o «Compartir» (con restricciones): copia autónoma de la aplicación con los datos.</td></tr>
 </table></div>
 
 <h2 id="referencia--glosario">Glosario</h2>
 <dl class="gloss">
-<dt>Autoguardado</dt><dd>Guardado silencioso cada 5 minutos en el Excel vinculado o en el archivo elegido con «Compartir», si ya se concedió permiso.</dd>
+<dt>Agrupador</dt><dd>Modo de la Línea de Tiempo (antes «Vista C1») que agrupa las barras en bandas por una o varias columnas anidadas.</dd>
+<dt>Autoguardado</dt><dd>Guardado silencioso cada 5 minutos en el Excel vinculado o en el archivo elegido con «Guardar sesión», si ya se concedió permiso.</dd>
 <dt>Avance</dt><dd>Porcentaje completado de una tarea (0–100).</dd>
 <dt>Capa</dt><dd>Elemento que se puede mostrar u ocultar sobre el cronograma (avance, línea base, dependencias…).</dd>
 <dt>Categoría 1 / Categoría 2</dt><dd>Niveles de agrupación de las tareas, con color propio.</dd>
@@ -959,13 +982,19 @@
 
 <h2 id="problemas--guardar">Guardar y exportar</h2>
 <h3 id="problemas--no-guarda-excel">No puedo guardar en el Excel</h3>
-<p>Use Chrome o Edge y vincule el archivo desde <span class="ui">Datos</span>. Como alternativa, use <span class="ui">Descargar .xlsx</span>.</p>
+<p>Use Chrome o Edge y vincule el archivo desde <span class="ui">Gestión de escenarios</span>. Como alternativa, use <span class="ui">Descargar</span> → <span class="ui">XLSX de la Tabla de Datos</span>.</p>
 <h3 id="problemas--pptx">La exportación a PowerPoint no se genera</h3>
 <p>La primera vez necesita conexión a internet para descargar el componente de exportación.</p>
 <h3 id="problemas--perdi-cambios">Perdí mis cambios de la Línea de Tiempo</h3>
-<p>Use <span class="ui">Compartir</span> para guardar una copia completa. Las tareas ocultas de Ejecutivo y el formato de fecha también se recuerdan por proyecto en el navegador. Las preferencias de Configuración son propias de cada navegador.</p>
+<p>Use <span class="ui">Guardar sesión</span> para guardar una copia completa que podrá seguir editando. Las tareas ocultas de Ejecutivo y el formato de fecha también se recuerdan por proyecto en el navegador. Las preferencias de Configuración son propias de cada navegador.</p>
 <h3 id="problemas--cambios-sin-compartir">Aviso de «cambios sin compartir»</h3>
-<p>La aplicación no guarda por sí sola si no hay un destino vinculado. Pulse <span class="ui">Compartir</span> (o guarde en el Excel vinculado) para conservar el trabajo.</p>
+<p>La aplicación no guarda por sí sola si no hay un destino vinculado. Pulse <span class="ui">Guardar sesión</span> (o guarde en el Excel vinculado) para conservar el trabajo.</p>
+<h3 id="problemas--archivo-solo-lectura">Un archivo que me compartieron no me deja editar predecesoras o línea base</h3>
+<p>Es intencional: las copias hechas con <span class="ui">Compartir</span> bloquean el motor de precedencias y las celdas de Predecesoras, Sucesoras y Línea Base. Si necesita editar, pida al autor su archivo de <span class="ui">Guardar sesión</span>.</p>
+<h3 id="problemas--chrome-xml">Chrome dice que el archivo .xml puede ser peligroso</h3>
+<p>Es un aviso estándar de Chrome al guardar cualquier archivo .xml desde una página; elija <b>Guardar</b>. Ver <a href="#/datos/devolver-xml">Devolver los cambios a Project</a>.</p>
+<h3 id="problemas--preds-vacias">La celda de Predecesoras muestra un texto gris</h3>
+<p>«Sin predecesoras» en gris claro es solo la ayuda de una celda vacía: esa tarea no tiene predecesoras. Escriba directamente, por ejemplo <code>12; 15CC+2 días</code>.
 
 <h2 id="problemas--datos-inconsistentes">Datos inconsistentes</h2>
 <div class="table-wrap"><table>

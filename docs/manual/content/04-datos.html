@@ -29,13 +29,13 @@
 <callout type="warn" title="Filas que se omiten">
 <p>Una fila se omite si le falta el <b>Nombre de Tarea</b>, la <b>Categoría 1</b> o alguna fecha de <b>Línea Base</b>. Si faltan tareas después de cargar, revise primero esas tres columnas.</p>
 </callout>
-<p>Puede partir de una plantilla vacía con el ícono <ui>Descargar plantilla</ui> de la barra de la Tabla de Datos.</p>
+<p>Puede partir de una plantilla vacía con <ui>Descargar</ui> → <ui>Planilla</ui> en la barra de la Tabla de Datos.</p>
 
 <h3 id="excel-vinculado">Excel vinculado</h3>
 <p>Cuando el navegador lo permite (Chrome o Edge), el Excel queda <b>vinculado</b>. Aparecen entonces dos botones nuevos: <ui>Actualizar</ui>, que recarga el archivo con los últimos cambios guardados en Excel, y <ui>Guardar cambios en el Excel vinculado</ui>, que escribe la tabla en el mismo archivo.</p>
-<fig slug="ciclo-excel" t="Ciclo de trabajo con un Excel vinculado">Actualizar trae datos del Excel; Guardar cambios los devuelve. Descargar y Compartir generan archivos nuevos.</fig>
+<fig slug="ciclo-excel" t="Ciclo de trabajo con un Excel vinculado">Actualizar trae datos del Excel; Guardar cambios los devuelve. Descargar, Guardar sesión y Compartir generan archivos nuevos.</fig>
 <callout type="info" title="Autoguardado">
-<p>Si hay un Excel vinculado (o un archivo elegido con «Compartir») y ya concedió permiso de escritura, la aplicación guarda los cambios sola cada 5 minutos. Sin destino vinculado no guarda nada: el aviso de «cambios sin compartir» es la única señal.</p>
+<p>Si hay un Excel vinculado (o un archivo elegido con <ui>Guardar sesión</ui>) y ya concedió permiso de escritura, la aplicación guarda los cambios sola cada 5 minutos. Nunca reescribe una copia creada con «Compartir». Sin destino vinculado no guarda nada: el aviso de «cambios sin guardar» es la única señal.</p>
 </callout>
 
 <h2 id="xml">Importar desde Project XML</h2>
@@ -77,10 +77,10 @@
 <h2 id="devolver-xml">Devolver los cambios a Project (XML)</h2>
 <p>Los cambios que haga en la Tabla de Datos se pueden llevar de vuelta a Microsoft Project. OpenGanttLab no reemplaza el archivo: vuelve a leer el <b>XML original</b> por partes y crea un <b>XML nuevo</b> en el que solo cambian las tareas que usted editó. El resto del archivo pasa sin alteraciones y funciona también con archivos de más de 1 GB.</p>
 <ol class="steps">
-<li><b>Edite en la Tabla de Datos</b>Cambie nombres, avance, fechas, predecesoras o campos personalizados de las tareas del XML.</li>
-<li><b>Pulse «Guardar cambios en un XML de Project»</b>Está en <ui>Datos</ui> → <ui>Gestión de XML</ui> → <ui>Base de datos</ui>, en la fila del archivo (ícono de documento con flecha).
+<li><b>Edite en la Tabla de Datos</b>Cambie nombres, avance, fechas, predecesoras, línea base, campos personalizados, agregue filas o elimine tareas del XML.</li>
+<li><b>Pulse «XML modificado»</b>Está en el menú <ui>Descargar</ui> de la barra de la Tabla de Datos (aparece cuando hay un XML cargado). Con varios XML cargados use el ícono de la fila del archivo en <ui>Gestión de XML</ui> → <ui>Base de datos</ui>.
 <fig slug="xml-guardar-cambios" t="Botón para guardar los cambios en un XML" legend="Guardar cambios en un XML de Project (junto a Duplicar y Eliminar)">Cada archivo cargado tiene su propio botón.</fig></li>
-<li><b>Elija el XML original y el destino</b>Lea el aviso y pulse <ui>Continuar</ui>. Elija el XML original del proyecto y luego dónde guardar el nuevo (propone «…_editado.xml»).
+<li><b>Elija el destino</b>Lea el aviso y pulse <ui>Continuar</ui>. La aplicación usa como base <b>el mismo XML que importó</b> (no hay que volver a elegirlo; si ya no está accesible se lo pide) y solo pregunta dónde guardar el nuevo (propone «…_editado.xml»). Si hay filas nuevas o tareas eliminadas, antes muestra la lista y pide confirmación.
 <fig slug="xml-guardar-dialogo" t="Aviso previo" observe="Indica qué archivo debe elegir y que el original no se modifica.|Resume lo que se devuelve.">Cuadro que aparece antes de elegir los archivos.</fig></li>
 <li><b>Revise el resumen y abra el resultado en Project</b>La aplicación indica cuántas tareas se modificaron y qué no se pudo devolver.
 <fig slug="xml-guardado-resumen" t="Resumen del guardado" observe="Cuántas tareas se modificaron de las del archivo.|Qué tipo de cambios se escribieron.|Lo que no se devuelve.">Ejemplo con un nombre, un avance y unas predecesoras modificados.</fig></li>
@@ -96,6 +96,9 @@
 </table>
 <p><b>También se devuelve:</b> las fechas de la Línea Base que la tarea ya tiene en el XML (no se crean líneas base nuevas), las marcas de hito, ruta crítica y resumen, las <b>filas nuevas</b> de la tabla (se agregan al final del proyecto con un UID nuevo, como tareas de nivel 1 con programación manual) y las <b>filas eliminadas</b> (se quita la tarea, sus asignaciones y los vínculos de otras tareas que la referenciaban; antes de guardar se pide confirmación con la lista).</p>
 <p><b>No se devuelve:</b> los eventos, las fechas de las tareas resumen, los desfases en porcentaje y los escenarios creados con «Duplicar escenario». Project puede recalcular Ruta crítica y Resumen al abrir el archivo.</p>
+<callout type="info" title="Aviso de Chrome sobre archivos .xml">
+<p>Al guardar, Chrome puede mostrar «Este tipo de archivo (.xml) puede ser peligroso». Es un aviso estándar del navegador para cualquier archivo .xml, no de OpenGanttLab: el archivo lo genera usted a partir del suyo. Elija <b>Guardar</b>.</p>
+</callout>
 <callout type="warn" title="Fechas: programación manual y duración aproximada">
 <p>Project recalcula las fechas de las tareas con programación automática, por lo que OpenGanttLab marca como <b>manual</b> cada tarea cuyas fechas cambió. La duración se conserva si el largo de la tarea no cambia; si cambia, se ajusta de forma <b>proporcional</b> (aproximada), porque la aplicación cuenta días corridos y Project usa calendarios laborales. Si una tarea no trae los elementos de programación manual, sus fechas no se devuelven y el resumen lo indica.</p>
 </callout>
@@ -108,7 +111,7 @@
 
 <h2 id="tabla-de-datos">La Tabla de Datos</h2>
 <p>La tabla contiene todas las tareas y es el lugar para corregir datos. Los cambios se aplican solos.</p>
-<fig slug="tabla-datos" t="Tabla de Datos" legend="Restaurar datos originales del XML, Deshacer y Rehacer|Cargar archivo y más opciones de carga|Descargar plantilla|Descargar .xlsx|Agregar fila|Filtro por columna|Compartir|Pestañas: Tabla de Datos, Gestión de escenarios y Gestión de XML|Reprogramar sucesoras (interruptor)|Segmentador de escenario|Encabezados con botón de filtro" observe="Con un Excel vinculado aparecen además «Actualizar» y «Guardar cambios».|La columna «Duración (d)» está a la derecha de End R/P.">La barra y las columnas de la Tabla de Datos.</fig>
+<fig slug="tabla-datos" t="Tabla de Datos" legend="Restaurar datos originales del XML, Deshacer y Rehacer|Cargar archivo y más opciones de carga|Descargar (Planilla, XLSX y XML modificado)|Agregar fila|Filtro por columna|Guardar sesión y Compartir|Pestañas: Tabla de Datos, Gestión de escenarios y Gestión de XML|Reprogramar sucesoras (interruptor)|Segmentador de escenario|Encabezados con botón de filtro" observe="Con un Excel vinculado aparecen además «Actualizar» y «Guardar cambios».|La columna «Duración (d)» está a la derecha de End R/P.">La barra y las columnas de la Tabla de Datos.</fig>
 <ul>
 <li><b>Editar:</b> haga clic en una celda y escriba. El Gantt y la Línea de Tiempo se actualizan al salir de la tabla, no en cada tecla.</li>
 <li><b>Agregar o eliminar filas:</b> <ui>Agregar fila</ui> al final; el ícono de papelera al final de cada fila la elimina.</li>

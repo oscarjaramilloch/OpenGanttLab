@@ -14,8 +14,9 @@
 <tr><td>Una imagen para un informe</td><td>PNG</td><td>Línea de Tiempo → <ui>Exportar</ui></td></tr>
 <tr><td>Un documento para imprimir</td><td>PDF</td><td>Línea de Tiempo → <ui>Exportar</ui></td></tr>
 <tr><td>Una diapositiva</td><td>PPTX (PowerPoint)</td><td>Línea de Tiempo → <ui>Exportar</ui></td></tr>
-<tr><td>Llevar la tabla a Excel</td><td>Descargar .xlsx o Guardar cambios</td><td>Datos</td></tr>
-<tr><td>Devolver los cambios a Project</td><td>Guardar cambios en un XML de Project</td><td>Datos › Gestión de XML › Base de datos</td></tr>
+<tr><td>Llevar la tabla a Excel</td><td>Descargar → XLSX de la Tabla de Datos, o Guardar cambios</td><td>Gestión de escenarios / Tabla de Datos</td></tr>
+<tr><td>Devolver los cambios a Project</td><td>Descargar → XML modificado</td><td>Barra de la Tabla de Datos</td></tr>
+<tr><td>Guardar mi trabajo para seguir después</td><td>Guardar sesión</td><td>Barra de herramientas</td></tr>
 <tr><td>Enviar todo a otra persona</td><td>Compartir</td><td>Barra de herramientas</td></tr>
 </table>
 
@@ -33,16 +34,31 @@
 
 <h2 id="excel">Excel</h2>
 <ul>
-<li><ui>Descargar .xlsx</ui> genera un Excel con todas las tareas, incluidas las columnas de Predecesoras y Sucesoras.</li>
+<li><ui>Descargar</ui> → <ui>XLSX de la Tabla de Datos</ui> genera un Excel con todas las tareas, incluidas las columnas de Predecesoras y Sucesoras.</li>
 <li><ui>Guardar cambios en el Excel vinculado</ui> escribe la tabla en el mismo archivo (Chrome o Edge).</li>
 <li>Desde la Gestión de XML, el ícono <ui>Exportar a Excel</ui> descarga toda la base como un archivo <code>.csv</code> (que Excel abre), con las líneas base 0–10.</li>
 </ul>
 
 <h2 id="xml">XML de Project</h2>
-<p>Desde la Gestión de XML puede crear un <b>XML nuevo</b> con los cambios de la Tabla de Datos (nombres, avance, fechas, predecesoras y campos personalizados) para abrirlo en Microsoft Project. El original no se modifica. Se explica, con sus límites, en <a href="#/datos/devolver-xml">Devolver los cambios a Project (XML)</a>.</p>
+<p>Con <ui>Descargar</ui> → <ui>XML modificado</ui> obtiene el <b>XML original con los cambios hechos en la app</b> (nombres, avance, fechas, predecesoras, línea base, hito/ruta crítica/resumen, filas nuevas y eliminadas y campos personalizados) para abrirlo en Microsoft Project. El original no se modifica. Se explica, con sus límites, en <a href="#/datos/devolver-xml">Devolver los cambios a Project (XML)</a>.</p>
+
+<h2 id="guardar-sesion">Guardar sesión de trabajo</h2>
+<p><ui>Guardar sesión</ui> (ícono de disco, junto a Compartir) guarda una <b>copia completa</b> de la aplicación con sus datos para continuar su trabajo más tarde: al reabrir el archivo todo se puede editar con normalidad.</p>
+<ul>
+<li>Pide un <b>nombre de sesión</b>. Ese nombre se muestra al inicio del título de la pestaña del navegador («Mi sesión · OpenGanttLab») para distinguir varias ventanas abiertas, y sirve como nombre sugerido del archivo. Al reabrirlo, la pestaña vuelve a llevar el nombre.</li>
+<li>El selector de carpeta abre por defecto en <b>Descargas</b>.</li>
+<li>El <b>autoguardado</b> (cada 5 minutos, si ya se concedió permiso) reescribe este mismo archivo. Nunca reescribe una copia creada con Compartir.</li>
+</ul>
 
 <h2 id="compartir">Compartir</h2>
-<p><ui>Compartir</ui> genera un único archivo HTML —una copia de la aplicación con sus datos embebidos— que se abre en cualquier navegador sin el Excel ni el XML originales. Se guarda por defecto como <code>OpenGanttLab_compartir.html</code>.</p>
+<p><ui>Compartir</ui> genera un único archivo HTML —una copia de la aplicación con sus datos embebidos— que se abre en cualquier navegador sin el Excel ni el XML originales. Se guarda por defecto como <code>OpenGanttLab_compartir.html</code>. A diferencia de <ui>Guardar sesión</ui>, la copia compartida se abre con <b>restricciones</b>.</p>
+<callout type="warn" title="Restricciones de un archivo compartido">
+<ul>
+<li>El <b>motor de precedencias</b> queda bloqueado: no se reprograman sucesoras y el interruptor «Reprogramar sucesoras» aparece deshabilitado.</li>
+<li>Las celdas de <b>Predecesoras, Sucesoras y Línea Base</b> (Start LB y End LB) de la Tabla de Datos, y los campos de vínculos del panel de las barras, son de solo lectura.</li>
+<li>Se mantienen la Línea de Tiempo, el Gantt y la Gestión de escenarios. Los archivos compartidos antes de esta distinción también se abren con estas restricciones.</li>
+</ul>
+</callout>
 <ol class="steps">
 <li><b>Prepare el resultado</b>Deje el Gantt y la Línea de Tiempo como quiere que se vean.</li>
 <li><b>Pulse Compartir</b>En Chrome o Edge se abre el selector de carpeta; en otros navegadores el archivo se descarga.</li>
@@ -53,12 +69,12 @@
 <ul>
 <li>Las tareas y sus fechas, avance, marca de ruta crítica, ID y predecesoras, y los escenarios (Categorías 1) activos con sus colores.</li>
 <li>En el Gantt: las capas Línea base, Dependencias, Fechas y Resumen; la escala, la fuente y los tamaños; el orden de los grupos y de las tareas; y los textos libres.</li>
-<li>En la Línea de Tiempo: las capas y modos activos (Comparador, Segmentación, Ejecutivo, Vista C1, Vista Hitos, Marca Activity, Resumen, Leyenda, Fecha de estado, Ruta crítica y Dependencias), las tareas ocultas, los colores, textos y formas editados, los títulos, el orden de las bandas y el formato de fecha.</li>
+<li>En la Línea de Tiempo: las capas y modos activos (Comparador, Segmentación, Ejecutivo, Agrupador, Vista Hitos, Marca Activity, Resumen, Leyenda, Fecha de estado, Ruta crítica y Dependencias), las tareas ocultas, los colores, textos y formas editados, los títulos, el orden de las bandas y el formato de fecha.</li>
 </ul>
 </callout>
 <callout type="warn" title="Lo que no viaja">
 <p>En el Gantt no se guardan las capas Avance real, Marca Activity, Fecha de estado y Ruta crítica, las columnas que agregó con clic derecho ni los filtros por columna: al abrir el archivo compartido hay que volver a configurarlos. Tampoco viajan las preferencias de <ui>Configuración</ui> (por ejemplo el aviso de conflictos de fechas) son del navegador de cada persona, y las columnas de mapeo personalizadas de XML duran solo la sesión.</p>
 </callout>
 <callout type="tip" title="Cambios sin compartir">
-<p>El botón <ui>Compartir</ui> se resalta cuando hay cambios sin guardar. En <ui>Configuración</ui> puede activar un recordatorio cada N minutos.</p>
+<p>El botón <ui>Compartir</ui> se resalta cuando hay cambios sin guardar (se apaga también al usar Guardar sesión). En <ui>Configuración</ui> puede activar un recordatorio cada N minutos.</p>
 </callout>
