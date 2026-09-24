@@ -1006,15 +1006,29 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button class="rb-flat" id="btnRefresh" style="display:none" title="Actualizar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
         </button>
-        <button class="rb-flat" onclick="downloadTemplate()" title="Descargar plantilla">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8"/><path d="M14 2v6h6"/><path d="M17 13v8"/><path d="m14 18 3 3 3-3"/></svg>
-        </button>
         <button class="rb-flat" id="btnSaveToExcel" onclick="saveChangesToExcel()" style="display:none" title="Guardar cambios en el Excel vinculado">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
         </button>
-        <button class="rb-flat" onclick="downloadXlsx()" title="Descargar .xlsx">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
-        </button>
+        <div style="position:relative;display:inline-block">
+          <button class="rb-flat" id="btnDatosDlMenu" onclick="toggleDropMenu(event,'btnDatosDlMenu','datosDlMenuPanel')" title="Descargar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:2px"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div id="datosDlMenuPanel" class="rb-menu-panel" data-menu-btn="btnDatosDlMenu" style="display:none;position:fixed;z-index:99999;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:4px;min-width:230px">
+            <button class="filtro-menu-item" onclick="closeAllDropMenus();downloadTemplate()" title="Plantilla vacía de Excel para cargar datos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h8"/><path d="M14 2v6h6"/><path d="M17 13v8"/><path d="m14 18 3 3 3-3"/></svg>
+              Planilla
+            </button>
+            <button class="filtro-menu-item" onclick="closeAllDropMenus();downloadXlsx()" title="Descarga la Tabla de Datos como .xlsx">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+              XLSX de la Tabla de Datos
+            </button>
+            <button class="filtro-menu-item" id="btnXmlExport" style="display:none" onclick="closeAllDropMenus();pxmlExportBtn()" title="El XML original con los cambios hechos en la app">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
+              XML modificado
+            </button>
+          </div>
+        </div>
         <button class="rb-flat" id="btnAddRow" onclick="addEditorRow()" title="Agregar fila">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
@@ -1034,9 +1048,6 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
             </button>
           </div>
         </div>
-        <button class="rb-flat" id="btnXmlExport" style="display:none" title="Exportar el XML original con los cambios hechos en la app" onclick="pxmlExportBtn()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
-        </button>
         <button class="rb-flat" id="btnSaveSession"title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
         </button>
@@ -8879,7 +8890,7 @@ function pxmlExportBtn(){
   pxmlTab('db');apToast('Hay varios XML cargados: use el ícono de exportar en la fila del que quiera devolver.');
 }
 function pxmlRefreshDb(){
-  const _bx=document.getElementById('btnXmlExport');if(_bx)_bx.style.display=PXML_DB.length&&!AP_SHARED?'':'none';
+  const _bx=document.getElementById('btnXmlExport');if(_bx)_bx.style.display=PXML_DB.length&&!AP_SHARED?'flex':'none';
   document.getElementById('pxmlDbCount').textContent=PXML_DB.length;
   const totalTasks=PXML_DB.reduce((a,b)=>a+b.tasks.length,0);
   document.getElementById('pxmlDbSummary').textContent=`${PXML_DB.length} archivo(s) · ${totalTasks} tareas totales`;
