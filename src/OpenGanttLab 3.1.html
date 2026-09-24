@@ -1034,7 +1034,10 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
             </button>
           </div>
         </div>
-        <button class="rb-flat" id="btnSaveSession" title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
+        <button class="rb-flat" id="btnXmlExport" style="display:none" title="Exportar el XML original con los cambios hechos en la app" onclick="pxmlExportBtn()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
+        </button>
+        <button class="rb-flat" id="btnSaveSession"title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
         </button>
         <button class="rb-flat dirty-save-btn" id="btnSave" title="Compartir" style="position:relative">
@@ -8686,6 +8689,8 @@ async function pxmlLoadFiles(files){
       const result=await pxmlParseFile(file,(pct,n)=>{log.textContent=base+`  Leyendo ${pct}% · ${n} tareas…
 `;setBar((idx0+pct/100)/nFiles);});
       setBar((idx0+1)/nFiles);
+      // El original queda referenciado (no copiado) para "Devolver a Project" sin volver a elegirlo.
+      Object.defineProperty(result,'srcFile',{value:file,enumerable:false,writable:true});
       log.textContent=base+`  Línea base actual: ${result.currentBaseline} (${result.baselineWhy}${result.baselineDate?' '+result.baselineDate:''})
 `+(result.skipped?`  ⚠ ${result.skipped} bloque(s) de tareas con XML inválido omitidos
 `:'');
@@ -8869,7 +8874,12 @@ function pxmlMergeCols(){
     if(!seen.has(cc.id)){seen.add(cc.id);PXML_ALL_COLS.push(cc);}
   }));
 }
+function pxmlExportBtn(){
+  if(PXML_DB.length===1)return pxmlWriteBack(0);
+  pxmlTab('db');apToast('Hay varios XML cargados: use el ícono de exportar en la fila del que quiera devolver.');
+}
 function pxmlRefreshDb(){
+  const _bx=document.getElementById('btnXmlExport');if(_bx)_bx.style.display=PXML_DB.length&&!AP_SHARED?'':'none';
   document.getElementById('pxmlDbCount').textContent=PXML_DB.length;
   const totalTasks=PXML_DB.reduce((a,b)=>a+b.tasks.length,0);
   document.getElementById('pxmlDbSummary').textContent=`${PXML_DB.length} archivo(s) · ${totalTasks} tareas totales`;
@@ -9048,12 +9058,16 @@ async function pxmlWriteBack(i){
   if(!window.showOpenFilePicker||!window.showSaveFilePicker){await ogDialog({title:'Función no disponible',msg:'Guardar un XML nuevo necesita Chrome o Edge (API de acceso a archivos).',ok:'Entendido',cancel:false});return;}
   const ctx=pxmlBuildWriteCtx(i);
   if(!ctx||!ctx.byUid.size){await ogDialog({title:'No hay tareas para devolver',msg:'La Tabla de Datos no tiene tareas de este XML con su UID de Project. Vuelva a importar el archivo y compruebe el mapeo.',ok:'Entendido',cancel:false});return;}
-  const go=await ogDialog({title:'Guardar cambios en un XML de Project',msg:'1) Elija el XML ORIGINAL de "'+(db.variantName||db.projectName)+'" ('+db.fileName+').\n2) Elija dónde guardar el XML nuevo. El original no se modifica.\n\nSe devuelven nombres, avance, fechas (como programación manual), predecesoras y campos personalizados. Es una función nueva: compruebe el resultado en Project.',ok:'Continuar'});
+  let file=db.srcFile;
+  if(file){try{await file.slice(0,1).arrayBuffer();}catch(_){file=null;}} // el archivo cambió o ya no es accesible
+  const go=await ogDialog({title:'Guardar cambios en un XML de Project',msg:(file?'Se usará el mismo XML que importó ('+db.fileName+') como base: se conserva todo su contenido y se le aplican los cambios hechos en la app.\nElija dónde guardar el XML nuevo. El original no se modifica.':'1) Elija el XML ORIGINAL de "'+(db.variantName||db.projectName)+'" ('+db.fileName+').\n2) Elija dónde guardar el XML nuevo. El original no se modifica.')+'\n\nSe devuelven nombres, avance, fechas (como programación manual), predecesoras y campos personalizados. Compruebe el resultado en Project.',ok:'Continuar'});
   if(!go)return;
   const st=document.getElementById('pxmlApplyStatus');
   try{
-    const [inH]=await window.showOpenFilePicker({multiple:false,types:[{description:'Project XML',accept:{'text/xml':['.xml']}}]});
-    const file=await inH.getFile();
+    if(!file){
+      const [inH]=await window.showOpenFilePicker({multiple:false,types:[{description:'Project XML',accept:{'text/xml':['.xml']}}]});
+      file=await inH.getFile();
+    }
     const head=new TextDecoder('utf-8').decode(await file.slice(0,400000).arrayBuffer()),nm=/<Name>([\s\S]*?)<\/Name>/.exec(head);
     if(nm&&db.projectName&&nm[1].trim()!==db.projectName&&!(await ogDialog({title:'¿Es el mismo proyecto?',msg:'El archivo elegido se llama "'+nm[1].trim()+'" y el importado "'+db.projectName+'". Los UID podrían no coincidir.',ok:'Continuar de todos modos'})))return;
     const outH=await window.showSaveFilePicker({suggestedName:file.name.replace(/\.xml$/i,'')+'_editado.xml',startIn:'downloads',types:[{description:'Project XML',accept:{'text/xml':['.xml']}}]});
