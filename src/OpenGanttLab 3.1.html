@@ -300,6 +300,41 @@ th,td{padding:0}
   border-radius:6px;font-size:11px;pointer-events:none;display:none;max-width:280px;line-height:1.6;
   box-shadow:0 3px 14px rgba(0,0,0,.18);border:1px solid #ddd}
 /* ── Editor ── */
+.si-ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 24px;border-bottom:1px solid var(--line);background:var(--panel)}
+.si-ctl label{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.si-ctl select,.si-flt select,.si-flt input[type=search]{font:inherit;font-size:12px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);max-width:280px}
+.si-body{flex:1;overflow:auto;padding:18px 24px 28px;background:var(--bg)}
+.si-empty{padding:40px 16px;text-align:center;color:var(--muted);font-size:13px}
+.si-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.si-kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.si-kpi-l{font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.si-kpi-v{font-size:22px;font-weight:700;color:var(--ink);margin-top:4px}
+.si-of{font-size:12px;font-weight:500;color:var(--muted)}
+.si-kpi-s{font-size:11px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.si-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:16px}
+.si-card h3{font-size:13px;font-weight:700;color:var(--ink);margin:0 0 6px}
+.si-card ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.6;color:var(--ink)}
+.si-note{font-size:10.5px;color:var(--muted);margin:8px 0 0}
+.si-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.si-tabs button{background:none;border:none;border-bottom:2px solid transparent;padding:8px 14px;font:inherit;font-size:12.5px;color:var(--muted);cursor:pointer}
+.si-tabs button.on{color:var(--ink);font-weight:600;border-bottom-color:#2563eb}
+.si-flt{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.si-chk{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink);cursor:pointer}
+.si-count{font-size:11px;color:var(--muted);margin:4px 0 6px}
+.si-tw{overflow:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.si-t{border-collapse:collapse;table-layout:auto;width:100%;min-width:1100px;font-size:12px}
+.si-t td.si-nm{max-width:340px;overflow:hidden;text-overflow:ellipsis}
+.si-t th,.si-t td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+.si-t thead th{position:sticky;top:0;background:var(--panel);font-weight:600;color:var(--muted);font-size:11px;z-index:1}
+.si-t td.si-n,.si-t th.si-n{text-align:right;font-variant-numeric:tabular-nums}
+.si-t td.si-c,.si-t th.si-c{text-align:center;width:34px}
+.si-t tbody tr:hover{background:rgba(37,99,235,.05)}
+.si-th{background:none;border:none;font:inherit;color:inherit;cursor:pointer;padding:0}
+.si-chip{font-weight:600;font-size:11.5px}
+.si-na,.si-z{color:var(--muted)}
+.si-star{background:none;border:none;font-size:16px;line-height:1;color:var(--muted);cursor:pointer}
+.si-star.on{color:#d97706}
+.si-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .edModal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
 .edPanel{background:var(--panel);color:var(--ink);border-radius:10px;box-shadow:0 8px 32px rgba(11,34,57,.28);width:98vw;height:92vh;display:flex;flex-direction:column;overflow:hidden}
 /* Botones Clarity (solid / outline) — tomados de components/clarity/Button.tsx e Integrador */
@@ -457,6 +492,10 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <span class="nr-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/></svg></span>
       <span class="nr-label">Gestión de escenarios</span>
     </button>
+    <button class="nr-item" id="navAnalisis" title="Análisis: comparar escenarios">
+      <span class="nr-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V11"/><path d="M10 20V4"/><path d="M16 20v-6"/><path d="M22 20H2"/></svg></span>
+      <span class="nr-label">Análisis</span>
+    </button>
     <button class="nr-item" id="navConfig" title="Configuración">
       <span class="nr-ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15 1.65 1.65 0 0 0 3.17 14H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 4.29l.06.06A1.65 1.65 0 0 0 8.92 4.68 1.65 1.65 0 0 0 9.92 3.17V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.32 9c.14.32.44.55.79.62.15.03.3.05.46.05H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
       <span class="nr-label">Configuración</span>
@@ -518,19 +557,21 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
     document.getElementById('editorModal').style.display='none';
     document.getElementById('presModal').style.display='none';
     document.getElementById('configModal').style.display='none';
+    var _am=document.getElementById('analysisModal');if(_am)_am.style.display='none';
     showGanttArea(true);
     placeStatusbar('gantt');
   }
   function setActive(id){document.querySelectorAll('.nr-list .nr-item').forEach(function(b){b.classList.toggle('active',b.id===id);});}
   window.ogReturnToGantt=function(){setActive('navGantt');closeDockPanels();};
   document.getElementById('navGantt').addEventListener('click',function(){setActive('navGantt');closeDockPanels();document.getElementById('wrap').scrollIntoView({behavior:'smooth'});});
-  document.getElementById('navLdt').addEventListener('click',function(){if(window.flushEditorRender)flushEditorRender();setActive('navLdt');showGanttArea(false);document.getElementById('editorModal').style.display='none';document.getElementById('configModal').style.display='none';document.getElementById('btnPres').click();placeStatusbar('pres');});
+  document.getElementById('navLdt').addEventListener('click',function(){if(window.flushEditorRender)flushEditorRender();setActive('navLdt');showGanttArea(false);document.getElementById('editorModal').style.display='none';document.getElementById('configModal').style.display='none';var _am=document.getElementById('analysisModal');if(_am)_am.style.display='none';document.getElementById('btnPres').click();placeStatusbar('pres');});
   window.openDatosPanel=function(){
     setActive('navDatos');
     showGanttArea(false);
     placeStatusbar(null);
     document.getElementById('presModal').style.display='none';
     document.getElementById('configModal').style.display='none';
+    var _am=document.getElementById('analysisModal');if(_am)_am.style.display='none';
     var hayDatos=typeof TASKS!=='undefined'&&TASKS.length;
     // Con datos, datosSwitchView('table') (abajo) ya llama populateEditor(): no duplicarlo.
     if(!hayDatos){var b=document.getElementById('editorBody');if(b)b.innerHTML='<tr><td colspan="14" style="padding:20px;text-align:center;color:var(--muted);font-size:12px">Aún no hay datos cargados — usa <b>Cargar archivo</b> arriba (Excel o Project XML) para comenzar.</td></tr>';}
@@ -545,9 +586,22 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
     placeStatusbar(null);
     document.getElementById('editorModal').style.display='none';
     document.getElementById('presModal').style.display='none';
+    var _am=document.getElementById('analysisModal');if(_am)_am.style.display='none';
     document.getElementById('configModal').style.display='flex';
     if(window.apRenderConfigUI)window.apRenderConfigUI();
   };
+  window.openAnalysisPanel=function(){
+    if(window.flushEditorRender)flushEditorRender();
+    setActive('navAnalisis');
+    showGanttArea(false);
+    placeStatusbar(null);
+    document.getElementById('editorModal').style.display='none';
+    document.getElementById('presModal').style.display='none';
+    document.getElementById('configModal').style.display='none';
+    document.getElementById('analysisModal').style.display='flex';
+    if(window.siOnOpen)siOnOpen();
+  };
+  document.getElementById('navAnalisis').addEventListener('click',window.openAnalysisPanel);
   document.getElementById('navConfig').addEventListener('click',window.openConfigPanel);
   document.getElementById('navAyuda').addEventListener('click',function(){setActive('navAyuda');document.getElementById('btnDoc').click();});
 })();
@@ -1251,6 +1305,17 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
 </div>
 
 <!-- Configuración (pestaña propia, no ventana flotante) -->
+<div class="edModal dockPanel" id="analysisModal" style="display:none">
+  <div class="edPanel" style="position:relative">
+    <button class="icon-x" onclick="if(window.ogReturnToGantt)ogReturnToGantt()" title="Cerrar" style="position:absolute;top:8px;right:10px;z-index:6">✕</button>
+    <header style="position:static">
+      <svg width="38" height="38" viewBox="0 0 128 128" style="flex-shrink:0;stroke:none"><rect width="128" height="128" rx="24" fill="#EEF5FF"/><g fill="none" stroke="#0F2D5B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M30 96V62"/><path d="M60 96V30"/><path d="M90 96V52"/><path d="M20 100h88"/></g></svg>
+      <div><h1>Análisis</h1><div class="sub">Comparación de escenarios</div></div>
+    </header>
+    <div class="si-ctl" id="siCtl"></div>
+    <div class="si-body" id="siBody"></div>
+  </div>
+</div>
 <div class="edModal dockPanel" id="configModal" style="display:none">
   <div class="edPanel" style="position:relative">
     <button class="icon-x" onclick="closeConfigPanel()" title="Cerrar" style="position:absolute;top:8px;right:10px;z-index:6">✕</button>
@@ -1446,6 +1511,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" id="presRapToggleWrap" title="Agrupa las barras en bandas por la columna que elijas (Categoría 1 por defecto), con el color de Categoría 2."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span class="tg-label">Agrupador</span><input type="checkbox" id="presShowRaP" onchange="togglePresRaP()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presGroupMenuWrap"><button class="tb-btn sm" id="btnPresGroupMenu" aria-label="Opciones de agrupador" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresGroupMenu','presGroupMenuPanel')" title="agrupador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presGroupMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresGroupMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:240px"><div id="presGroupFieldWrap" style="display:flex;flex-direction:column;align-items:stretch;gap:4px"></div></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Muestra únicamente los hitos de la Línea de Tiempo — oculta todas las tareas y filas de resumen."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"/></svg><span class="tg-label">Vista Hitos</span><input type="checkbox" id="presShowHitos" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
+        <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Compara los hitos de dos escenarios: flecha de desviación y días de diferencia (Δ) por hito."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h12"/><path d="m13 8 4 4-4 4"/><path d="M4 5v14"/></svg><span class="tg-label">Timeline Delta</span><input type="checkbox" id="presShowDelta" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-pop-sep"></div>
         <button type="button" class="filtro-menu-item" id="btnPresResetLayers" title="Restablece el contenido (no cambia el modo de vista)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>Restablecer capas</button>
       </div>
@@ -2371,6 +2437,8 @@ let TASKS=[], SCENARIOS=[], SCEN_ON={};
 // precedencias (edSchedForward) no debe mover fechas de sucesoras, aunque el resto de la edición
 // (LdT, Gantt, Gestión de escenarios, incluso preds/sucs/ID del panel) siga funcionando igual.
 let AP_SHARED=false;
+// Análisis: hitos clave — marcas manuales (nombre normalizado → true/false) y detección por nombre. Se guarda con la sesión.
+const SI_CFG={manual:{},auto:true};
 // Nombre de la sesión de trabajo: se muestra al inicio del título de la pestaña para distinguir varias instancias abiertas.
 let AP_SESSION_NAME='';
 const AP_BASE_TITLE='OpenGanttLab — Plataforma abierta para planificación, análisis y visualización de cronogramas';
@@ -4938,7 +5006,7 @@ function _buildShareBlob(shared){
     presShowHoy:(document.getElementById('presShowHoy')||{checked:false}).checked,
     presHoyDash:(document.getElementById('presHoyDash')||{value:'solid'}).value,
     presHoyW:(document.getElementById('presHoyW')||{value:2}).value,
-    presHoyColor:_presHoyCol,presYearDivColor:_presYearDivCol,presYearDivW:(document.getElementById('presYearDivW')||{value:0.5}).value,presShowElapsed:(document.getElementById('presShowElapsed')||{checked:false}).checked,presYearDivOn:(document.getElementById('presYearDivOn')||{checked:true}).checked,presYearDivDash:(document.getElementById('presYearDivDash')||{value:'solid'}).value,
+    presHoyColor:_presHoyCol,presYearDivColor:_presYearDivCol,presYearDivW:(document.getElementById('presYearDivW')||{value:0.5}).value,siKeyMs:SI_CFG.manual,siKeyAuto:SI_CFG.auto,presShowElapsed:(document.getElementById('presShowElapsed')||{checked:false}).checked,presYearDivOn:(document.getElementById('presYearDivOn')||{checked:true}).checked,presYearDivDash:(document.getElementById('presYearDivDash')||{value:'solid'}).value,
     presShowOnlyCrit:(document.getElementById('presShowOnlyCrit')||{checked:false}).checked,
     presCritW:(document.getElementById('presCritW')||{value:2.5}).value,
     presFilterEsc:(document.getElementById('presFilterEsc')||{value:''}).value,
@@ -5154,6 +5222,8 @@ function loadEmbedded(){
   _setVal('presHoyDash',d.presHoyDash);
   _setVal('presHoyW',d.presHoyW);
   if(d.presYearDivColor)_presYearDivCol=d.presYearDivColor;
+  if(d.siKeyMs&&typeof d.siKeyMs==='object')SI_CFG.manual=d.siKeyMs;
+  if(d.siKeyAuto!=null)SI_CFG.auto=!!d.siKeyAuto;
   if(d.presShowElapsed!=null){const _se=document.getElementById('presShowElapsed');if(_se)_se.checked=!!d.presShowElapsed;}
   if(d.presYearDivDash){const _yd=document.getElementById('presYearDivDash');if(_yd)_yd.value=d.presYearDivDash;}
   if(d.presYearDivOn!=null){const _yo=document.getElementById('presYearDivOn');if(_yo)_yo.checked=!!d.presYearDivOn;}
@@ -6735,6 +6805,11 @@ function renderPres(){
   const mainTitleYOffset=+(document.getElementById('presMainTitleYOffset')||{value:0}).value||0;
   const lbTitleYOffset=+(document.getElementById('presLbTitleYOffset')||{value:0}).value||0;
   const body=document.getElementById('presBody');
+  if((document.getElementById('presShowDelta')||{}).checked){
+    try{body.innerHTML=`<div id="presZoomSizer" style="position:relative;flex-shrink:0"><div id="presZoomInner" style="position:absolute;top:0;left:0;transform-origin:top left">${presDeltaHtml(ff)}</div></div>`;_presApplyZoom();}
+    catch(err){body.innerHTML=`<div style="color:#c00;padding:20px;font-family:monospace;font-size:12px;white-space:pre-wrap">❌ Error en Timeline Delta:\n${err.message}</div>`;console.error(err);}
+    return;
+  }
   try{
   const all=TASKS.filter(t=>!PRES_HIDDEN_KEYS.has((t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea)
     &&(!_presM2||norm(t.marca2||'')==='si')
@@ -9831,6 +9906,283 @@ if(_apHadData){
   }
 }
 setTimeout(updateEstDateDisplay,0);
+/*SI:ENGINE:BEGIN*/
+/* ═══ SCHEDULE INTELLIGENCE — MOTOR ANALÍTICO ═══
+   Funciones puras (sin DOM ni estado global de la app): reciben listas de tareas y devuelven resultados.
+   Las pruebas (tests/si-engine.test.js) extraen este bloque por sus marcadores y lo ejecutan en Node.
+   Convenciones:
+   - Todas las diferencias están en DÍAS CALENDARIO (la app no tiene calendarios laborales).
+   - Un dato ausente/ilegible es null (nunca 0): las filas con fechas inválidas son «no comparables».
+   - Solo se informan hechos y métricas derivadas; el motor no afirma causalidad. */
+const SI={};
+SI.dayNo=d=>(Object.prototype.toString.call(d)==='[object Date]'&&!isNaN(d))?Math.round(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5):null;
+SI.iso=n=>n==null?'':new Date(n*864e5).toISOString().slice(0,10);
+SI.norm=s=>String(s==null?'':s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+SI.kind=t=>t.hito?'hito':t.evento?'evento':t.summary?'resumen':'tarea';
+// Entidad normalizada de una tarea de la app. basis: 'RP' (real/proyectada) o 'LB' (línea base)
+SI.entity=(t,basis)=>{
+  const lb=basis==='LB',s=SI.dayNo(lb?t.iLB:t.iRP),f=SI.dayNo(lb?t.fLB:t.fRP),kind=SI.kind(t);
+  const valid=s!=null&&f!=null&&f>=s;
+  return{ref:t,uid:t.puid?String(t.puid):'',scope:t.pscope||'',id:t.pid==null?'':String(t.pid).trim(),name:String(t.tarea||'').trim(),
+    nameKey:SI.norm(t.tarea),ctxKey:SI.norm(t.c1)+'\u0001'+SI.norm(t.c2)+'\u0001'+SI.norm(t.tarea),kind,
+    s,f,dur:valid?(kind==='hito'?0:f-s+1):null,valid,crit:!!t.crit};
+};
+// Emparejamiento A↔B. Orden de prioridad: UID de Project dentro del mismo archivo → contexto (Cat1|Cat2|nombre)
+// por orden de aparición → nombre único en ambos lados. Nunca se usa solo el nombre si es ambiguo.
+SI.match=(A,B)=>{
+  const pairs=[],usedA=new Set(),usedB=new Set();
+  const byUid=new Map();
+  B.forEach(e=>{if(e.uid&&e.scope){const k=e.scope+'\u0000'+e.uid;if(!byUid.has(k))byUid.set(k,e);}});
+  A.forEach(a=>{
+    if(!(a.uid&&a.scope))return;
+    const b=byUid.get(a.scope+'\u0000'+a.uid);
+    if(b&&!usedB.has(b)){pairs.push({a,b,method:'uid',ambiguous:false});usedA.add(a);usedB.add(b);}
+  });
+  const group=(list,used)=>{const m=new Map();list.forEach(e=>{if(used.has(e))return;let g=m.get(e.ctxKey);if(!g)m.set(e.ctxKey,g=[]);g.push(e);});return m;};
+  const gA=group(A,usedA),gB=group(B,usedB);
+  gA.forEach((la,k)=>{
+    const lb=gB.get(k);if(!lb)return;
+    const n=Math.min(la.length,lb.length),amb=la.length!==lb.length;
+    for(let i=0;i<n;i++){pairs.push({a:la[i],b:lb[i],method:'contexto',ambiguous:amb});usedA.add(la[i]);usedB.add(lb[i]);}
+  });
+  const nA=new Map(),nB=new Map();
+  A.forEach(e=>{if(!usedA.has(e))(nA.get(e.nameKey)||nA.set(e.nameKey,[]).get(e.nameKey)).push(e);});
+  B.forEach(e=>{if(!usedB.has(e))(nB.get(e.nameKey)||nB.set(e.nameKey,[]).get(e.nameKey)).push(e);});
+  nA.forEach((la,k)=>{const lb=nB.get(k);if(la.length===1&&lb&&lb.length===1&&k){pairs.push({a:la[0],b:lb[0],method:'nombre',ambiguous:false});usedA.add(la[0]);usedB.add(lb[0]);}});
+  return{pairs,removed:A.filter(e=>!usedA.has(e)),added:B.filter(e=>!usedB.has(e))};
+};
+// ComparisonResult por elemento
+SI.row=(p,scA,scB)=>{
+  const {a,b,method,ambiguous}=p,e=a||b;
+  const r={entityId:(a&&a.id)||(b&&b.id)||'',key:(a?a.ctxKey:b.ctxKey),name:e.name,kind:e.kind,isMilestone:e.kind==='hito',
+    scenarioA:scA,scenarioB:scB,method:method||'',
+    startA:a?a.s:null,startB:b?b.s:null,finishA:a?a.f:null,finishB:b?b.f:null,durationA:a?a.dur:null,durationB:b?b.dur:null,
+    deltaStartDays:null,deltaFinishDays:null,deltaDurationDays:null,percentChange:null,changes:[],
+    metadata:{idA:a?a.id:'',idB:b?b.id:'',c1:e.ref.c1||'',c2:e.ref.c2||'',crit:!!((a&&a.crit)||(b&&b.crit)),ambiguous:!!ambiguous,refA:a?a.ref:null,refB:b?b.ref:null}};
+  if(a&&!b){r.matchStatus='REMOVED';r.status='eliminado';return r;}
+  if(b&&!a){r.matchStatus='ADDED';r.status='agregado';return r;}
+  if(!a.valid||!b.valid){r.matchStatus='INCOMPARABLE';r.status='no_comparable';return r;}
+  r.matchStatus='MATCHED';
+  r.deltaStartDays=b.s-a.s;r.deltaFinishDays=b.f-a.f;r.deltaDurationDays=b.dur-a.dur;
+  r.percentChange=a.dur>0?Math.round((b.dur-a.dur)/a.dur*10000)/100:null;   // duración A = 0 (hito): % no aplicable
+  if(r.deltaStartDays)r.changes.push('inicio');if(r.deltaFinishDays)r.changes.push('fin');if(r.deltaDurationDays)r.changes.push('duracion');
+  r.status=!r.changes.length?'sin_cambio':r.deltaFinishDays>0?'retrasado':r.deltaFinishDays<0?'adelantado':'modificado';
+  return r;
+};
+// Hito clave: marca manual (nombre→true/false) o detección por patrones del nombre
+SI.KEY_PATTERNS=[/\bfid\b/,/\bgates?\b|\bg[0-5]\b/,/\bntp\b/,/mechanical completion|\bmc\b|terminacion mecanica/,/commissioning|puesta en (marcha|servicio)|comisionamiento/,/start[- ]?up|arranque/,/\bcod\b/,/\bcv\d\b/,/\bcn\d\b/,/fin de proyecto|project finish/];
+SI.isKey=(name,cfg)=>{
+  const k=SI.norm(name),c=cfg||{};
+  if(c.manual&&Object.prototype.hasOwnProperty.call(c.manual,k))return !!c.manual[k];
+  return c.auto!==false&&SI.KEY_PATTERNS.some(re=>re.test(k));
+};
+SI.compare=(tasksA,tasksB,opts)=>{
+  const o=opts||{},basis=o.basis==='LB'?'LB':'RP',scA=o.scenarioA||'A',scB=o.scenarioB||'B';
+  const A=tasksA.map(t=>SI.entity(t,basis)),B=tasksB.map(t=>SI.entity(t,basis));
+  const m=SI.match(A,B),rows=[];
+  m.pairs.forEach(p=>rows.push(SI.row(p,scA,scB)));
+  m.removed.forEach(a=>rows.push(SI.row({a,b:null},scA,scB)));
+  m.added.forEach(b=>rows.push(SI.row({a:null,b},scA,scB)));
+  rows.forEach(r=>{r.isKey=r.isMilestone&&SI.isKey(r.name,o.keyCfg);});
+  return{rows,summary:SI.summarize(rows,A,B),basis,scenarioA:scA,scenarioB:scB};
+};
+SI.span=(E)=>{let mn=null,mx=null;E.forEach(e=>{if(!e.valid)return;if(mn==null||e.s<mn)mn=e.s;if(mx==null||e.f>mx)mx=e.f;});return{start:mn,finish:mx,duration:mn==null?null:mx-mn+1};};
+SI.summarize=(rows,A,B)=>{
+  const c={total:rows.length,matched:0,added:0,removed:0,incomparable:0,unchanged:0,delayed:0,advanced:0,modified:0};
+  const ms={total:0,changed:0,delayed:0,advanced:0,unchanged:0,added:0,removed:0,incomparable:0};
+  let maxShift=null,maxDelay=null,maxAdvance=null,maxMsShift=null;
+  rows.forEach(r=>{
+    if(r.matchStatus==='ADDED')c.added++;else if(r.matchStatus==='REMOVED')c.removed++;else if(r.matchStatus==='INCOMPARABLE')c.incomparable++;else{
+      c.matched++;
+      if(r.status==='sin_cambio')c.unchanged++;else if(r.status==='retrasado')c.delayed++;else if(r.status==='adelantado')c.advanced++;else c.modified++;
+      const a=Math.abs(r.deltaFinishDays);
+      if(!maxShift||a>Math.abs(maxShift.deltaFinishDays))maxShift=r;
+      if(r.deltaFinishDays>0&&(!maxDelay||r.deltaFinishDays>maxDelay.deltaFinishDays))maxDelay=r;
+      if(r.deltaFinishDays<0&&(!maxAdvance||r.deltaFinishDays<maxAdvance.deltaFinishDays))maxAdvance=r;
+    }
+    if(r.isMilestone){
+      ms.total++;
+      if(r.matchStatus==='ADDED')ms.added++;else if(r.matchStatus==='REMOVED')ms.removed++;else if(r.matchStatus==='INCOMPARABLE')ms.incomparable++;
+      else if(r.status==='sin_cambio')ms.unchanged++;else{ms.changed++;if(r.deltaFinishDays>0)ms.delayed++;else if(r.deltaFinishDays<0)ms.advanced++;
+        if(!maxMsShift||Math.abs(r.deltaFinishDays)>Math.abs(maxMsShift.deltaFinishDays))maxMsShift=r;}
+    }
+  });
+  const sA=SI.span(A),sB=SI.span(B);
+  return{counts:c,milestones:ms,maxShift,maxDelay,maxAdvance,maxMilestoneShift:maxMsShift,
+    projectA:sA,projectB:sB,
+    finishDeltaDays:(sA.finish!=null&&sB.finish!=null)?sB.finish-sA.finish:null,
+    startDeltaDays:(sA.start!=null&&sB.start!=null)?sB.start-sA.start:null,
+    durationDeltaDays:(sA.duration!=null&&sB.duration!=null)?sB.duration-sA.duration:null,
+    activitiesA:A.length,activitiesB:B.length};
+};
+/*SI:ENGINE:END*/
+
+/* ═══ TIMELINE DELTA: hitos de dos escenarios, desviación (Δ días) por hito ═══ */
+let _deltaA='',_deltaB='';
+function presDeltaSet(which,v){if(which==='A')_deltaA=v;else _deltaB=v;renderPres();}
+function presDeltaHtml(ff){
+  const escs=[...new Set(TASKS.map(t=>t.escenario||'').filter(Boolean))].sort();
+  const pick=(cur,alt)=>escs.includes(cur)?cur:(escs.find(e=>e!==alt)||'');
+  _deltaA=pick(_deltaA,_deltaB);_deltaB=pick(_deltaB===_deltaA?'':_deltaB,_deltaA);
+  const sel=(w,cur)=>`<select onchange="presDeltaSet('${w}',this.value)" style="font:inherit;font-size:13px;padding:3px 6px;border:1px solid #ccd;border-radius:6px">${escs.map(e=>`<option value="${esc(e)}"${e===cur?' selected':''}>${esc(e)}</option>`).join('')}</select>`;
+  const head=(inner)=>`<div style="padding:16px 20px;font-family:${ff};background:#fff;color:#1f2a3a;display:inline-block;min-width:1100px"><div style="display:flex;align-items:flex-end;gap:24px;margin-bottom:14px"><div><div style="font-size:34px;font-weight:800;line-height:1.1">Timeline Delta</div><div style="font-size:18px;color:#5b6778">Comparación de hitos entre escenarios</div></div><span style="flex:1"></span><div style="display:flex;align-items:center;gap:10px;font-size:14px;background:#f1f4f8;border-radius:10px;padding:10px 16px"><span style="color:#1a5fb4;font-size:18px">◆</span>${sel('A',_deltaA)}<span style="color:#e11d1d;font-size:18px;margin-left:8px">◆</span>${sel('B',_deltaB)}<span style="color:#7b8794;margin-left:8px">- - ▸ Desviación (Δ)</span></div></div>${inner}</div>`;
+  if(escs.length<2)return head('<p style="color:#888;padding:30px">Timeline Delta necesita al menos dos escenarios con hitos (Gestión de escenarios).</p>');
+  const hitos=sc=>TASKS.filter(t=>(t.escenario||'')===sc&&t.hito).map(t=>SI.entity(t,'RP')).filter(e=>e.valid);
+  const m=SI.match(hitos(_deltaA),hitos(_deltaB));
+  const rows=m.pairs.map(p=>SI.row(p,_deltaA,_deltaB)).filter(r=>r.matchStatus==='MATCHED').sort((a,b)=>a.finishA-b.finishA);
+  if(!rows.length)return head('<p style="color:#888;padding:30px">Ningún hito coincide entre estos dos escenarios (se emparejan por identificador, contexto o nombre).</p>');
+  const dt=n=>new Date(n*864e5),MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const fm=n=>{const d=dt(n);return MES[d.getUTCMonth()]+' '+d.getUTCFullYear();};
+  const all=rows.flatMap(r=>[r.finishA,r.finishB]);
+  const y0=dt(Math.min(...all)).getUTCFullYear(),y1=dt(Math.max(...all)).getUTCFullYear();
+  const dayY=y=>Date.UTC(y,0,1)/864e5,d0=dayY(y0),d1=dayY(y1+1);
+  const LW=210,TL=Math.max(720,(y1-y0+1)*170),TBX=LW+TL+24,RH=88,HH=54,TOP=0,TBW=420,W=TBX+TBW,H=HH+rows.length*RH+6;
+  const X=n=>LW+(n-d0)/(d1-d0)*TL;
+  let s=`<rect x="0" y="0" width="${LW+TL}" height="${H}" rx="14" fill="#fff" stroke="#e3e8ef"/>`;
+  rows.forEach((r,i)=>{if(i%2===0)s+=`<rect x="1" y="${HH+i*RH}" width="${LW+TL-2}" height="${RH}" fill="#f4f7fb"/>`;});
+  for(let y=y0;y<=y1;y++){const x=X(dayY(y)),w=X(dayY(y+1))-x;
+    s+=`<rect x="${x}" y="0" width="${w}" height="${HH}" fill="#5f6873"/><text x="${x+w/2}" y="${HH/2+6}" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">${y}</text>`;
+    s+=`<line x1="${x}" y1="${HH}" x2="${x}" y2="${H}" stroke="#dfe5ec"/>`;}
+  const bx=TBX;
+  s+=`<rect x="${bx}" y="0" width="${TBW}" height="${H}" rx="14" fill="#fff" stroke="#e3e8ef"/><rect x="${bx}" y="0" width="${TBW}" height="${HH}" fill="#f1f4f8"/>`;
+  [['Hito',16,'start'],['A',TBW*.47,'middle'],['B',TBW*.7,'middle'],['Δ días',TBW-52,'middle']].forEach(([t,x,a])=>{s+=`<text x="${bx+x}" y="${HH/2+6}" text-anchor="${a}" font-size="15" font-weight="700" fill="#33404f">${t==='A'?esc(_deltaA):t==='B'?esc(_deltaB):t}</text>`;});
+  const diamond=(x,y,c)=>`<path d="M${x} ${y-10}L${x+10} ${y}L${x} ${y+10}L${x-10} ${y}Z" fill="${c}"/>`;
+  rows.forEach((r,i)=>{
+    const cy=HH+i*RH+RH/2,xa=X(r.finishA),xb=X(r.finishB),n=r.deltaFinishDays,col=n>0?'#e11d1d':n<0?'#1a7f37':'#7b8794',txt=(n>0?'+':'')+n;
+    s+=`<text x="16" y="${cy-2}" font-size="19" font-weight="800" fill="#1f2a3a">${esc(r.name)}</text><text x="16" y="${cy+20}" font-size="13" fill="#5b6778">${esc(r.metadata.c2||r.metadata.c1||'')}</text>`;
+    if(n)s+=`<line x1="${xa+12}" y1="${cy}" x2="${xb-14}" y2="${cy}" stroke="#9aa5b1" stroke-width="2" stroke-dasharray="6 5"/><path d="M${xb-14} ${cy-4}L${xb-8} ${cy}L${xb-14} ${cy+4}" fill="none" stroke="#9aa5b1" stroke-width="2"/>`;
+    s+=`<text x="${(xa+xb)/2}" y="${cy-18}" text-anchor="middle" font-size="15" font-weight="700" fill="${col}">${txt} d</text>`;
+    s+=diamond(xa,cy,'#1a5fb4')+(n?diamond(xb,cy,'#e11d1d'):'');
+    s+=`<text x="${xa}" y="${cy+32}" text-anchor="${n?'end':'middle'}" font-size="14" fill="#1a5fb4">${fm(r.finishA)}</text>`;
+    if(n)s+=`<text x="${xb}" y="${cy+32}" text-anchor="start" font-size="14" fill="#e11d1d">${fm(r.finishB)}</text>`;
+    const ty=HH+i*RH;
+    if(i%2===1)s+=`<rect x="${bx+1}" y="${ty}" width="${TBW-2}" height="${RH}" fill="#f4f7fb"/>`;
+    s+=`<text x="${bx+16}" y="${cy+6}" font-size="16" font-weight="800" fill="#1f2a3a">${esc(r.name)}</text><text x="${bx+TBW*.47}" y="${cy+6}" text-anchor="middle" font-size="15" fill="#33404f">${fm(r.finishA)}</text><text x="${bx+TBW*.7}" y="${cy+6}" text-anchor="middle" font-size="15" fill="#33404f">${fm(r.finishB)}</text>`;
+    s+=`<rect x="${bx+TBW-88}" y="${cy-16}" width="72" height="32" rx="9" fill="${n>0?'#fde3e3':n<0?'#dff3e5':'#eceff3'}"/><text x="${bx+TBW-52}" y="${cy+6}" text-anchor="middle" font-size="16" font-weight="800" fill="${col}">${txt}</text>`;
+  });
+  return head(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;font-family:${ff}">${s}</svg>`);
+}
+/* ═══ SCHEDULE INTELLIGENCE — INTERFAZ (pestaña Análisis) ═══
+   Solo presentación: todos los cálculos vienen de SI (motor de arriba). */
+const SI_UI={a:'',b:'',basis:'RP',tab:'delta',q:'',status:'',kind:'',onlyChanges:false,onlyKey:false,sortK:'',sortDir:1,limit:400,res:null,msg:''};
+const SI_STATUS={
+  retrasado:{g:'▲',t:'Retrasado',c:'#c0392b'},adelantado:{g:'▼',t:'Adelantado',c:'#1a7f37'},sin_cambio:{g:'＝',t:'Sin cambio',c:'var(--muted)'},
+  modificado:{g:'◆',t:'Modificado',c:'#b7791f'},agregado:{g:'＋',t:'Agregado',c:'#1a5fb4'},eliminado:{g:'－',t:'Eliminado',c:'#6b7280'},no_comparable:{g:'？',t:'No comparable',c:'#6b7280'}
+};
+const SI_METHOD={uid:'UID',contexto:'Contexto',nombre:'Nombre'};
+function siOnOpen(){
+  const list=scenList();
+  if(!list.some(s=>s.key===SI_UI.a))SI_UI.a=list[0]?list[0].key:'';
+  if(!list.some(s=>s.key===SI_UI.b)||SI_UI.b===SI_UI.a)SI_UI.b=(list.find(s=>s.key!==SI_UI.a)||{}).key||'';
+  // Por defecto A = original y B = la copia (las copias se nombran «… (copia)»)
+  if(/\(copia/.test(SI_UI.a)&&!/\(copia/.test(SI_UI.b)){const t=SI_UI.a;SI_UI.a=SI_UI.b;SI_UI.b=t;}
+  siRun();siRender();
+}
+function siRun(){
+  SI_UI.res=null;SI_UI.msg='';
+  if(!TASKS.length){SI_UI.msg='Aún no hay datos: cargue un Excel o un XML de Project.';return;}
+  const list=scenList();
+  if(list.length<2){SI_UI.msg='Se necesitan al menos dos escenarios para comparar. Cargue otro XML o use «Duplicar» en Gestión de escenarios.';return;}
+  if(!SI_UI.a||!SI_UI.b||SI_UI.a===SI_UI.b){SI_UI.msg='Elija dos escenarios distintos.';return;}
+  const tk=k=>TASKS.filter(t=>scenKey(t)===k);
+  SI_UI.res=SI.compare(tk(SI_UI.a),tk(SI_UI.b),{scenarioA:scenLabel(SI_UI.a),scenarioB:scenLabel(SI_UI.b),basis:SI_UI.basis,keyCfg:SI_CFG});
+}
+function siSet(k,v){SI_UI[k]=v;if(k==='a'||k==='b'||k==='basis')siRun();SI_UI.limit=400;siRender();}
+function siSwap(){const t=SI_UI.a;SI_UI.a=SI_UI.b;SI_UI.b=t;siRun();siRender();}
+function siSort(k){if(SI_UI.sortK===k)SI_UI.sortDir=-SI_UI.sortDir;else{SI_UI.sortK=k;SI_UI.sortDir=1;}siRender();}
+function siToggleKey(nameKey){
+  const cur=SI.isKey(nameKey,SI_CFG);SI_CFG.manual[nameKey]=!cur;
+  if(typeof markDirty==='function')markDirty();
+  siRun();siRender();
+}
+const siDelta=n=>n==null?'<span class="si-na" title="No disponible">—</span>':(n===0?'<span class="si-z">0</span>':`<span style="color:${n>0?'#c0392b':'#1a7f37'};font-weight:600">${n>0?'+':'−'}${Math.abs(n)}</span>`);
+const siChip=s=>{const m=SI_STATUS[s]||SI_STATUS.no_comparable;return`<span class="si-chip" style="color:${m.c}"><span aria-hidden="true">${m.g}</span> ${m.t}</span>`;};
+const siD=n=>n==null?'—':SI.iso(n);
+function siFilterRows(rows,milestonesOnly){
+  const q=SI.norm(SI_UI.q);
+  let out=rows.filter(r=>{
+    if(milestonesOnly&&!r.isMilestone)return false;
+    if(SI_UI.status&&r.status!==SI_UI.status)return false;
+    if(SI_UI.kind==='hito'&&!r.isMilestone)return false;
+    if(SI_UI.kind==='tarea'&&r.kind!=='tarea')return false;
+    if(SI_UI.onlyChanges&&(r.status==='sin_cambio'))return false;
+    if(SI_UI.onlyKey&&!r.isKey)return false;
+    if(q&&!(SI.norm(r.name).includes(q)||SI.norm(r.entityId).includes(q)))return false;
+    return true;
+  });
+  const k=SI_UI.sortK;
+  if(k){const d=SI_UI.sortDir;out=out.slice().sort((x,y)=>{const a=x[k],b=y[k];if(a==null&&b==null)return 0;if(a==null)return 1;if(b==null)return-1;return(typeof a==='string'?a.localeCompare(b,'es'):a-b)*d;});}
+  return out;
+}
+function siTh(k,label,cls){const on=SI_UI.sortK===k;return`<th scope="col" class="${cls||''}" aria-sort="${on?(SI_UI.sortDir>0?'ascending':'descending'):'none'}"><button type="button" class="si-th" onclick="siSort('${k}')">${label}${on?(SI_UI.sortDir>0?' ▲':' ▼'):''}</button></th>`;}
+function siFacts(r){
+  const s=r.summary,c=s.counts,m=s.milestones,f=[];
+  const dd=n=>`${n>0?'+':n<0?'−':''}${Math.abs(n)} día${Math.abs(n)===1?'':'s'}`;
+  f.push(`${m.changed} de ${m.total} hito${m.total===1?'':'s'} cambiaron (${m.delayed} retrasado${m.delayed===1?'':'s'}, ${m.advanced} adelantado${m.advanced===1?'':'s'}).`);
+  if(s.maxMilestoneShift)f.push(`Mayor desplazamiento de un hito: ${dd(s.maxMilestoneShift.deltaFinishDays)} («${esc(s.maxMilestoneShift.name)}»).`);
+  if(s.finishDeltaDays!=null)f.push(`Fin del cronograma: ${dd(s.finishDeltaDays)} (${siD(s.projectA.finish)} → ${siD(s.projectB.finish)}).`);
+  if(s.durationDeltaDays!=null)f.push(`Duración total del cronograma: ${dd(s.durationDeltaDays)}.`);
+  f.push(`Actividades: ${c.matched} emparejadas, ${c.added} agregada${c.added===1?'':'s'}, ${c.removed} eliminada${c.removed===1?'':'s'}${c.incomparable?`, ${c.incomparable} no comparable${c.incomparable===1?'':'s'}`:''}.`);
+  return f;
+}
+function siKpi(l,v,sub){return`<div class="si-kpi"><div class="si-kpi-l">${l}</div><div class="si-kpi-v">${v}</div>${sub?`<div class="si-kpi-s">${sub}</div>`:''}</div>`;}
+function siRender(){
+  const box=document.getElementById('siBody');if(!box)return;
+  const list=scenList(),opt=(sel)=>list.map(s=>`<option value="${esc(s.key)}"${s.key===sel?' selected':''}>${esc(scenLabel(s.key))} (${s.n})</option>`).join('');
+  document.getElementById('siCtl').innerHTML=
+    `<label>Escenario A <select onchange="siSet('a',this.value)">${opt(SI_UI.a)}</select></label>`+
+    `<button type="button" class="rb-flat" onclick="siSwap()" title="Intercambiar A y B" aria-label="Intercambiar A y B"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg></button>`+
+    `<label>Escenario B <select onchange="siSet('b',this.value)">${opt(SI_UI.b)}</select></label>`+
+    `<label>Fechas <select onchange="siSet('basis',this.value)"><option value="RP"${SI_UI.basis==='RP'?' selected':''}>Real / Proyectada</option><option value="LB"${SI_UI.basis==='LB'?' selected':''}>Línea base</option></select></label>`+
+    `<span style="flex:1"></span><button type="button" class="rb-flat" onclick="siRun();siRender()" title="Recalcular con los datos actuales">Recalcular</button><button type="button" class="rb-flat" onclick="siExportCsv()" title="Exportar la tabla mostrada a CSV">Exportar CSV</button>`;
+  const r=SI_UI.res;
+  if(!r){box.innerHTML=`<div class="si-empty">${esc(SI_UI.msg||'Sin datos para analizar.')}</div>`;return;}
+  const s=r.summary,c=s.counts,m=s.milestones,dl=n=>n==null?'—':(n===0?'sin cambio':`${n>0?'+':'−'}${Math.abs(n)} d`);
+  const kpis=
+    siKpi('Fin del cronograma',dl(s.finishDeltaDays),`${siD(s.projectA.finish)} → ${siD(s.projectB.finish)}`)+
+    siKpi('Duración total',dl(s.durationDeltaDays),`${s.projectA.duration??'—'} → ${s.projectB.duration??'—'} días`)+
+    siKpi('Hitos afectados',`${m.changed} <span class="si-of">de ${m.total}</span>`,`${m.delayed} retrasados · ${m.advanced} adelantados`)+
+    siKpi('Actividades afectadas',`${c.delayed+c.advanced+c.modified} <span class="si-of">de ${c.matched}</span>`,`${c.delayed} retrasadas · ${c.advanced} adelantadas · ${c.modified} modificadas`)+
+    siKpi('Mayor desplazamiento',s.maxShift?dl(s.maxShift.deltaFinishDays):'—',s.maxShift?esc(s.maxShift.name):'')+
+    siKpi('Agregadas / eliminadas',`${c.added} <span class="si-of">/</span> ${c.removed}`,c.incomparable?`${c.incomparable} no comparables`:'');
+  const facts=`<div class="si-card"><h3>Qué cambió</h3><ul>${siFacts(r).map(x=>`<li>${x}</li>`).join('')}</ul><p class="si-note">Hechos calculados por el motor de análisis, en días calendario. No se infiere causalidad.</p></div>`;
+  const tabs=`<div class="si-tabs" role="tablist"><button role="tab" aria-selected="${SI_UI.tab==='delta'}" class="${SI_UI.tab==='delta'?'on':''}" onclick="siSet('tab','delta')">Delta de actividades</button><button role="tab" aria-selected="${SI_UI.tab==='hitos'}" class="${SI_UI.tab==='hitos'?'on':''}" onclick="siSet('tab','hitos')">Hitos</button></div>`;
+  const hitos=SI_UI.tab==='hitos';
+  const flt=`<div class="si-flt"><input type="search" placeholder="Buscar por nombre o ID" value="${esc(SI_UI.q)}" oninput="SI_UI.q=this.value;SI_UI.limit=400;siRenderTable()" aria-label="Buscar">`+
+    `<select onchange="siSet('status',this.value)" aria-label="Estado"><option value="">Todos los estados</option>${Object.keys(SI_STATUS).map(k=>`<option value="${k}"${SI_UI.status===k?' selected':''}>${SI_STATUS[k].t}</option>`).join('')}</select>`+
+    (hitos?'':`<select onchange="siSet('kind',this.value)" aria-label="Tipo"><option value="">Hitos y tareas</option><option value="hito"${SI_UI.kind==='hito'?' selected':''}>Solo hitos</option><option value="tarea"${SI_UI.kind==='tarea'?' selected':''}>Solo tareas</option></select>`)+
+    `<label class="si-chk"><input type="checkbox" ${SI_UI.onlyChanges?'checked':''} onchange="siSet('onlyChanges',this.checked)">Solo con cambios</label>`+
+    (hitos?`<label class="si-chk"><input type="checkbox" ${SI_UI.onlyKey?'checked':''} onchange="siSet('onlyKey',this.checked)">Solo hitos clave</label><label class="si-chk" title="Detecta FID, Gate, NTP, CV0, CN1… por el nombre del hito"><input type="checkbox" ${SI_CFG.auto?'checked':''} onchange="SI_CFG.auto=this.checked;siRun();siRender()">Detectar por nombre</label>`:'')+`</div>`;
+  box.innerHTML=`<div class="si-kpis">${kpis}</div>${facts}${tabs}${flt}<div id="siTable"></div>`;
+  siRenderTable();
+}
+function siRenderTable(){
+  const r=SI_UI.res,el=document.getElementById('siTable');if(!r||!el)return;
+  const hitos=SI_UI.tab==='hitos',rows=siFilterRows(r.rows,hitos),shown=rows.slice(0,SI_UI.limit);
+  const a=esc(r.scenarioA),b=esc(r.scenarioB);
+  let head,body;
+  if(hitos){
+    const base=r.summary.projectA.start;
+    head=`<tr><th scope="col" class="si-c" title="Hito clave">★</th>${siTh('name','Hito')}${siTh('entityId','ID')}${siTh('finishA','Fecha A')}${siTh('finishB','Fecha B')}${siTh('deltaFinishDays','Δ días')}<th scope="col" title="Δ días relativo al plazo desde el inicio del cronograma A hasta la fecha A">Δ % del plazo</th>${siTh('status','Estado')}<th scope="col">Crítica</th><th scope="col" title="La holgura no está disponible en los datos importados">Holgura</th></tr>`;
+    body=shown.map(x=>{
+      const nk=SI.norm(x.name),pct=(x.deltaFinishDays!=null&&x.finishA!=null&&base!=null&&x.finishA-base>0)?(Math.round(x.deltaFinishDays/(x.finishA-base)*1000)/10)+' %':'—';
+      return`<tr><td class="si-c"><button type="button" class="si-star${x.isKey?' on':''}" onclick="siToggleKey('${esc(nk).replace(/'/g,'&#39;')}')" aria-pressed="${x.isKey}" aria-label="Marcar «${esc(x.name)}» como hito clave" title="${x.isKey?'Hito clave (clic para quitar)':'Marcar como hito clave'}">${x.isKey?'★':'☆'}</button></td><td class="si-nm" title="${esc(x.name)}">${esc(x.name)}</td><td>${esc(x.entityId)}</td><td>${siD(x.finishA)}</td><td>${siD(x.finishB)}</td><td class="si-n">${siDelta(x.deltaFinishDays)}</td><td class="si-n">${pct}</td><td>${siChip(x.status)}</td><td>${x.metadata.crit?'Sí':'—'}</td><td class="si-na" title="No disponible">n/d</td></tr>`;}).join('');
+  }else{
+    head=`<tr>${siTh('status','Estado')}${siTh('entityId','ID')}${siTh('name','Actividad')}<th scope="col">Tipo</th>${siTh('startA','Inicio A')}${siTh('startB','Inicio B')}${siTh('deltaStartDays','Δ inicio')}${siTh('finishA','Fin A')}${siTh('finishB','Fin B')}${siTh('deltaFinishDays','Δ fin')}${siTh('durationA','Dur A')}${siTh('durationB','Dur B')}${siTh('deltaDurationDays','Δ dur')}${siTh('percentChange','Δ %')}<th scope="col">Coincidencia</th></tr>`;
+    body=shown.map(x=>`<tr><td>${siChip(x.status)}</td><td>${esc(x.entityId)}</td><td class="si-nm" title="${esc(x.name)}">${esc(x.name)}</td><td>${x.kind}</td><td>${siD(x.startA)}</td><td>${siD(x.startB)}</td><td class="si-n">${siDelta(x.deltaStartDays)}</td><td>${siD(x.finishA)}</td><td>${siD(x.finishB)}</td><td class="si-n">${siDelta(x.deltaFinishDays)}</td><td class="si-n">${x.durationA??'—'}</td><td class="si-n">${x.durationB??'—'}</td><td class="si-n">${siDelta(x.deltaDurationDays)}</td><td class="si-n">${x.percentChange==null?'<span class="si-na" title="No aplica (duración A = 0 o sin dato)">—</span>':x.percentChange+' %'}</td><td>${x.method?SI_METHOD[x.method]+(x.metadata.ambiguous?' (aprox.)':''):'—'}</td></tr>`).join('');
+  }
+  el.innerHTML=`<div class="si-count">${rows.length} elemento${rows.length===1?'':'s'}${rows.length>shown.length?` · mostrando ${shown.length}`:''}</div><div class="si-tw"><table class="si-t"><caption class="si-sr">${hitos?'Análisis de hitos':'Delta de actividades'} entre ${a} (A) y ${b} (B). Δ = B − A en días calendario.</caption><thead>${head}</thead><tbody>${body||'<tr><td colspan="15" class="si-empty">Ningún elemento coincide con los filtros.</td></tr>'}</tbody></table></div>${rows.length>shown.length?`<div style="text-align:center;margin:10px"><button type="button" class="rb-flat" onclick="SI_UI.limit+=800;siRenderTable()">Mostrar más</button></div>`:''}`;
+}
+function siExportCsv(){
+  const r=SI_UI.res;if(!r)return;
+  const hitos=SI_UI.tab==='hitos',rows=siFilterRows(r.rows,hitos);
+  const H=['Estado','ID','Actividad','Tipo','Inicio A','Inicio B','Delta inicio (d)','Fin A','Fin B','Delta fin (d)','Duracion A','Duracion B','Delta duracion (d)','Delta %','Coincidencia','Hito clave'];
+  const q=v=>{v=v==null?'':String(v);return/[",\n;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const lines=[H.join(',')].concat(rows.map(x=>[SI_STATUS[x.status].t,x.entityId,x.name,x.kind,siD(x.startA),siD(x.startB),x.deltaStartDays,siD(x.finishA),siD(x.finishB),x.deltaFinishDays,x.durationA,x.durationB,x.deltaDurationDays,x.percentChange,x.method,x.isKey?'Sí':''].map(q).join(',')));
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}));
+  a.download='Analisis_'+(hitos?'hitos':'delta')+'_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+
 /* ═══ IMPACTO: días de diferencia entre dos barras/hitos de la LdT (p. ej. mismo hito en dos escenarios) ═══ */
 let _impMode=false,_impPick=[];
 function presImpactToggle(){_impMode=!_impMode;_impPick=[];presImpactUI();}

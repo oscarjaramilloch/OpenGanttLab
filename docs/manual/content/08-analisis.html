@@ -12,6 +12,21 @@
 <p>OpenGanttLab es una aplicación web de <b>visualización y comparación de cronogramas</b>. No calcula valor ganado ni costos y no incluye tableros de gráficos: analiza fechas, avance, ruta crítica y dependencias.</p>
 </callout>
 
+<h2 id="comparar-escenarios">Comparar dos escenarios (pestaña Análisis)</h2>
+<p>La pestaña <ui>Análisis</ui> del riel compara dos escenarios cualesquiera: dos XML distintos, un XML y su copia, o escenarios de Excel. Elija <b>Escenario A</b> y <b>Escenario B</b> y la base de fechas (Real/Proyectada o Línea base). Todas las diferencias son <b>B − A en días calendario</b>: positivo si B es posterior.</p>
+<ul>
+<li><b>Indicadores:</b> fin y duración del cronograma, hitos y actividades afectados, mayor desplazamiento, actividades agregadas y eliminadas.</li>
+<li><b>Qué cambió:</b> resumen factual calculado por el motor, sin interpretar causas.</li>
+<li><b>Delta de actividades:</b> tabla con estado (con texto y símbolo, no solo color), inicio, fin y duración de A y B, sus diferencias y el porcentaje de cambio de duración. Se puede ordenar, buscar, filtrar por estado y tipo, y exportar a CSV.</li>
+<li><b>Hitos:</b> la misma comparación solo para hitos, con estrella de <b>hito clave</b>. Los hitos clave se detectan por nombre (FID, Gate, NTP, CV0, CN1…) y se pueden marcar o desmarcar a mano; la marca manual se guarda con la sesión.</li>
+</ul>
+<callout type="info" title="Cómo se emparejan las actividades">
+<p>Primero por UID de Project dentro del mismo archivo (así también se emparejan un XML y su copia aunque cambie el nombre); luego por Categoría 1, Categoría 2 y nombre en orden de aparición; y por último por nombre, solo si es único en ambos escenarios. Nunca se empareja solo por un nombre repetido: esas actividades aparecen como agregadas y eliminadas. La columna <b>Coincidencia</b> indica el método usado (con «aprox.» cuando los conteos difieren).</p>
+</callout>
+<callout type="warn" title="Límites">
+<p>No hay calendarios laborales ni holgura en los datos importados: los días son calendario y la holgura aparece como «n/d». Una actividad con fechas ausentes o inválidas se marca «no comparable» en lugar de suponer un valor.</p>
+</callout>
+
 <h2 id="indicadores">Indicadores de la barra de estado</h2>
 <p>La barra inferior resume el conjunto de tareas visible.</p>
 <table>
