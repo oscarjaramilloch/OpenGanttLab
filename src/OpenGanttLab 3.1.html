@@ -2881,7 +2881,7 @@ let RAP_C1_ORDER={};
 // del XML o creada en la tabla). Con varios niveles, la clave de una banda interna es la ruta unida por PG_SEP.
 let PRES_GROUP_FIELDS=['c1'];
 const PG_SEP='\u0001',PG_MAX=4;
-function presGroupOptions(){return[{k:'c1',l:'Categoría 1'},{k:'escenario',l:'Escenario'},{k:'c2',l:'Categoría 2'},...PXML_CUSTOM.map(c=>({k:c.key,l:c.label||c.key}))];}
+function presGroupOptions(){return[{k:'escenario',l:'Escenario'},{k:'c1',l:'Categoría 1'},{k:'c2',l:'Categoría 2'},...PXML_CUSTOM.map(c=>({k:c.key,l:c.label||c.key}))];}
 function presFieldVal(t,f){
   if(f==='c1')return t.c1;
   if(f==='escenario')return t.escenario||'';
