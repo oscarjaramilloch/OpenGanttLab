@@ -438,15 +438,14 @@ FIGS['06'] = async b => {
   await shot(p, 'fig-06-tabla-datos', { clip: C(NAV, 0, W - NAV, 520), ann: [
     { n: 1, rect: await un('#btnEdResetXml', '#btnEdRedo'), at: 'tc', dy: -4, pad: 2 },
     { n: 2, rect: await un('#btnLink', '#btnDatosImportMenu'), at: 'tc', dy: -4, pad: 2 },
-    { n: 3, rect: await byTitle('Descargar plantilla'), at: 'tc', dy: -4, pad: 2 },
-    { n: 4, rect: await byTitle('Descargar .xlsx'), at: 'tc', dy: -4, pad: 2 },
-    { n: 5, rect: await R('#btnAddRow'), at: 'tc', dy: -4, pad: 2 },
-    { n: 6, rect: await R('#btnEdFiltroMenu'), at: 'tc', dy: -4, pad: 2 },
-    { n: 7, rect: await R('#btnSave'), at: 'tc', dy: -4, pad: 2 },
-    { n: 8, rect: tabs, at: 'tl', dy: 4, pad: 2 },
-    { n: 9, rect: await R('#edSchedWrap'), at: 'tc', dy: -4, pad: 3 },
-    { n: 10, rect: await R('#edSegWrap'), at: 'tc', dy: -4, pad: 3 },
-    { n: 11, rect: th, at: 'tl', dy: 2, pad: 1 },
+    { n: 3, rect: await R('#btnDatosDlMenu'), at: 'tc', dy: -4, pad: 2 },
+    { n: 4, rect: await R('#btnAddRow'), at: 'tc', dy: -4, pad: 2 },
+    { n: 5, rect: await R('#btnEdFiltroMenu'), at: 'tc', dy: -4, pad: 2 },
+    { n: 6, rect: await un('#btnSaveSession', '#btnSave'), at: 'tc', dy: -4, pad: 2 },
+    { n: 7, rect: tabs, at: 'tl', dy: 4, pad: 2 },
+    { n: 8, rect: await R('#edSchedWrap'), at: 'tc', dy: -4, pad: 3 },
+    { n: 9, rect: await R('#edSegWrap'), at: 'tc', dy: -4, pad: 3 },
+    { n: 10, rect: th, at: 'tl', dy: 2, pad: 1 },
   ] });
   await p.close();
 };
@@ -667,6 +666,29 @@ FIGS['72'] = async b => {           // Resumen tras guardar (estadísticas de un
   }, demoXml('Planta de ejemplo'));
   await sleep(700);
   await modalShot(p, 'fig-72-xml-guardado-resumen', '#ogDlg .og-card');
+  await p.close();
+};
+
+/* Nuevas: menú Descargar, diálogo de Guardar sesión y Agrupador de varios niveles */
+FIGS['80'] = async b => {
+  const p = await abrir(b); await click(p, '#navDatos'); await sleep(500);
+  await p.evaluate(() => { document.getElementById('btnXmlExport').style.display = 'flex'; });
+  await click(p, '#btnDatosDlMenu');
+  const bt = await rectOf(p, '#btnDatosDlMenu'), pn = await rectOf(p, '#datosDlMenuPanel');
+  await shot(p, 'fig-80-menu-descargar', { clip: C(bt.x - 40, bt.y - 10, Math.max(pn.w, bt.w) + 80, pn.y + pn.h - bt.y + 30) });
+  await p.close();
+};
+FIGS['81'] = async b => {
+  const p = await abrir(b);
+  await p.evaluate(() => { saveSession(); }); await sleep(500);
+  await p.evaluate(() => { const i = document.querySelector('#ogDlg .og-in'); i.value = 'RaP SubB — escenario P50'; }); await sleep(200);
+  await modalShot(p, 'fig-81-guardar-sesion-dialogo', '#ogDlg .og-card');
+  await p.close();
+};
+FIGS['82'] = async b => {
+  const p = await ldt(b); await set(p, 'presShowRaP', true);
+  await p.evaluate(() => { PRES_GROUP_FIELDS = ['c1', 'c2']; renderPres(); }); await sleep(600);
+  await ldtShot(p, 'fig-82-ldt-agrupador-niveles');
   await p.close();
 };
 
