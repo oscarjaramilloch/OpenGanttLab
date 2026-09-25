@@ -113,5 +113,66 @@ console.log('resumen: fin de proyecto y hitos');
     eq(s.counts.unchanged, 1, 'una sin cambio'); eq(s.finishDeltaDays, 0, 'fin de proyecto igual (2027-01-01 en A y B)');
 }
 
+console.log('intervalos entre hitos (CV0→FID W.O→CN1→CN2→FID)');
+{
+    const mk = (n, d, p) => task(n, d, null, { hito: true, puid: p, pscope: 'f' });
+    const A = [mk('CV0', [2026, 9, 1], '1'), mk('FID W.O', [2027, 8, 1], '2'), mk('CN1', [2028, 10, 1], '3'), mk('CN2', [2030, 10, 1], '4')];
+    const B = [mk('CV0', [2026, 10, 1], '1'), mk('FID W.O', [2027, 8, 1], '2'), mk('CN1', [2029, 1, 1], '3'), mk('CN2', [2030, 12, 1], '4')];
+    const r = SI.compare(A, B), it = SI.intervals(r.rows);
+    eq(it.count, 4, '4 hitos en la secuencia'); eq(it.intervals.length, 3, '3 intervalos');
+    eq(it.intervals[0].durationA, SI.dayNo(D(2027, 8, 1)) - SI.dayNo(D(2026, 9, 1)), 'duración A del 1.er intervalo');
+    eq(it.intervals[0].deltaDays, -30, 'CV0→FID W.O se comprime 30 días (CV0 se movió +30, FID W.O no)');
+    eq(it.intervals[0].type, 'compresion', 'compresión');
+    eq(it.intervals[1].deltaDays, 92, 'FID W.O→CN1 se expande 92 días'); eq(it.intervals[1].type, 'expansion', 'expansión');
+    eq(it.firstShiftDays, 30, 'corrimiento del primer hito'); eq(it.lastShiftDays, 61, 'corrimiento del último hito');
+    eq(it.firstShiftDays + it.sumDeltaDays, it.lastShiftDays, 'corrimiento inicial + suma de intervalos = corrimiento final');
+    eq(SI.intervals([]).count, 0, 'sin hitos: sin intervalos');
+}
+
+console.log('deriva');
+{
+    const mk = (n, d, p) => task(n, d, null, { hito: true, puid: p, pscope: 'f' });
+    const A = [mk('H1', [2026, 1, 1], '1'), mk('H2', [2026, 6, 1], '2'), mk('H3', [2027, 1, 1], '3'), mk('H4', [2027, 6, 1], '4')];
+    const days = [0, 30, 60, 90];
+    const B = A.map((t, i) => mk(t.tarea, [2026 + (i > 1 ? 1 : 0), i === 0 ? 1 : i === 1 ? 6 : i === 2 ? 1 : 6, 1], String(i + 1)));
+    B.forEach((t, i) => { t.iRP = new Date(+A[i].iRP + days[i] * 864e5); t.fRP = new Date(+A[i].fRP + days[i] * 864e5); });
+    const d = SI.drift(SI.compare(A, B).rows);
+    eq(d.points.map(p => p.delta), [0, 30, 60, 90], 'serie de deltas');
+    eq(d.points.map(p => p.step), [0, 30, 30, 30], 'incrementos entre hitos');
+    eq(d.stats.max, 90, 'máximo'); eq(d.stats.min, 0, 'mínimo'); eq(d.stats.mean, 45, 'promedio'); eq(d.stats.trend, 'creciente', 'tendencia creciente');
+    eq(d.stats.firstSignificant.name, 'H2', 'primera desviación significativa (umbral 1 día)');
+    eq(SI.drift(SI.compare(A, B).rows, { threshold: 50 }).stats.firstSignificant.name, 'H3', 'umbral configurable');
+    eq(SI.drift([]).stats, null, 'sin hitos: sin estadísticos');
+    const flat = SI.drift(SI.compare(A, A.map(t => Object.assign({}, t))).rows);
+    eq(flat.stats.trend, 'estable', 'sin cambios: estable'); eq(flat.stats.firstSignificant, null, 'sin desviación significativa');
+}
+
+console.log('N escenarios: matriz, dispersión y convergencia');
+{
+    const mk = (n, d, p, extra) => task(n, d, null, Object.assign({ hito: true, puid: p, pscope: 'f' }, extra));
+    const base = () => [mk('FID', [2031, 8, 15], '1'), mk('CN1', [2028, 1, 1], '2'), task('Obra', [2029, 1, 1], [2031, 8, 15], { puid: '3', pscope: 'f' })];
+    const A = base();
+    const B = base(); B[0].iRP = B[0].fRP = D(2031, 11, 20);      // FID +97
+    const C = base(); C[0].iRP = C[0].fRP = D(2031, 12, 10);      // FID +117
+    C.push(task('Extra', [2030, 1, 1], [2030, 2, 1]));            // actividad agregada
+    const r = SI.multi([{ key: 'A', label: 'A', tasks: A }, { key: 'B', label: 'B', tasks: B }, { key: 'C', label: 'C', tasks: C }]);
+    const fid = r.milestones.find(m => m.name === 'FID');
+    eq(fid.deltas, [0, 97, 117], 'deltas de FID por escenario');
+    eq(fid.spreadDays, 117, 'dispersión de FID = 117 días');
+    eq(SI.iso(fid.earliest) + '|' + SI.iso(fid.latest), '2031-08-15|2031-12-10', 'más temprano y más tardío');
+    eq(r.milestones.find(m => m.name === 'CN1').spreadDays, 0, 'CN1 sin dispersión');
+    eq(r.scenarios[2].added, 1, 'C tiene 1 actividad agregada'); eq(r.scenarios[1].added, 0, 'B sin agregadas');
+    eq(r.scenarios[1].finishDeltaDays, 97, 'fin del cronograma de B');
+    eq(r.projectSpread.spreadDays, 117, 'dispersión del fin del proyecto');
+    eq(r.spreadStats.behavior, 'diverge', 'la separación crece hacia el final (diverge)');
+    eq(SI.multi([]).scenarios.length, 0, 'sin escenarios');
+    const one = SI.multi([{ key: 'A', label: 'A', tasks: A }]);
+    eq(one.milestones[0].spreadDays, 0, 'un solo escenario: dispersión 0');
+    // un hito ausente en un escenario: fecha null, no inventada
+    const D2 = base().filter(t => t.tarea !== 'CN1');
+    const r2 = SI.multi([{ key: 'A', label: 'A', tasks: A }, { key: 'D', label: 'D', tasks: D2 }]);
+    eq(r2.milestones.find(m => m.name === 'CN1').dates[1], null, 'hito ausente = null');
+}
+
 console.log(fail ? `\n${fail} fallo(s), ${ok} correctas` : `\nTodas correctas (${ok})`);
 process.exit(fail ? 1 : 0);

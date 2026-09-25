@@ -334,6 +334,8 @@ th,td{padding:0}
 .si-na,.si-z{color:var(--muted)}
 .si-star{background:none;border:none;font-size:16px;line-height:1;color:var(--muted);cursor:pointer}
 .si-star.on{color:#d97706}
+.si-h3{font-size:13px;font-weight:700;color:var(--ink);margin:18px 0 8px}
+.si-dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .si-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .edModal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
 .edPanel{background:var(--panel);color:var(--ink);border-radius:10px;box-shadow:0 8px 32px rgba(11,34,57,.28);width:98vw;height:92vh;display:flex;flex-direction:column;overflow:hidden}
@@ -10015,6 +10017,79 @@ SI.summarize=(rows,A,B)=>{
     durationDeltaDays:(sA.duration!=null&&sB.duration!=null)?sB.duration-sA.duration:null,
     activitiesA:A.length,activitiesB:B.length};
 };
+// ── Fase 3: intervalos entre hitos y deriva ──
+// Hitos emparejados (con delta) ordenados por su fecha en A. Con onlyKey, solo los hitos clave (si hay al menos 2).
+SI.milestoneSeq=(rows,opts)=>{
+  const o=opts||{};
+  let m=rows.filter(r=>r.isMilestone&&r.matchStatus==='MATCHED').sort((x,y)=>x.finishA-y.finishA||x.finishB-y.finishB);
+  if(o.onlyKey){const k=m.filter(r=>r.isKey);if(k.length>=2)m=k;}
+  return m;
+};
+// Intervalo = días entre hitos consecutivos. delta>0 expansión, delta<0 compresión. La suma de los deltas es
+// el cambio de plazo entre el primer y el último hito; el desplazamiento del primero es el «corrimiento».
+SI.intervals=(rows,opts)=>{
+  const seq=SI.milestoneSeq(rows,opts),out=[];
+  for(let i=1;i<seq.length;i++){
+    const p=seq[i-1],q=seq[i],dA=q.finishA-p.finishA,dB=q.finishB-p.finishB,d=dB-dA;
+    out.push({fromName:p.name,toName:q.name,fromId:p.entityId,toId:q.entityId,durationA:dA,durationB:dB,deltaDays:d,
+      percentChange:dA>0?Math.round(d/dA*10000)/100:null,type:d>0?'expansion':d<0?'compresion':'sin_cambio'});
+  }
+  const shift=seq.length?seq[0].deltaFinishDays:null;
+  return{intervals:out,firstShiftDays:shift,sumDeltaDays:out.reduce((a,x)=>a+x.deltaDays,0),
+    lastShiftDays:seq.length?seq[seq.length-1].deltaFinishDays:null,count:seq.length};
+};
+// Deriva del desplazamiento a lo largo del cronograma (hitos en orden de fecha A). Solo describe lo observado;
+// que un cambio se propague por dependencias es un análisis aparte (no se infiere aquí).
+SI.drift=(rows,opts)=>{
+  const o=opts||{},th=o.threshold==null?1:o.threshold,seq=SI.milestoneSeq(rows,o);
+  const pts=seq.map((r,i)=>({name:r.name,id:r.entityId,dayA:r.finishA,delta:r.deltaFinishDays,step:i?r.deltaFinishDays-seq[i-1].deltaFinishDays:r.deltaFinishDays,isKey:!!r.isKey}));
+  if(!pts.length)return{points:[],stats:null};
+  const d=pts.map(p=>p.delta),n=d.length,mean=d.reduce((a,b)=>a+b,0)/n;
+  let slope=null;
+  if(n>=2){const xs=pts.map(p=>p.dayA),mx=xs.reduce((a,b)=>a+b,0)/n;let sxy=0,sxx=0;pts.forEach(p=>{sxy+=(p.dayA-mx)*(p.delta-mean);sxx+=(p.dayA-mx)*(p.dayA-mx);});slope=sxx?sxy/sxx*365.25:null;}
+  const first=pts.find(p=>Math.abs(p.delta)>=th)||null;
+  const trend=slope==null?'indeterminada':Math.abs(slope)<1?'estable':slope>0?'creciente':'decreciente';
+  return{points:pts,stats:{count:n,max:Math.max(...d),min:Math.min(...d),mean:Math.round(mean*100)/100,last:d[n-1],slopeDaysPerYear:slope==null?null:Math.round(slope*100)/100,trend,
+    firstSignificant:first?{name:first.name,dayA:first.dayA,delta:first.delta}:null,threshold:th}};
+};
+// ── Fase 4: N escenarios ──
+// scen: [{key,label,tasks}] — la primera es la referencia. Cada una se empareja contra la referencia con SI.compare.
+SI.multi=(scen,opts)=>{
+  const o=opts||{};if(!scen.length)return{scenarios:[],milestones:[],projectSpread:null,spreadStats:null};
+  const ref=scen[0],base=SI.compare(ref.tasks,ref.tasks,{basis:o.basis,scenarioA:ref.label,scenarioB:ref.label,keyCfg:o.keyCfg});
+  const cmp=scen.map((s,i)=>i===0?null:SI.compare(ref.tasks,s.tasks,{basis:o.basis,scenarioA:ref.label,scenarioB:s.label,keyCfg:o.keyCfg}));
+  const lb=o.basis==='LB';
+  const scenarios=scen.map((s,i)=>{
+    const E=s.tasks.map(t=>SI.entity(t,o.basis)),sp=SI.span(E),c=i?cmp[i].summary:null;
+    const matched=i?cmp[i].rows.filter(r=>r.matchStatus==='MATCHED'):[];
+    const sh=matched.map(r=>r.deltaFinishDays),mean=sh.length?Math.round(sh.reduce((a,b)=>a+b,0)/sh.length*100)/100:null;
+    return{key:s.key,label:s.label,isRef:i===0,activities:E.length,milestones:E.filter(e=>e.kind==='hito').length,start:sp.start,finish:sp.finish,duration:sp.duration,
+      finishDeltaDays:i&&sp.finish!=null&&base.summary.projectA.finish!=null?sp.finish-base.summary.projectA.finish:null,
+      modified:c?c.counts.delayed+c.counts.advanced+c.counts.modified:0,added:c?c.counts.added:0,removed:c?c.counts.removed:0,
+      meanShift:mean,maxShift:sh.length?sh.reduce((a,b)=>Math.abs(b)>Math.abs(a)?b:a,0):null};
+  });
+  // Hitos de la referencia y su fecha en cada escenario (null si no se emparejó: no se inventa)
+  const refMs=base.rows.filter(r=>r.isMilestone&&r.finishA!=null);
+  const byRow=cmp.map(c=>{const m=new Map();if(c)c.rows.forEach(r=>{if(r.isMilestone&&r.matchStatus==='MATCHED')m.set(r.key+'\u0001'+r.finishA+'\u0001'+r.entityId,r);});return m;});
+  const milestones=refMs.map(r=>{
+    const dates=[r.finishA],deltas=[0];
+    for(let i=1;i<scen.length;i++){const x=byRow[i].get(r.key+'\u0001'+r.finishA+'\u0001'+r.entityId);dates.push(x?x.finishB:null);deltas.push(x?x.deltaFinishDays:null);}
+    const v=dates.filter(d=>d!=null),e=Math.min(...v),l=Math.max(...v);
+    return{name:r.name,id:r.entityId,isKey:!!r.isKey,dates,deltas,earliest:e,latest:l,spreadDays:l-e,present:v.length};
+  }).sort((a,b)=>a.dates[0]-b.dates[0]);
+  const fin=scenarios.map(s=>s.finish).filter(x=>x!=null);
+  const projectSpread=fin.length?{earliest:Math.min(...fin),latest:Math.max(...fin),spreadDays:Math.max(...fin)-Math.min(...fin)}:null;
+  // Convergencia/divergencia: tendencia de la dispersión entre hitos ordenados por fecha de la referencia
+  const ms=milestones.filter(m=>m.present>=2);let spreadStats=null;
+  if(ms.length){
+    const sp=ms.map(m=>m.spreadDays),n=sp.length,xs=ms.map(m=>m.dates[0]),mx=xs.reduce((a,b)=>a+b,0)/n,ms0=sp.reduce((a,b)=>a+b,0)/n;
+    let sxy=0,sxx=0;xs.forEach((x,i)=>{sxy+=(x-mx)*(sp[i]-ms0);sxx+=(x-mx)*(x-mx);});
+    const slope=n>=2&&sxx?sxy/sxx*365.25:null;
+    spreadStats={count:n,max:Math.max(...sp),min:Math.min(...sp),mean:Math.round(ms0*100)/100,first:sp[0],last:sp[n-1],slopeDaysPerYear:slope==null?null:Math.round(slope*100)/100,
+      behavior:slope==null?'indeterminado':Math.abs(slope)<1?'constante':slope>0?'diverge':'converge'};
+  }
+  return{scenarios,milestones,projectSpread,spreadStats};
+};
 /*SI:ENGINE:END*/
 
 /* ═══ TIMELINE DELTA: hitos de dos escenarios, desviación (Δ días) por hito ═══ */
@@ -10064,7 +10139,7 @@ function presDeltaHtml(ff){
 }
 /* ═══ SCHEDULE INTELLIGENCE — INTERFAZ (pestaña Análisis) ═══
    Solo presentación: todos los cálculos vienen de SI (motor de arriba). */
-const SI_UI={a:'',b:'',basis:'RP',tab:'delta',q:'',status:'',kind:'',onlyChanges:false,onlyKey:false,sortK:'',sortDir:1,limit:400,res:null,msg:''};
+const SI_UI={a:'',b:'',basis:'RP',tab:'delta',q:'',status:'',kind:'',onlyChanges:false,onlyKey:false,multi:[],sortK:'',sortDir:1,limit:400,res:null,msg:''};
 const SI_STATUS={
   retrasado:{g:'▲',t:'Retrasado',c:'#c0392b'},adelantado:{g:'▼',t:'Adelantado',c:'#1a7f37'},sin_cambio:{g:'＝',t:'Sin cambio',c:'var(--muted)'},
   modificado:{g:'◆',t:'Modificado',c:'#b7791f'},agregado:{g:'＋',t:'Agregado',c:'#1a5fb4'},eliminado:{g:'－',t:'Eliminado',c:'#6b7280'},no_comparable:{g:'？',t:'No comparable',c:'#6b7280'}
@@ -10136,7 +10211,8 @@ function siRender(){
     `<label>Fechas <select onchange="siSet('basis',this.value)"><option value="RP"${SI_UI.basis==='RP'?' selected':''}>Real / Proyectada</option><option value="LB"${SI_UI.basis==='LB'?' selected':''}>Línea base</option></select></label>`+
     `<span style="flex:1"></span><button type="button" class="rb-flat" onclick="siRun();siRender()" title="Recalcular con los datos actuales">Recalcular</button><button type="button" class="rb-flat" onclick="siExportCsv()" title="Exportar la tabla mostrada a CSV">Exportar CSV</button>`;
   const r=SI_UI.res;
-  if(!r){box.innerHTML=`<div class="si-empty">${esc(SI_UI.msg||'Sin datos para analizar.')}</div>`;return;}
+  if(!r&&!(SI_UI.tab==='multi'&&TASKS.length&&scenList().length>=2)){box.innerHTML=`<div class="si-empty">${esc(SI_UI.msg||'Sin datos para analizar.')}</div>`;return;}
+  if(!r){box.innerHTML=siTabsHtml()+'<div id="siTable"></div>';siRenderTab();return;}
   const s=r.summary,c=s.counts,m=s.milestones,dl=n=>n==null?'—':(n===0?'sin cambio':`${n>0?'+':'−'}${Math.abs(n)} d`);
   const kpis=
     siKpi('Fin del cronograma',dl(s.finishDeltaDays),`${siD(s.projectA.finish)} → ${siD(s.projectB.finish)}`)+
@@ -10146,15 +10222,15 @@ function siRender(){
     siKpi('Mayor desplazamiento',s.maxShift?dl(s.maxShift.deltaFinishDays):'—',s.maxShift?esc(s.maxShift.name):'')+
     siKpi('Agregadas / eliminadas',`${c.added} <span class="si-of">/</span> ${c.removed}`,c.incomparable?`${c.incomparable} no comparables`:'');
   const facts=`<div class="si-card"><h3>Qué cambió</h3><ul>${siFacts(r).map(x=>`<li>${x}</li>`).join('')}</ul><p class="si-note">Hechos calculados por el motor de análisis, en días calendario. No se infiere causalidad.</p></div>`;
-  const tabs=`<div class="si-tabs" role="tablist"><button role="tab" aria-selected="${SI_UI.tab==='delta'}" class="${SI_UI.tab==='delta'?'on':''}" onclick="siSet('tab','delta')">Delta de actividades</button><button role="tab" aria-selected="${SI_UI.tab==='hitos'}" class="${SI_UI.tab==='hitos'?'on':''}" onclick="siSet('tab','hitos')">Hitos</button></div>`;
-  const hitos=SI_UI.tab==='hitos';
-  const flt=`<div class="si-flt"><input type="search" placeholder="Buscar por nombre o ID" value="${esc(SI_UI.q)}" oninput="SI_UI.q=this.value;SI_UI.limit=400;siRenderTable()" aria-label="Buscar">`+
+  const tabs=siTabsHtml();
+  const hitos=SI_UI.tab==='hitos',dtab=SI_UI.tab==='delta'||SI_UI.tab==='hitos';
+  const flt=!dtab?'':`<div class="si-flt"><input type="search" placeholder="Buscar por nombre o ID" value="${esc(SI_UI.q)}" oninput="SI_UI.q=this.value;SI_UI.limit=400;siRenderTable()" aria-label="Buscar">`+
     `<select onchange="siSet('status',this.value)" aria-label="Estado"><option value="">Todos los estados</option>${Object.keys(SI_STATUS).map(k=>`<option value="${k}"${SI_UI.status===k?' selected':''}>${SI_STATUS[k].t}</option>`).join('')}</select>`+
     (hitos?'':`<select onchange="siSet('kind',this.value)" aria-label="Tipo"><option value="">Hitos y tareas</option><option value="hito"${SI_UI.kind==='hito'?' selected':''}>Solo hitos</option><option value="tarea"${SI_UI.kind==='tarea'?' selected':''}>Solo tareas</option></select>`)+
     `<label class="si-chk"><input type="checkbox" ${SI_UI.onlyChanges?'checked':''} onchange="siSet('onlyChanges',this.checked)">Solo con cambios</label>`+
     (hitos?`<label class="si-chk"><input type="checkbox" ${SI_UI.onlyKey?'checked':''} onchange="siSet('onlyKey',this.checked)">Solo hitos clave</label><label class="si-chk" title="Detecta FID, Gate, NTP, CV0, CN1… por el nombre del hito"><input type="checkbox" ${SI_CFG.auto?'checked':''} onchange="SI_CFG.auto=this.checked;siRun();siRender()">Detectar por nombre</label>`:'')+`</div>`;
-  box.innerHTML=`<div class="si-kpis">${kpis}</div>${facts}${tabs}${flt}<div id="siTable"></div>`;
-  siRenderTable();
+  box.innerHTML=(SI_UI.tab==='multi'?'':`<div class="si-kpis">${kpis}</div>${facts}`)+`${tabs}${flt}<div id="siTable"></div>`;
+  siRenderTab();
 }
 function siRenderTable(){
   const r=SI_UI.res,el=document.getElementById('siTable');if(!r||!el)return;
@@ -10181,6 +10257,96 @@ function siExportCsv(){
   const lines=[H.join(',')].concat(rows.map(x=>[SI_STATUS[x.status].t,x.entityId,x.name,x.kind,siD(x.startA),siD(x.startB),x.deltaStartDays,siD(x.finishA),siD(x.finishB),x.deltaFinishDays,x.durationA,x.durationB,x.deltaDurationDays,x.percentChange,x.method,x.isKey?'Sí':''].map(q).join(',')));
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}));
   a.download='Analisis_'+(hitos?'hitos':'delta')+'_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+
+/* ── Intervalos, deriva y N escenarios (fases 3 y 4) ── */
+const SI_PAL=['#2563eb','#d97706','#16a34a','#9333ea','#dc2626','#0891b2','#65a30d','#be185d'];
+const siFmtD=n=>n==null?'—':(n===0?'0':(n>0?'+':'−')+Math.abs(n));
+const siTxt=(x,y,t,o)=>`<text x="${x}" y="${y}" style="fill:var(--${(o&&o.c)||'ink'});font-size:${(o&&o.s)||11}px" text-anchor="${(o&&o.a)||'start'}"${o&&o.b?' font-weight="700"':''}>${esc(t)}</text>`;
+function siTabsHtml(){
+  const T=[['delta','Delta de actividades'],['hitos','Hitos'],['intervalos','Intervalos'],['deriva','Deriva'],['multi','Escenarios']];
+  return`<div class="si-tabs" role="tablist">${T.map(t=>`<button role="tab" aria-selected="${SI_UI.tab===t[0]}" class="${SI_UI.tab===t[0]?'on':''}" onclick="siSet('tab','${t[0]}')">${t[1]}</button>`).join('')}</div>`;
+}
+function siKeyOpts(){return`<div class="si-flt"><label class="si-chk"><input type="checkbox" ${SI_UI.onlyKey?'checked':''} onchange="siSet('onlyKey',this.checked)">Solo hitos clave (si hay al menos 2)</label><label class="si-chk" title="Detecta FID, Gate, NTP, CV0, CN1… por el nombre del hito"><input type="checkbox" ${SI_CFG.auto?'checked':''} onchange="SI_CFG.auto=this.checked;siRun();siRender()">Detectar por nombre</label></div>`;}
+function siRenderTab(){
+  const el=document.getElementById('siTable');if(!el)return;
+  if(SI_UI.tab==='intervalos')return siRenderIntervals(el);
+  if(SI_UI.tab==='deriva')return siRenderDrift(el);
+  if(SI_UI.tab==='multi')return siRenderMulti(el);
+  siRenderTable();
+}
+function siRenderIntervals(el){
+  const r=SI_UI.res,it=SI.intervals(r.rows,{onlyKey:SI_UI.onlyKey});
+  if(it.intervals.length===0){el.innerHTML=`<div class="si-empty">Se necesitan al menos dos hitos emparejados entre A y B (hay ${it.count}).</div>`;return;}
+  const dd=n=>n==null?'—':(n===0?'0':(n>0?'+':'−')+Math.abs(n))+' d';
+  const cards=`<div class="si-kpis">${siKpi('Corrimiento del primer hito',dd(it.firstShiftDays),esc(it.intervals[0].fromName))}${siKpi('Cambio acumulado de intervalos',dd(it.sumDeltaDays),'suma de expansiones y compresiones')}${siKpi('Corrimiento del último hito',dd(it.lastShiftDays),esc(it.intervals[it.intervals.length-1].toName))}</div>`+
+    `<p class="si-note" style="margin:0 0 10px">Corrimiento del primer hito + cambio acumulado de intervalos = corrimiento del último hito. Distingue un <b>desplazamiento del cronograma</b> (todos los hitos se mueven igual) de un <b>cambio de duración</b> (los intervalos se expanden o comprimen).</p>`;
+  const W=900,rowH=46,left=230,right=90,mx=Math.max(...it.intervals.map(x=>Math.max(x.durationA,x.durationB)),1),sc=(W-left-right)/mx;
+  let svg=`<svg viewBox="0 0 ${W} ${it.intervals.length*rowH+30}" width="100%" role="img" aria-label="Duración de cada intervalo entre hitos en A y B" style="max-width:${W}px">`;
+  svg+=siTxt(left,14,'A (gris) · B (color)',{c:'muted',s:10});
+  it.intervals.forEach((x,i)=>{
+    const y=24+i*rowH,col=x.type==='expansion'?'#c0392b':x.type==='compresion'?'#1a7f37':'#6b7280';
+    svg+=siTxt(left-10,y+13,`${x.fromName} → ${x.toName}`,{a:'end'});
+    svg+=`<rect x="${left}" y="${y}" width="${Math.max(1,x.durationA*sc)}" height="12" rx="2" style="fill:var(--line)"/>`+siTxt(left+x.durationA*sc+6,y+10,x.durationA+' d',{c:'muted',s:10});
+    svg+=`<rect x="${left}" y="${y+16}" width="${Math.max(1,x.durationB*sc)}" height="12" rx="2" fill="${col}"/>`+siTxt(left+x.durationB*sc+6,y+26,x.durationB+' d',{s:10});
+  });
+  svg+='</svg>';
+  const rows=it.intervals.map(x=>`<tr><td>${esc(x.fromName)} → ${esc(x.toName)}</td><td class="si-n">${x.durationA}</td><td class="si-n">${x.durationB}</td><td class="si-n">${siDelta(x.deltaDays)}</td><td class="si-n">${x.percentChange==null?'—':x.percentChange+' %'}</td><td><span class="si-chip" style="color:${x.type==='expansion'?'#c0392b':x.type==='compresion'?'#1a7f37':'var(--muted)'}"><span aria-hidden="true">${x.type==='expansion'?'▲':x.type==='compresion'?'▼':'＝'}</span> ${x.type==='expansion'?'Expansión':x.type==='compresion'?'Compresión':'Sin cambio'}</span></td></tr>`).join('');
+  el.innerHTML=siKeyOpts()+cards+`<div class="si-card">${svg}</div><div class="si-tw"><table class="si-t"><caption class="si-sr">Intervalos entre hitos consecutivos</caption><thead><tr><th scope="col">Intervalo</th><th scope="col" class="si-n">Días A</th><th scope="col" class="si-n">Días B</th><th scope="col" class="si-n">Δ días</th><th scope="col" class="si-n">Δ %</th><th scope="col">Tipo</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function siRenderDrift(el){
+  const r=SI_UI.res,d=SI.drift(r.rows,{onlyKey:SI_UI.onlyKey});
+  if(!d.stats){el.innerHTML=`<div class="si-empty">No hay hitos emparejados entre A y B para calcular la deriva.</div>`;return;}
+  const s=d.stats,dd=n=>n==null?'—':(n===0?'0':(n>0?'+':'−')+Math.abs(n))+' d';
+  const cards=`<div class="si-kpis">${siKpi('Desviación máxima',dd(s.max),'')}${siKpi('Desviación mínima',dd(s.min),'')}${siKpi('Promedio',dd(Math.round(s.mean*10)/10),`${s.count} hitos`)}${siKpi('Tendencia',s.trend[0].toUpperCase()+s.trend.slice(1),s.slopeDaysPerYear==null?'':(s.slopeDaysPerYear>0?'+':'')+s.slopeDaysPerYear+' d por año')}${siKpi('Primera desviación',s.firstSignificant?esc(s.firstSignificant.name):'Ninguna',s.firstSignificant?`${siD(s.firstSignificant.dayA)} · ${dd(s.firstSignificant.delta)}`:`umbral ${s.threshold} d`)}</div>`;
+  const W=900,H=280,L=52,R=20,T=16,B=34,pts=d.points,x0=Math.min(...pts.map(p=>p.dayA)),x1=Math.max(...pts.map(p=>p.dayA)),lo=Math.min(0,s.min),hi=Math.max(0,s.max),pad=Math.max(5,(hi-lo)*0.1);
+  const X=v=>L+(x1===x0?(W-L-R)/2:(v-x0)/(x1-x0)*(W-L-R)),Y=v=>T+(hi+pad-v)/((hi+pad)-(lo-pad))*(H-T-B);
+  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Desviación de cada hito respecto de A a lo largo del cronograma" style="max-width:${W}px">`;
+  for(let i=0;i<=4;i++){const v=lo-pad+(hi+pad-(lo-pad))*i/4;svg+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" style="stroke:var(--line)"/>`+siTxt(L-6,Y(v)+4,Math.round(v)+' d',{a:'end',c:'muted',s:10});}
+  svg+=`<line x1="${L}" y1="${Y(0)}" x2="${W-R}" y2="${Y(0)}" style="stroke:var(--muted)" stroke-dasharray="4 3"/>`;
+  svg+=`<polyline fill="none" stroke="#2563eb" stroke-width="2" points="${pts.map(p=>X(p.dayA)+','+Y(p.delta)).join(' ')}"/>`;
+  pts.forEach((p,i)=>{svg+=`<circle cx="${X(p.dayA)}" cy="${Y(p.delta)}" r="${p.isKey?5:3.5}" fill="${p.delta>0?'#c0392b':p.delta<0?'#1a7f37':'#6b7280'}" stroke="#fff"><title>${esc(p.name)}: ${dd(p.delta)} (${siD(p.dayA)})</title></circle>`;
+    if(p.isKey||pts.length<=12)svg+=siTxt(X(p.dayA),Y(p.delta)-9,p.name.length>18?p.name.slice(0,17)+'…':p.name,{a:'middle',s:9,c:'muted'});});
+  svg+=siTxt(L,H-8,siD(x0),{c:'muted',s:10})+siTxt(W-R,H-8,siD(x1),{a:'end',c:'muted',s:10})+siTxt((L+W-R)/2,H-8,'Fecha del hito en A',{a:'middle',c:'muted',s:10});
+  svg+='</svg>';
+  const rows=pts.map(p=>`<tr><td>${esc(p.name)}</td><td>${siD(p.dayA)}</td><td class="si-n">${siDelta(p.delta)}</td><td class="si-n">${siDelta(p.step)}</td></tr>`).join('');
+  el.innerHTML=siKeyOpts()+cards+`<div class="si-card"><h3>Deriva del desplazamiento</h3>${svg}<p class="si-note">Observado: diferencia de fecha de cada hito (B − A) en orden cronológico; «incremento» es el cambio respecto del hito anterior. Esto describe el comportamiento, no su causa: si un cambio se propagó por dependencias se analiza aparte.</p></div><div class="si-tw"><table class="si-t"><caption class="si-sr">Desviación por hito</caption><thead><tr><th scope="col">Hito</th><th scope="col">Fecha A</th><th scope="col" class="si-n">Δ días</th><th scope="col" class="si-n">Incremento</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function siMultiKeys(){
+  const list=scenList().map(s=>s.key);
+  SI_UI.multi=(SI_UI.multi||[]).filter(k=>list.includes(k));
+  if(!SI_UI.multi.length)SI_UI.multi=list.slice(0,6);
+  return list;
+}
+function siToggleMulti(k,on){
+  const sel=new Set(SI_UI.multi);if(on)sel.add(k);else sel.delete(k);
+  SI_UI.multi=scenList().map(s=>s.key).filter(x=>sel.has(x));siRender();
+}
+function siRenderMulti(el){
+  const all=siMultiKeys(),sel=SI_UI.multi;
+  const pick=`<div class="si-flt">${all.map(k=>`<label class="si-chk"><input type="checkbox" ${sel.includes(k)?'checked':''} onchange="siToggleMulti('${esc(k).replace(/'/g,'&#39;')}',this.checked)">${esc(scenLabel(k))}</label>`).join('')}</div>`;
+  if(sel.length<2){el.innerHTML=siKeyOpts()+pick+`<div class="si-empty">Seleccione al menos dos escenarios. El primero de la lista es la referencia.</div>`;return;}
+  const M=SI.multi(sel.map(k=>({key:k,label:scenLabel(k),tasks:TASKS.filter(t=>scenKey(t)===k)})),{basis:SI_UI.basis,keyCfg:SI_CFG});
+  const dd=n=>n==null?'—':(n===0?'0':(n>0?'+':'−')+Math.abs(n));
+  const ps=M.projectSpread,ss=M.spreadStats;
+  const cards=`<div class="si-kpis">${siKpi('Dispersión del fin del cronograma',ps?ps.spreadDays+' d':'—',ps?`${siD(ps.earliest)} → ${siD(ps.latest)}`:'')}${siKpi('Hitos con mayor dispersión',ss?ss.max+' d':'—',ss?`promedio ${ss.mean} d`:'')}${siKpi('Comportamiento',ss?({diverge:'Divergen',converge:'Convergen',constante:'Separación constante',indeterminado:'Indeterminado'})[ss.behavior]:'—',ss&&ss.slopeDaysPerYear!=null?(ss.slopeDaysPerYear>0?'+':'')+ss.slopeDaysPerYear+' d de separación por año':'')}</div>`;
+  const matrix=`<div class="si-tw"><table class="si-t"><caption class="si-sr">Matriz de escenarios</caption><thead><tr><th scope="col">Escenario</th><th scope="col">Inicio</th><th scope="col">Fin</th><th scope="col" class="si-n">Δ fin vs ref.</th><th scope="col" class="si-n">Duración (d)</th><th scope="col" class="si-n">Actividades</th><th scope="col" class="si-n">Hitos</th><th scope="col" class="si-n">Modificadas</th><th scope="col" class="si-n">Agregadas</th><th scope="col" class="si-n">Eliminadas</th><th scope="col" class="si-n">Desplaz. promedio</th><th scope="col" class="si-n">Desplaz. máximo</th></tr></thead><tbody>${M.scenarios.map((s,i)=>`<tr><td><span class="si-dot" style="background:${SI_PAL[i%SI_PAL.length]}"></span>${esc(s.label)}${s.isRef?' <span class="si-na">(referencia)</span>':''}</td><td>${siD(s.start)}</td><td>${siD(s.finish)}</td><td class="si-n">${s.isRef?'—':siDelta(s.finishDeltaDays)}</td><td class="si-n">${s.duration??'—'}</td><td class="si-n">${s.activities}</td><td class="si-n">${s.milestones}</td><td class="si-n">${s.isRef?'—':s.modified}</td><td class="si-n">${s.isRef?'—':s.added}</td><td class="si-n">${s.isRef?'—':s.removed}</td><td class="si-n">${s.isRef?'—':(s.meanShift==null?'—':siDelta(Math.round(s.meanShift)))}</td><td class="si-n">${s.isRef?'—':siDelta(s.maxShift)}</td></tr>`).join('')}</tbody></table></div>`;
+  let ms=M.milestones;if(SI_UI.onlyKey){const k=ms.filter(m=>m.isKey);if(k.length)ms=k;}
+  let chart='';
+  if(ms.length){
+    const W=900,rowH=26,L=210,R=20,all=ms.flatMap(m=>m.dates.filter(d=>d!=null)),a=Math.min(...all),b=Math.max(...all),X=v=>L+(b===a?(W-L-R-60)/2:(v-a)/(b-a)*(W-L-R-60));
+    chart=`<svg viewBox="0 0 ${W} ${ms.length*rowH+34}" width="100%" role="img" aria-label="Fecha de cada hito en cada escenario" style="max-width:${W}px">`;
+    ms.forEach((m,i)=>{const y=18+i*rowH;
+      chart+=siTxt(L-8,y+4,m.name.length>30?m.name.slice(0,29)+'…':m.name,{a:'end',s:10});
+      chart+=`<line x1="${X(m.earliest)}" y1="${y}" x2="${X(m.latest)}" y2="${y}" style="stroke:var(--muted)" stroke-width="2"/>`;
+      m.dates.forEach((d,j)=>{if(d!=null)chart+=`<circle cx="${X(d)}" cy="${y}" r="5" fill="${SI_PAL[j%SI_PAL.length]}" stroke="#fff"><title>${esc(m.name)} · ${esc(M.scenarios[j].label)}: ${siD(d)}</title></circle>`;});
+      chart+=siTxt(W-R,y+4,m.spreadDays?m.spreadDays+' d':'',{a:'end',c:'muted',s:10});});
+    chart+=siTxt(L,ms.length*rowH+28,siD(a),{c:'muted',s:10})+siTxt(W-R,ms.length*rowH+28,siD(b),{a:'end',c:'muted',s:10})+'</svg>';
+  }
+  const legend=`<div class="si-flt" style="margin-bottom:0">${M.scenarios.map((s,i)=>`<span class="si-chk"><span class="si-dot" style="background:${SI_PAL[i%SI_PAL.length]}"></span>${esc(s.label)}</span>`).join('')}</div>`;
+  const rows=ms.map(m=>`<tr><td>${m.isKey?'★ ':''}${esc(m.name)}</td>${m.dates.map((d,j)=>`<td>${siD(d)}${j&&d!=null?` <span class="si-n">${siDelta(m.deltas[j])}</span>`:''}</td>`).join('')}<td class="si-n">${m.present>=2?m.spreadDays+' d':'—'}</td></tr>`).join('');
+  const mt=`<div class="si-tw"><table class="si-t"><caption class="si-sr">Fechas de cada hito por escenario y dispersión</caption><thead><tr><th scope="col">Hito</th>${M.scenarios.map(s=>`<th scope="col">${esc(s.label)}</th>`).join('')}<th scope="col" class="si-n">Dispersión</th></tr></thead><tbody>${rows||'<tr><td colspan="9" class="si-empty">No hay hitos.</td></tr>'}</tbody></table></div>`;
+  el.innerHTML=siKeyOpts()+pick+cards+`<h3 class="si-h3">Matriz de escenarios</h3>${matrix}<h3 class="si-h3">Dispersión por hito</h3><div class="si-card">${legend}${chart}<p class="si-note">Cada punto es la fecha del hito en un escenario; la línea une la más temprana con la más tardía. La comparación es contra el primer escenario seleccionado (referencia). La herramienta muestra hechos y diferencias; no califica un escenario como mejor.</p></div>${mt}`;
 }
 
 /* ═══ IMPACTO: días de diferencia entre dos barras/hitos de la LdT (p. ej. mismo hito en dos escenarios) ═══ */
