@@ -2031,6 +2031,8 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button id="pbmMitoUnder" class="rb-sm" onclick="presToggleMitoStyle('underline')" style="padding:2px 7px;text-decoration:underline" title="Subrayado"><u>S</u></button>
         <button id="pbmMitoBold" class="rb-sm active" onclick="presToggleMitoStyle('bold')" style="padding:2px 7px;font-weight:700" title="Negrita">N</button>
       </div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pbmMTxtSwatch" onclick="presMkTextColor('mito')" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Color del texto"></span><button type="button" class="rb-flat" style="padding:1px 6px" onclick="presMkTextAuto('mito')">Auto</button></div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Alinear:</span><span class="pbm-seg" style="flex:1"><button type="button" id="pbmMAl_start" class="pbm-seg-btn" onclick="presMkAlign('mito','start')" title="Texto a partir del marcador, hacia la derecha">Izq.</button><button type="button" id="pbmMAl_middle" class="pbm-seg-btn" onclick="presMkAlign('mito','middle')" title="Centrado sobre el marcador">Centro</button><button type="button" id="pbmMAl_end" class="pbm-seg-btn" onclick="presMkAlign('mito','end')" title="Texto que termina en el marcador">Der.</button></span></div>
       </div>
     </div>
     <!-- Fechas del hito: mostrar, alinear (vinculada al nombre / independiente) y posición -->
@@ -2091,6 +2093,12 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <span id="pbmMitoSwatchInner" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Clic para cambiar color"></span>
         <span class="pop-unit" style="font-size:8px">clic para cambiar</span>
       </div>
+    </div>
+    <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:4px;font-size:10px">
+      <div class="pop-label">Borde</div>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Grosor:</span><input type="number" id="pbmMBdW" class="pop-num" min="0" max="8" step="0.5" oninput="presBdSet('mito')" style="width:56px"><span class="pop-unit">px</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Estilo:</span><select id="pbmMBdDash" class="rb-sel" onchange="presBdSet('mito')" style="flex:1;max-width:none"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pbmMBdColor" onclick="presBdColor('mito')" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Clic para cambiar color"></span><button type="button" class="rb-flat" style="padding:1px 6px;margin-left:auto" onclick="presBdReset('mito')">Restablecer</button></div>
     </div>
     <!-- Ubicación (sobre el eje / dentro de una banda de Categoría 1) -->
     <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:6px">
@@ -2182,7 +2190,16 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button id="pbmEvtoUnder" class="rb-sm" onclick="presToggleEvtoStyle('underline')" style="padding:2px 7px;text-decoration:underline" title="Subrayado"><u>S</u></button>
         <button id="pbmEvtoBold" class="rb-sm active" onclick="presToggleEvtoStyle('bold')" style="padding:2px 7px;font-weight:700" title="Negrita">N</button>
       </div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pbmETxtSwatch" onclick="presMkTextColor('evento')" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Color del texto"></span><button type="button" class="rb-flat" style="padding:1px 6px" onclick="presMkTextAuto('evento')">Auto</button></div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Alinear:</span><span class="pbm-seg" style="flex:1"><button type="button" id="pbmEAl_start" class="pbm-seg-btn" onclick="presMkAlign('evento','start')" title="Texto a partir del marcador, hacia la derecha">Izq.</button><button type="button" id="pbmEAl_middle" class="pbm-seg-btn" onclick="presMkAlign('evento','middle')" title="Centrado sobre el marcador">Centro</button><button type="button" id="pbmEAl_end" class="pbm-seg-btn" onclick="presMkAlign('evento','end')" title="Texto que termina en el marcador">Der.</button></span></div>
     </div>
+    <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:4px;font-size:10px">
+      <div class="pop-label">Borde</div>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Grosor:</span><input type="number" id="pbmEBdW" class="pop-num" min="0" max="8" step="0.5" oninput="presBdSet('evento')" style="width:56px"><span class="pop-unit">px</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Estilo:</span><select id="pbmEBdDash" class="rb-sel" onchange="presBdSet('evento')" style="flex:1;max-width:none"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pbmEBdColor" onclick="presBdColor('evento')" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Clic para cambiar color"></span><button type="button" class="rb-flat" style="padding:1px 6px;margin-left:auto" onclick="presBdReset('evento')">Restablecer</button></div>
+    </div>
+
   </div>
 </div>
 
@@ -2380,6 +2397,16 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
     <span style="font-size:10px;color:#666;min-width:42px">Fuente:</span>
     <span id="pymFgSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#fff"></span>
     <button id="pymFgAuto" onclick="presYearAutoFg()" style="font-size:8px;padding:1px 4px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">Auto</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <span style="font-size:10px;color:#666;min-width:42px">Estilo:</span>
+    <button type="button" id="pymBold" onclick="presYearFmtToggle('bold')" style="width:26px;height:22px;padding:0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff"><b>N</b></button>
+    <button type="button" id="pymItalic" onclick="presYearFmtToggle('italic')" style="width:26px;height:22px;padding:0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff"><i>K</i></button>
+    <button type="button" id="pymUnder" onclick="presYearFmtToggle('under')" style="width:26px;height:22px;padding:0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff"><u>S</u></button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <span style="font-size:10px;color:#666;min-width:42px">Alinear:</span>
+    <span style="display:flex;gap:3px;flex:1"><button type="button" id="pymAl_start" onclick="presYearAlign('start')" style="flex:1;font-size:9px;padding:3px 0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff">Izq.</button><button type="button" id="pymAl_middle" onclick="presYearAlign('middle')" style="flex:1;font-size:9px;padding:3px 0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff">Centro</button><button type="button" id="pymAl_end" onclick="presYearAlign('end')" style="flex:1;font-size:9px;padding:3px 0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff">Der.</button></span>
   </div>
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
     <span style="font-size:10px;color:#666;min-width:42px">Escala:</span>
@@ -4245,7 +4272,10 @@ function applyPickerColor(color){
   else if(_cpTarget.type==='presdeltacolor'){if(_cpTarget.w==='A')_deltaCA=color;else _deltaCB=color;renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='preslegtitle'){PRES_LEGEND_CFG.titleColor=color;const sw=document.getElementById('plgTitleColor');if(sw)sw.style.background=color;renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='presconn'){const c=PRES_CONNECTORS.find(q=>q.id===_conMenuId);if(c){_presSnap();c.color=color;const sw=document.getElementById('pcmColor');if(sw)sw.style.background=color;renderPres();}closeColorPicker();return;}
-  else if(_cpTarget.type==='presborder'){if(_presBorderCtx){_presSnap();_presBorderObj(_presBorderCtx).borderColor=color;const sw=document.getElementById('pbdColor');if(sw)sw.style.background=color;['pymBdColor','pbmBdColor'].forEach(i=>{const e=document.getElementById(i);if(e)e.style.background=color;});renderPres();}closeColorPicker();return;}
+  else if(_cpTarget.type==='preslegcolor'){PRES_LEGEND_CFG[_cpTarget.field]=color;presLegendFill();renderPres();closeColorPicker();return;}
+  else if(_cpTarget.type==='presmktext'){const o=presMkOpt();if(o){_presSnap();o.textColor=color;o._textManual=true;presMkSync(_cpTarget.kind);renderPres();}closeColorPicker();return;}
+  else if(_cpTarget.type==='presfmcolor'){if(_presBorderCtx){presFmSet(_cpTarget.field,color,false);const sw=document.getElementById(_cpTarget.field==='fill'?'pfmFill':'pfmColor');if(sw)sw.style.background=color;}closeColorPicker();return;}
+  else if(_cpTarget.type==='presborder'){if(_presBorderCtx){_presSnap();_presBorderObj(_presBorderCtx).borderColor=color;const sw=document.getElementById('pbdColor');if(sw)sw.style.background=color;['pymBdColor','pbmBdColor','pbmMBdColor','pbmEBdColor'].forEach(i=>{const e=document.getElementById(i);if(e)e.style.background=color;});renderPres();}closeColorPicker();return;}
   else if(_cpTarget.type==='pressubprocband'){_presSubprocColors[_cpTarget.v]=color;renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='pressubproccolor'){_presSubprocCol=color;_presSubprocColors={};presSyncSegUI();renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='presyeardivcolor'){_presYearDivCol=color;presSyncSegUI();renderPres();closeColorPicker();return;}
@@ -5103,7 +5133,7 @@ function _buildShareBlob(shared){
   const data={shared:!!shared,sessionName:AP_SESSION_NAME,tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||'',preds:t.preds||'',pscope:t.pscope||''})),
     scenarios:SCENARIOS,on:SCEN_ON,color:SCEN_COLOR,escColor:ESC_COLOR,cat2color:CAT2_COLOR,eventocolor:EVENTO_COLOR,presOpts:PRES_OPTS,presHidden:[...PRES_HIDDEN_KEYS],presTextBoxes:PRES_TEXTBOXES,presShapes:PRES_SHAPES,ganttTextBoxes:GANTT_TEXTBOXES,ganttOrder:GANTT_ORDER,ganttC2Order:GANTT_C2_ORDER,ganttTaskOrder:GANTT_TASK_ORDER,
     scale:document.getElementById('scale').value,mode:document.querySelector('input[name=mode]:checked').value,
-    showLB:document.getElementById('showLB').checked,showDeps:document.getElementById('showDeps').checked,showDates:document.getElementById('showDates').checked,presShowDates:document.getElementById('presShowDates').checked,presShowSubproc:(document.getElementById('presShowSubproc')||{}).checked,presSubprocField:(document.getElementById('presSubprocField')||{}).value,presSubprocGap:(document.getElementById('presSubprocGap')||{}).value,presSubprocPos:(document.getElementById('presSubprocPos')||{}).value,presSubprocColor:_presSubprocCol,presSubprocColors:_presSubprocColors,presYearMerge:PRES_YEAR_MERGE,presSubprocStyle:_presSubprocStyle,presYearBorder:PRES_YEAR_BORDER,presConnectors:PRES_CONNECTORS,presLegendCfg:PRES_LEGEND_CFG,
+    showLB:document.getElementById('showLB').checked,showDeps:document.getElementById('showDeps').checked,showDates:document.getElementById('showDates').checked,presShowDates:document.getElementById('presShowDates').checked,presShowSubproc:(document.getElementById('presShowSubproc')||{}).checked,presSubprocField:(document.getElementById('presSubprocField')||{}).value,presSubprocGap:(document.getElementById('presSubprocGap')||{}).value,presSubprocPos:(document.getElementById('presSubprocPos')||{}).value,presSubprocColor:_presSubprocCol,presSubprocColors:_presSubprocColors,presYearMerge:PRES_YEAR_MERGE,presSubprocStyle:_presSubprocStyle,presYearBorder:PRES_YEAR_BORDER,presYearFmt:PRES_YEAR_FMT,presConnectors:PRES_CONNECTORS,presLegendCfg:PRES_LEGEND_CFG,
     presExtraH:+document.getElementById('presExtraH').value||0,presExtraTop:+document.getElementById('presExtraTop').value||0,presExtraBottom:+(document.getElementById('presExtraBottom')||{value:0}).value||0,presExtraLeft:+(document.getElementById('presExtraLeft')||{value:0}).value||0,presExtraRight:+(document.getElementById('presExtraRight')||{value:0}).value||0,presLegendPos:PRES_LEGEND_POS,presLegendSize:PRES_LEGEND_SIZE,
     fontFamily:document.getElementById('fontFamily').value,
     fontSizes:{dates:document.getElementById('fsDates').value,months:document.getElementById('fsMonths').value,years:document.getElementById('fsYears').value,cat1:document.getElementById('fsCat1').value,cat2:document.getElementById('fsCat2').value,tasks:document.getElementById('fsTasks').value},
@@ -5297,8 +5327,9 @@ function loadEmbedded(){
   PRES_YEAR_MERGE=Object.assign({},d.presYearMerge||{});
   _presSubprocStyle=Object.assign({},d.presSubprocStyle||{});
   PRES_YEAR_BORDER=Object.assign({},d.presYearBorder||{});
+  PRES_YEAR_FMT=Object.assign({},d.presYearFmt||{});
   PRES_CONNECTORS=Array.isArray(d.presConnectors)?d.presConnectors:[];
-  if(d.presLegendCfg)PRES_LEGEND_CFG=Object.assign({field:'c2',titleOn:false,title:'',titleSize:12,titleColor:'#2c3e50',fs:10,box:true,style:'swatch',hidden:[]},d.presLegendCfg);
+  if(d.presLegendCfg)PRES_LEGEND_CFG=Object.assign({field:'c2',titleOn:false,title:'',titleSize:12,titleColor:'#2c3e50',fs:10,box:true,style:'swatch',hidden:[],bold:false,textColor:'',fill:'',borderW:1,borderColor:'',borderDash:'solid',align:'start'},d.presLegendCfg);
   if(d.presExtraH!=null)document.getElementById('presExtraH').value=d.presExtraH;
   if(d.presExtraTop!=null)document.getElementById('presExtraTop').value=d.presExtraTop;
   if(d.presExtraBottom!=null&&document.getElementById('presExtraBottom'))document.getElementById('presExtraBottom').value=d.presExtraBottom;
@@ -5666,8 +5697,8 @@ function apRestoreExecConfigLocal(){
 let PRES_YEAR_COLORS={};
 let PRES_YEAR_TEXT_COLORS={};
 // Forma del marcador de un hito (opt.miShape) y texto adicional (opt.miNote) movible con el mouse (opt.miNoteDx/Dy)
-function presMsShape(shape,x,y,ds,col,attrs){
-  const st='fill="'+col+'" stroke="'+col+'" stroke-width="1.5"'+attrs;
+function presMsShape(shape,x,y,ds,col,attrs,bo){
+  const st='fill="'+col+'"'+((bo&&bo.borderW>0)?presBorderAttr(bo,'#333333',1):' stroke="'+col+'" stroke-width="1.5"')+attrs;
   if(shape==='triangleDown')return'<polygon points="'+(x-ds)+','+(y-ds)+' '+(x+ds)+','+(y-ds)+' '+x+','+(y+ds)+'" '+st+'/>';
   if(shape==='triangleUp')return'<polygon points="'+x+','+(y-ds)+' '+(x+ds)+','+(y+ds)+' '+(x-ds)+','+(y+ds)+'" '+st+'/>';
   if(shape==='circle')return'<circle cx="'+x+'" cy="'+y+'" r="'+ds+'" '+st+'/>';
@@ -5717,48 +5748,99 @@ function _pbmSyncMitoShape(o){
   const ta=document.getElementById('pbmMitoNote');if(ta&&document.activeElement!==ta)ta.value=(o&&o.miNote)||'';
 }
 // Borde de los rectángulos agrupadores (verticales: PRES_OPTS['RAPC1|'+valor]; horizontales: _presSubprocStyle[valor])
-let _presSubprocStyle={},_presBorderCtx=null,PRES_YEAR_BORDER={};   // PRES_YEAR_BORDER: año (o 'LB'+año) → {borderW,borderColor,borderDash}
+let _presSubprocStyle={},_presBorderCtx=null,PRES_YEAR_BORDER={},PRES_YEAR_FMT={};   // PRES_YEAR_FMT: año (o 'LB'+año) → {label,bold,italic,under,align}   // PRES_YEAR_BORDER: año (o 'LB'+año) → {borderW,borderColor,borderDash}
 function presDashAttr(d){return d==='dotted'?' stroke-dasharray="2,3"':d==='dashed'?' stroke-dasharray="8,4"':d==='dashed2'?' stroke-dasharray="10,4,2,4"':'';}
 function presBorderAttr(o,defCol,defW){return' stroke="'+((o&&o.borderColor)||defCol)+'" stroke-width="'+((o&&o.borderW!=null&&o.borderW!=='')?o.borderW:defW)+'"'+presDashAttr(o&&o.borderDash);}
 function _presBorderObj(ctx){
   if(ctx.kind==='rap'){const k='RAPC1|'+ctx.key;if(!PRES_OPTS[k])PRES_OPTS[k]={};return PRES_OPTS[k];}
   if(ctx.kind==='year'){if(!PRES_YEAR_BORDER[ctx.key])PRES_YEAR_BORDER[ctx.key]={};return PRES_YEAR_BORDER[ctx.key];}
-  if(ctx.kind==='bar'){if(!PRES_OPTS[ctx.key])PRES_OPTS[ctx.key]={};return PRES_OPTS[ctx.key];}
+  if(ctx.kind==='bar'||ctx.kind==='mito'||ctx.kind==='evento'){if(!PRES_OPTS[ctx.key])PRES_OPTS[ctx.key]={};return PRES_OPTS[ctx.key];}
   if(!_presSubprocStyle[ctx.key])_presSubprocStyle[ctx.key]={};return _presSubprocStyle[ctx.key];
 }
+// Campos de texto/relleno/alineación de los agrupadores (rap = vertical, sp = horizontal)
+function presFmGet(f){
+  const c=_presBorderCtx,o=_presBorderObj(c),rap=c.kind==='rap';
+  switch(f){
+    case 'label':return o.label||'';
+    case 'fs':return(rap?o.fontSize:o.fs)||'';
+    case 'bold':return rap?o.textBold!==false:!!o.bold;
+    case 'italic':return rap?!!o.textItalic:!!o.italic;
+    case 'under':return rap?!!o.textUnder:!!o.under;
+    case 'color':return rap?(o._textManual?o.textColor:''):(o.textColor||'');
+    case 'fill':return rap?(o.fill||''):(_presSubprocColors[c.key]||'');
+    case 'align':return(rap?o.labelAlign:o.align)||'middle';
+  }
+}
+function presFmApply(f,v){
+  const c=_presBorderCtx,o=_presBorderObj(c),rap=c.kind==='rap';
+  if(f==='label')o.label=v;
+  else if(f==='fs'){const k=rap?'fontSize':'fs';if(v)o[k]=+v;else delete o[k];}
+  else if(f==='bold')o[rap?'textBold':'bold']=v;
+  else if(f==='italic')o[rap?'textItalic':'italic']=v;
+  else if(f==='under')o[rap?'textUnder':'under']=v;
+  else if(f==='color'){if(rap){if(v){o.textColor=v;o._textManual=true;}else{delete o.textColor;delete o._textManual;}}else{if(v)o.textColor=v;else delete o.textColor;}}
+  else if(f==='fill'){if(rap){if(v)o.fill=v;else delete o.fill;}else{if(v)_presSubprocColors[c.key]=v;else delete _presSubprocColors[c.key];}}
+  else if(f==='align')o[rap?'labelAlign':'align']=v;
+}
+function presFmSet(f,v,rebuild){
+  if(!_presBorderCtx)return;_presSnap();presFmApply(f,v);renderPres();
+  if(rebuild&&_presFmPos)presOpenBorderMenu(_presBorderCtx.kind,_presBorderCtx.key,_presFmPos.x,_presFmPos.y);
+}
+function presFmToggle(f){presFmSet(f,!presFmGet(f),true);}
+function presFmColor(f){
+  _cpTarget={type:'presfmcolor',field:f};document.getElementById('cpLabel').textContent={color:'Color del texto',fill:'Color de relleno'}[f]||'Color';
+  const r=document.getElementById(f==='fill'?'pfmFill':'pfmColor').getBoundingClientRect(),cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
+}
+let _presFmPos=null;
 function presOpenBorderMenu(kind,key,x,y){
-  _presBorderCtx={kind,key};
+  _presBorderCtx={kind,key};_presFmPos={x,y};
   let m=document.getElementById('presBorderMenu');
   if(!m){m=document.createElement('div');m.id='presBorderMenu';m.style.cssText='position:fixed;z-index:100005;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:220px;font-size:11px;color:#333;display:none';document.body.appendChild(m);
     document.addEventListener('mousedown',e=>{if(m.style.display!=='none'&&!m.contains(e.target)&&!e.target.closest('#colorPicker'))m.style.display='none';},true);}
   const o=_presBorderObj(_presBorderCtx),bw=(o.borderW!=null&&o.borderW!=='')?o.borderW:(kind==='rap'?1.5:0);
   const dash=o.borderDash||'solid',col=o.borderColor||(kind==='rap'?'#9aa5b1':(kind==='year'||kind==='bar')?'#333333':'#7a8ea3');
   const S=(v,t)=>'<option value="'+v+'"'+(dash===v?' selected':'')+'>'+t+'</option>';
-  m.innerHTML='<div style="font-weight:700;margin-bottom:8px">'+(kind==='bar'?'Borde de la barra':kind==='year'?'Borde del año '+String(key).replace(/^LB/,''):'Borde · '+String(key).replace(/</g,'&lt;'))+'</div>'
+  const full=(kind==='rap'||kind==='sp');
+  const DIV='<div style="border-top:1px solid #e3e3e3;margin:8px 0 8px;padding-top:8px"></div>',SEC=t=>'<div style="font-size:10px;font-weight:700;color:#555;margin-bottom:6px">'+t+'</div>';
+  const inp='font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px';
+  const tb=(f,l,st)=>'<button type="button" onclick="presFmToggle(\''+f+'\')" style="width:26px;height:24px;padding:0;cursor:pointer;border:1px solid '+(presFmGet(f)?'#2563eb':'#ccc')+';background:'+(presFmGet(f)?'#e8f0fe':'#fff')+';border-radius:4px;'+st+'">'+l+'</button>';
+  const alBtn=(v,l)=>'<button type="button" onclick="presFmSet(\'align\',\''+v+'\',true)" style="flex:1;padding:3px 0;font-size:10px;cursor:pointer;border:1px solid '+(presFmGet('align')===v?'#2563eb':'#ccc')+';background:'+(presFmGet('align')===v?'#e8f0fe':'#fff')+';border-radius:4px">'+l+'</button>';
+  const fullTop=!full?'':(SEC('Texto')
+    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span style="min-width:44px;color:#666">Nombre:</span><input type="text" id="pfmLabel" value="'+String(presFmGet('label')).replace(/"/g,'&quot;')+'" placeholder="'+String(key).replace(/"/g,'&quot;').replace(/</g,'&lt;')+'" oninput="presFmSet(\'label\',this.value)" style="flex:1;min-width:0;'+inp+'"></div>'
+    +DIV+SEC('Fuente')
+    +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px"><input type="number" min="6" max="60" value="'+presFmGet('fs')+'" placeholder="auto" oninput="presFmSet(\'fs\',this.value)" style="width:52px;'+inp+'">'+tb('bold','<b>N</b>','')+tb('italic','<i>K</i>','')+tb('under','<u>S</u>','')+'<span id="pfmColor" onclick="presFmColor(\'color\')" title="Color del texto" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+(presFmGet('color')||'#ffffff')+'"></span><button type="button" onclick="presFmSet(\'color\',\'\',true)" style="font-size:9px;padding:1px 5px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">Auto</button></div>'
+    +DIV+SEC('Relleno')
+    +'<div style="display:flex;gap:8px;align-items:center"><span style="min-width:44px;color:#666">Color:</span><span id="pfmFill" onclick="presFmColor(\'fill\')" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+(presFmGet('fill')||'#ffffff')+'"></span><button type="button" onclick="presFmSet(\'fill\',\'\',true)" style="margin-left:auto;font-size:9px;padding:1px 6px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">'+(kind==='sp'?'Restablecer':'Sin relleno')+'</button></div>'
+    +DIV+SEC('Borde'));
+  const fullBottom=!full?'':(DIV+SEC('Alineación')+'<div style="display:flex;gap:4px">'+(kind==='rap'?alBtn('start','Abajo')+alBtn('middle','Centro')+alBtn('end','Arriba'):alBtn('start','Izquierda')+alBtn('middle','Centro')+alBtn('end','Derecha'))+'</div>');
+  m.innerHTML=(full?'<div style="font-weight:700;margin-bottom:8px">Formato · '+String(key).replace(/</g,'&lt;')+'</div>':'')+fullTop+(full?'':'<div style="font-weight:700;margin-bottom:8px">'+(kind==='bar'?'Borde de la barra':kind==='year'?'Borde del año '+String(key).replace(/^LB/,''):'Borde · '+String(key).replace(/</g,'&lt;'))+'</div>')
    +(kind==='rap'?'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Forma:</span><select id="pbdShape" onchange="presBorderSet()" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><option value="box"'+(o.borderShape!=='line'?' selected':'')+'>Caja completa</option><option value="line"'+(o.borderShape==='line'?' selected':'')+'>Solo línea inferior</option></select></div>':'')
    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Grosor:</span><input type="number" id="pbdW" min="0" max="8" step="0.5" value="'+bw+'" oninput="presBorderSet()" style="width:56px;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><span style="color:#999">px</span></div>'
    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Estilo:</span><select id="pbdDash" onchange="presBorderSet()" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px">'+S('solid','— Continua')+S('dotted','· · Punteada')+S('dashed','— Rayada')+S('dashed2','— Mixta')+'</select></div>'
    +'<div style="display:flex;gap:8px;align-items:center"><span style="min-width:44px;color:#666">Color:</span><span id="pbdColor" onclick="presBorderPickColor()" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+col+'"></span><button type="button" onclick="presBorderReset()" style="margin-left:auto;font-size:10px;padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer">Restablecer</button></div>';
-  m.style.display='block';m.style.left=Math.max(4,Math.min(x+4,innerWidth-232))+'px';m.style.top=Math.max(4,Math.min(y+4,innerHeight-(m.offsetHeight||180)-8))+'px';
+  m.innerHTML+=fullBottom;m.style.width=full?'250px':'220px';
+  m.style.display='block';m.style.left=Math.max(4,Math.min(x+4,innerWidth-262))+'px';m.style.top=Math.max(4,Math.min(y+4,innerHeight-(m.offsetHeight||180)-8))+'px';
 }
 // Borde integrado en los menús del año y de la barra (mismos datos que el menú de borde de los agrupadores)
 function _presBdCtx(kind){return{kind,key:kind==='year'?(_presYearIsLB?'LB':'')+_presYearKey:_presBarKey};}
+function _presBdP(kind){return kind==='year'?'pym':kind==='mito'?'pbmM':kind==='evento'?'pbmE':'pbm';}
 function presBdFill(kind){
   const c=_presBdCtx(kind);if(!c.key)return;_presBorderCtx=c;
-  const o=_presBorderObj(c),p=kind==='year'?'pym':'pbm';
+  const o=_presBorderObj(c),p=_presBdP(kind);
   const w=document.getElementById(p+'BdW'),d=document.getElementById(p+'BdDash'),s=document.getElementById(p+'BdColor');
   if(w)w.value=(o.borderW!=null&&o.borderW!=='')?o.borderW:0;if(d)d.value=o.borderDash||'solid';if(s)s.style.background=o.borderColor||'#333333';
 }
 function presBdSet(kind){
   const c=_presBdCtx(kind);if(!c.key)return;_presBorderCtx=c;_presSnap();
-  const o=_presBorderObj(c),p=kind==='year'?'pym':'pbm',w=document.getElementById(p+'BdW'),d=document.getElementById(p+'BdDash');
+  const o=_presBorderObj(c),p=_presBdP(kind),w=document.getElementById(p+'BdW'),d=document.getElementById(p+'BdDash');
   if(w&&w.value!=='')o.borderW=Math.max(0,Math.min(8,+w.value));if(d)o.borderDash=d.value;
   renderPres();
 }
 function presBdColor(kind){
   _presBorderCtx=_presBdCtx(kind);_cpTarget={type:'presborder'};
   document.getElementById('cpLabel').textContent='Color del borde';
-  const r=document.getElementById(kind==='year'?'pymBdColor':'pbmBdColor').getBoundingClientRect(),cp=document.getElementById('colorPicker');
+  const r=document.getElementById(_presBdP(kind)+'BdColor').getBoundingClientRect(),cp=document.getElementById('colorPicker');
   cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
 }
 function presBdReset(kind){
@@ -5766,6 +5848,20 @@ function presBdReset(kind){
   const o=_presBorderObj(c);delete o.borderColor;delete o.borderW;delete o.borderDash;delete o.borderShape;
   presBdFill(kind);renderPres();
 }
+// Hitos y eventos: color y alineación del texto (miTextAlign / evTextAlign)
+function presMkOpt(){return _presBarKey?(PRES_OPTS[_presBarKey]||(PRES_OPTS[_presBarKey]={})):null;}
+function presMkSync(kind){
+  const o=presMkOpt();if(!o)return;const P=kind==='mito'?'pbmM':'pbmE',al=o[kind==='mito'?'miTextAlign':'evTextAlign']||'middle';
+  const sw=document.getElementById(P+'TxtSwatch');if(sw)sw.style.background=o._textManual&&o.textColor?o.textColor:'#333333';
+  ['start','middle','end'].forEach(a=>{const b=document.getElementById(P+'Al_'+a);if(b)b.classList.toggle('active',a===al);});
+}
+function presMkTextColor(kind){
+  _cpTarget={type:'presmktext',kind};document.getElementById('cpLabel').textContent='Color del texto';
+  const r=document.getElementById((kind==='mito'?'pbmM':'pbmE')+'TxtSwatch').getBoundingClientRect(),cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
+}
+function presMkTextAuto(kind){const o=presMkOpt();if(!o)return;_presSnap();delete o.textColor;delete o._textManual;presMkSync(kind);renderPres();}
+function presMkAlign(kind,a){const o=presMkOpt();if(!o)return;_presSnap();o[kind==='mito'?'miTextAlign':'evTextAlign']=a;presMkSync(kind);renderPres();}
 function presOpenYearBorder(e){e.stopPropagation();presOpenBorderMenu('year',(_presYearIsLB?'LB':'')+_presYearKey,e.clientX,e.clientY);}
 function presOpenBarBorder(e){e.stopPropagation();if(!_presBarKey)return;presOpenBorderMenu('bar',_presBarKey,e.clientX,e.clientY);}
 function presBorderSet(){
@@ -5796,7 +5892,7 @@ document.getElementById('presBody').addEventListener('contextmenu',e=>{
   else presOpenBorderMenu('rap',rp.dataset.c1,e.clientX,e.clientY);
 },true);
 // Configuración de la leyenda (columna de colores, título propio, tamaño, estilo y entradas ocultas)
-let PRES_LEGEND_CFG={field:'c2',titleOn:false,title:'',titleSize:12,titleColor:'#2c3e50',fs:10,box:true,style:'swatch',hidden:[]};
+let PRES_LEGEND_CFG={field:'c2',titleOn:false,title:'',titleSize:12,titleColor:'#2c3e50',fs:10,box:true,style:'swatch',hidden:[],bold:false,textColor:'',fill:'',borderW:1,borderColor:'',borderDash:'solid',align:'start'};
 const _PL_FIELDS=[['c2','Categoría 2'],['c1','Categoría 1'],['escenario','Escenario']];
 function presLegendColor(field,v){return(field==='c2'?CAT2_COLOR[v]:field==='c1'?SCEN_COLOR[v]:ESC_COLOR[v])||'#A5C867';}
 function presLegendValues(field){return[...new Set(TASKS.map(t=>t[field]==null?'':t[field]))].filter(v=>v!==''||field==='c2');}
@@ -5807,6 +5903,11 @@ function presLegendSet(k,v){
   else c[k]=v;
   if(k==='field'){c.hidden=[];presLegendFill();}
   renderPres();
+}
+function presLegendPickColor(field){
+  _cpTarget={type:'preslegcolor',field};document.getElementById('cpLabel').textContent={textColor:'Color del texto de la leyenda',fill:'Relleno de la leyenda',borderColor:'Color del borde de la leyenda'}[field]||'Color';
+  const r=document.getElementById('plg_'+field).getBoundingClientRect(),cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
 }
 function presLegendPickTitleColor(){
   _cpTarget={type:'preslegtitle'};document.getElementById('cpLabel').textContent='Color del título de la leyenda';
@@ -5821,6 +5922,10 @@ function presLegendFill(){
   p.innerHTML=row('Mostrar por:','<select onchange="presLegendSet(\'field\',this.value)" style="'+inp+'">'+_PL_FIELDS.map(f=>'<option value="'+f[0]+'"'+(c.field===f[0]?' selected':'')+'>'+f[1]+'</option>').join('')+'</select>')
    +row('Estilo:','<select onchange="presLegendSet(\'style\',this.value)" style="'+inp+'"><option value="swatch"'+(c.style==='swatch'?' selected':'')+'>Muestra y texto</option><option value="chip"'+(c.style==='chip'?' selected':'')+'>Etiqueta de color</option></select>')
    +row('Letra:','<input type="number" min="6" max="40" value="'+c.fs+'" oninput="presLegendSet(\'fs\',this.value)" style="width:52px;'+inp+'"><span style="font-size:10px;color:var(--muted)">px</span>')
+   +row('Texto:','<button type="button" onclick="presLegendSet(\'bold\','+(!c.bold)+');presLegendFill()" style="width:26px;height:24px;padding:0;cursor:pointer;border:1px solid '+(c.bold?'#2563eb':'#ccc')+';background:'+(c.bold?'#e8f0fe':'#fff')+';border-radius:4px"><b>N</b></button><span id="plg_textColor" onclick="presLegendPickColor(\'textColor\')" title="Color del texto" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:'+(c.textColor||'#444444')+'"></span><button type="button" onclick="presLegendSet(\'textColor\',\'\');presLegendFill()" style="font-size:9px;padding:1px 5px;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5">Auto</button>')
+   +row('Alinear:','<span style="display:flex;gap:3px;flex:1">'+[['start','Izq.'],['middle','Centro'],['end','Der.']].map(a=>'<button type="button" onclick="presLegendSet(\'align\',\''+a[0]+'\');presLegendFill()" style="flex:1;font-size:10px;padding:3px 0;cursor:pointer;border:1px solid '+(c.align===a[0]?'#2563eb':'#ccc')+';background:'+(c.align===a[0]?'#e8f0fe':'#fff')+';border-radius:4px">'+a[1]+'</button>').join('')+'</span>')
+   +row('Relleno:','<span id="plg_fill" onclick="presLegendPickColor(\'fill\')" title="Color de relleno del recuadro" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:'+(c.fill||'#ffffff')+'"></span><button type="button" onclick="presLegendSet(\'fill\',\'\');presLegendFill()" style="font-size:9px;padding:1px 5px;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5">Blanco</button>')
+   +row('Borde:','<input type="number" min="0" max="8" step="0.5" value="'+(c.borderW==null?1:c.borderW)+'" oninput="presLegendSet(\'borderW\',this.value===\'\'?1:+this.value)" style="width:48px;'+inp+'"><select onchange="presLegendSet(\'borderDash\',this.value)" style="'+inp+'">'+[['solid','Continua'],['dotted','Punteada'],['dashed','Rayada'],['dashed2','Mixta']].map(o=>'<option value="'+o[0]+'"'+((c.borderDash||'solid')===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select><span id="plg_borderColor" onclick="presLegendPickColor(\'borderColor\')" title="Color del borde" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:'+(c.borderColor||'#cccccc')+'"></span>')
    +'<label style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:7px;cursor:pointer"><input type="checkbox" '+(c.box?'checked':'')+' onchange="presLegendSet(\'box\',this.checked)">Recuadro de fondo</label>'
    +'<label style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:7px;cursor:pointer"><input type="checkbox" '+(c.titleOn?'checked':'')+' onchange="presLegendSet(\'titleOn\',this.checked)">Título</label>'
    +row('Texto:','<input type="text" value="'+String(c.title).replace(/"/g,'&quot;')+'" placeholder="Título de la leyenda" oninput="presLegendSet(\'title\',this.value)" style="flex:1;min-width:0;'+inp+'">')
@@ -5885,6 +5990,8 @@ function _presSnap(){
     lytc:JSON.stringify(PRES_LB_YEAR_TEXT_COLORS),
     ywm:JSON.stringify(PRES_YEAR_WIDTH_MUL),
     ym:JSON.stringify(PRES_YEAR_MERGE),
+    yfm:JSON.stringify(PRES_YEAR_FMT),
+    ybd:JSON.stringify(PRES_YEAR_BORDER),
     pcn:JSON.stringify(PRES_CONNECTORS),
     lp:JSON.stringify(PRES_LEGEND_POS),
     ls:JSON.stringify(PRES_LEGEND_SIZE)
@@ -5903,6 +6010,8 @@ function _presCurrentSnap(){
     lytc:JSON.stringify(PRES_LB_YEAR_TEXT_COLORS),
     ywm:JSON.stringify(PRES_YEAR_WIDTH_MUL),
     ym:JSON.stringify(PRES_YEAR_MERGE),
+    yfm:JSON.stringify(PRES_YEAR_FMT),
+    ybd:JSON.stringify(PRES_YEAR_BORDER),
     pcn:JSON.stringify(PRES_CONNECTORS),
     lp:JSON.stringify(PRES_LEGEND_POS),
     ls:JSON.stringify(PRES_LEGEND_SIZE)
@@ -5917,6 +6026,8 @@ function _presRestoreSnap(snap){
   PRES_LB_YEAR_TEXT_COLORS=JSON.parse(snap.lytc);
   PRES_YEAR_WIDTH_MUL=snap.ywm?JSON.parse(snap.ywm):{};
   PRES_YEAR_MERGE=snap.ym?JSON.parse(snap.ym):{};
+  PRES_YEAR_FMT=snap.yfm?JSON.parse(snap.yfm):{};
+  PRES_YEAR_BORDER=snap.ybd?JSON.parse(snap.ybd):{};
   PRES_CONNECTORS=snap.pcn?JSON.parse(snap.pcn):[];
   PRES_LEGEND_POS=snap.lp?JSON.parse(snap.lp):{x:null,y:null};
   PRES_LEGEND_SIZE=snap.ls?JSON.parse(snap.ls):{w:null,h:null};
@@ -6386,7 +6497,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const bandSelCls=(b.c1===_presRapSelC1)?' class="pres-sel"':'';
       {const _bo=PRES_OPTS['RAPC1|'+b.c1]||{};
       if(_bo.borderShape==='line')svg+=`<line x1="${_ix0}" y1="${by1}" x2="${ML+TW+MR-2}" y2="${by1}"${presBorderAttr(_bo,bandGray,1.5)} data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;
-      else svg+=`<rect x="${_ix0}" y="${by0}" width="${ML+TW+MR-2-_ix0}" height="${by1-by0}" rx="${_outerSum?0:8}" ry="${_outerSum?0:8}" fill="none"${presBorderAttr(_bo,bandGray,1.5)} data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;}
+      else svg+=`<rect x="${_ix0}" y="${by0}" width="${ML+TW+MR-2-_ix0}" height="${by1-by0}" rx="${_outerSum?0:8}" ry="${_outerSum?0:8}" fill="${_bo.fill||'none'}"${presBorderAttr(_bo,bandGray,1.5)} data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;}
       // Divisor vertical entre la columna de nombres de Categoría 1 y el Gantt
       if((PRES_OPTS['RAPC1|'+b.c1]||{}).borderShape!=='line')svg+=`<line x1="${_rapLblEnd}" y1="${by0}" x2="${_rapLblEnd}" y2="${by1}"${presBorderAttr(PRES_OPTS['RAPC1|'+b.c1],bandGray,1.5)}/>`;
       // Estilo/texto editable de la etiqueta de Categoría 1 — guardado en PRES_OPTS bajo una
@@ -6426,7 +6537,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
       // el arrastre al hacer clic justo sobre las letras) — el doble clic sobre esta misma
       // asa abre el menú de edición de texto.
       svg+=`<rect x="${_ix0}" y="${by0}" width="${_rapLblEnd-5-_ix0+2}" height="${by1-by0}" fill="transparent" data-rap-reorder="1" data-c1="${ex(String(b.c1||''))}" style="cursor:move"/>`;
-      svg+=`<text x="${lx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" font-size="${labelFsz}" font-weight="${labelWeight}" font-style="${labelStyle}" text-decoration="${labelDeco}" fill="${labelFill}" transform="rotate(-90 ${lx} ${cy})" pointer-events="none">${tspans}</text>`;
+      const _lA=c1Opt.labelAlign||'middle',lcy=_lA==='start'?by1-8:_lA==='end'?by0+8:cy;
+      svg+=`<text x="${lx}" y="${lcy}" text-anchor="${_lA}" dominant-baseline="middle" font-size="${labelFsz}" font-weight="${labelWeight}" font-style="${labelStyle}" text-decoration="${labelDeco}" fill="${labelFill}" transform="rotate(-90 ${lx} ${lcy})" pointer-events="none">${tspans}</text>`;
       // Asa de arrastre: borde inferior de la banda → ajustar su alto (filas) manualmente
       svg+=`<rect x="${_ix0}" y="${by1-3}" width="${ML+TW+MR-2-_ix0}" height="6" fill="transparent" data-rap-resize="h" data-c1="${ex(String(b.c1||''))}" data-rows="${b.rows}" style="cursor:ns-resize"/>`;
     });
@@ -6446,7 +6558,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
         const oGap=ofs*1.15,olx=(cx0+cx1)/2,ocy=(oy0+oy1)/2;
         const oFill=oo._textManual?oo.textColor:presGroupColor(pk);
         if(oo.borderShape==='line')svg+=`<line x1="2" y1="${oy1}" x2="${ML+TW+MR-2}" y2="${oy1}"${presBorderAttr(oo,'#6b7785',2)} pointer-events="none"/>`;
-        else{svg+=`<rect x="2" y="${oy0}" width="${ML+TW+MR-4}" height="${oy1-oy0}" rx="8" ry="8" fill="none"${presBorderAttr(oo,'#6b7785',2)} pointer-events="none"/>`;
+        else{svg+=`<rect x="2" y="${oy0}" width="${ML+TW+MR-4}" height="${oy1-oy0}" rx="8" ry="8" fill="${oo.fill||'none'}"${presBorderAttr(oo,'#6b7785',2)} pointer-events="none"/>`;
         svg+=`<line x1="${cx1}" y1="${oy0}" x2="${cx1}" y2="${oy1}"${presBorderAttr(oo,'#6b7785',1.5)}/>`;}
         svg+=`<rect x="${cx0}" y="${oy0}" width="${cx1-cx0}" height="${oy1-oy0}" fill="transparent" data-rap-olbl="1" data-c1="${ex(pk)}"/>`;
         svg+=`<text x="${olx}" y="${ocy}" text-anchor="middle" dominant-baseline="middle" font-size="${ofs}" font-weight="${oo.textBold===false?'400':'700'}" font-style="${oo.textItalic?'italic':'normal'}" text-decoration="${oo.textUnder?'underline':'none'}" fill="${oFill}" transform="rotate(-90 ${olx} ${ocy})" pointer-events="none">${oLines.map((ln,q)=>`<tspan x="${olx}" dy="${q===0?-(oLines.length-1)*oGap/2:oGap}">${ex(ln)}</tspan>`).join('')}</text>`;
@@ -6488,8 +6600,10 @@ function _presSVG(all,S,TW,mn,mx,opts){
       B.forEach(p=>{if(p===o)return;const nx=[];segs.forEach(s=>{if(p.x1<=s[0]||p.x0>=s[1]){nx.push(s);return;}if(p.x0>s[0])nx.push([s[0],p.x0]);if(p.x1<s[1])nx.push([p.x1,s[1]]);});segs=nx;});
       const best=segs.sort((u,v)=>(v[1]-v[0])-(u[1]-u[0]))[0]||[o.x0,o.x1];
       const under=segs.length?o.bc:mix(o.bc,o.bc);
-      const cw=(fsz+1)*0.56,maxCh=Math.max(3,Math.floor((best[1]-best[0]-8)/cw)),nm=String(o.r.v),txt=nm.length>maxCh?nm.slice(0,Math.max(1,maxCh-1))+'…':nm;
-      svg+=`<text x="${(best[0]+best[1])/2}" y="${by+bh/2+fsz*0.35}" text-anchor="middle" font-size="${fsz+1}" fill="${lumaOf(under)<128?'#fff':'#222'}" pointer-events="none">${ex(txt)}</text>`;
+      const st=_presSubprocStyle[o.r.v]||{},fs2=st.fs||(fsz+1),al=st.align||'middle';
+      const cw=fs2*0.56,maxCh=Math.max(3,Math.floor((best[1]-best[0]-8)/cw)),nm=String(st.label||o.r.v),txt=nm.length>maxCh?nm.slice(0,Math.max(1,maxCh-1))+'…':nm;
+      const tx=al==='start'?best[0]+6:al==='end'?best[1]-6:(best[0]+best[1])/2;
+      svg+=`<text x="${tx}" y="${by+bh/2+fs2*0.35}" text-anchor="${al}" font-size="${fs2}" font-weight="${st.bold?'bold':'normal'}" font-style="${st.italic?'italic':'normal'}"${st.under?' text-decoration="underline"':''} fill="${st.textColor||(lumaOf(under)<128?'#fff':'#222')}" pointer-events="none">${ex(txt)}</text>`;
     });
   }
   if(_spBands.length)svg+=_spPos==='axis'
@@ -6522,7 +6636,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
     svg+=`<rect x="${m.x0}" y="${axisY0}" width="${m.w}" height="${yrH}" rx="2" fill="${yc}"${(_yb&&_yb.borderW>0)?presBorderAttr(_yb,'#333333',1):''} ${yrAttr} style="cursor:pointer"/>`;
     const yrTextColors=useLB?PRES_LB_YEAR_TEXT_COLORS:PRES_YEAR_TEXT_COLORS;
     const yfg=yrTextColors[m.yr]||'#fff';
-    svg+=`<text x="${m.x0+m.w/2}" y="${axisY0+yrH/2+yrSz*0.35}" text-anchor="middle" font-size="${yrSz}" font-weight="bold" fill="${yfg}" pointer-events="none">${ex(m.lbl||m.yr)}</text>`;
+    const _yf=PRES_YEAR_FMT[(useLB?'LB':'')+m.yr]||{},_yal=_yf.align||'middle',_ytx=_yal==='start'?m.x0+8:_yal==='end'?m.x0+m.w-8:m.x0+m.w/2;
+    svg+=`<text x="${_ytx}" y="${axisY0+yrH/2+yrSz*0.35}" text-anchor="${_yal}" font-size="${yrSz}" font-weight="${_yf.bold===false?'normal':'bold'}" font-style="${_yf.italic?'italic':'normal'}"${_yf.under?' text-decoration="underline"':''} fill="${yfg}" pointer-events="none">${ex(m.lbl||_yf.label||m.yr)}</text>`;
   });
   if(showSeg&&scaleKey!=='anios'){S.minor.forEach(m=>{
     if(!m.lbl)return;const x0=ML+m.x,w=m.w;
@@ -6691,7 +6806,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const mitoLines=mitoLabel.split(/\r?\n/).map(l=>ex(l.trim())).filter(Boolean);
     const mitoLineH=mfsz*1.3;
     const mitoYOff=(PRES_OPTS[mitoLbKey]&&PRES_OPTS[mitoLbKey].miYOffset)||0;
-    const mitoTextAttrs=`text-anchor="middle" font-size="${mfsz}" font-weight="${mbold}" font-style="${mItalic}"${mDecor} fill="#333" pointer-events="none"`;
+    const _mo=PRES_OPTS[mitoLbKey]||{},_mal=_mo.miTextAlign||'middle',_mtc=(_mo._textManual&&_mo.textColor)?_mo.textColor:'#333';
+    const mitoTextAttrs=`text-anchor="${_mal}" font-size="${mfsz}" font-weight="${mbold}" font-style="${mItalic}"${mDecor} fill="${_mtc}" pointer-events="none"`;
     const mitoML=(lines,x,baseY)=>{
       if(lines.length===1)return`<text x="${x}" y="${baseY}" ${mitoTextAttrs}>${lines[0]}</text>`;
       let s=`<text ${mitoTextAttrs}><tspan x="${x}" y="${baseY}">${lines[0]}</tspan>`;
@@ -6727,7 +6843,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const _lineY1=_aboveAxis?axisY0:axisY0+axisH;
       const _lineY2=_aboveAxis?dY+ds+1:dY-ds-1;
       if(!PRES_OPTS[mitoLbKey].lineHide) svg+=`<line x1="${mx2}" y1="${_lineY1}" x2="${mx2}" y2="${_lineY2}" stroke="${PRES_OPTS[mitoLbKey].lineColor||'#333'}" stroke-width="${lineW}"${lineDashAttr}/>`;
-      svg+=presMsShape(PRES_OPTS[mitoLbKey].miShape,mx2,dY,ds,col,mitoAttrs);
+      svg+=presMsShape(PRES_OPTS[mitoLbKey].miShape,mx2,dY,ds,col,mitoAttrs,PRES_OPTS[mitoLbKey]);
       svg+=presMsNote(PRES_OPTS[mitoLbKey],mitoLbKey,mx2,_aboveAxis?dY+ds+mfsz+8:dY+ds+mfsz*(mitoLines.length+2)+8,Math.max(8,mfsz-1),'#333');
       svg+=elapsedTxt(useLB?m.iLB:m.iRP,_aboveAxis?mx2+ds+4:mx2,_aboveAxis?dY+3:dY-ds-3,_aboveAxis?'start':'middle',mDateSz,col);
       if(_aboveAxis){
@@ -6740,7 +6856,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     } else {
       const dY=miBotStart+ds+mfsz*2+16+mitoYOff;
       svg+=elapsedTxt(useLB?m.iLB:m.iRP,mx2,dY-ds-3,'middle',mDateSz,col);
-      svg+=presMsShape(PRES_OPTS[mitoLbKey].miShape,mx2,dY,ds,col,mitoAttrs);
+      svg+=presMsShape(PRES_OPTS[mitoLbKey].miShape,mx2,dY,ds,col,mitoAttrs,PRES_OPTS[mitoLbKey]);
       svg+=presMsNote(PRES_OPTS[mitoLbKey],mitoLbKey,mx2,dY+ds+mfsz*(mitoLines.length+2)+8,Math.max(8,mfsz-1),'#333');
       svg+=mitoML(mitoLines,mx2,dY+ds+mfsz+2);
       svg+=mitoDateAt(dY,dY+ds+mfsz+2+(mitoLines.length)*mitoLineH);
@@ -6763,7 +6879,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const y0=cy-(nL-1)*lh/2+mfsz*0.35;
     const selCls=(mk===_presBarKey)?' class="pres-sel"':'';
     svg+=elapsedTxt(useLB?m.iLB:m.iRP,mx3,cy-ds-3,'middle',dSz,col);
-    svg+=presMsShape(o.miShape,mx3,cy,ds,col,` data-pres-mito="${ex(mk)}" data-in-band="1"${selCls} style="cursor:pointer"`);
+    svg+=presMsShape(o.miShape,mx3,cy,ds,col,` data-pres-mito="${ex(mk)}" data-in-band="1"${selCls} style="cursor:pointer"`,o);
     svg+=presMsNote(o,mk,mx3,cy+ds+dSz*2+8,Math.max(8,mfsz-1),'#333');
     const tAttrs=`text-anchor="start" font-size="${mfsz}" font-weight="${o.textBold!==false?'bold':'normal'}" font-style="${o.textItalic?'italic':'normal'}"${o.textUnder?' text-decoration="underline"':''} fill="#333" pointer-events="none"`;
     let ts=`<text ${tAttrs}>`;
@@ -6793,11 +6909,12 @@ function _presSVG(all,S,TW,mn,mx,opts){
     // Triángulo ▼ invertido: punta abajo tocando axisY0, base arriba
     const tipY=axisY0;
     const baseY=tipY-ds*2;
-    svg+=`<polygon points="${ex2-ds},${baseY} ${ex2+ds},${baseY} ${ex2},${tipY}" fill="${col}" stroke="${col}" stroke-width="1.5"${evAttrs}/>`;
+    svg+=`<polygon points="${ex2-ds},${baseY} ${ex2+ds},${baseY} ${ex2},${tipY}" fill="${col}"${(PRES_OPTS[evLbKey].borderW>0)?presBorderAttr(PRES_OPTS[evLbKey],'#333333',1):` stroke="${col}" stroke-width="1.5"`}${evAttrs}/>`;
     const evtoLabel=(PRES_OPTS[evLbKey]&&PRES_OPTS[evLbKey].label!==undefined&&PRES_OPTS[evLbKey].label.trim()!=='')?PRES_OPTS[evLbKey].label:ev.tarea;
     const evtoLines=evtoLabel.split(/\r?\n/).map(l=>ex(l.trim())).filter(Boolean);
     const evtoLineH=efsz*1.3;
-    const evtoTextAttrs=`text-anchor="middle" font-size="${efsz}" font-weight="${mbold}" font-style="${eItalic}"${eDecor} fill="#333" pointer-events="none"`;
+    const _eo=PRES_OPTS[evLbKey]||{},_eal=_eo.evTextAlign||'middle',_etc=(_eo._textManual&&_eo.textColor)?_eo.textColor:'#333';
+    const evtoTextAttrs=`text-anchor="${_eal}" font-size="${efsz}" font-weight="${mbold}" font-style="${eItalic}"${eDecor} fill="${_etc}" pointer-events="none"`;
     if(evtoLines.length===1){
       svg+=`<text x="${ex2}" y="${baseY-efsz-2}" ${evtoTextAttrs}>${evtoLines[0]}</text>`;
     } else {
@@ -6977,19 +7094,20 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const legX0=Math.max(4,W-MR-legW-4),legY0=titleH+4;
       const legX=PRES_LEGEND_POS.x!=null?PRES_LEGEND_POS.x:legX0;
       const legY=PRES_LEGEND_POS.y!=null?PRES_LEGEND_POS.y:legY0;
-      svg+=`<g data-pres-legend-drag="1" style="cursor:move"><rect x="${legX}" y="${legY}" width="${legW}" height="${legH}" rx="4" fill="${_lc.box?'#ffffff':'transparent'}" fill-opacity="0.92" stroke="${_lc.box?'#ccc':'none'}" stroke-width="1"/>`;
+      const _lal=_lc.align||'start',_ltc=_lc.textColor||'#444',_lwt=_lc.bold?'bold':'normal';
+      svg+=`<g data-pres-legend-drag="1" style="cursor:move"><rect x="${legX}" y="${legY}" width="${legW}" height="${legH}" rx="4" fill="${_lc.box?(_lc.fill||'#ffffff'):'transparent'}" fill-opacity="${_lc.fill?1:0.92}"${_lc.box&&(_lc.borderW==null||_lc.borderW>0)?presBorderAttr({borderW:_lc.borderW==null?1:_lc.borderW,borderColor:_lc.borderColor||'#cccccc',borderDash:_lc.borderDash},'#cccccc',1):' stroke="none"'}/>`;
       let cy=legY+legPad;
-      if(legTitle){svg+=`<text x="${legX+8}" y="${cy+(_lc.titleSize||12)}" font-size="${_lc.titleSize||12}" font-weight="bold" fill="${_lc.titleColor||'#2c3e50'}" pointer-events="none">${ex(legTitle)}</text>`;cy+=legTitleH;}
+      if(legTitle){svg+=`<text x="${_lal==='start'?legX+8:_lal==='end'?legX+legW-8:legX+legW/2}" text-anchor="${_lal}" y="${cy+(_lc.titleSize||12)}" font-size="${_lc.titleSize||12}" font-weight="bold" fill="${_lc.titleColor||'#2c3e50'}" pointer-events="none">${ex(legTitle)}</text>`;cy+=legTitleH;}
       legItems.forEach(({c,lines})=>{
         const rowH=Math.max(legSw,lines.length*legLineH)+(chip?6:0);
         const col=presLegendColor(_lc.field,c);
         if(chip){
           const lu=(()=>{try{return .299*parseInt(col.slice(1,3),16)+.587*parseInt(col.slice(3,5),16)+.114*parseInt(col.slice(5,7),16);}catch{return 200;}})();
           svg+=`<rect x="${legX+6}" y="${cy}" width="${legW-12}" height="${rowH}" rx="2" fill="${col}" stroke="rgba(0,0,0,.2)" stroke-width=".7"/>`;
-          lines.forEach((ln,li)=>{svg+=`<text x="${legX+legW/2}" y="${cy+3+li*legLineH+legLineH-3+(rowH-6-lines.length*legLineH)/2}" text-anchor="middle" font-size="${legFsz}" fill="${lu<128?'#fff':'#222'}" pointer-events="none">${ex(ln)}</text>`;});
+          lines.forEach((ln,li)=>{svg+=`<text x="${_lal==='start'?legX+12:_lal==='end'?legX+legW-12:legX+legW/2}" y="${cy+3+li*legLineH+legLineH-3+(rowH-6-lines.length*legLineH)/2}" text-anchor="${_lal}" font-size="${legFsz}" font-weight="${_lwt}" fill="${_lc.textColor||(lu<128?'#fff':'#222')}" pointer-events="none">${ex(ln)}</text>`;});
         }else{
           svg+=`<rect x="${legX+8}" y="${cy+(rowH-legSw)/2}" width="${legSw}" height="${legSw}" rx="2" fill="${col}"/>`;
-          lines.forEach((ln,li)=>{svg+=`<text x="${legX+legTextX}" y="${cy+li*legLineH+legLineH-3}" font-size="${legFsz}" fill="#444" pointer-events="none">${ex(ln)}</text>`;});
+          lines.forEach((ln,li)=>{svg+=`<text x="${_lal==='start'?legX+legTextX:_lal==='end'?legX+legW-8:(legX+legTextX+legX+legW-8)/2}" text-anchor="${_lal}" y="${cy+li*legLineH+legLineH-3}" font-size="${legFsz}" font-weight="${_lwt}" fill="${_ltc}" pointer-events="none">${ex(ln)}</text>`;});
         }
         cy+=rowH+legRowGap;
       });
@@ -7476,7 +7594,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pbmClase').style.background=CAT2_COLOR[_miParts[1]]||'#555';
     // Hito tiene swatch propio dentro de pbmMitoRow — ocultar pbmFondoRow
     document.getElementById('pbmMitoSwatchInner').style.background=opt.color;
-    _pbmSyncMitoShape(opt);
+    _pbmSyncMitoShape(opt);presMkSync('mito');presBdFill('mito');
     // Sección "Fechas" del hito: estado actual de mostrar / alinear / posición
     {
       const _gD=(document.getElementById('presShowDates')||{checked:false}).checked;
@@ -7519,7 +7637,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pbmNombre').value=opt.label!==undefined?opt.label:_evParts[2];
     const _evTask=TASKS.find(t=>t.c1===_evParts[0]&&t.c2===_evParts[1]&&t.tarea===_evParts[2]);
     const _evClaseColor=(_evTask&&(EVENTO_COLOR[rawKey]||CAT2_COLOR[_evTask.c2]))||'#e67e22';
-    document.getElementById('pbmClase').textContent='Evento';
+    document.getElementById('pbmClase').textContent='Evento';presMkSync('evento');presBdFill('evento');
     document.getElementById('pbmClase').style.background=EVENTO_COLOR[rawKey]||CAT2_COLOR[_evParts[1]]||'#e67e22';
     // Fondo compartido: mostrar solo Color, ocultar Trama y Altura
     document.getElementById('pbmSwatch').style.background=opt.color;
@@ -8926,6 +9044,18 @@ function presSetYearWidthMul(val,snapForUndo){
   renderPres();
 }
 // Tramos de la franja de años: el año elegido se une con los siguientes (hasta el año indicado)
+function _presYfKey(){return(_presYearIsLB?'LB':'')+_presYearKey;}
+function presYearFmtSync(){
+  const o=PRES_YEAR_FMT[_presYfKey()]||{};
+  const st=(id,on)=>{const b=document.getElementById(id);if(b){b.style.borderColor=on?'#2563eb':'#ccc';b.style.background=on?'#e8f0fe':'#fff';}};
+  st('pymBold',o.bold!==false);st('pymItalic',!!o.italic);st('pymUnder',!!o.under);
+  ['start','middle','end'].forEach(a=>st('pymAl_'+a,(o.align||'middle')===a));
+}
+function presYearFmtToggle(f){
+  _presSnap();const k=_presYfKey(),o=PRES_YEAR_FMT[k]||(PRES_YEAR_FMT[k]={});
+  o[f]=(f==='bold')?(o.bold===false):!o[f];presYearFmtSync();renderPres();
+}
+function presYearAlign(a){_presSnap();const k=_presYfKey(),o=PRES_YEAR_FMT[k]||(PRES_YEAR_FMT[k]={});o.align=a;presYearFmtSync();renderPres();}
 function presYearMergeFill(yrKey,isLB){
   const sel=document.getElementById('pymMergeTo'),lbl=document.getElementById('pymMergeLbl');if(!sel||!lbl)return;
   const y0=+yrKey,ys=new Set();
@@ -8933,7 +9063,7 @@ function presYearMergeFill(yrKey,isLB){
   const mx=Math.max(...ys,y0),cur=PRES_YEAR_MERGE[y0];
   let o='<option value="">(sin unir)</option>';
   for(let y=y0+1;y<=mx;y++)o+='<option value="'+y+'"'+(cur&&cur.to===y?' selected':'')+'>'+y+'</option>';
-  sel.innerHTML=o;lbl.value=cur&&cur.label?cur.label:'';
+  sel.innerHTML=o;lbl.value=cur&&cur.label?cur.label:((PRES_YEAR_FMT[(isLB?'LB':'')+yrKey]||{}).label||'');presYearFmtSync();
   const inMerged=Object.keys(PRES_YEAR_MERGE).some(k=>+k<y0&&PRES_YEAR_MERGE[k].to>=y0);
   sel.disabled=inMerged;
 }
@@ -8942,7 +9072,7 @@ function presYearMergeSet(onlyLabel){
   const to=+document.getElementById('pymMergeTo').value||0,label=document.getElementById('pymMergeLbl').value;
   if(!onlyLabel)_presSnap();
   if(to>y0){PRES_YEAR_MERGE[y0]={to,label};}
-  else delete PRES_YEAR_MERGE[y0];
+  else{delete PRES_YEAR_MERGE[y0];const k=_presYfKey(),o=PRES_YEAR_FMT[k]||(PRES_YEAR_FMT[k]={});if(label)o.label=label;else delete o.label;}
   renderPres();
 }
 function presResetYearWidthMul(){
@@ -11839,7 +11969,7 @@ document.addEventListener('keydown',e=>{
           </div>
           <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
             <li><b>Agrupador vertical y horizontal:</b> el «Agrupador» pasa a llamarse <b>Agrupador vertical</b> (hasta 4 niveles anidados, columna a elección, asas de ajuste). Nuevo <b>Agrupador horizontal</b>: una banda por valor de la columna elegida (Categoría 1 por defecto) sobre la franja de años (una sola fila: donde dos bandas se superponen, el tramo común se pinta con la mezcla de sus colores; se coloca encima de los hitos o pegado a la franja de años); los hitos se arrastran con el mouse para cambiar su «Distancia al eje» y pueden pasar por encima del agrupador, con color propio por banda (doble clic), espacio hasta los años automático o ajustable arrastrando, y borde configurable. Ambos van juntos en Capas → Modo de vista.</li>
-            <li><b>Borde (grosor, estilo y color):</b> de los agrupadores (clic derecho; forma caja completa o solo línea inferior), de cada año (menú del año → Borde) y de cada barra de tarea (panel de la barra → Borde).</li>
+            <li><b>Formato completo en todos los elementos:</b> tareas, hitos, eventos, años, agrupadores vertical y horizontal y leyenda ofrecen Texto, Fuente, Relleno, Borde (grosor, estilo, color) y Alineación, más sus opciones propias. Los agrupadores se abren con clic derecho; los años (nombre propio, N K S, alineación) y los hitos y eventos (color y alineación del texto, borde del marcador) con su menú o panel.</li>
             <li><b>Franja de años:</b> doble clic en un año → «Unir hasta» funde varios años en un tramo (p. ej. «2030 - 2033») con texto editable. En Vista Hitos el eje se calcula solo con los hitos.</li>
             <li><b>Timeline Delta:</b> nuevo modo que compara los hitos de dos escenarios (A y B) con flecha de desviación y columna «Δ días»; usa la escala, el formato de fecha, los años, los filtros y los controles de la Línea de Tiempo.</li>
             <li><b>Vista Hitos:</b> botón de opciones con «Días desplazados entre escenarios» (línea en escuadra con «+N días» entre el mismo hito de bandas consecutivas); con «Días transcurridos» el hito muestra «diast: N» arriba, la fecha bajo el rombo y el nombre a la derecha.</li>

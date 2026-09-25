@@ -98,15 +98,26 @@
 <fig slug="ldt-c1-bandas" t="Bandas del Agrupador" legend="Etiqueta vertical de la banda: se selecciona y se arrastra para reordenar|Banda de Categoría 1: su borde inferior se arrastra para ajustar el alto">Cada Categoría 1 es una banda con su etiqueta.</fig>
 <fig slug="ldt-agrupador-niveles" t="Agrupador de dos niveles" observe="La columna del nivel externo (Categoría 1) es un solo recuadro que abarca sus bandas internas.|Cada banda interna (Categoría 2) tiene su propia etiqueta.">Categoría 1 como nivel 1 y Categoría 2 como nivel 2.</fig>
 
-<h3 id="borde-agrupador">Estilo del borde de los agrupadores, años y tareas</h3>
-<p>Los agrupadores usan un menú propio (clic derecho). Los <b>años</b> y las <b>barras de tarea</b> tienen una sección <b>Borde</b>, separada por un divisor y con sus controles a la vista (Grosor, Estilo, Color y Restablecer), dentro del menú del año (doble clic en el año) y del panel de la barra (doble clic en la barra, bajo Fondo). Los cambios se ven al instante. Una barra con borde propio reemplaza al borde rojo de la ruta crítica.</p>
-<p>Un <b>clic derecho</b> sobre la etiqueta o el borde de una banda vertical (o sobre un rectángulo del agrupador horizontal) abre un menú con el estilo de su borde:</p>
+<h3 id="borde-agrupador">Formato de cada elemento: Texto, Fuente, Relleno, Borde y Alineación</h3>
+<p>Todos los elementos editables de la Línea de Tiempo ofrecen, como mínimo, estas cinco secciones, más las propias de cada uno. Todo es solo visual: no cambia los datos.</p>
+<table>
+<tr><th>Elemento</th><th>Cómo se abre</th><th>Texto</th><th>Fuente</th><th>Relleno</th><th>Borde</th><th>Alineación</th></tr>
+<tr><td>Tarea</td><td>Doble clic</td><td>Nombre</td><td>Tamaño, N K S, color</td><td>Color y trama</td><td>Grosor, estilo, color</td><td>Izq./centro/der. y posición</td></tr>
+<tr><td>Hito</td><td>Doble clic</td><td>Nombre y texto adicional</td><td>Tamaño, N K S, color</td><td>Color del marcador</td><td>Grosor, estilo, color</td><td>Izq./centro/der. del texto</td></tr>
+<tr><td>Evento</td><td>Doble clic</td><td>Nombre</td><td>Tamaño, N K S, color</td><td>Color</td><td>Grosor, estilo, color</td><td>Izq./centro/der. del texto</td></tr>
+<tr><td>Año</td><td>Doble clic</td><td>Texto propio del año o del tramo</td><td>Escala, N K S, color</td><td>Color de fondo</td><td>Grosor, estilo, color</td><td>Izq./centro/der.</td></tr>
+<tr><td>Agrupador vertical</td><td>Clic derecho en la banda</td><td>Nombre</td><td>Tamaño, N K S, color</td><td>Color de la banda</td><td>Grosor, estilo, color y forma</td><td>Abajo/centro/arriba</td></tr>
+<tr><td>Agrupador horizontal</td><td>Clic derecho en el rectángulo</td><td>Nombre</td><td>Tamaño, N K S, color</td><td>Color</td><td>Grosor, estilo, color</td><td>Izq./centro/der.</td></tr>
+<tr><td>Leyenda</td><td>Botón de opciones</td><td>Título</td><td>Tamaño, N, color</td><td>Color del recuadro</td><td>Grosor, estilo, color</td><td>Izq./centro/der.</td></tr>
+</table>
+<p>Las secciones propias de cada elemento no aplican a los demás: la trama y las fechas de las tareas; la forma, el texto adicional, la línea y la distancia al eje de los hitos; la escala, el ancho y la unión en tramos de los años; el campo por el que agrupa, la posición y el espacio del agrupador horizontal; los campos y las entradas visibles de la leyenda.</p>
 <ul>
-<li><b>Forma</b> (bandas verticales): <i>Caja completa</i> o <i>Solo línea inferior</i>. Con «solo línea» la banda queda como un separador entre grupos, por ejemplo una línea punteada larga entre fases.</li>
-<li><b>Grosor</b> en px (0 a 8), <b>Estilo</b> (continua, punteada, rayada o mixta) y <b>Color</b> con el selector de la aplicación.</li>
-<li><b>Restablecer</b> devuelve el borde al aspecto por defecto. Cada banda tiene su propio estilo y se guarda con la sesión.</li>
+<li><b>Borde:</b> grosor de 0 a 8 px (0 = sin borde), estilo (continua, punteada, rayada o mixta), color y <b>Restablecer</b>. En las bandas verticales, además, la <b>forma</b>: caja completa o solo línea inferior (para usarla como separador entre grupos).</li>
+<li><b>Relleno:</b> en los agrupadores, «Sin relleno» o «Restablecer» devuelven el aspecto original.</li>
+<li><b>Alineación:</b> en las bandas verticales el nombre se pega abajo, al centro o arriba; en los demás, a la izquierda, al centro o a la derecha. El texto se abrevia si no cabe.</li>
+<li>Una barra con borde propio reemplaza al borde rojo de la ruta crítica. Cada banda tiene su propio formato y todo se guarda con la sesión.</li>
 </ul>
-<fig slug="agrupador-borde-menu" t="Menú de borde de un agrupador" observe="Forma: caja completa o solo línea inferior.|Grosor, estilo y color del borde.">Clic derecho sobre la etiqueta de una banda.</fig>
+<fig slug="agrupador-borde-menu" t="Menú de formato de un agrupador" observe="Texto, Fuente, Relleno, Borde y Alineación, separados por divisores.|Forma: caja completa o solo línea inferior (bandas verticales).">Clic derecho sobre la etiqueta de una banda.</fig>
 
 <h2 id="agrupador-horizontal">Agrupador horizontal: subprocesos sobre los años</h2>
 <p>El <ui>Agrupador horizontal</ui> dibuja, encima de todo y bajo el título, un rectángulo por cada valor de la columna elegida. Cada rectángulo va del inicio de la primera tarea de ese valor al fin de la última, con el nombre centrado. Ocupa <b>una sola fila</b>: donde las fechas de dos valores se superponen, ese tramo común se pinta con la <b>mezcla de los colores</b> de ambos, y cada nombre se coloca en su tramo sin superposición (se abrevia si no cabe). Está pensado para mostrar las fases o subprocesos (por ejemplo «Subproceso B», «Subproceso C») sobre el tiempo. Su interruptor está junto al del Agrupador vertical en <ui>Capas</ui> → <b>Modo de vista</b>, y se usan a la vez.</p>
