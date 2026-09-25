@@ -2869,6 +2869,7 @@ let _presLastGroupByC1=false;
 // las tareas de esa banda necesitan (ver _rapMinRows en _presSVG).
 // Espacio (px) entre la columna de etiquetas del Agrupador y el inicio del gráfico, y a la derecha del gráfico; se ajustan arrastrando.
 let RAP_GAP_L=40,RAP_GAP_R=80;
+let RAP_OUTER_W_USER=[]; // ancho manual (px) de la columna de cada nivel externo del Agrupador (índice = nivel)
 let RAP_LABEL_W_USER=0; // 0 = sin ajuste manual: usa el ancho mínimo autoajustado al texto (ver _rapAutoLabelW)
 let RAP_BAND_ROWS_OVERRIDE={};
 // Orden vertical manual de las bandas de Categoría 1 en Vista RaP (clave = nombre de
@@ -2910,7 +2911,7 @@ function presSyncGroupUI(){
   }).join('')+(n<PG_MAX&&opts.length>n?'<button type="button" class="filtro-menu-item" style="padding:4px 6px" onclick="presAddGroupLevel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Agregar nivel</button>':'');
 }
 function presGroupChanged(){
-  RAP_C1_ORDER={};RAP_BAND_ROWS_OVERRIDE={};_presRapSelC1=null; // el orden y el alto manual de bandas eran de la agrupación anterior
+  RAP_C1_ORDER={};RAP_BAND_ROWS_OVERRIDE={};RAP_OUTER_W_USER=[];_presRapSelC1=null; // el orden y el alto manual de bandas eran de la agrupación anterior
   renderPres();
 }
 function presSetGroupLevel(i,v){PRES_GROUP_FIELDS[i]=v||'c1';presGroupChanged();}
@@ -4899,7 +4900,7 @@ function _buildShareBlob(shared){
     estName:document.getElementById('estName').value,estDate:document.getElementById('estDate').value,
     presExecMode:document.getElementById('presShowExecutive').checked,presDateFmt:document.getElementById('presDateFmt').value,presExecHidden:[...PRES_EXEC_HIDDEN_KEYS],presDepHidden:[...PRES_DEP_HIDDEN],
     rapAvailable:_rapAvailable,presShowRaP:(document.getElementById('presShowRaP')||{checked:false}).checked,
-    presGroupFields:PRES_GROUP_FIELDS,rapLabelW:RAP_LABEL_W_USER,rapGapL:RAP_GAP_L,rapGapR:RAP_GAP_R,rapBandRowsOverride:RAP_BAND_ROWS_OVERRIDE,rapC1Order:RAP_C1_ORDER,
+    presGroupFields:PRES_GROUP_FIELDS,rapLabelW:RAP_LABEL_W_USER,rapOuterW:RAP_OUTER_W_USER,rapGapL:RAP_GAP_L,rapGapR:RAP_GAP_R,rapBandRowsOverride:RAP_BAND_ROWS_OVERRIDE,rapC1Order:RAP_C1_ORDER,
     // Toggles del ribbon de la LdT que también deben sobrevivir a "Compartir" — sin esto el
     // archivo compartido reabre con Comparador/Segmentación/Marca Activity/Resumen/Leyenda/
     // Fecha de estado/Ruta Crítica en su valor por defecto del HTML en vez del configurado.
@@ -5103,6 +5104,7 @@ function loadEmbedded(){
   _rapAvailable=!!d.rapAvailable;
   const _rapCbEl=document.getElementById('presShowRaP');if(_rapCbEl)_rapCbEl.checked=_rapAvailable&&!!d.presShowRaP;
   if(d.rapLabelW!=null)RAP_LABEL_W_USER=+d.rapLabelW||24;
+  if(Array.isArray(d.rapOuterW))RAP_OUTER_W_USER=d.rapOuterW;
   if(d.rapGapL!=null)RAP_GAP_L=+d.rapGapL;
   if(d.rapGapR!=null)RAP_GAP_R=+d.rapGapR;
   RAP_BAND_ROWS_OVERRIDE=d.rapBandRowsOverride||{};
@@ -5806,7 +5808,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
         const w=lines.length<=1?Math.ceil(fontSize*0.85)+2:Math.ceil(lines.length*fontSize*1.15)+2;
         if(w>mw)mw=w;
       });
-      _outerW.push(mw+12);
+      _outerW.push(Math.max(mw+12,RAP_OUTER_W_USER[l]||0));
     }
   }
   const _outerSum=_outerW.reduce((a,b)=>a+b,0);
@@ -6003,6 +6005,9 @@ function _presSVG(all,S,TW,mn,mx,opts){
         svg+=`<text x="${olx}" y="${ocy}" text-anchor="middle" dominant-baseline="middle" font-size="${ofs}" font-weight="${oo.textBold===false?'400':'700'}" font-style="${oo.textItalic?'italic':'normal'}" text-decoration="${oo.textUnder?'underline':'none'}" fill="${oFill}" transform="rotate(-90 ${olx} ${ocy})" pointer-events="none">${oLines.map((ln,q)=>`<tspan x="${olx}" dy="${q===0?-(oLines.length-1)*oGap/2:oGap}">${ex(ln)}</tspan>`).join('')}</text>`;
         i=j+1;
       }
+      // Asa de arrastre: divisor de esta columna → ajustar su ancho
+      const _lastB=rapBands[rapBands.length-1];
+      svg+=`<rect x="${cx1-3}" y="${taskY0}" width="6" height="${(_lastB.startLy+_lastB.rows)*layerH}" fill="transparent" data-rap-resize="o${l}" data-w="${_outerW[l]}" style="cursor:ew-resize"><title>Arrastre para ajustar el ancho de esta columna</title></rect>`;
     }
     // Asa de arrastre: divisor entre la columna de Categoría 1 y el Gantt → ajustar su ancho
     const _rapLastBand=rapBands[rapBands.length-1];
@@ -7348,10 +7353,12 @@ document.getElementById('presBody').addEventListener('mousedown',e=>{
     _presRapDrag={type,startX:pt.x,startW:RAP_LABEL_W_USER||(+svg.dataset.rapLw||0)};
   } else if(type==='gl'||type==='gr'){
     _presRapDrag={type,startX:pt.x,startV:type==='gl'?RAP_GAP_L:RAP_GAP_R};
+  } else if(/^o\d+$/.test(type)){
+    _presRapDrag={type,startX:pt.x,startV:+handle.dataset.w||0,lvl:+type.slice(1)};
   } else {
     _presRapDrag={type,startY:pt.y,c1:handle.dataset.c1,layerH:+svg.dataset.layerH||42,startRows:+handle.dataset.rows||1};
   }
-  document.body.style.cursor=(type==='w'||type==='gl'||type==='gr')?'ew-resize':'ns-resize';
+  document.body.style.cursor=(type==='w'||type==='gl'||type==='gr'||/^o\d+$/.test(type))?'ew-resize':'ns-resize';
   document.body.style.userSelect='none';
   e.preventDefault();e.stopPropagation();
 });
@@ -7362,6 +7369,9 @@ document.addEventListener('mousemove',e=>{
   if(_presRapDrag.type==='w'){
     const dx=pt.x-_presRapDrag.startX;
     RAP_LABEL_W_USER=Math.max(16,Math.round(_presRapDrag.startW+dx));
+    renderPres();
+  } else if(/^o\d+$/.test(_presRapDrag.type)){
+    RAP_OUTER_W_USER[_presRapDrag.lvl]=Math.max(16,Math.round(_presRapDrag.startV+pt.x-_presRapDrag.startX));
     renderPres();
   } else if(_presRapDrag.type==='gl'||_presRapDrag.type==='gr'){
     const v=Math.max(0,Math.min(400,Math.round(_presRapDrag.startV+pt.x-_presRapDrag.startX)));
