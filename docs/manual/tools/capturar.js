@@ -611,7 +611,7 @@ FIGS['65'] = async b => {           // Segmentador de escenario en la Tabla de D
   await p.close();
 };
 FIGS['66'] = async b => {           // Ajustes del Gantt: fuente y tamaños
-  const p = await abrir(b); await gantt(p); await click(p, '#btnFontMenu'); await sleep(400);
+  const p = await abrir(b, { w: 1700 }); await gantt(p); await click(p, '#btnFontMenu'); await sleep(400);
   const m = await rectOf(p, '#fontMenuPanel'), t = await rectOf(p, '#btnFontMenu');
   await shot(p, 'fig-66-gantt-ajustes-fuente', { clip: C(Math.max(0, Math.min(t.x, m.x) - 40), t.y - 20, Math.max(m.w, 340) + 100, m.y + m.h - t.y + 50) }); await p.close();
 };
