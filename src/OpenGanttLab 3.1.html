@@ -2933,8 +2933,15 @@ function apUpdateRapAvailability(){
   cb.disabled=false;
   if(wrap){wrap.style.opacity='';wrap.title='Agrupa las barras por Categoría 1, con el color de Categoría 2.';}
 }
-function togglePresRaP(){
+async function togglePresRaP(){
   const cb=document.getElementById('presShowRaP');
+  if(cb&&cb.checked){
+    // Al activar el Agrupador se parte de Escenario; si ninguna tarea tiene escenario, de Categoría 1 (con aviso)
+    const hayEsc=TASKS.some(t=>String(t.escenario||'').trim()!=='');
+    PRES_GROUP_FIELDS=[hayEsc?'escenario':'c1'];
+    RAP_C1_ORDER={};RAP_BAND_ROWS_OVERRIDE={};RAP_OUTER_W_USER=[];_presRapSelC1=null;
+    if(!hayEsc&&TASKS.length)await ogDialog({title:'Sin escenario configurado',msg:'Ninguna tarea tiene un Escenario asignado, así que el Agrupador se inicia por Categoría 1. Puede cambiar la columna en el botón de opciones del Agrupador.',ok:'Entendido',cancel:false});
+  }
   if(!cb||!cb.checked){
     // Al desactivar Vista C1, la vista normal vuelve siempre al arreglo automático del
     // primer renderizado — se descarta cualquier posición manual (de ambas vistas) en vez
