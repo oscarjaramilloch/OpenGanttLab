@@ -5712,13 +5712,18 @@ function _presSVG(all,S,TW,mn,mx,opts){
   // Hitos con la opción «Ubicación → Dentro de banda C1» (PRES_OPTS[...].miBand = nombre de la banda): solo en Vista C1
   // normal (no Ejecutivo ni Vista Hitos); se dibujan como una fila más de su banda, con el nombre a la derecha.
   const _allMs=all.filter(t=>t.hito&&!isExecHidden(t));
+  // Una banda guardada (texto) solo vale si existe entre las tareas del mismo escenario: al duplicar un escenario los hitos
+  // heredan la banda del original y, sin esta validación, se dibujarían todos dentro de la banda del primer proyecto.
+  const _escBands=new Set();
+  all.forEach(t=>{_escBands.add((t.escenario||'')+''+presGroupVal(t));});
+  const _validBand=(m,v)=>(v&&v!==true&&_escBands.has((m.escenario||'')+''+v))?v:presGroupVal(m);
   const _bandOf=m=>{
     const o=PRES_OPTS[useLB?'LB|'+pkOf(m):pkOf(m)];
     if(!groupByC1||execMode)return null;
     // Vista Hitos + Agrupador: todos los hitos van dentro de la banda de su grupo (o la que tengan asignada)
-    if(hitosOnly)return(o&&o.miBand&&o.miBand!==true)?o.miBand:presGroupVal(m);
+    if(hitosOnly)return _validBand(m,o&&o.miBand);
     if(!o||!o.miBand)return null;
-    return o.miBand===true?presGroupVal(m):o.miBand;
+    return _validBand(m,o.miBand);
   };
   const milestones=_allMs.filter(m=>_bandOf(m)===null),bandMs=_allMs.filter(m=>_bandOf(m)!==null);
   // Vista RaP: agrupa por Categoría 1 en bandas — desactiva layersOverride (piensa en filas
