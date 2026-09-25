@@ -651,12 +651,12 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
           </button>
           <div id="fechaEstadoMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnFechaEstadoMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:230px">
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <span style="font-size:11px;color:var(--muted);min-width:52px">Fecha:</span>
+              <span class="pop-unit" style="min-width:52px">Fecha:</span>
               <span id="estDateDisplay" onclick="document.getElementById('estDate').showPicker()" style="font-size:11px;padding:3px 8px;border:1px solid var(--line);border-radius:6px;cursor:pointer;background:var(--panel);color:var(--ink);min-width:80px;display:inline-block" title="Clic para seleccionar fecha (formato heredado de Formato de fecha del Gantt)"></span>
             </div>
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <span style="font-size:11px;color:var(--muted);min-width:52px">Estilo:</span>
-              <select id="hoyDash" onchange="applyHoyStyle()" style="font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px">
+              <span class="pop-unit" style="min-width:52px">Estilo:</span>
+              <select id="hoyDash" onchange="applyHoyStyle()" class="rb-sel" style="max-width:none;flex:1">
                 <option value="solid">— Sólida</option>
                 <option value="dotted">- - Punteada</option>
                 <option value="dashed">— Rayada</option>
@@ -664,12 +664,12 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
               </select>
             </div>
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <span style="font-size:11px;color:var(--muted);min-width:52px">Grosor:</span>
-              <input type="number" id="hoyW" value="2" min="1" max="8" step="0.5" onchange="applyHoyStyle()" style="width:44px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px">
+              <span class="pop-unit" style="min-width:52px">Grosor:</span>
+              <input type="number" id="hoyW" value="2" min="1" max="8" step="0.5" onchange="applyHoyStyle()" class="pop-num" style="width:44px">
               <span style="font-size:10px;color:var(--muted)">px</span>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
-              <span style="font-size:11px;color:var(--muted);min-width:52px">Color:</span>
+              <span class="pop-unit" style="min-width:52px">Color:</span>
               <span id="hoyLineColor" onclick="pickHoyColor()" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#FF0000" title="Color"></span>
             </div>
           </div>
@@ -683,7 +683,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
           <div id="rutaCriticaMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnRutaCriticaMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:170px">
             <div style="display:flex;gap:8px;align-items:center">
               <span style="font-size:11px;color:var(--muted)">Borde:</span>
-              <input type="number" id="critBorderW" value="2.5" min="0.5" max="8" step="0.5" style="width:44px;font:inherit;border:1px solid var(--line);border-radius:6px;text-align:center;padding:3px 4px;font-size:11px;background:var(--panel);color:var(--ink)" onchange="render()">
+              <input type="number" id="critBorderW" value="2.5" min="0.5" max="8" step="0.5" class="pop-num" style="width:56px" onchange="render()">
               <span style="font-size:10px;color:var(--muted)">px</span>
             </div>
           </div>
@@ -1474,8 +1474,8 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
           </button>
           <div id="presFechaEstadoMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresFechaEstadoMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:200px">
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <span style="font-size:11px;color:var(--muted);min-width:48px">Estilo:</span>
-              <select id="presHoyDash" onchange="applyPresHoyStyle()" style="font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px">
+              <span class="pop-unit" style="min-width:48px">Estilo:</span>
+              <select id="presHoyDash" onchange="applyPresHoyStyle()" class="rb-sel" style="max-width:none;flex:1">
                 <option value="solid">— Sólida</option>
                 <option value="dotted">- - Punteada</option>
                 <option value="dashed">— Rayada</option>
@@ -1483,12 +1483,12 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
               </select>
             </div>
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-              <span style="font-size:11px;color:var(--muted);min-width:48px">Grosor:</span>
-              <input type="number" id="presHoyW" value="2" min="1" max="8" step="0.5" onchange="applyPresHoyStyle()" style="width:44px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px" title="Grosor px">
+              <span class="pop-unit" style="min-width:48px">Grosor:</span>
+              <input type="number" id="presHoyW" value="2" min="1" max="8" step="0.5" onchange="applyPresHoyStyle()" class="pop-num" style="width:44px" title="Grosor px">
               <span style="font-size:10px;color:var(--muted)">px</span>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
-              <span style="font-size:11px;color:var(--muted);min-width:48px">Color:</span>
+              <span class="pop-unit" style="min-width:48px">Color:</span>
               <span id="presHoyColor" onclick="pickPresHoyColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#FF0000" title="Color"></span>
             </div>
           </div>
@@ -1502,7 +1502,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
           <div id="presRutaCriticaMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresRutaCriticaMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:150px">
             <div style="display:flex;gap:8px;align-items:center">
               <span style="font-size:11px;color:var(--muted)">Borde:</span>
-              <input type="number" id="presCritW" value="2.5" min="0.5" max="8" step="0.5" onchange="renderPres()" style="width:44px;font:inherit;border:1px solid var(--line);border-radius:6px;text-align:center;padding:3px 4px;font-size:11px;background:var(--panel);color:var(--ink)">
+              <input type="number" id="presCritW" value="2.5" min="0.5" max="8" step="0.5" onchange="renderPres()" class="pop-num" style="width:56px">
               <span style="font-size:10px;color:var(--muted)">px</span>
             </div>
           </div>
@@ -1510,10 +1510,10 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <div class="tb-pop-sep"></div>
         <div class="tb-pop-title">MODO DE VISTA</div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg><span class="tg-label">Comparador</span><input type="checkbox" id="presShowLB" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
-        <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="1.5"/><path d="M9 9v6"/><path d="M15 9v6"/></svg><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presSegMenuWrap"><button class="tb-btn sm" id="btnPresSegMenu" aria-label="Opciones de segmentación" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresSegMenu','presSegMenuPanel')" title="segmentación"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presSegMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresSegMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:200px"><div id="presYearDivWrap" style="display:flex;flex-direction:column;gap:8px"><label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--ink)"><input type="checkbox" id="presYearDivOn" checked onchange="renderPres()" data-noreset>Divisor de año</label><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Grosor:</span><input type="number" id="presYearDivW" value="0.5" min="0.5" max="6" step="0.5" onchange="renderPres()" style="width:44px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px" title="Grosor (px)"><span style="font-size:10px;color:var(--muted)">px</span></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Estilo:</span><select id="presYearDivDash" onchange="renderPres()" style="font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Color:</span><span id="presYearDivColor" onclick="pickPresYearDivColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#eeeeee" title="Color"></span></div></div></div></div></div>
+        <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="1.5"/><path d="M9 9v6"/><path d="M15 9v6"/></svg><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presSegMenuWrap"><button class="tb-btn sm" id="btnPresSegMenu" aria-label="Opciones de segmentación" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresSegMenu','presSegMenuPanel')" title="segmentación"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presSegMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresSegMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:200px"><div id="presYearDivWrap" style="display:flex;flex-direction:column;gap:8px"><label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--ink)"><input type="checkbox" id="presYearDivOn" checked onchange="renderPres()" data-noreset>Divisor de año</label><div style="display:flex;gap:5px;align-items:center;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:48px">Grosor:</span><input type="number" id="presYearDivW" value="0.5" min="0.5" max="6" step="0.5" onchange="renderPres()" class="pop-num" style="width:44px" title="Grosor (px)"><span style="font-size:10px;color:var(--muted)">px</span></div><div style="display:flex;gap:5px;align-items:center;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:48px">Estilo:</span><select id="presYearDivDash" onchange="renderPres()" class="rb-sel" style="max-width:none;flex:1"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div><div style="display:flex;gap:5px;align-items:center;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:48px">Color:</span><span id="presYearDivColor" onclick="pickPresYearDivColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#eeeeee" title="Color"></span></div></div></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" id="presRapToggleWrap" title="Agrupa las barras en bandas por la columna que elijas (Categoría 1 por defecto), con el color de Categoría 2."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span class="tg-label">Agrupador vertical</span><input type="checkbox" id="presShowRaP" onchange="togglePresRaP()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presGroupMenuWrap"><button class="tb-btn sm" id="btnPresGroupMenu" aria-label="Opciones de agrupador" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresGroupMenu','presGroupMenuPanel')" title="agrupador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presGroupMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresGroupMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:240px"><div id="presGroupFieldWrap" style="display:flex;flex-direction:column;align-items:stretch;gap:4px"></div></div></div></div>
-        <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Agrupador horizontal — banda sobre la franja de años: un rectángulo por cada valor de la columna elegida, del inicio de su primera tarea al fin de su última"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="8" height="5" rx="1.5"/><rect x="13" y="5" width="8" height="5" rx="1.5"/><path d="M3 15h18"/><path d="M3 19h18"/></svg><span class="tg-label">Agrupador horizontal</span><input type="checkbox" id="presShowSubproc" onchange="renderPres()"><span class="tg-track"></span></label><div style="position:relative;display:none" id="presSubprocMenuWrap"><button class="tb-btn sm" id="btnPresSubprocMenu" aria-label="Opciones del agrupador horizontal" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresSubprocMenu','presSubprocMenuPanel')" title="Opciones del agrupador horizontal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presSubprocMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresSubprocMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:220px"><div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:56px">Agrupar por:</span><select id="presSubprocField" onchange="renderPres()" data-noreset style="font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px"><option value="c1">Categoría 1</option><option value="c2">Categoría 2</option><option value="escenario">Escenario</option></select></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:56px">Posición:</span><select id="presSubprocPos" onchange="renderPres()" data-noreset style="font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px" title="Encima de los hitos o entre los hitos y la franja de años"><option value="top">Encima de los hitos</option><option value="axis">Sobre la franja de años</option></select></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:56px">Color:</span><span id="presSubprocColor" onclick="pickPresSubprocColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#c9e4f7" title="Color de las bandas"></span></div><div style="display:flex;gap:8px;align-items:center" title="Espacio en blanco entre las bandas y la franja de años. Vacío = automático. También se arrastra el borde inferior de las bandas."><span style="font-size:11px;color:var(--muted);min-width:56px">Espacio:</span><input type="number" id="presSubprocGap" min="0" max="600" step="2" placeholder="auto" onchange="renderPres()" data-noreset style="width:56px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px"><span style="font-size:10px;color:var(--muted)">px</span><button type="button" class="rb-flat" style="padding:2px 6px;font-size:11px" onclick="document.getElementById('presSubprocGap').value='';renderPres()">Auto</button></div></div></div></div></div>
+        <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Agrupador horizontal — banda sobre la franja de años: un rectángulo por cada valor de la columna elegida, del inicio de su primera tarea al fin de su última"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="8" height="5" rx="1.5"/><rect x="13" y="5" width="8" height="5" rx="1.5"/><path d="M3 15h18"/><path d="M3 19h18"/></svg><span class="tg-label">Agrupador horizontal</span><input type="checkbox" id="presShowSubproc" onchange="renderPres()"><span class="tg-track"></span></label><div style="position:relative;display:none" id="presSubprocMenuWrap"><button class="tb-btn sm" id="btnPresSubprocMenu" aria-label="Opciones del agrupador horizontal" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresSubprocMenu','presSubprocMenuPanel')" title="Opciones del agrupador horizontal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presSubprocMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresSubprocMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:220px"><div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;gap:5px;align-items:center;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:56px">Agrupar por:</span><select id="presSubprocField" onchange="renderPres()" data-noreset class="rb-sel" style="max-width:none;flex:1"><option value="c1">Categoría 1</option><option value="c2">Categoría 2</option><option value="escenario">Escenario</option></select></div><div style="display:flex;gap:5px;align-items:center;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:56px">Posición:</span><select id="presSubprocPos" onchange="renderPres()" data-noreset class="rb-sel" style="max-width:none;flex:1" title="Encima de los hitos o entre los hitos y la franja de años"><option value="top">Encima de los hitos</option><option value="axis">Sobre la franja de años</option></select></div><div style="display:flex;gap:5px;align-items:center;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:56px">Color:</span><span id="presSubprocColor" onclick="pickPresSubprocColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#c9e4f7" title="Color de las bandas"></span></div><div style="display:flex;gap:8px;align-items:center" title="Espacio en blanco entre las bandas y la franja de años. Vacío = automático. También se arrastra el borde inferior de las bandas."><span class="pop-unit" style="min-width:56px">Espacio:</span><input type="number" id="presSubprocGap" min="0" max="600" step="2" placeholder="auto" onchange="renderPres()" data-noreset class="pop-num" style="width:56px"><span style="font-size:10px;color:var(--muted)">px</span><button type="button" class="rb-flat" style="padding:2px 6px;font-size:11px" onclick="document.getElementById('presSubprocGap').value='';renderPres()">Auto</button></div></div></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Muestra únicamente los hitos de la Línea de Tiempo — oculta todas las tareas y filas de resumen."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"/></svg><span class="tg-label">Vista Hitos</span><input type="checkbox" id="presShowHitos" onchange="renderPres()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presHitosMenuWrap"><button class="tb-btn sm" id="btnPresHitosMenu" aria-label="Opciones de Vista Hitos" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresHitosMenu','presHitosMenuPanel')" title="Opciones de Vista Hitos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presHitosMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresHitosMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:240px"><label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--ink)" title="Une el mismo hito entre escenarios (con el Agrupador por escenario) y rotula los días de desplazamiento"><input type="checkbox" id="presShowMsDelta" checked onchange="renderPres()" data-noreset>Días desplazados entre escenarios</label></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Compara los hitos de dos escenarios: flecha de desviación y días de diferencia (Δ) por hito."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h12"/><path d="m13 8 4 4-4 4"/><path d="M4 5v14"/></svg><span class="tg-label">Timeline Delta</span><input type="checkbox" id="presShowDelta" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-pop-sep"></div>
@@ -2032,7 +2032,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button id="pbmMitoBold" class="rb-sm active" onclick="presToggleMitoStyle('bold')" style="padding:2px 7px;font-weight:700" title="Negrita">N</button>
       </div>
       <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pbmMTxtSwatch" onclick="presMkTextColor('mito')" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Color del texto"></span><button type="button" class="rb-flat" style="padding:1px 6px" onclick="presMkTextAuto('mito')">Auto</button></div>
-      <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Alinear:</span><span class="pbm-seg" style="flex:1"><button type="button" id="pbmMAl_start" class="pbm-seg-btn" onclick="presMkAlign('mito','start')" title="Texto a partir del marcador, hacia la derecha">Izq.</button><button type="button" id="pbmMAl_middle" class="pbm-seg-btn" onclick="presMkAlign('mito','middle')" title="Centrado sobre el marcador">Centro</button><button type="button" id="pbmMAl_end" class="pbm-seg-btn" onclick="presMkAlign('mito','end')" title="Texto que termina en el marcador">Der.</button></span></div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Alinear:</span><span class="pbm-seg" style="flex:1"><button type="button" id="pbmMAl_start" class="pbm-seg-btn" onclick="presMkAlign('mito','start')" title="Texto a partir del marcador, hacia la derecha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="17" y2="18"/></svg></button><button type="button" id="pbmMAl_middle" class="pbm-seg-btn" onclick="presMkAlign('mito','middle')" title="Centrado sobre el marcador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="5.5" y1="18" x2="18.5" y2="18"/></svg></button><button type="button" id="pbmMAl_end" class="pbm-seg-btn" onclick="presMkAlign('mito','end')" title="Texto que termina en el marcador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="7" y1="18" x2="20" y2="18"/></svg></button></span></div>
       </div>
     </div>
     <!-- Fechas del hito: mostrar, alinear (vinculada al nombre / independiente) y posición -->
@@ -2191,7 +2191,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button id="pbmEvtoBold" class="rb-sm active" onclick="presToggleEvtoStyle('bold')" style="padding:2px 7px;font-weight:700" title="Negrita">N</button>
       </div>
       <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pbmETxtSwatch" onclick="presMkTextColor('evento')" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Color del texto"></span><button type="button" class="rb-flat" style="padding:1px 6px" onclick="presMkTextAuto('evento')">Auto</button></div>
-      <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Alinear:</span><span class="pbm-seg" style="flex:1"><button type="button" id="pbmEAl_start" class="pbm-seg-btn" onclick="presMkAlign('evento','start')" title="Texto a partir del marcador, hacia la derecha">Izq.</button><button type="button" id="pbmEAl_middle" class="pbm-seg-btn" onclick="presMkAlign('evento','middle')" title="Centrado sobre el marcador">Centro</button><button type="button" id="pbmEAl_end" class="pbm-seg-btn" onclick="presMkAlign('evento','end')" title="Texto que termina en el marcador">Der.</button></span></div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px"><span class="pop-unit" style="min-width:40px">Alinear:</span><span class="pbm-seg" style="flex:1"><button type="button" id="pbmEAl_start" class="pbm-seg-btn" onclick="presMkAlign('evento','start')" title="Texto a partir del marcador, hacia la derecha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="17" y2="18"/></svg></button><button type="button" id="pbmEAl_middle" class="pbm-seg-btn" onclick="presMkAlign('evento','middle')" title="Centrado sobre el marcador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="5.5" y1="18" x2="18.5" y2="18"/></svg></button><button type="button" id="pbmEAl_end" class="pbm-seg-btn" onclick="presMkAlign('evento','end')" title="Texto que termina en el marcador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="7" y1="18" x2="20" y2="18"/></svg></button></span></div>
     </div>
     <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:4px;font-size:10px">
       <div class="pop-label">Borde</div>
@@ -2205,46 +2205,46 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
 
 
 <!-- Panel cuadro de texto libre para Línea de Tiempo -->
-<div id="presTextBoxMenu" style="display:none;position:fixed;z-index:100010;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:230px;max-height:90vh;overflow-y:auto">
+<div id="presTextBoxMenu" class="rb-menu-panel" style="display:none;position:fixed;z-index:100010;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:230px;max-height:90vh;overflow-y:auto">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-    <span style="font-size:10px;font-weight:700;color:#555">📝 Cuadro de texto</span>
-    <button onclick="presDeleteTextBox()" style="font-size:9px;padding:1px 6px;border:1px solid #f99;border-radius:3px;background:#fff5f5;color:#c00;cursor:pointer">🗑 Eliminar</button>
+    <span class="pop-label">📝 Cuadro de texto</span>
+    <button type="button" class="rb-flat" style="padding:1px 6px;color:#c0392b" onclick="presDeleteTextBox()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></svg> Eliminar</button>
   </div>
   <div style="margin-bottom:6px">
-    <div style="font-size:9px;color:#999;font-weight:600;margin-bottom:4px">Texto</div>
+    <div class="pop-label">Texto</div>
     <textarea id="ptbContent" rows="3" onchange="presUpdateTextBox()" oninput="presUpdateTextBox()" style="width:100%;box-sizing:border-box;font:inherit;font-size:11px;border:1px solid #ccc;border-radius:3px;padding:4px;resize:vertical"></textarea>
   </div>
   <div style="display:flex;align-items:center;gap:4px;font-size:10px;margin-bottom:6px">
-    <span style="color:#666;min-width:40px">Tamaño:</span>
-    <select id="ptbFontSz" onchange="presUpdateTextBox()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;width:58px">
+    <span class="pop-unit" style="min-width:40px">Tamaño:</span>
+    <select id="ptbFontSz" class="rb-sel" onchange="presUpdateTextBox()" style="width:62px;max-width:none">
       <option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option>
       <option value="12" selected>12</option><option value="13">13</option><option value="14">14</option>
       <option value="16">16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option>
     </select>
-    <button id="ptbBoldBtn" onclick="presToggleTextBoxStyle('bold')" style="padding:1px 6px;font-size:11px;font-weight:bold;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5"><b>N</b></button>
-    <button id="ptbItalicBtn" onclick="presToggleTextBoxStyle('italic')" style="padding:1px 6px;font-size:11px;font-style:italic;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5"><i>K</i></button>
-    <button id="ptbUnderBtn" onclick="presToggleTextBoxStyle('under')" style="padding:1px 6px;font-size:11px;text-decoration:underline;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5"><u>S</u></button>
+    <button id="ptbItalicBtn" type="button" class="rb-sm" onclick="presToggleTextBoxStyle('italic')" style="padding:2px 7px;font-style:italic" title="Cursiva">K</button>
+    <button id="ptbUnderBtn" type="button" class="rb-sm" onclick="presToggleTextBoxStyle('under')" style="padding:2px 7px;text-decoration:underline" title="Subrayado">S</button>
+    <button id="ptbBoldBtn" type="button" class="rb-sm" onclick="presToggleTextBoxStyle('bold')" style="padding:2px 7px;font-weight:700" title="Negrita">N</button>
   </div>
   <div style="border-top:1px solid #eee;padding-top:6px;margin-bottom:6px;display:flex;flex-direction:column;gap:5px">
-    <div style="font-size:9px;color:#999;font-weight:600">Colores</div>
+    <div class="pop-label">Colores</div>
     <div style="display:flex;align-items:center;gap:6px;font-size:10px">
-      <span style="color:#666;min-width:40px">Texto:</span>
+      <span class="pop-unit" style="min-width:40px">Texto:</span>
       <span id="ptbColorSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#222"></span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;font-size:10px">
-      <span style="color:#666;min-width:40px">Fondo:</span>
+      <span class="pop-unit" style="min-width:40px">Fondo:</span>
       <span id="ptbBgSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#fffde7"></span>
-      <label style="font-size:9px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="ptbBgNone" onchange="presUpdateTextBox()"> Sin fondo</label>
+      <label style="font-size:10px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="ptbBgNone" onchange="presUpdateTextBox()"> Sin fondo</label>
     </div>
     <div style="display:flex;align-items:center;gap:6px;font-size:10px">
-      <span style="color:#666;min-width:40px">Borde:</span>
+      <span class="pop-unit" style="min-width:40px">Borde:</span>
       <span id="ptbBorderSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#aaaaaa"></span>
-      <label style="font-size:9px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="ptbBorderNone" onchange="presUpdateTextBox()"> Sin borde</label>
+      <label style="font-size:10px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="ptbBorderNone" onchange="presUpdateTextBox()"> Sin borde</label>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:5px;font-size:10px;border-top:1px solid #eee;padding-top:6px">
-    <span style="color:#666;min-width:40px">Alinear:</span>
-    <select id="ptbAlign" onchange="presUpdateTextBox()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1">
+    <span class="pop-unit" style="min-width:40px">Alinear:</span>
+    <select id="ptbAlign" class="rb-sel" onchange="presUpdateTextBox()" style="max-width:none;flex:1">
       <option value="start">⬅ Izquierda</option>
       <option value="middle" selected>⬛ Centro</option>
       <option value="end">➡ Derecha</option>
@@ -2253,23 +2253,23 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
 </div>
 
 <!-- Menú de edición de forma libre (LdT) -->
-<div id="presShapeMenu" style="display:none;position:fixed;z-index:100010;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:210px;max-height:90vh;overflow-y:auto">
+<div id="presShapeMenu" class="rb-menu-panel" style="display:none;position:fixed;z-index:100010;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:210px;max-height:90vh;overflow-y:auto">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-    <span style="font-size:10px;font-weight:700;color:#555" id="pshTitle">▭ Forma</span>
-    <button onclick="presDeleteShape()" style="font-size:9px;padding:1px 6px;border:1px solid #f99;border-radius:3px;background:#fff5f5;color:#c00;cursor:pointer">🗑 Eliminar</button>
+    <span class="pop-label" id="pshTitle">▭ Forma</span>
+    <button type="button" class="rb-flat" style="padding:1px 6px;color:#c0392b" onclick="presDeleteShape()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></svg> Eliminar</button>
   </div>
   <div id="pshFillRow" style="display:flex;align-items:center;gap:6px;font-size:10px;margin-bottom:6px">
-    <span style="color:#666;min-width:40px">Relleno:</span>
+    <span class="pop-unit" style="min-width:40px">Relleno:</span>
     <span id="pshFillSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#bdd7f0"></span>
-    <label style="font-size:9px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="pshFillNone" onchange="presUpdateShape()"> Sin relleno</label>
+    <label style="font-size:10px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="pshFillNone" onchange="presUpdateShape()"> Sin relleno</label>
   </div>
   <div style="display:flex;align-items:center;gap:6px;font-size:10px;margin-bottom:6px">
-    <span style="color:#666;min-width:40px">Borde:</span>
+    <span class="pop-unit" style="min-width:40px">Borde:</span>
     <span id="pshStrokeSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#1e3a5f"></span>
   </div>
   <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:6px">
-    <span style="color:#666;min-width:40px">Grosor:</span>
-    <select id="pshStrokeW" onchange="presUpdateShape()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1">
+    <span class="pop-unit" style="min-width:40px">Grosor:</span>
+    <select id="pshStrokeW" class="rb-sel" onchange="presUpdateShape()" style="max-width:none;flex:1">
       <option value="1">1 px</option><option value="1.5" selected>1.5 px</option><option value="2">2 px</option>
       <option value="3">3 px</option><option value="4">4 px</option><option value="6">6 px</option>
     </select>
@@ -2277,30 +2277,30 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
 
   <!-- Texto dentro de la forma: mismo motor de edición que las barras de tareas -->
   <div id="pshTextRow" style="display:flex;flex-direction:column;gap:5px;border-top:1px solid #eee;padding-top:6px;margin-bottom:6px">
-    <div style="font-size:9px;color:#999;font-weight:600">Texto</div>
+    <div class="pop-label">Texto</div>
     <textarea id="pshTextContent" rows="2" onchange="presUpdateShape()" oninput="presUpdateShape()" placeholder="(sin texto)" style="width:100%;box-sizing:border-box;font:inherit;font-size:11px;border:1px solid #ccc;border-radius:3px;padding:4px;resize:vertical"></textarea>
     <div style="display:flex;align-items:center;gap:4px;font-size:10px">
-      <span style="color:#666;min-width:40px">Tamaño:</span>
-      <select id="pshFontSzSel" onchange="presUpdateShape()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;width:62px">
+      <span class="pop-unit" style="min-width:40px">Tamaño:</span>
+      <select id="pshFontSzSel" class="rb-sel" onchange="presUpdateShape()" style="width:62px;max-width:none">
         <option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>
         <option value="11">11</option><option value="12" selected>12</option><option value="13">13</option>
         <option value="14">14</option><option value="16">16</option><option value="18">18</option><option value="20">20</option>
       </select>
-      <button id="pshItalic" onclick="presShapeToggleStyle('italic')" style="padding:1px 6px;font-size:11px;font-style:italic;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5" title="Cursiva"><i>K</i></button>
-      <button id="pshUnder" onclick="presShapeToggleStyle('underline')" style="padding:1px 6px;font-size:11px;text-decoration:underline;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5" title="Subrayado"><u>S</u></button>
-      <label style="display:flex;align-items:center;gap:2px;cursor:pointer" title="Negrita"><input type="checkbox" id="pshBold" checked onchange="presUpdateShape()"> <b>N</b></label>
+      <button id="pshItalic" type="button" class="rb-sm" onclick="presShapeToggleStyle('italic')" style="padding:2px 7px;font-style:italic" title="Cursiva">K</button>
+      <button id="pshUnder" type="button" class="rb-sm" onclick="presShapeToggleStyle('underline')" style="padding:2px 7px;text-decoration:underline" title="Subrayado">S</button>
+      <button id="pshBold" type="button" class="rb-sm active" onclick="this.classList.toggle('active');presUpdateShape()" style="padding:2px 7px;font-weight:700" title="Negrita">N</button>
     </div>
     <div style="display:flex;align-items:center;gap:5px;font-size:10px">
-      <span style="color:#666;min-width:40px">Alinear:</span>
-      <select id="pshAlignSel" onchange="presUpdateShape()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1">
+      <span class="pop-unit" style="min-width:40px">Alinear:</span>
+      <select id="pshAlignSel" class="rb-sel" onchange="presUpdateShape()" style="max-width:none;flex:1">
         <option value="start">⬅ Izquierda</option>
         <option value="middle" selected>⬛ Centro</option>
         <option value="end">➡ Derecha</option>
       </select>
     </div>
     <div style="display:flex;align-items:center;gap:5px;font-size:10px">
-      <span style="color:#666;min-width:40px">Posición:</span>
-      <select id="pshPosSel" onchange="presUpdateShape()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1">
+      <span class="pop-unit" style="min-width:40px">Posición:</span>
+      <select id="pshPosSel" class="rb-sel" onchange="presUpdateShape()" style="max-width:none;flex:1">
         <option value="center" selected>— Centro</option>
         <option value="top-out">▲ Encima borde sup.</option>
         <option value="top-in">▼ Debajo borde sup.</option>
@@ -2314,29 +2314,29 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
   </div>
 
   <div style="border-top:1px solid #eee;padding-top:6px;display:flex;flex-direction:column;gap:5px">
-    <div style="font-size:9px;color:#999;font-weight:600">Tamaño y posición</div>
+    <div class="pop-label">Tamaño y posición</div>
     <div style="display:flex;align-items:center;gap:5px;font-size:10px">
-      <span style="color:#666;min-width:40px">Ancho:</span>
-      <input type="number" id="pshW" onchange="presUpdateShape()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1;width:0" min="4">
-      <span style="color:#999">px</span>
+      <span class="pop-unit" style="min-width:40px">Ancho:</span>
+      <input type="number" id="pshW" class="pop-num" onchange="presUpdateShape()" style="flex:1;width:0;text-align:left" min="4">
+      <span class="pop-unit">px</span>
     </div>
     <div id="pshHRow" style="display:flex;align-items:center;gap:5px;font-size:10px">
-      <span style="color:#666;min-width:40px">Alto:</span>
-      <input type="number" id="pshH" onchange="presUpdateShape()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1;width:0" min="4">
-      <span style="color:#999">px</span>
+      <span class="pop-unit" style="min-width:40px">Alto:</span>
+      <input type="number" id="pshH" class="pop-num" onchange="presUpdateShape()" style="flex:1;width:0;text-align:left" min="4">
+      <span class="pop-unit">px</span>
     </div>
     <div style="display:flex;align-items:center;gap:5px;font-size:10px">
-      <span style="color:#666;min-width:40px">Pos. X:</span>
-      <input type="number" id="pshX" onchange="presUpdateShape()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1;width:0">
-      <span style="color:#999">px</span>
+      <span class="pop-unit" style="min-width:40px">Pos. X:</span>
+      <input type="number" id="pshX" class="pop-num" onchange="presUpdateShape()" style="flex:1;width:0;text-align:left">
+      <span class="pop-unit">px</span>
     </div>
     <div style="display:flex;align-items:center;gap:5px;font-size:10px">
-      <span style="color:#666;min-width:40px">Pos. Y:</span>
-      <input type="number" id="pshY" onchange="presUpdateShape()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1;width:0">
-      <span style="color:#999">px</span>
+      <span class="pop-unit" style="min-width:40px">Pos. Y:</span>
+      <input type="number" id="pshY" class="pop-num" onchange="presUpdateShape()" style="flex:1;width:0;text-align:left">
+      <span class="pop-unit">px</span>
     </div>
     <div style="display:flex;align-items:center;gap:5px;font-size:10px">
-      <span style="color:#666;min-width:40px">Giro:</span>
+      <span class="pop-unit" style="min-width:40px">Giro:</span>
       <input type="number" id="pshRotation" onchange="presUpdateShape()" oninput="presUpdateShape()" value="0" min="-180" max="180" step="5" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1;width:0">
       <span style="color:#999">°</span>
     </div>
@@ -2386,60 +2386,29 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
     <button type="button" class="btn-solid" onclick="presFilterClose()">Aceptar</button>
   </div>
 </div>
-<div id="presYearMenu" style="display:none;position:fixed;z-index:100002;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:210px">
-  <div style="font-size:10px;font-weight:700;color:#555;margin-bottom:8px" id="pymTitle"></div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="font-size:10px;color:#666;min-width:42px">Fondo:</span>
-    <span id="pymBgSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer"></span>
-    <span style="font-size:8px;color:#aaa">clic para cambiar</span>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="font-size:10px;color:#666;min-width:42px">Fuente:</span>
-    <span id="pymFgSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#fff"></span>
-    <button id="pymFgAuto" onclick="presYearAutoFg()" style="font-size:8px;padding:1px 4px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">Auto</button>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="font-size:10px;color:#666;min-width:42px">Estilo:</span>
-    <button type="button" id="pymBold" onclick="presYearFmtToggle('bold')" style="width:26px;height:22px;padding:0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff"><b>N</b></button>
-    <button type="button" id="pymItalic" onclick="presYearFmtToggle('italic')" style="width:26px;height:22px;padding:0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff"><i>K</i></button>
-    <button type="button" id="pymUnder" onclick="presYearFmtToggle('under')" style="width:26px;height:22px;padding:0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff"><u>S</u></button>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="font-size:10px;color:#666;min-width:42px">Alinear:</span>
-    <span style="display:flex;gap:3px;flex:1"><button type="button" id="pymAl_start" onclick="presYearAlign('start')" style="flex:1;font-size:9px;padding:3px 0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff">Izq.</button><button type="button" id="pymAl_middle" onclick="presYearAlign('middle')" style="flex:1;font-size:9px;padding:3px 0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff">Centro</button><button type="button" id="pymAl_end" onclick="presYearAlign('end')" style="flex:1;font-size:9px;padding:3px 0;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#fff">Der.</button></span>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="font-size:10px;color:#666;min-width:42px">Escala:</span>
-    <select id="pymScaleSel" onchange="presSetYearSz(this.value)" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1">
-      <option value="8">8</option><option value="9">9</option><option value="10">10</option>
-      <option value="11">11</option><option value="12">12</option><option value="13">13</option>
-      <option value="14">14</option><option value="15" selected>15</option><option value="16">16</option>
-      <option value="18">18</option><option value="20">20</option><option value="24">24</option>
-    </select>
-  </div>
-  <div style="border-top:1px solid #e3e3e3;margin:0 0 8px;padding-top:8px">
-    <div style="font-size:10px;font-weight:700;color:#555;margin-bottom:6px">Borde</div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:10px;color:#666;min-width:42px">Grosor:</span><input type="number" id="pymBdW" min="0" max="8" step="0.5" oninput="presBdSet('year')" style="width:52px;font:inherit;font-size:10px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><span style="font-size:9px;color:#aaa">px</span></div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:10px;color:#666;min-width:42px">Estilo:</span><select id="pymBdDash" onchange="presBdSet('year')" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div>
-    <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#666;min-width:42px">Color:</span><span id="pymBdColor" onclick="presBdColor('year')" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer"></span><button type="button" onclick="presBdReset('year')" style="margin-left:auto;font-size:9px;padding:1px 6px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">Restablecer</button></div>
-  </div>
-  <div style="border-top:1px solid #e3e3e3;margin:8px 0 0;padding-top:8px"></div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px" title="Une este año con los siguientes en una sola banda de la franja">
-    <span style="font-size:10px;color:#666;min-width:42px">Unir hasta:</span>
-    <select id="pymMergeTo" onchange="presYearMergeSet()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1"></select>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="font-size:10px;color:#666;min-width:42px">Texto:</span>
-    <input type="text" id="pymMergeLbl" placeholder="p. ej. 2030 - 2033" oninput="presYearMergeSet(true)" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1;min-width:0">
-  </div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <span style="font-size:10px;color:#666;min-width:42px">Ancho:</span>
-    <input type="number" id="pymWidthMul" min="0.2" max="4" step="0.1" value="1" oninput="presSetYearWidthMul(this.value,false)" onchange="presSetYearWidthMul(this.value,true)" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;width:52px">
-    <span style="font-size:9px;color:#aaa">×</span>
-    <button type="button" onclick="presResetYearWidthMul()" title="Restablecer ancho de este año" style="margin-left:auto;width:20px;height:20px;padding:0;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer;display:flex;align-items:center;justify-content:center">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-    </button>
-  </div>
+<div id="presYearMenu" class="rb-menu-panel" style="display:none;position:fixed;z-index:100002;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:228px;max-height:90vh;overflow-y:auto">
+  <div class="pop-label" id="pymTitle" style="margin-bottom:6px"></div>
+  <div class="pop-label">Texto</div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Texto:</span><input type="text" id="pymMergeLbl" class="pop-num" placeholder="p. ej. 2030 - 2033" oninput="presYearMergeSet(true)" style="flex:1;width:auto;min-width:0;text-align:left"></div>
+  <div style="border-top:1px solid var(--grid);margin:6px 0"></div>
+  <div class="pop-label">Fuente</div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Tamaño:</span><select id="pymScaleSel" class="rb-sel" onchange="presSetYearSz(this.value)" style="width:62px;max-width:none"><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15" selected>15</option><option value="16">16</option><option value="18">18</option><option value="20">20</option><option value="24">24</option></select><button type="button" id="pymItalic" class="rb-sm" onclick="presYearFmtToggle('italic')" style="padding:2px 7px;font-style:italic" title="Cursiva">K</button><button type="button" id="pymUnder" class="rb-sm" onclick="presYearFmtToggle('under')" style="padding:2px 7px;text-decoration:underline" title="Subrayado">S</button><button type="button" id="pymBold" class="rb-sm" onclick="presYearFmtToggle('bold')" style="padding:2px 7px;font-weight:700" title="Negrita">N</button></div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pymFgSwatch" title="Clic para cambiar color" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer"></span><button type="button" id="pymFgAuto" class="rb-flat" style="padding:1px 6px" onclick="presYearAutoFg()">Auto</button></div>
+  <div style="border-top:1px solid var(--grid);margin:6px 0"></div>
+  <div class="pop-label">Relleno</div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pymBgSwatch" title="Clic para cambiar color" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer"></span></div>
+  <div style="border-top:1px solid var(--grid);margin:6px 0"></div>
+  <div class="pop-label">Borde</div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Grosor:</span><input type="number" id="pymBdW" class="pop-num" min="0" max="8" step="0.5" oninput="presBdSet('year')" style="width:56px"><span class="pop-unit">px</span></div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Estilo:</span><select id="pymBdDash" class="rb-sel" onchange="presBdSet('year')" style="max-width:none;flex:1"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pymBdColor" onclick="presBdColor('year')" title="Clic para cambiar color" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer"></span><button type="button" class="rb-flat" style="padding:1px 6px;margin-left:auto" onclick="presBdReset('year')">Restablecer</button></div>
+  <div style="border-top:1px solid var(--grid);margin:6px 0"></div>
+  <div class="pop-label">Alineación</div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Alinear:</span><div class="pbm-seg" role="group" aria-label="Alinear"><button type="button" id="pymAl_start" class="pbm-seg-btn" onclick="presYearAlign('start')" title="Izquierda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="17" y2="18"/></svg></button><button type="button" id="pymAl_middle" class="pbm-seg-btn" onclick="presYearAlign('middle')" title="Centro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="5.5" y1="18" x2="18.5" y2="18"/></svg></button><button type="button" id="pymAl_end" class="pbm-seg-btn" onclick="presYearAlign('end')" title="Derecha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="7" y1="18" x2="20" y2="18"/></svg></button></div></div>
+  <div style="border-top:1px solid var(--grid);margin:6px 0"></div>
+  <div class="pop-label">Tramo y ancho</div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Unir hasta:</span><select id="pymMergeTo" class="rb-sel" onchange="presYearMergeSet()" style="max-width:none;flex:1"></select></div>
+  <div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">Ancho:</span><input type="number" id="pymWidthMul" class="pop-num" min="0.2" max="4" step="0.1" value="1" oninput="presSetYearWidthMul(this.value,false)" onchange="presSetYearWidthMul(this.value,true)" style="width:56px"><span class="pop-unit">×</span><button type="button" class="rb-flat" style="padding:1px 6px;margin-left:auto" onclick="presResetYearWidthMul()" title="Restablecer ancho de este año">Restablecer</button></div>
 </div>
 
 <!-- Tooltip -->
@@ -2447,46 +2416,46 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
 <!-- Overlay cuadros de texto del Gantt -->
 <div id="ganttTextOverlay" style="position:absolute;inset:0;pointer-events:none;z-index:15;overflow:visible"></div>
 <!-- Panel edición cuadro texto Gantt -->
-<div id="ganttTextMenu" style="display:none;position:fixed;z-index:100020;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:230px;max-height:90vh;overflow-y:auto">
+<div id="ganttTextMenu" class="rb-menu-panel" style="display:none;position:fixed;z-index:100020;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:230px;max-height:90vh;overflow-y:auto">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-    <span style="font-size:10px;font-weight:700;color:#555">📝 Cuadro de texto</span>
-    <button onclick="ganttDeleteTextBox()" style="font-size:9px;padding:1px 6px;border:1px solid #f99;border-radius:3px;background:#fff5f5;color:#c00;cursor:pointer">🗑 Eliminar</button>
+    <span class="pop-label">📝 Cuadro de texto</span>
+    <button type="button" class="rb-flat" style="padding:1px 6px;color:#c0392b" onclick="ganttDeleteTextBox()"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></svg> Eliminar</button>
   </div>
   <div style="margin-bottom:6px">
-    <div style="font-size:9px;color:#999;font-weight:600;margin-bottom:4px">Texto</div>
+    <div class="pop-label">Texto</div>
     <textarea id="gtbContent" rows="3" oninput="ganttUpdateTextBox()" style="width:100%;box-sizing:border-box;font:inherit;font-size:11px;border:1px solid #ccc;border-radius:3px;padding:4px;resize:vertical"></textarea>
   </div>
   <div style="display:flex;align-items:center;gap:4px;font-size:10px;margin-bottom:6px">
-    <span style="color:#666;min-width:40px">Tamaño:</span>
-    <select id="gtbFontSz" onchange="ganttUpdateTextBox()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;width:58px">
+    <span class="pop-unit" style="min-width:40px">Tamaño:</span>
+    <select id="gtbFontSz" class="rb-sel" onchange="ganttUpdateTextBox()" style="width:62px;max-width:none">
       <option value="9">9</option><option value="10">10</option><option value="11">11</option>
       <option value="12" selected>12</option><option value="13">13</option><option value="14">14</option>
       <option value="16">16</option><option value="18">18</option><option value="20">20</option>
     </select>
-    <button id="gtbBoldBtn" onclick="ganttToggleTextBoxStyle('bold')" style="padding:1px 6px;font-size:11px;font-weight:bold;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5"><b>N</b></button>
-    <button id="gtbItalicBtn" onclick="ganttToggleTextBoxStyle('italic')" style="padding:1px 6px;font-size:11px;font-style:italic;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5"><i>K</i></button>
-    <button id="gtbUnderBtn" onclick="ganttToggleTextBoxStyle('under')" style="padding:1px 6px;font-size:11px;text-decoration:underline;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5"><u>S</u></button>
+    <button id="gtbItalicBtn" type="button" class="rb-sm" onclick="ganttToggleTextBoxStyle('italic')" style="padding:2px 7px;font-style:italic" title="Cursiva">K</button>
+    <button id="gtbUnderBtn" type="button" class="rb-sm" onclick="ganttToggleTextBoxStyle('under')" style="padding:2px 7px;text-decoration:underline" title="Subrayado">S</button>
+    <button id="gtbBoldBtn" type="button" class="rb-sm" onclick="ganttToggleTextBoxStyle('bold')" style="padding:2px 7px;font-weight:700" title="Negrita">N</button>
   </div>
   <div style="border-top:1px solid #eee;padding-top:6px;margin-bottom:6px;display:flex;flex-direction:column;gap:5px">
-    <div style="font-size:9px;color:#999;font-weight:600">Colores</div>
+    <div class="pop-label">Colores</div>
     <div style="display:flex;align-items:center;gap:6px;font-size:10px">
-      <span style="color:#666;min-width:40px">Texto:</span>
+      <span class="pop-unit" style="min-width:40px">Texto:</span>
       <span id="gtbColorSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#222"></span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;font-size:10px">
-      <span style="color:#666;min-width:40px">Fondo:</span>
+      <span class="pop-unit" style="min-width:40px">Fondo:</span>
       <span id="gtbBgSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#fffde7"></span>
-      <label style="font-size:9px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="gtbBgNone" onchange="ganttUpdateTextBox()"> Sin fondo</label>
+      <label style="font-size:10px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="gtbBgNone" onchange="ganttUpdateTextBox()"> Sin fondo</label>
     </div>
     <div style="display:flex;align-items:center;gap:6px;font-size:10px">
-      <span style="color:#666;min-width:40px">Borde:</span>
+      <span class="pop-unit" style="min-width:40px">Borde:</span>
       <span id="gtbBorderSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:#aaaaaa"></span>
-      <label style="font-size:9px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="gtbBorderNone" onchange="ganttUpdateTextBox()"> Sin borde</label>
+      <label style="font-size:10px;display:flex;align-items:center;gap:3px;cursor:pointer"><input type="checkbox" id="gtbBorderNone" onchange="ganttUpdateTextBox()"> Sin borde</label>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:5px;font-size:10px;border-top:1px solid #eee;padding-top:6px">
-    <span style="color:#666;min-width:40px">Alinear:</span>
-    <select id="gtbAlign" onchange="ganttUpdateTextBox()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1">
+    <span class="pop-unit" style="min-width:40px">Alinear:</span>
+    <select id="gtbAlign" class="rb-sel" onchange="ganttUpdateTextBox()" style="max-width:none;flex:1">
       <option value="left">⬅ Izquierda</option>
       <option value="center" selected>⬛ Centro</option>
       <option value="right">➡ Derecha</option>
@@ -5757,6 +5726,27 @@ function _presBorderObj(ctx){
   if(ctx.kind==='bar'||ctx.kind==='mito'||ctx.kind==='evento'){if(!PRES_OPTS[ctx.key])PRES_OPTS[ctx.key]={};return PRES_OPTS[ctx.key];}
   if(!_presSubprocStyle[ctx.key])_presSubprocStyle[ctx.key]={};return _presSubprocStyle[ctx.key];
 }
+/* ═══ CONTROLES COMUNES DE LOS PANELES DE PROPIEDADES (misma apariencia que el panel de la barra) ═══
+   Etiquetas .pop-unit (10 px), encabezados .pop-label, alinear con .pbm-seg (íconos), N K S con .rb-sm, selects .rb-sel,
+   números .pop-num y «Restablecer» con .rb-flat. Todos los paneles nuevos o revisados deben construirse con estas piezas. */
+const PP_AL={start:'<line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="17" y2="18"/>',middle:'<line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="5.5" y1="18" x2="18.5" y2="18"/>',end:'<line x1="4" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="7" y1="18" x2="20" y2="18"/>'};
+const PP_MENU_CSS='position:fixed;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:228px;max-height:90vh;overflow-y:auto;font-size:11px;display:none';
+const ppSvg=(inner,style)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"'+(style?' style="'+style+'"':'')+'>'+inner+'</svg>';
+const ppSec=t=>'<div class="pop-label">'+t+'</div>';
+const ppDiv=()=>'<div style="border-top:1px solid var(--grid);margin:6px 0 6px"></div>';
+const ppRow=(lbl,inner)=>'<div style="display:flex;align-items:center;gap:5px;font-size:10px;margin-bottom:5px"><span class="pop-unit" style="min-width:40px">'+lbl+'</span>'+inner+'</div>';
+const ppSwatch=(id,color,onclick)=>'<span id="'+id+'" onclick="'+onclick+'" title="Clic para cambiar color" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer;background:'+color+'"></span>';
+const ppFlat=(label,onclick,extra)=>'<button type="button" class="rb-flat" style="padding:1px 6px;'+(extra||'')+'" onclick="'+onclick+'">'+label+'</button>';
+const ppSel=(id,onchange,opts,cur,w)=>'<select'+(id?' id="'+id+'"':'')+' class="rb-sel" onchange="'+onchange+'" style="'+(w?'width:'+w+'px;':'')+'max-width:none;'+(w?'':'flex:1')+'">'+opts.map(o=>'<option value="'+o[0]+'"'+(String(cur)===String(o[0])?' selected':'')+'>'+o[1]+'</option>').join('')+'</select>';
+const PP_SIZES=[7,8,9,10,11,12,13,14,16,18,20,24];
+const ppSize=(id,onchange,cur,auto)=>{const l=(auto?[['','Auto']]:[]).concat(PP_SIZES.map(v=>[String(v),String(v)]));if(cur&&!PP_SIZES.includes(+cur))l.push([String(cur),String(cur)]);return ppSel(id,onchange,l,cur==null?'':cur,62);};
+const ppNum=(id,attrs,handler,val)=>'<input type="number" id="'+id+'" class="pop-num" '+attrs+' value="'+val+'" oninput="'+handler+'" style="width:56px">';
+const ppText=(id,val,ph,handler)=>'<input type="text" id="'+id+'" class="pop-num" value="'+String(val).replace(/"/g,'&quot;')+'" placeholder="'+String(ph).replace(/"/g,'&quot;')+'" oninput="'+handler+'" style="flex:1;width:auto;min-width:0;text-align:left">';
+const ppNKS=(hand,on)=>['italic','underline','bold'].map(k=>{const L={italic:['K','font-style:italic','Cursiva'],underline:['S','text-decoration:underline','Subrayado'],bold:['N','font-weight:700','Negrita']}[k];return '<button type="button" class="rb-sm'+(on[k]?' active':'')+'" onclick="'+hand+'(\''+k+'\')" style="padding:2px 7px;'+L[1]+'" title="'+L[2]+'">'+L[0]+'</button>';}).join('');
+const ppAlign=(cur,onclick,vertical,titles)=>{const T=titles||(vertical?{start:'Abajo',middle:'Centro',end:'Arriba'}:{start:'Izquierda',middle:'Centro',end:'Derecha'});return '<div class="pbm-seg" role="group" aria-label="Alinear">'+['start','middle','end'].map(v=>'<button type="button" class="pbm-seg-btn'+(cur===v?' active':'')+'" title="'+T[v]+'" onclick="'+onclick.replace('%v',v)+'">'+ppSvg(PP_AL[v],vertical?'transform:rotate(-90deg)':'')+'</button>').join('')+'</div>';};
+const ppTrash='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/></svg>';
+function ppMenu(id,z){let m=document.getElementById(id);if(!m){m=document.createElement('div');m.id=id;m.className='rb-menu-panel';m.style.cssText=PP_MENU_CSS+';z-index:'+(z||100005);document.body.appendChild(m);document.addEventListener('mousedown',e=>{if(m.style.display!=='none'&&!m.contains(e.target)&&!e.target.closest('#colorPicker'))m.style.display='none';},true);}return m;}
+function ppPlace(m,x,y){m.style.display='block';m.style.left=Math.max(4,Math.min(x+4,innerWidth-244))+'px';m.style.top=Math.max(4,Math.min(y+4,innerHeight-(m.offsetHeight||180)-8))+'px';}
 // Campos de texto/relleno/alineación de los agrupadores (rap = vertical, sp = horizontal)
 function presFmGet(f){
   const c=_presBorderCtx,o=_presBorderObj(c),rap=c.kind==='rap';
@@ -5784,7 +5774,7 @@ function presFmApply(f,v){
 }
 function presFmSet(f,v,rebuild){
   if(!_presBorderCtx)return;_presSnap();presFmApply(f,v);renderPres();
-  if(rebuild&&_presFmPos)presOpenBorderMenu(_presBorderCtx.kind,_presBorderCtx.key,_presFmPos.x,_presFmPos.y);
+  if(rebuild&&_presFmPos){const c=_presBorderCtx,p=_presFmPos;setTimeout(()=>presOpenBorderMenu(c.kind,c.key,p.x,p.y),0);}
 }
 function presFmToggle(f){presFmSet(f,!presFmGet(f),true);}
 function presFmColor(f){
@@ -5793,34 +5783,42 @@ function presFmColor(f){
   cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
 }
 let _presFmPos=null;
+// Convierte un <select> en una botonera de íconos sin tocar su código: el select sigue existiendo (oculto) y mantiene su valor
+function ppSelectToSeg(id,items){
+  const sel=document.getElementById(id);if(!sel||sel._seg)return;
+  const box=document.createElement('div');box.className='pbm-seg';box.setAttribute('role','group');
+  items.forEach(it=>{const b=document.createElement('button');b.type='button';b.className='pbm-seg-btn';b.title=it[1];b.dataset.v=it[0];b.innerHTML=it[2];b.onclick=()=>{sel.value=it[0];sel.dispatchEvent(new Event('change',{bubbles:true}));};box.appendChild(b);});
+  sel.style.display='none';sel.parentNode.insertBefore(box,sel.nextSibling);sel._seg=box;
+  const d=Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value');
+  const sync=()=>box.querySelectorAll('.pbm-seg-btn').forEach(b=>b.classList.toggle('active',b.dataset.v===d.get.call(sel)));
+  Object.defineProperty(sel,'value',{get(){return d.get.call(sel);},set(v){d.set.call(sel,v);sync();},configurable:true});
+  sel.addEventListener('change',sync);sync();
+}
+(function(){
+  const S=i=>ppSvg(i),A=PP_AL,POS={'top-out':['Encima borde sup.','<line x1="7" y1="4" x2="17" y2="4"/><rect x="4" y="7" width="16" height="10" rx="1"/>'],'top-in':['Debajo borde sup.','<rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="9.5" x2="17" y2="9.5"/>'],'center':['Centro','<rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="12" x2="17" y2="12"/>'],'bot-in':['Encima borde inf.','<rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="14.5" x2="17" y2="14.5"/>'],'bot-out':['Debajo borde inf.','<rect x="4" y="7" width="16" height="10" rx="1"/><line x1="7" y1="20" x2="17" y2="20"/>']};
+  const al=(a,b,c)=>[[a,'Izquierda',S(A.start)],[b,'Centro',S(A.middle)],[c,'Derecha',S(A.end)]];
+  ppSelectToSeg('ptbAlign',al('start','middle','end'));ppSelectToSeg('pshAlignSel',al('start','middle','end'));ppSelectToSeg('gtbAlign',al('left','center','right'));
+  ppSelectToSeg('pshPosSel',['top-out','top-in','center','bot-in','bot-out'].map(k=>[k,POS[k][0],S(POS[k][1])]));
+})();
 function presOpenBorderMenu(kind,key,x,y){
   _presBorderCtx={kind,key};_presFmPos={x,y};
-  let m=document.getElementById('presBorderMenu');
-  if(!m){m=document.createElement('div');m.id='presBorderMenu';m.style.cssText='position:fixed;z-index:100005;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:220px;font-size:11px;color:#333;display:none';document.body.appendChild(m);
-    document.addEventListener('mousedown',e=>{if(m.style.display!=='none'&&!m.contains(e.target)&&!e.target.closest('#colorPicker'))m.style.display='none';},true);}
-  const o=_presBorderObj(_presBorderCtx),bw=(o.borderW!=null&&o.borderW!=='')?o.borderW:(kind==='rap'?1.5:0);
-  const dash=o.borderDash||'solid',col=o.borderColor||(kind==='rap'?'#9aa5b1':(kind==='year'||kind==='bar')?'#333333':'#7a8ea3');
-  const S=(v,t)=>'<option value="'+v+'"'+(dash===v?' selected':'')+'>'+t+'</option>';
-  const full=(kind==='rap'||kind==='sp');
-  const DIV='<div style="border-top:1px solid #e3e3e3;margin:8px 0 8px;padding-top:8px"></div>',SEC=t=>'<div style="font-size:10px;font-weight:700;color:#555;margin-bottom:6px">'+t+'</div>';
-  const inp='font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px';
-  const tb=(f,l,st)=>'<button type="button" onclick="presFmToggle(\''+f+'\')" style="width:26px;height:24px;padding:0;cursor:pointer;border:1px solid '+(presFmGet(f)?'#2563eb':'#ccc')+';background:'+(presFmGet(f)?'#e8f0fe':'#fff')+';border-radius:4px;'+st+'">'+l+'</button>';
-  const alBtn=(v,l)=>'<button type="button" onclick="presFmSet(\'align\',\''+v+'\',true)" style="flex:1;padding:3px 0;font-size:10px;cursor:pointer;border:1px solid '+(presFmGet('align')===v?'#2563eb':'#ccc')+';background:'+(presFmGet('align')===v?'#e8f0fe':'#fff')+';border-radius:4px">'+l+'</button>';
-  const fullTop=!full?'':(SEC('Texto')
-    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span style="min-width:44px;color:#666">Nombre:</span><input type="text" id="pfmLabel" value="'+String(presFmGet('label')).replace(/"/g,'&quot;')+'" placeholder="'+String(key).replace(/"/g,'&quot;').replace(/</g,'&lt;')+'" oninput="presFmSet(\'label\',this.value)" style="flex:1;min-width:0;'+inp+'"></div>'
-    +DIV+SEC('Fuente')
-    +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px"><input type="number" min="6" max="60" value="'+presFmGet('fs')+'" placeholder="auto" oninput="presFmSet(\'fs\',this.value)" style="width:52px;'+inp+'">'+tb('bold','<b>N</b>','')+tb('italic','<i>K</i>','')+tb('under','<u>S</u>','')+'<span id="pfmColor" onclick="presFmColor(\'color\')" title="Color del texto" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+(presFmGet('color')||'#ffffff')+'"></span><button type="button" onclick="presFmSet(\'color\',\'\',true)" style="font-size:9px;padding:1px 5px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">Auto</button></div>'
-    +DIV+SEC('Relleno')
-    +'<div style="display:flex;gap:8px;align-items:center"><span style="min-width:44px;color:#666">Color:</span><span id="pfmFill" onclick="presFmColor(\'fill\')" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+(presFmGet('fill')||'#ffffff')+'"></span><button type="button" onclick="presFmSet(\'fill\',\'\',true)" style="margin-left:auto;font-size:9px;padding:1px 6px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">'+(kind==='sp'?'Restablecer':'Sin relleno')+'</button></div>'
-    +DIV+SEC('Borde'));
-  const fullBottom=!full?'':(DIV+SEC('Alineación')+'<div style="display:flex;gap:4px">'+(kind==='rap'?alBtn('start','Abajo')+alBtn('middle','Centro')+alBtn('end','Arriba'):alBtn('start','Izquierda')+alBtn('middle','Centro')+alBtn('end','Derecha'))+'</div>');
-  m.innerHTML=(full?'<div style="font-weight:700;margin-bottom:8px">Formato · '+String(key).replace(/</g,'&lt;')+'</div>':'')+fullTop+(full?'':'<div style="font-weight:700;margin-bottom:8px">'+(kind==='bar'?'Borde de la barra':kind==='year'?'Borde del año '+String(key).replace(/^LB/,''):'Borde · '+String(key).replace(/</g,'&lt;'))+'</div>')
-   +(kind==='rap'?'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Forma:</span><select id="pbdShape" onchange="presBorderSet()" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><option value="box"'+(o.borderShape!=='line'?' selected':'')+'>Caja completa</option><option value="line"'+(o.borderShape==='line'?' selected':'')+'>Solo línea inferior</option></select></div>':'')
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Grosor:</span><input type="number" id="pbdW" min="0" max="8" step="0.5" value="'+bw+'" oninput="presBorderSet()" style="width:56px;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><span style="color:#999">px</span></div>'
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Estilo:</span><select id="pbdDash" onchange="presBorderSet()" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px">'+S('solid','— Continua')+S('dotted','· · Punteada')+S('dashed','— Rayada')+S('dashed2','— Mixta')+'</select></div>'
-   +'<div style="display:flex;gap:8px;align-items:center"><span style="min-width:44px;color:#666">Color:</span><span id="pbdColor" onclick="presBorderPickColor()" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+col+'"></span><button type="button" onclick="presBorderReset()" style="margin-left:auto;font-size:10px;padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer">Restablecer</button></div>';
-  m.innerHTML+=fullBottom;m.style.width=full?'250px':'220px';
-  m.style.display='block';m.style.left=Math.max(4,Math.min(x+4,innerWidth-262))+'px';m.style.top=Math.max(4,Math.min(y+4,innerHeight-(m.offsetHeight||180)-8))+'px';
+  const m=ppMenu('presBorderMenu',100005),full=(kind==='rap'||kind==='sp'),o=_presBorderObj(_presBorderCtx),rap=kind==='rap';
+  const bw=(o.borderW!=null&&o.borderW!=='')?o.borderW:(rap?1.5:0),dash=o.borderDash||'solid',col=o.borderColor||(rap?'#9aa5b1':(kind==='year'||kind==='bar')?'#333333':'#7a8ea3');
+  const nm=String(key).replace(/</g,'&lt;');
+  let s='<div class="pop-label" style="margin-bottom:6px">'+(full?'Formato · '+nm:kind==='bar'?'Borde de la barra':kind==='year'?'Borde del año '+String(key).replace(/^LB/,''):'Borde · '+nm)+'</div>';
+  if(full){
+    s+=ppSec('Texto')+ppRow('Nombre:',ppText('pfmLabel',presFmGet('label'),key,"presFmSet('label',this.value)"))+ppDiv();
+    s+=ppSec('Fuente')+ppRow('Tamaño:',ppSize('pfmSize',"presFmSet('fs',this.value,false)",presFmGet('fs'),true)+ppNKS('presFmToggle',{italic:presFmGet('italic'),underline:presFmGet('under'),bold:presFmGet('bold')}).replace(/presFmToggle\('underline'\)/,"presFmToggle('under')"))
+      +ppRow('Color:',ppSwatch('pfmColor',presFmGet('color')||'#222222',"presFmColor('color')")+ppFlat('Auto',"presFmSet('color','',true)"))+ppDiv();
+    s+=ppSec('Relleno')+ppRow('Color:',ppSwatch('pfmFill',presFmGet('fill')||'#ffffff',"presFmColor('fill')")+ppFlat(rap?'Sin relleno':'Restablecer',"presFmSet('fill','',true)",'margin-left:auto'))+ppDiv();
+  }
+  s+=ppSec('Borde');
+  if(rap)s+=ppRow('Forma:',ppSel('pbdShape',"presBorderSet()",[['box','Caja completa'],['line','Solo línea inferior']],o.borderShape==='line'?'line':'box'));
+  s+=ppRow('Grosor:',ppNum('pbdW','min="0" max="8" step="0.5"',"presBorderSet()",bw)+'<span class="pop-unit">px</span>')
+    +ppRow('Estilo:',ppSel('pbdDash',"presBorderSet()",[['solid','— Continua'],['dotted','· · Punteada'],['dashed','— Rayada'],['dashed2','— Mixta']],dash))
+    +ppRow('Color:',ppSwatch('pbdColor',col,'presBorderPickColor()')+ppFlat('Restablecer','presBorderReset()','margin-left:auto'));
+  if(full)s+=ppDiv()+ppSec('Alineación')+ppRow('Alinear:',ppAlign(presFmGet('align'),"presFmSet('align','%v',true)",rap));
+  m.innerHTML=s;ppPlace(m,x,y);
 }
 // Borde integrado en los menús del año y de la barra (mismos datos que el menú de borde de los agrupadores)
 function _presBdCtx(kind){return{kind,key:kind==='year'?(_presYearIsLB?'LB':'')+_presYearKey:_presBarKey};}
@@ -5915,24 +5913,28 @@ function presLegendPickTitleColor(){
   cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
 }
 function presLegendFill(){
-  const p=document.getElementById('presLegendMenuPanel');if(!p)return;const c=PRES_LEGEND_CFG;
-  const row=(l,inner)=>'<div style="display:flex;gap:8px;align-items:center;margin-bottom:7px"><span style="font-size:11px;color:var(--muted);min-width:64px">'+l+'</span>'+inner+'</div>';
-  const inp='font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 5px';
-  const vals=presLegendValues(c.field);
-  p.innerHTML=row('Mostrar por:','<select onchange="presLegendSet(\'field\',this.value)" style="'+inp+'">'+_PL_FIELDS.map(f=>'<option value="'+f[0]+'"'+(c.field===f[0]?' selected':'')+'>'+f[1]+'</option>').join('')+'</select>')
-   +row('Estilo:','<select onchange="presLegendSet(\'style\',this.value)" style="'+inp+'"><option value="swatch"'+(c.style==='swatch'?' selected':'')+'>Muestra y texto</option><option value="chip"'+(c.style==='chip'?' selected':'')+'>Etiqueta de color</option></select>')
-   +row('Letra:','<input type="number" min="6" max="40" value="'+c.fs+'" oninput="presLegendSet(\'fs\',this.value)" style="width:52px;'+inp+'"><span style="font-size:10px;color:var(--muted)">px</span>')
-   +row('Texto:','<button type="button" onclick="presLegendSet(\'bold\','+(!c.bold)+');presLegendFill()" style="width:26px;height:24px;padding:0;cursor:pointer;border:1px solid '+(c.bold?'#2563eb':'#ccc')+';background:'+(c.bold?'#e8f0fe':'#fff')+';border-radius:4px"><b>N</b></button><span id="plg_textColor" onclick="presLegendPickColor(\'textColor\')" title="Color del texto" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:'+(c.textColor||'#444444')+'"></span><button type="button" onclick="presLegendSet(\'textColor\',\'\');presLegendFill()" style="font-size:9px;padding:1px 5px;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5">Auto</button>')
-   +row('Alinear:','<span style="display:flex;gap:3px;flex:1">'+[['start','Izq.'],['middle','Centro'],['end','Der.']].map(a=>'<button type="button" onclick="presLegendSet(\'align\',\''+a[0]+'\');presLegendFill()" style="flex:1;font-size:10px;padding:3px 0;cursor:pointer;border:1px solid '+(c.align===a[0]?'#2563eb':'#ccc')+';background:'+(c.align===a[0]?'#e8f0fe':'#fff')+';border-radius:4px">'+a[1]+'</button>').join('')+'</span>')
-   +row('Relleno:','<span id="plg_fill" onclick="presLegendPickColor(\'fill\')" title="Color de relleno del recuadro" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:'+(c.fill||'#ffffff')+'"></span><button type="button" onclick="presLegendSet(\'fill\',\'\');presLegendFill()" style="font-size:9px;padding:1px 5px;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5">Blanco</button>')
-   +row('Borde:','<input type="number" min="0" max="8" step="0.5" value="'+(c.borderW==null?1:c.borderW)+'" oninput="presLegendSet(\'borderW\',this.value===\'\'?1:+this.value)" style="width:48px;'+inp+'"><select onchange="presLegendSet(\'borderDash\',this.value)" style="'+inp+'">'+[['solid','Continua'],['dotted','Punteada'],['dashed','Rayada'],['dashed2','Mixta']].map(o=>'<option value="'+o[0]+'"'+((c.borderDash||'solid')===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select><span id="plg_borderColor" onclick="presLegendPickColor(\'borderColor\')" title="Color del borde" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:'+(c.borderColor||'#cccccc')+'"></span>')
-   +'<label style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:7px;cursor:pointer"><input type="checkbox" '+(c.box?'checked':'')+' onchange="presLegendSet(\'box\',this.checked)">Recuadro de fondo</label>'
-   +'<label style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:7px;cursor:pointer"><input type="checkbox" '+(c.titleOn?'checked':'')+' onchange="presLegendSet(\'titleOn\',this.checked)">Título</label>'
-   +row('Texto:','<input type="text" value="'+String(c.title).replace(/"/g,'&quot;')+'" placeholder="Título de la leyenda" oninput="presLegendSet(\'title\',this.value)" style="flex:1;min-width:0;'+inp+'">')
-   +row('Tamaño / color:','<input type="number" min="6" max="40" value="'+c.titleSize+'" oninput="presLegendSet(\'titleSize\',this.value)" style="width:52px;'+inp+'"><span id="plgTitleColor" onclick="presLegendPickTitleColor()" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:'+c.titleColor+'"></span>')
-   +'<div style="font-size:11px;color:var(--muted);margin:6px 0 4px">Entradas visibles</div>'
-   +vals.map(v=>'<label style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:3px;cursor:pointer"><input type="checkbox" '+(c.hidden.indexOf(v)<0?'checked':'')+' onchange="presLegendSet(\'hide\',{value:this.dataset.v,on:this.checked})" data-v="'+String(v).replace(/"/g,'&quot;')+'"><span style="width:10px;height:10px;border-radius:2px;background:'+presLegendColor(c.field,v)+';display:inline-block"></span>'+String(v||'(Sin valor)').replace(/</g,'&lt;')+'</label>').join('')
-   +'<div style="font-size:10px;color:var(--muted);margin-top:6px">Arrastre la leyenda en la LdT para moverla.</div>';
+  const p=document.getElementById('presLegendMenuPanel');if(!p)return;const c=PRES_LEGEND_CFG,vals=presLegendValues(c.field);
+  const tog=(on,handler,label)=>'<label class="toggle" style="padding:2px 0"><span class="tg-label" style="font-size:10px">'+label+'</span><input type="checkbox"'+(on?' checked':'')+' onchange="'+handler+'"><span class="tg-track"></span></label>';
+  p.style.width='228px';p.style.padding='10px';
+  p.innerHTML=ppSec('Contenido')
+    +ppRow('Mostrar:',ppSel('',"presLegendSet('field',this.value)",_PL_FIELDS,c.field))
+    +ppRow('Estilo:',ppSel('',"presLegendSet('style',this.value)",[['swatch','Muestra y texto'],['chip','Etiqueta de color']],c.style))
+    +ppDiv()+ppSec('Título')+tog(c.titleOn,"presLegendSet('titleOn',this.checked)",'Mostrar título')
+    +ppRow('Texto:',ppText('plgTitleTxt',c.title,'Título de la leyenda',"presLegendSet('title',this.value)"))
+    +ppRow('Tamaño:',ppSize('',"presLegendSet('titleSize',this.value)",c.titleSize,false)+ppSwatch('plgTitleColor',c.titleColor,'presLegendPickTitleColor()'))
+    +ppDiv()+ppSec('Fuente')
+    +ppRow('Tamaño:',ppSize('',"presLegendSet('fs',this.value)",c.fs,false)+'<button type="button" class="rb-sm'+(c.bold?' active':'')+'" onclick="presLegendSet(\'bold\','+(!c.bold)+');setTimeout(presLegendFill,0)" style="padding:2px 7px;font-weight:700" title="Negrita">N</button>')
+    +ppRow('Color:',ppSwatch('plg_textColor',c.textColor||'#444444',"presLegendPickColor('textColor')")+ppFlat('Auto',"presLegendSet('textColor','');setTimeout(presLegendFill,0)"))
+    +ppDiv()+ppSec('Relleno')+tog(c.box,"presLegendSet('box',this.checked)",'Recuadro de fondo')
+    +ppRow('Color:',ppSwatch('plg_fill',c.fill||'#ffffff',"presLegendPickColor('fill')")+ppFlat('Blanco',"presLegendSet('fill','');setTimeout(presLegendFill,0)",'margin-left:auto'))
+    +ppDiv()+ppSec('Borde')
+    +ppRow('Grosor:',ppNum('plgBdW','min="0" max="8" step="0.5"',"presLegendSet('borderW',this.value===''?1:+this.value)",c.borderW==null?1:c.borderW)+'<span class="pop-unit">px</span>')
+    +ppRow('Estilo:',ppSel('',"presLegendSet('borderDash',this.value)",[['solid','— Continua'],['dotted','· · Punteada'],['dashed','— Rayada'],['dashed2','— Mixta']],c.borderDash||'solid'))
+    +ppRow('Color:',ppSwatch('plg_borderColor',c.borderColor||'#cccccc',"presLegendPickColor('borderColor')")+ppFlat('Restablecer',"presLegendSet('borderColor','');presLegendSet('borderW',1);setTimeout(presLegendFill,0)",'margin-left:auto'))
+    +ppDiv()+ppSec('Alineación')+ppRow('Alinear:',ppAlign(c.align||'start',"presLegendSet('align','%v');setTimeout(presLegendFill,0)",false))
+    +ppDiv()+ppSec('Entradas visibles')
+    +vals.map(v=>'<label style="display:flex;align-items:center;gap:6px;font-size:10px;margin-bottom:3px;cursor:pointer"><input type="checkbox" '+(c.hidden.indexOf(v)<0?'checked':'')+' onchange="presLegendSet(\'hide\',{value:this.dataset.v,on:this.checked})" data-v="'+String(v).replace(/"/g,'&quot;')+'"><span style="width:10px;height:10px;border-radius:2px;background:'+presLegendColor(c.field,v)+';display:inline-block"></span>'+String(v||'(Sin valor)').replace(/</g,'&lt;')+'</label>').join('')
+    +'<div class="pop-unit" style="margin-top:6px">Arrastre la leyenda en la LdT para moverla.</div>';
 }
 // Arrastre vertical de un hito (Distancia al eje = opt.miYOffset): hacia arriba lo aleja del eje si está sobre él; hacia abajo si está bajo el eje
 (function(){
@@ -8631,9 +8633,9 @@ function ganttOpenTextMenu(id,cx,cy){
   document.getElementById('gtbBgNone').checked=!tb.bg||tb.bg==='none';
   document.getElementById('gtbBorderNone').checked=!tb.border||tb.border==='none';
   document.getElementById('gtbAlign').value=tb.align||'center';
-  document.getElementById('gtbBoldBtn').style.background=tb.bold?'#ddeeff':'#f5f5f5';
-  document.getElementById('gtbItalicBtn').style.background=tb.italic?'#ddeeff':'#f5f5f5';
-  document.getElementById('gtbUnderBtn').style.background=tb.under?'#ddeeff':'#f5f5f5';
+  document.getElementById('gtbBoldBtn').classList.toggle('active',!!(tb.bold));
+  document.getElementById('gtbItalicBtn').classList.toggle('active',!!(tb.italic));
+  document.getElementById('gtbUnderBtn').classList.toggle('active',!!(tb.under));
   const m=document.getElementById('ganttTextMenu');
   m.style.display='block';
   m.style.left=Math.min(cx+8,innerWidth-240)+'px';
@@ -8669,9 +8671,9 @@ function ganttUpdateTextBox(){
 function ganttToggleTextBoxStyle(style){
   if(!_gtbId)return;
   const tb=GANTT_TEXTBOXES.find(b=>b.id===_gtbId);if(!tb)return;
-  if(style==='bold'){tb.bold=!tb.bold;document.getElementById('gtbBoldBtn').style.background=tb.bold?'#ddeeff':'#f5f5f5';}
-  else if(style==='italic'){tb.italic=!tb.italic;document.getElementById('gtbItalicBtn').style.background=tb.italic?'#ddeeff':'#f5f5f5';}
-  else if(style==='under'){tb.under=!tb.under;document.getElementById('gtbUnderBtn').style.background=tb.under?'#ddeeff':'#f5f5f5';}
+  if(style==='bold'){tb.bold=!tb.bold;document.getElementById('gtbBoldBtn').classList.toggle('active',!!(tb.bold));}
+  else if(style==='italic'){tb.italic=!tb.italic;document.getElementById('gtbItalicBtn').classList.toggle('active',!!(tb.italic));}
+  else if(style==='under'){tb.under=!tb.under;document.getElementById('gtbUnderBtn').classList.toggle('active',!!(tb.under));}
   ganttRenderTextBoxes();
 }
 
@@ -8780,9 +8782,9 @@ function presOpenShapeMenu(id,cx,cy){
   document.getElementById('pshTextRow').style.display=(isLine||sh.type==='image')?'none':'flex';
   document.getElementById('pshTextContent').value=sh.text||'';
   document.getElementById('pshFontSzSel').value=String(sh.fontSize||12);
-  document.getElementById('pshBold').checked=sh.textBold!==false;
-  document.getElementById('pshItalic').style.background=sh.textItalic?'#ddeeff':'#f5f5f5';
-  document.getElementById('pshUnder').style.background=sh.textUnder?'#ddeeff':'#f5f5f5';
+  document.getElementById('pshBold').classList.toggle('active',sh.textBold!==false);
+  document.getElementById('pshItalic').classList.toggle('active',!!(sh.textItalic));
+  document.getElementById('pshUnder').classList.toggle('active',!!(sh.textUnder));
   document.getElementById('pshAlignSel').value=sh.textAlign||'middle';
   document.getElementById('pshPosSel').value=sh.textPos||'center';
   document.getElementById('pshTextFull').checked=!!sh.textFull;
@@ -8809,7 +8811,7 @@ function presUpdateShape(){
   if(!isLine){
     sh.text=document.getElementById('pshTextContent').value;
     sh.fontSize=+document.getElementById('pshFontSzSel').value||12;
-    sh.textBold=document.getElementById('pshBold').checked;
+    sh.textBold=document.getElementById('pshBold').classList.contains('active');
     sh.textAlign=document.getElementById('pshAlignSel').value;
     sh.textPos=document.getElementById('pshPosSel').value;
     sh.textFull=document.getElementById('pshTextFull').checked;
@@ -8821,10 +8823,10 @@ function presShapeToggleStyle(style){
   const sh=PRES_SHAPES.find(s=>s.id===_pshId);if(!sh)return;
   if(style==='italic'){
     sh.textItalic=!sh.textItalic;
-    document.getElementById('pshItalic').style.background=sh.textItalic?'#ddeeff':'#f5f5f5';
+    document.getElementById('pshItalic').classList.toggle('active',!!(sh.textItalic));
   } else {
     sh.textUnder=!sh.textUnder;
-    document.getElementById('pshUnder').style.background=sh.textUnder?'#ddeeff':'#f5f5f5';
+    document.getElementById('pshUnder').classList.toggle('active',!!(sh.textUnder));
   }
   renderPres();
 }
@@ -8878,9 +8880,9 @@ function presOpenTextBoxMenu(id,cx,cy){
   document.getElementById('ptbBgNone').checked=!tb.bg||tb.bg==='none';
   document.getElementById('ptbBorderNone').checked=!tb.border||tb.border==='none';
   document.getElementById('ptbAlign').value=tb.align||'middle';
-  document.getElementById('ptbBoldBtn').style.background=tb.bold?'#ddeeff':'#f5f5f5';
-  document.getElementById('ptbItalicBtn').style.background=tb.italic?'#ddeeff':'#f5f5f5';
-  document.getElementById('ptbUnderBtn').style.background=tb.under?'#ddeeff':'#f5f5f5';
+  document.getElementById('ptbBoldBtn').classList.toggle('active',!!(tb.bold));
+  document.getElementById('ptbItalicBtn').classList.toggle('active',!!(tb.italic));
+  document.getElementById('ptbUnderBtn').classList.toggle('active',!!(tb.under));
   const m=document.getElementById('presTextBoxMenu');
   m.style.display='block';
   m.style.left=Math.min(cx+8,innerWidth-240)+'px';
@@ -8901,9 +8903,9 @@ function presUpdateTextBox(){
 function presToggleTextBoxStyle(style){
   if(!_ptbId)return;
   const tb=PRES_TEXTBOXES.find(b=>b.id===_ptbId);if(!tb)return;
-  if(style==='bold'){tb.bold=!tb.bold;document.getElementById('ptbBoldBtn').style.background=tb.bold?'#ddeeff':'#f5f5f5';}
-  else if(style==='italic'){tb.italic=!tb.italic;document.getElementById('ptbItalicBtn').style.background=tb.italic?'#ddeeff':'#f5f5f5';}
-  else if(style==='under'){tb.under=!tb.under;document.getElementById('ptbUnderBtn').style.background=tb.under?'#ddeeff':'#f5f5f5';}
+  if(style==='bold'){tb.bold=!tb.bold;document.getElementById('ptbBoldBtn').classList.toggle('active',!!(tb.bold));}
+  else if(style==='italic'){tb.italic=!tb.italic;document.getElementById('ptbItalicBtn').classList.toggle('active',!!(tb.italic));}
+  else if(style==='under'){tb.under=!tb.under;document.getElementById('ptbUnderBtn').classList.toggle('active',!!(tb.under));}
   renderPres();
 }
 
@@ -9047,7 +9049,7 @@ function presSetYearWidthMul(val,snapForUndo){
 function _presYfKey(){return(_presYearIsLB?'LB':'')+_presYearKey;}
 function presYearFmtSync(){
   const o=PRES_YEAR_FMT[_presYfKey()]||{};
-  const st=(id,on)=>{const b=document.getElementById(id);if(b){b.style.borderColor=on?'#2563eb':'#ccc';b.style.background=on?'#e8f0fe':'#fff';}};
+  const st=(id,on)=>{const b=document.getElementById(id);if(b)b.classList.toggle('active',!!on);};
   st('pymBold',o.bold!==false);st('pymItalic',!!o.italic);st('pymUnder',!!o.under);
   ['start','middle','end'].forEach(a=>st('pymAl_'+a,(o.align||'middle')===a));
 }
@@ -11170,29 +11172,31 @@ function presDrawConnectors(){
 }
 function presConnMenu(id,x,y){
   const c=PRES_CONNECTORS.find(k=>k.id===id);if(!c)return;_conMenuId=id;
-  let m=document.getElementById('presConnMenu');
-  if(!m){m=document.createElement('div');m.id='presConnMenu';m.style.cssText='position:fixed;z-index:100005;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:230px;font-size:11px;color:#333;display:none';document.body.appendChild(m);
-    document.addEventListener('mousedown',e=>{if(m.style.display!=='none'&&!m.contains(e.target)&&!e.target.closest('#colorPicker'))m.style.display='none';},true);}
-  const S=(v,t)=>'<option value="'+v+'"'+((c.dash||'solid')===v?' selected':'')+'>'+t+'</option>';
-  m.innerHTML='<div style="font-weight:700;margin-bottom:8px">Conector</div>'
-   +'<div style="display:flex;gap:4px;margin-bottom:8px">'+CON_TYPES.map(t=>'<button type="button" onclick="presConnSet(\'type\',\''+t[0]+'\')" title="'+t[1]+'" style="flex:1;height:28px;border:1px solid '+((c.type||'z')===t[0]?'#2563eb':'#ccc')+';background:'+((c.type||'z')===t[0]?'#e8f0fe':'#fff')+';border-radius:5px;cursor:pointer;padding:0"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+t[2]+'</svg></button>').join('')+'</div>'
-   +(c.type==='dim'?'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Texto:</span><input type="text" value="'+String(c.text==null?'':c.text).replace(/"/g,'&quot;')+'" oninput="presConnSet(\'text\',this.value)" placeholder="p. ej. Time To Market:" style="flex:1;min-width:0;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"></div>'
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Formato:</span><select onchange="presConnSet(\'fmt\',this.value)" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px">'+[['ym','Años y meses'],['m','Meses'],['d','Días'],['dsign','Días con signo (+/−)'],['none','Sin valor']].map(o=>'<option value="'+o[0]+'"'+((c.fmt||'ym')===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></div>'
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Desde:</span><select onchange="presConnSet(\'fromEdge\',this.value)" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><option value="start"'+((c.fromEdge||'start')==='start'?' selected':'')+'>Comienzo de A</option><option value="end"'+(c.fromEdge==='end'?' selected':'')+'>Fin de A</option></select></div>'
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Hasta:</span><select onchange="presConnSet(\'toEdge\',this.value)" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><option value="start"'+(c.toEdge==='start'?' selected':'')+'>Comienzo de B</option><option value="end"'+((c.toEdge||'end')==='end'?' selected':'')+'>Fin de B</option></select></div>'
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Letra:</span><input type="number" min="6" max="40" value="'+(c.fs||12)+'" oninput="presConnSet(\'fs\',this.value)" style="width:56px;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><button type="button" onclick="presConnResetPos()" style="margin-left:auto;font-size:10px;padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer" title="Vuelve a la posición automática, bajo la franja de años">Restablecer posición</button></div>':'')
-   +(c.type==='z'?'<div style="margin-bottom:8px;color:#666;font-size:10px;line-height:1.3">Arrastre el tramo vertical para moverlo. <button type="button" onclick="presConnResetPos()" style="font-size:10px;padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer">Restablecer recorrido</button></div>':'')
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Grosor:</span><input type="number" id="pcmW" min="0.5" max="8" step="0.5" value="'+(c.w||1.5)+'" oninput="presConnSet(\'w\',this.value)" style="width:56px;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><span style="color:#999">px</span></div>'
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Estilo:</span><select onchange="presConnSet(\'dash\',this.value)" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px">'+S('solid','— Continua')+S('dotted','· · Punteada')+S('dashed','— Rayada')+S('dashed2','— Mixta')+'</select></div>'
-   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Color:</span><span id="pcmColor" onclick="presConnPickColor()" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+(c.color||'#1f6f8b')+'"></span><label style="margin-left:auto;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" '+(c.arrow!==false?'checked':'')+' onchange="presConnSet(\'arrow\',this.checked)">Flecha</label></div>'
-   +'<button type="button" onclick="presConnDelete()" style="font-size:10px;padding:2px 8px;border:1px solid #f99;border-radius:3px;background:#fff5f5;color:#c00;cursor:pointer">🗑 Eliminar</button>';
-  m.style.display='block';m.style.left=Math.max(4,Math.min(x+4,innerWidth-242))+'px';m.style.top=Math.max(4,Math.min(y+4,innerHeight-(m.offsetHeight||220)-8))+'px';
+  const m=ppMenu('presConnMenu',100005);
+  const dim=c.type==='dim';
+  let s='<div class="pop-label" style="margin-bottom:6px">'+(dim?'Medida de tiempo':'Conector')+'</div>'
+   +'<div class="pbm-seg" role="group" aria-label="Tipo de conector" style="margin-bottom:6px">'+CON_TYPES.map(t=>'<button type="button" class="pbm-seg-btn'+((c.type||'z')===t[0]?' active':'')+'" title="'+t[1]+'" onclick="presConnSet(\'type\',\''+t[0]+'\')">'+ppSvg(t[2])+'</button>').join('')+'</div>';
+  if(dim){
+    s+=ppDiv()+ppSec('Texto')+ppRow('Texto:',ppText('pcmText',c.text==null?'':c.text,'p. ej. Plazo:',"presConnSet('text',this.value)"))
+      +ppRow('Formato:',ppSel('',"presConnSet('fmt',this.value)",[['ym','Años y meses'],['m','Meses'],['d','Días'],['dsign','Días con signo (+/−)'],['none','Sin valor']],c.fmt||'ym'))
+      +ppRow('Tamaño:',ppSize('',"presConnSet('fs',this.value)",c.fs||12,false))
+      +ppDiv()+ppSec('Fechas')
+      +ppRow('Desde:',ppSel('',"presConnSet('fromEdge',this.value)",[['start','Comienzo de A'],['end','Fin de A']],c.fromEdge||'start'))
+      +ppRow('Hasta:',ppSel('',"presConnSet('toEdge',this.value)",[['start','Comienzo de B'],['end','Fin de B']],c.toEdge||'end'));
+  }
+  if(c.type==='z')s+='<div class="pop-unit" style="margin:4px 0;line-height:1.3">Arrastre el tramo vertical para moverlo.</div>';
+  s+=ppDiv()+ppSec('Línea')+ppRow('Grosor:',ppNum('pcmW','min="0.5" max="8" step="0.5"',"presConnSet('w',this.value)",c.w||1.5)+'<span class="pop-unit">px</span>')
+    +ppRow('Estilo:',ppSel('',"presConnSet('dash',this.value)",[['solid','— Continua'],['dotted','· · Punteada'],['dashed','— Rayada'],['dashed2','— Mixta']],c.dash||'solid'))
+    +ppRow('Color:',ppSwatch('pcmColor',c.color||'#1f6f8b','presConnPickColor()'));
+  if(!dim)s+=ppRow('Flecha:','<label class="toggle" style="padding:0"><input type="checkbox"'+(c.arrow!==false?' checked':'')+' onchange="presConnSet(\'arrow\',this.checked)"><span class="tg-track"></span></label>');
+  s+=ppDiv()+'<div style="display:flex;align-items:center;gap:6px">'+((dim||c.type==='z')?ppFlat('Restablecer posición','presConnResetPos()'):'')+ppFlat(ppTrash+' Eliminar','presConnDelete()','margin-left:auto;color:#c0392b')+'</div>';
+  m.innerHTML=s;ppPlace(m,x,y);
 }
 function presConnSet(k,v){
   const c=PRES_CONNECTORS.find(q=>q.id===_conMenuId);if(!c)return;_presSnap();
   c[k]=k==='w'?Math.max(.5,Math.min(8,+v||1.5)):(k==='fs'?Math.max(6,Math.min(40,+v||12)):(k==='dy'?(+v||0):v));
   if(k==='type'&&v==='dim'){if(!c.fromEdge)c.fromEdge='start';if(!c.toEdge)c.toEdge='end';if(c.text==null)c.text='';c.fmt=c.fmt||'ym';}
-  if(k==='type'){const m=document.getElementById('presConnMenu');if(m&&m.style.display!=='none')presConnMenu(c.id,parseFloat(m.style.left)-4,parseFloat(m.style.top)-4);}
+  if(k==='type'){const m=document.getElementById('presConnMenu');if(m&&m.style.display!=='none'){const _x=parseFloat(m.style.left)-4,_y=parseFloat(m.style.top)-4;setTimeout(()=>presConnMenu(c.id,_x,_y),0);}}
   renderPres();
 }
 function presConnPickColor(){
@@ -11969,6 +11973,7 @@ document.addEventListener('keydown',e=>{
           </div>
           <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
             <li><b>Agrupador vertical y horizontal:</b> el «Agrupador» pasa a llamarse <b>Agrupador vertical</b> (hasta 4 niveles anidados, columna a elección, asas de ajuste). Nuevo <b>Agrupador horizontal</b>: una banda por valor de la columna elegida (Categoría 1 por defecto) sobre la franja de años (una sola fila: donde dos bandas se superponen, el tramo común se pinta con la mezcla de sus colores; se coloca encima de los hitos o pegado a la franja de años); los hitos se arrastran con el mouse para cambiar su «Distancia al eje» y pueden pasar por encima del agrupador, con color propio por banda (doble clic), espacio hasta los años automático o ajustable arrastrando, y borde configurable. Ambos van juntos en Capas → Modo de vista.</li>
+            <li><b>Paneles normalizados:</b> todos los paneles de propiedades (tarea, hito, evento, año, agrupadores, leyenda, conectores, cuadros de texto y formas) usan las mismas etiquetas y tamaños, los mismos íconos de alineación y de posición, los botones K S N con el mismo aspecto y orden, y «Restablecer» / «Eliminar» con el mismo estilo. Guía en docs/GUIA_PANELES.md.</li>
             <li><b>Formato completo en todos los elementos:</b> tareas, hitos, eventos, años, agrupadores vertical y horizontal y leyenda ofrecen Texto, Fuente, Relleno, Borde (grosor, estilo, color) y Alineación, más sus opciones propias. Los agrupadores se abren con clic derecho; los años (nombre propio, N K S, alineación) y los hitos y eventos (color y alineación del texto, borde del marcador) con su menú o panel.</li>
             <li><b>Franja de años:</b> doble clic en un año → «Unir hasta» funde varios años en un tramo (p. ej. «2030 - 2033») con texto editable. En Vista Hitos el eje se calcula solo con los hitos.</li>
             <li><b>Timeline Delta:</b> nuevo modo que compara los hitos de dos escenarios (A y B) con flecha de desviación y columna «Δ días»; usa la escala, el formato de fecha, los años, los filtros y los controles de la Línea de Tiempo.</li>
