@@ -1442,7 +1442,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <div class="tb-pop-title">MODO DE VISTA</div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg><span class="tg-label">Comparador</span><input type="checkbox" id="presShowLB" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="1.5"/><path d="M9 9v6"/><path d="M15 9v6"/></svg><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
-        <div class="tb-lrow-wrap" id="presYearDivWrap" style="display:none;align-items:center;gap:6px;padding:2px 8px 6px 34px;flex-wrap:wrap"><span class="pop-unit">Divisor de año</span><input type="number" id="presYearDivW" value="0.5" min="0.5" max="6" step="0.5" onchange="renderPres()" style="width:44px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px" title="Grosor (px)"><span class="pop-unit">px</span><span id="presYearDivColor" onclick="pickPresYearDivColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#eeeeee" title="Color"></span></div>
+        <div class="tb-lrow-wrap" id="presYearDivWrap" style="display:none;align-items:center;gap:6px;padding:2px 8px 6px 34px;flex-wrap:wrap"><label class="pop-unit" style="display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" id="presYearDivOn" checked onchange="renderPres()" data-noreset>Divisor de año</label><input type="number" id="presYearDivW" value="0.5" min="0.5" max="6" step="0.5" onchange="renderPres()" style="width:44px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px" title="Grosor (px)"><span class="pop-unit">px</span><span id="presYearDivColor" onclick="pickPresYearDivColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#eeeeee" title="Color"></span></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" id="presRapToggleWrap" title="Agrupa las barras en bandas por la columna que elijas (Categoría 1 por defecto), con el color de Categoría 2."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span class="tg-label">Agrupador</span><input type="checkbox" id="presShowRaP" onchange="togglePresRaP()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap" id="presGroupFieldWrap" style="display:none;flex-direction:column;align-items:stretch;gap:4px;padding:2px 8px 6px 34px"></div>
@@ -2955,7 +2955,7 @@ function pickPresYearDivColor(){
 }
 function presSyncSegUI(){
   const seg=document.getElementById('presShowSeg'),w=document.getElementById('presYearDivWrap'),sw=document.getElementById('presYearDivColor');
-  if(w)w.style.display=seg&&seg.checked?'flex':'none';
+  if(w)w.style.display='flex';
   if(sw)sw.style.background=_presYearDivCol;
 }
 let _presHoyCol='#FF0000';
@@ -4930,7 +4930,7 @@ function _buildShareBlob(shared){
     presShowHoy:(document.getElementById('presShowHoy')||{checked:false}).checked,
     presHoyDash:(document.getElementById('presHoyDash')||{value:'solid'}).value,
     presHoyW:(document.getElementById('presHoyW')||{value:2}).value,
-    presHoyColor:_presHoyCol,presYearDivColor:_presYearDivCol,presYearDivW:(document.getElementById('presYearDivW')||{value:0.5}).value,
+    presHoyColor:_presHoyCol,presYearDivColor:_presYearDivCol,presYearDivW:(document.getElementById('presYearDivW')||{value:0.5}).value,presYearDivOn:(document.getElementById('presYearDivOn')||{checked:true}).checked,
     presShowOnlyCrit:(document.getElementById('presShowOnlyCrit')||{checked:false}).checked,
     presCritW:(document.getElementById('presCritW')||{value:2.5}).value,
     presFilterEsc:(document.getElementById('presFilterEsc')||{value:''}).value,
@@ -5146,6 +5146,7 @@ function loadEmbedded(){
   _setVal('presHoyDash',d.presHoyDash);
   _setVal('presHoyW',d.presHoyW);
   if(d.presYearDivColor)_presYearDivCol=d.presYearDivColor;
+  if(d.presYearDivOn!=null){const _yo=document.getElementById('presYearDivOn');if(_yo)_yo.checked=!!d.presYearDivOn;}
   if(d.presYearDivW!=null){const _yw=document.getElementById('presYearDivW');if(_yw)_yw.value=d.presYearDivW;}
   if(d.presHoyColor){_presHoyCol=d.presHoyColor;const sw=document.getElementById('presHoyColor');if(sw)sw.style.background=d.presHoyColor;}
   {const wrap=document.getElementById('presFechaEstadoMenuWrap');if(wrap)wrap.style.display=d.presShowHoy?'inline-block':'none';}
@@ -6066,7 +6067,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     svg+=`</g>`;
   });}
   const _ydW=Math.max(0.5,Math.min(6,+(document.getElementById('presYearDivW')||{value:0.5}).value||0.5));
-  S.grid.forEach(g=>{if(g.major)svg+=`<line x1="${ML+g.x}" y1="${axisY0+axisH}" x2="${ML+g.x}" y2="${miBotStart}" stroke="${_presYearDivCol}" stroke-width="${_ydW}"/>`;});
+  if((document.getElementById('presYearDivOn')||{checked:true}).checked)yearAxis.forEach((m,i)=>{if(i===0)return;svg+=`<line x1="${m.x0}" y1="${axisY0+axisH}" x2="${m.x0}" y2="${miBotStart}" stroke="${_presYearDivCol}" stroke-width="${_ydW}"/>`;});
 
   // ── Líneas de hitos inferiores ANTES que las barras (quedan detrás) ──
   const presShowDates=(document.getElementById('presShowDates')||{checked:true}).checked;
