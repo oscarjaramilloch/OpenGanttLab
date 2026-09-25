@@ -2867,6 +2867,8 @@ let _presLastGroupByC1=false;
 // _presRapDrag más abajo): ancho de la columna de nombres de Categoría 1 (px) y filas
 // mínimas por banda (clave = nombre de Categoría 1) — nunca reduce por debajo de lo que
 // las tareas de esa banda necesitan (ver _rapMinRows en _presSVG).
+// Espacio (px) entre la columna de etiquetas del Agrupador y el inicio del gráfico, y a la derecha del gráfico; se ajustan arrastrando.
+let RAP_GAP_L=40,RAP_GAP_R=80;
 let RAP_LABEL_W_USER=0; // 0 = sin ajuste manual: usa el ancho mínimo autoajustado al texto (ver _rapAutoLabelW)
 let RAP_BAND_ROWS_OVERRIDE={};
 // Orden vertical manual de las bandas de Categoría 1 en Vista RaP (clave = nombre de
@@ -4897,7 +4899,7 @@ function _buildShareBlob(shared){
     estName:document.getElementById('estName').value,estDate:document.getElementById('estDate').value,
     presExecMode:document.getElementById('presShowExecutive').checked,presDateFmt:document.getElementById('presDateFmt').value,presExecHidden:[...PRES_EXEC_HIDDEN_KEYS],presDepHidden:[...PRES_DEP_HIDDEN],
     rapAvailable:_rapAvailable,presShowRaP:(document.getElementById('presShowRaP')||{checked:false}).checked,
-    presGroupFields:PRES_GROUP_FIELDS,rapLabelW:RAP_LABEL_W_USER,rapBandRowsOverride:RAP_BAND_ROWS_OVERRIDE,rapC1Order:RAP_C1_ORDER,
+    presGroupFields:PRES_GROUP_FIELDS,rapLabelW:RAP_LABEL_W_USER,rapGapL:RAP_GAP_L,rapGapR:RAP_GAP_R,rapBandRowsOverride:RAP_BAND_ROWS_OVERRIDE,rapC1Order:RAP_C1_ORDER,
     // Toggles del ribbon de la LdT que también deben sobrevivir a "Compartir" — sin esto el
     // archivo compartido reabre con Comparador/Segmentación/Marca Activity/Resumen/Leyenda/
     // Fecha de estado/Ruta Crítica en su valor por defecto del HTML en vez del configurado.
@@ -5101,6 +5103,8 @@ function loadEmbedded(){
   _rapAvailable=!!d.rapAvailable;
   const _rapCbEl=document.getElementById('presShowRaP');if(_rapCbEl)_rapCbEl.checked=_rapAvailable&&!!d.presShowRaP;
   if(d.rapLabelW!=null)RAP_LABEL_W_USER=+d.rapLabelW||24;
+  if(d.rapGapL!=null)RAP_GAP_L=+d.rapGapL;
+  if(d.rapGapR!=null)RAP_GAP_R=+d.rapGapR;
   RAP_BAND_ROWS_OVERRIDE=d.rapBandRowsOverride||{};
   RAP_C1_ORDER=d.rapC1Order||{};
   if(d.presGroupFields&&d.presGroupFields.length)PRES_GROUP_FIELDS=d.presGroupFields.slice(0,PG_MAX);else if(d.presGroupField)PRES_GROUP_FIELDS=[d.presGroupField];
@@ -5827,7 +5831,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const needL=halfW-rawX-50; if(needL>_autoLeft)_autoLeft=needL;
     const needR=halfW-(TW-rawX)-80; if(needR>_autoRight)_autoRight=needR;
   });
-  const ML=(groupByC1?_rapLblEnd+40:50)+_extraLeft+Math.max(0,_autoLeft),MR=80+_extraRight+Math.max(0,_autoRight);
+  const ML=(groupByC1?_rapLblEnd+RAP_GAP_L:50)+_extraLeft+Math.max(0,_autoLeft),MR=(groupByC1?RAP_GAP_R:80)+_extraRight+Math.max(0,_autoRight);
   // Título (Escenario/Comparador) con "Distancia al eje" (titleYOffset), mismo principio que
   // los hitos: el texto se desplaza hacia arriba (más lejos del eje) restando el offset a su
   // posición natural, y el alto reservado arriba (_titleShift) crece exactamente lo necesario
@@ -5999,6 +6003,9 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const _rapLastBand=rapBands[rapBands.length-1];
     const _rapTotalRows=_rapLastBand.startLy+_rapLastBand.rows;
     svg+=`<rect x="${_rapLblEnd-3}" y="${taskY0}" width="6" height="${_rapTotalRows*layerH}" fill="transparent" data-rap-resize="w" style="cursor:ew-resize"/>`;
+    // Asas para ajustar el espacio en blanco: a la izquierda del gráfico (borde donde empieza el eje) y a la derecha (borde de la caja)
+    svg+=`<rect x="${ML-3}" y="${taskY0}" width="6" height="${_rapTotalRows*layerH}" fill="transparent" data-rap-resize="gl" style="cursor:ew-resize"><title>Arrastre para ajustar el espacio a la izquierda del gráfico</title></rect>`;
+    svg+=`<rect x="${ML+TW+MR-7}" y="${taskY0}" width="6" height="${_rapTotalRows*layerH}" fill="transparent" data-rap-resize="gr" style="cursor:ew-resize"><title>Arrastre para ajustar el espacio a la derecha del gráfico</title></rect>`;
     // Metadata para el arrastre de reordenamiento vertical (ver data-rap-reorder abajo) — se
     // necesita fuera de esta función para hacer hit-test contra la posición del puntero.
     _presLastRapBands=rapBands.map(b=>({c1:b.c1,startLy:b.startLy,rows:b.rows}));
@@ -7334,10 +7341,12 @@ document.getElementById('presBody').addEventListener('mousedown',e=>{
   const type=handle.dataset.rapResize;
   if(type==='w'){
     _presRapDrag={type,startX:pt.x,startW:RAP_LABEL_W_USER||(+svg.dataset.rapLw||0)};
+  } else if(type==='gl'||type==='gr'){
+    _presRapDrag={type,startX:pt.x,startV:type==='gl'?RAP_GAP_L:RAP_GAP_R};
   } else {
     _presRapDrag={type,startY:pt.y,c1:handle.dataset.c1,layerH:+svg.dataset.layerH||42,startRows:+handle.dataset.rows||1};
   }
-  document.body.style.cursor=type==='w'?'ew-resize':'ns-resize';
+  document.body.style.cursor=(type==='w'||type==='gl'||type==='gr')?'ew-resize':'ns-resize';
   document.body.style.userSelect='none';
   e.preventDefault();e.stopPropagation();
 });
@@ -7348,6 +7357,10 @@ document.addEventListener('mousemove',e=>{
   if(_presRapDrag.type==='w'){
     const dx=pt.x-_presRapDrag.startX;
     RAP_LABEL_W_USER=Math.max(16,Math.round(_presRapDrag.startW+dx));
+    renderPres();
+  } else if(_presRapDrag.type==='gl'||_presRapDrag.type==='gr'){
+    const v=Math.max(0,Math.min(400,Math.round(_presRapDrag.startV+pt.x-_presRapDrag.startX)));
+    if(_presRapDrag.type==='gl')RAP_GAP_L=v;else RAP_GAP_R=v;
     renderPres();
   } else if(_presRapDrag.type==='reorder'){
     _presRapDrag.moved=true;
