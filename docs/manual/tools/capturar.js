@@ -721,6 +721,12 @@ FIGS['9e'] = async b => {   // Agrupador horizontal pegado a la franja de años
   await ldtShot(p, 'fig-905-ldt-agrupador-horizontal-eje', false);
   await p.close();
 };
+FIGS['9f'] = async b => {   // Copiar formato
+  const p = await ldt(b, { h: 900 });
+  await p.evaluate(() => { const bs = [...document.querySelectorAll('#presBody [data-pres-bar]')]; const o = bs.find(e => /Obras civiles/.test(e.dataset.presBar)) || bs[3]; PRES_OPTS[o.dataset.presBar] = Object.assign(PRES_OPTS[o.dataset.presBar] || {}, { color: '#f4a261', textBold: true, borderW: 2, borderColor: '#9c4f00' }); renderPres(); _presBarKey = o.dataset.presBar; document.getElementById('btnPresFmt').click(); }); await sleep(700);
+  await shot(p, 'fig-906-ldt-copiar-formato', { clip: C(NAV, 62, W - NAV, 838) });
+  await p.close();
+};
 FIGS['91'] = async b => {   // opciones del agrupador horizontal
   const p = await ldt(b); await set(p, 'presShowSubproc', true); await click(p, '#btnPresCapasMenu');
   await click(p, '#btnPresSubprocMenu');
