@@ -377,6 +377,7 @@ th,td{padding:0}
 .edTable input[type=text]:focus,.edTable input[type=number]:focus{background:#fff;border-radius:3px;box-shadow:0 0 0 1.5px var(--accent) inset}
 .edTable textarea.etar{font:inherit;font-size:12px;text-align:center;border:none;background:transparent;padding:3px 4px;outline:none;width:100%;box-sizing:border-box;resize:none;overflow:hidden;line-height:1.3;white-space:pre-wrap}
 .edTable textarea.etar:focus{background:#fff;border-radius:3px;box-shadow:0 0 0 1.5px var(--accent) inset}
+.edTable input[type=date]::-webkit-datetime-edit{color:transparent}.dfw{position:relative;display:inline-block}.dfs{position:absolute;left:0;right:20px;top:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none;font-size:11.5px;color:var(--ink,#222)}
 .edTable input[type=date]{font:inherit;font-size:11.5px;text-align:center;border:none;background:transparent;padding:2px 3px;outline:none}
 .edTable select{font:inherit;font-size:12px;text-align:center;border:none;background:transparent;padding:2px;cursor:pointer}
 .edTable tr:hover td{background:#f6f9ff}
@@ -1512,7 +1513,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="1.5"/><path d="M9 9v6"/><path d="M15 9v6"/></svg><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presSegMenuWrap"><button class="tb-btn sm" id="btnPresSegMenu" aria-label="Opciones de segmentación" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresSegMenu','presSegMenuPanel')" title="segmentación"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presSegMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresSegMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:200px"><div id="presYearDivWrap" style="display:flex;flex-direction:column;gap:8px"><label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--ink)"><input type="checkbox" id="presYearDivOn" checked onchange="renderPres()" data-noreset>Divisor de año</label><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Grosor:</span><input type="number" id="presYearDivW" value="0.5" min="0.5" max="6" step="0.5" onchange="renderPres()" style="width:44px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px" title="Grosor (px)"><span style="font-size:10px;color:var(--muted)">px</span></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Estilo:</span><select id="presYearDivDash" onchange="renderPres()" style="font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Color:</span><span id="presYearDivColor" onclick="pickPresYearDivColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#eeeeee" title="Color"></span></div></div></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" id="presRapToggleWrap" title="Agrupa las barras en bandas por la columna que elijas (Categoría 1 por defecto), con el color de Categoría 2."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span class="tg-label">Agrupador</span><input type="checkbox" id="presShowRaP" onchange="togglePresRaP()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presGroupMenuWrap"><button class="tb-btn sm" id="btnPresGroupMenu" aria-label="Opciones de agrupador" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresGroupMenu','presGroupMenuPanel')" title="agrupador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presGroupMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresGroupMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:240px"><div id="presGroupFieldWrap" style="display:flex;flex-direction:column;align-items:stretch;gap:4px"></div></div></div></div>
-        <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Muestra únicamente los hitos de la Línea de Tiempo — oculta todas las tareas y filas de resumen."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"/></svg><span class="tg-label">Vista Hitos</span><input type="checkbox" id="presShowHitos" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
+        <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Muestra únicamente los hitos de la Línea de Tiempo — oculta todas las tareas y filas de resumen."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"/></svg><span class="tg-label">Vista Hitos</span><input type="checkbox" id="presShowHitos" onchange="renderPres()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presHitosMenuWrap"><button class="tb-btn sm" id="btnPresHitosMenu" aria-label="Opciones de Vista Hitos" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresHitosMenu','presHitosMenuPanel')" title="Opciones de Vista Hitos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presHitosMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresHitosMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:240px"><label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--ink)" title="Une el mismo hito entre escenarios (con el Agrupador por escenario) y rotula los días de desplazamiento"><input type="checkbox" id="presShowMsDelta" checked onchange="renderPres()" data-noreset>Días desplazados entre escenarios</label></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Compara los hitos de dos escenarios: flecha de desviación y días de diferencia (Δ) por hito."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h12"/><path d="m13 8 4 4-4 4"/><path d="M4 5v14"/></svg><span class="tg-label">Timeline Delta</span><input type="checkbox" id="presShowDelta" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-pop-sep"></div>
         <button type="button" class="filtro-menu-item" id="btnPresResetLayers" title="Restablece el contenido (no cambia el modo de vista)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>Restablecer capas</button>
@@ -3031,6 +3032,7 @@ function pickPresYearDivColor(){
   cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 }
 function presSyncSegUI(){
+  {const hc=document.getElementById('presShowHitos'),hw=document.getElementById('presHitosMenuWrap');if(hw)hw.style.display=hc&&hc.checked?'inline-block':'none';}
   const _fd=document.getElementById('presShowDates'),_fw=document.getElementById('presFechasMenuWrap');if(_fw)_fw.style.display=_fd&&_fd.checked?'inline-block':'none';
   const seg=document.getElementById('presShowSeg'),w=document.getElementById('presYearDivWrap'),sw=document.getElementById('presYearDivColor');
   const _sw=document.getElementById('presSegMenuWrap');if(_sw)_sw.style.display=seg&&seg.checked?'inline-block':'none';
@@ -3537,6 +3539,38 @@ document.getElementById('wrap').addEventListener('click',e=>{
 /* ── Dependencias en la Línea de Tiempo (vista normal y Comparador; no en Ejecutivo ni Hitos) ──
    Se leen las cajas de las barras/hitos ya dibujados (data-pres-*) y se agrega un grupo SVG encima.
    Las flechas del "resaltado por selección" llevan data-dep-tmp: los exportes PNG/PDF las omiten. */
+// Vista Hitos + Agrupador: une el mismo hito entre bandas (escenarios) y rotula los días de desplazamiento
+function presDrawMsDelta(){
+  const body=document.getElementById('presBody');if(!body)return;
+  body.querySelectorAll('.presMsDG').forEach(g=>g.remove());
+  const chk=id=>!!(document.getElementById(id)||{}).checked;
+  if(!chk('presShowHitos')||!chk('presShowMsDelta'))return;
+  try{
+    const byKey=new Map();TASKS.forEach(t=>byKey.set(pkOf(t),t));
+    body.querySelectorAll('svg').forEach(svg=>{
+      const groups=new Map();
+      svg.querySelectorAll('[data-pres-mito]').forEach(el=>{
+        const raw=el.dataset.presMito||'',t=byKey.get(raw.startsWith('LB|')?raw.slice(3):raw);if(!t||!t.hito)return;
+        let bb;try{bb=el.getBBox();}catch(e){return;}
+        const k=SI.norm(t.c1)+''+SI.norm(t.c2)+''+SI.norm(t.tarea);
+        (groups.get(k)||groups.set(k,[]).get(k)).push({t,x:bb.x+bb.width/2,y:bb.y+bb.height/2,h:bb.height});
+      });
+      let out='';
+      groups.forEach(list=>{
+        list.sort((a,b)=>a.y-b.y);
+        for(let i=0;i+1<list.length;i++){
+          const a=list[i],b=list[i+1];if((a.t.escenario||'')===(b.t.escenario||''))continue;
+          const n=Math.round((+b.t.iRP-+a.t.iRP)/864e5);if(!n)continue;
+          const col=n>0?'#c0392b':'#1a7f37',txt=(n>0?'+':'')+n+' días',w=txt.length*6.2+16,mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+          const yA=a.y+a.h/2,yB=b.y-b.h/2,ym=(a.y+b.y)/2;
+          out+='<path d="M'+a.x+' '+yA+' V'+ym+' H'+b.x+' V'+yB+'" fill="none" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,3" stroke-linejoin="round"/>';
+          out+='<rect x="'+(mx-w/2)+'" y="'+(my-10)+'" width="'+w+'" height="20" rx="8" fill="'+(n>0?'#fde3e3':'#dff3e5')+'" stroke="'+col+'" stroke-width=".6"/><text x="'+mx+'" y="'+(my+4)+'" text-anchor="middle" font-size="11" font-weight="bold" fill="'+col+'">'+txt+'</text>';
+        }
+      });
+      if(out)svg.insertAdjacentHTML('beforeend','<g class="presMsDG" pointer-events="none">'+out+'</g>');
+    });
+  }catch(err){console.warn('presDrawMsDelta:',err);}
+}
 function presDrawDeps(fresh){
   const body=document.getElementById('presBody');if(!body)return;
   body.querySelectorAll('.presDepG').forEach(g=>g.remove());
@@ -4132,6 +4166,7 @@ function applyPickerColor(color){
   else if(_cpTarget.type==='presyearbg'){_presSnap();(_presYearIsLB?PRES_LB_YEAR_COLORS:PRES_YEAR_COLORS)[_cpTarget.name]=color;document.getElementById('pymBgSwatch').style.background=color;closeColorPicker();renderPres();return;}
   else if(_cpTarget.type==='presyearfg'){_presSnap();(_presYearIsLB?PRES_LB_YEAR_TEXT_COLORS:PRES_YEAR_TEXT_COLORS)[_cpTarget.name]=color;document.getElementById('pymFgSwatch').style.background=color;closeColorPicker();renderPres();return;}
   else if(_cpTarget.type==='hoycolor'){_hoyLineCol=color;_hoyTextCol=color;const sw=document.getElementById('hoyLineColor');if(sw)sw.style.background=color;applyHoyStyle();closeColorPicker();return;}
+  else if(_cpTarget.type==='presdeltacolor'){if(_cpTarget.w==='A')_deltaCA=color;else _deltaCB=color;renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='presyeardivcolor'){_presYearDivCol=color;presSyncSegUI();renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='preshoycolor'){_presHoyCol=color;const sw=document.getElementById('presHoyColor');if(sw)sw.style.background=color;applyPresHoyStyle();closeColorPicker();return;}
   else if(_cpTarget.type==='prestitlecolor'){_presTitleColors[_cpTarget.name]=color;const sw=document.getElementById(_cpTarget.name);if(sw)sw.style.background=color;closeColorPicker();renderPres();return;}
@@ -6180,7 +6215,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
   const elapsedTxt=(d,x0,y0,anchor,sz,col)=>{
     if(!_showElapsed||!isFinite(_d1)||!(d instanceof Date)||isNaN(d))return'';
     const n=Math.floor((+d-_d1)/864e5)+1;
-    return`<text x="${x0}" y="${y0}" text-anchor="${anchor}" font-size="${sz}" font-style="italic" fill="${col||'#555'}" pointer-events="none">Día ${n}</text>`;
+    return`<text x="${x0}" y="${y0}" text-anchor="${anchor}" font-size="${sz}" font-style="italic" fill="${col||'#555'}" pointer-events="none">diast: ${n}</text>`;
   };
   // Barras
   // helper luminancia (reutiliza textContrast internamente)
@@ -6373,7 +6408,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const dSz=Math.max(7,mfsz-1);
     const showDate=o.miShowDate===true||(presShowDates&&o.miShowDate!==false);
     const dateOut=o.miDateAlign==='out',dPos=o.miDatePos||'bottom';
-    const dateInline=showDate&&!(dateOut&&(dPos==='top'||dPos==='bottom'||dPos==='left'));
+    // Con «Días transcurridos» activo: días arriba, fecha bajo el rombo y nombre centrado a la derecha
+    const dateInline=showDate&&!(_showElapsed||hitosOnly)&&!(dateOut&&(dPos==='top'||dPos==='bottom'||dPos==='left'));
     const nL=lines.length+(dateInline?1:0),tx=mx3+ds+5;
     const y0=cy-(nL-1)*lh/2+mfsz*0.35;
     const selCls=(mk===_presBarKey)?' class="pres-sel"':'';
@@ -6386,7 +6422,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     svg+=ts+'</text>';
     if(showDate&&!dateInline){ // fecha independiente arriba / abajo / izquierda del rombo
       let xx=mx3,yy=cy+ds+dSz+2,an='middle';
-      if(dPos==='top')yy=cy-ds-2;else if(dPos==='left'){xx=mx3-ds-4;yy=cy+dSz*0.35;an='end';}
+      if((_showElapsed||hitosOnly)&&!dateOut){/* bajo el rombo */}else if(dPos==='top')yy=cy-ds-2;else if(dPos==='left'){xx=mx3-ds-4;yy=cy+dSz*0.35;an='end';}
       svg+=`<text x="${xx}" y="${yy}" text-anchor="${an}" font-size="${dSz}" fill="${col}" pointer-events="none">${fD((useLB?m.iLB:m.iRP))}</text>`;
     }
   });
@@ -6823,7 +6859,9 @@ function renderPres(){
   // oculta de Ejecutivo (Delete/Sup) no debe seguir estirando el eje con sus fechas, y la
   // Línea Base tampoco debe contar mientras el Comparador esté apagado (solo se ve R/P).
   const visible=all.filter(t=>t.evento||!isExecHidden(t));
-  const rangeSrc=visible.length?visible:all;
+  // Vista Hitos: el eje solo debe cubrir los hitos/eventos (las tareas que no se dibujan no deben estirarlo)
+  const _onlyMs=(document.getElementById('presShowHitos')||{checked:false}).checked?visible.filter(t=>t.hito||t.evento):[];
+  const rangeSrc=_onlyMs.length?_onlyMs:(visible.length?visible:all);
   let mn=rangeSrc[0].iRP,mx=rangeSrc[0].fRP;
   rangeSrc.forEach(t=>{
     if(t.iRP<mn)mn=t.iRP;if(t.fRP>mx)mx=t.fRP;
@@ -6850,7 +6888,7 @@ function renderPres(){
   // clientWidth/clientHeight, que es justo lo que usamos para calcular el área de renderizado.
   body.innerHTML=`<div id="presZoomSizer" style="position:relative;flex-shrink:0"><div id="presZoomInner" style="position:absolute;top:0;left:0;transform-origin:top left">${_presContentHtml}</div></div>`;
   _presApplyZoom();
-  presDrawDeps(true);
+  presDrawDeps(true);presDrawMsDelta();
   }catch(err){
     body.innerHTML=`<div style="color:#c00;padding:20px;font-family:monospace;font-size:12px;white-space:pre-wrap">❌ Error en renderPres:\n${err.message}\n\n${err.stack}</div>`;
     console.error('renderPres error:',err);
@@ -10092,263 +10130,79 @@ SI.multi=(scen,opts)=>{
 };
 /*SI:ENGINE:END*/
 
+
+/* Fechas de la Tabla de Datos siempre dd/mm/aaaa (el input date nativo sigue el idioma del navegador): se superpone el texto formateado */
+(function(){
+  const fmt=v=>{const m=/^(d{4})-(d{2})-(d{2})$/.exec(v||'');return m?m[3]+'/'+m[2]+'/'+m[1]:'';};
+  const d=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');
+  Object.defineProperty(HTMLInputElement.prototype,'value',{configurable:true,enumerable:d.enumerable,get:d.get,set:function(v){d.set.call(this,v);if(this._dfs)this._dfs.textContent=fmt(this.value);}});
+  const wrap=i=>{if(i._dfs||!i.closest('.edTable'))return;const w=document.createElement('span'),s=document.createElement('span');w.className='dfw';s.className='dfs';i.parentNode.insertBefore(w,i);w.appendChild(i);w.appendChild(s);i._dfs=s;s.textContent=fmt(i.value);};
+  const scan=n=>{if(n.nodeType!==1)return;if(n.matches&&n.matches('input[type=date]'))wrap(n);n.querySelectorAll&&n.querySelectorAll('.edTable input[type=date]').forEach(wrap);};
+  new MutationObserver(ms=>ms.forEach(m=>m.addedNodes.forEach(scan))).observe(document.documentElement,{childList:true,subtree:true});
+  document.addEventListener('input',e=>{const i=e.target;if(i&&i._dfs)i._dfs.textContent=fmt(i.value);},true);
+  document.addEventListener('change',e=>{const i=e.target;if(i&&i._dfs)i._dfs.textContent=fmt(i.value);},true);
+  scan(document.body);
+})();
 /* ═══ TIMELINE DELTA: hitos de dos escenarios, desviación (Δ días) por hito ═══ */
-let _deltaA='',_deltaB='';
+let _deltaA='',_deltaB='',_deltaCA='#1f5fbf',_deltaCB='#e01f1f';
+function presDeltaPick(w){_cpTarget={type:'presdeltacolor',w};document.getElementById('cpLabel').textContent='Color del escenario '+w+' (Timeline Delta)';const ev=window.event,cp=document.getElementById('colorPicker');cp.style.display='block';const x=ev?ev.clientX:200,y=ev?ev.clientY:100;cp.style.left=Math.max(4,Math.min(x+8,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(y+8,innerHeight-(cp.offsetHeight||300)))+'px';}
 function presDeltaSet(which,v){if(which==='A')_deltaA=v;else _deltaB=v;renderPres();}
 function presDeltaHtml(ff){
+  const g=id=>document.getElementById(id),gv=(id,d)=>{const e=g(id);return e&&e.value!==''?e.value:d;},gc=(id,d)=>{const e=g(id);return e?e.checked:d;};
   const escs=[...new Set(TASKS.map(t=>t.escenario||'').filter(Boolean))].sort();
   const pick=(cur,alt)=>escs.includes(cur)?cur:(escs.find(e=>e!==alt)||'');
   _deltaA=pick(_deltaA,_deltaB);_deltaB=pick(_deltaB===_deltaA?'':_deltaB,_deltaA);
-  const sel=(w,cur)=>`<select onchange="presDeltaSet('${w}',this.value)" style="font:inherit;font-size:13px;padding:3px 6px;border:1px solid #ccd;border-radius:6px">${escs.map(e=>`<option value="${esc(e)}"${e===cur?' selected':''}>${esc(e)}</option>`).join('')}</select>`;
-  const head=(inner)=>`<div style="padding:16px 20px;font-family:${ff};background:#fff;color:#1f2a3a;display:inline-block;min-width:1100px"><div style="display:flex;align-items:flex-end;gap:24px;margin-bottom:14px"><div><div style="font-size:34px;font-weight:800;line-height:1.1">Timeline Delta</div><div style="font-size:18px;color:#5b6778">Comparación de hitos entre escenarios</div></div><span style="flex:1"></span><div style="display:flex;align-items:center;gap:10px;font-size:14px;background:#f1f4f8;border-radius:10px;padding:10px 16px"><span style="color:#1a5fb4;font-size:18px">◆</span>${sel('A',_deltaA)}<span style="color:#e11d1d;font-size:18px;margin-left:8px">◆</span>${sel('B',_deltaB)}<span style="color:#7b8794;margin-left:8px">- - ▸ Desviación (Δ)</span></div></div>${inner}</div>`;
+  const ca=_deltaCA,cb=_deltaCB;
+  const sel=(w,cur)=>`<select onchange="presDeltaSet('${w}',this.value)" style="font:inherit;font-size:12px;padding:2px 4px;border:1px solid #bbb;border-radius:4px">${escs.map(e=>`<option value="${esc(e)}"${e===cur?' selected':''}>${esc(e)}</option>`).join('')}</select>`;
+  const head=inner=>`<div style="padding:12px 16px;font-family:${ff};background:#fff;color:#333;display:inline-block;min-width:900px"><div style="display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:8px"><span onclick="presDeltaPick('A')" title="Clic para cambiar el color" style="cursor:pointer;color:${ca};font-size:16px">◆</span>A ${sel('A',_deltaA)}<span onclick="presDeltaPick('B')" title="Clic para cambiar el color" style="cursor:pointer;color:${cb};font-size:16px;margin-left:12px">◆</span>B ${sel('B',_deltaB)}<span style="color:#888;margin-left:12px">- - ▸ Desviación (Δ días)</span></div>${inner}</div>`;
   if(escs.length<2)return head('<p style="color:#888;padding:30px">Timeline Delta necesita al menos dos escenarios con hitos (Gestión de escenarios).</p>');
-  const hitos=sc=>TASKS.filter(t=>(t.escenario||'')===sc&&t.hito).map(t=>SI.entity(t,'RP')).filter(e=>e.valid);
+  // Mismos filtros que la LdT: filtro de tareas, Marca Activity, ruta crítica y ocultas (Delete/Ejecutivo)
+  const m2=gc('presShowMarca2',false),crit=gc('presShowOnlyCrit',false);
+  const hitos=sc=>TASKS.filter(t=>(t.escenario||'')===sc&&t.hito&&!PRES_HIDDEN_KEYS.has((t.escenario||'')+'|'+t.c1+'|'+t.c2+'|'+t.tarea)&&!isExecHidden(t)&&(!m2||norm(t.marca2||'')==='si')&&(!crit||t.crit)).map(t=>SI.entity(t,'RP')).filter(e=>e.valid);
   const m=SI.match(hitos(_deltaA),hitos(_deltaB));
   const rows=m.pairs.map(p=>SI.row(p,_deltaA,_deltaB)).filter(r=>r.matchStatus==='MATCHED').sort((a,b)=>a.finishA-b.finishA);
   if(!rows.length)return head('<p style="color:#888;padding:30px">Ningún hito coincide entre estos dos escenarios (se emparejan por identificador, contexto o nombre).</p>');
-  const dt=n=>new Date(n*864e5),MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  const fm=n=>{const d=dt(n);return MES[d.getUTCMonth()]+' '+d.getUTCFullYear();};
-  const all=rows.flatMap(r=>[r.finishA,r.finishB]);
-  const y0=dt(Math.min(...all)).getUTCFullYear(),y1=dt(Math.max(...all)).getUTCFullYear();
-  const dayY=y=>Date.UTC(y,0,1)/864e5,d0=dayY(y0),d1=dayY(y1+1);
-  const LW=210,TL=Math.max(720,(y1-y0+1)*170),TBX=LW+TL+24,RH=88,HH=54,TOP=0,TBW=420,W=TBX+TBW,H=HH+rows.length*RH+6;
-  const X=n=>LW+(n-d0)/(d1-d0)*TL;
-  let s=`<rect x="0" y="0" width="${LW+TL}" height="${H}" rx="14" fill="#fff" stroke="#e3e8ef"/>`;
-  rows.forEach((r,i)=>{if(i%2===0)s+=`<rect x="1" y="${HH+i*RH}" width="${LW+TL-2}" height="${RH}" fill="#f4f7fb"/>`;});
-  for(let y=y0;y<=y1;y++){const x=X(dayY(y)),w=X(dayY(y+1))-x;
-    s+=`<rect x="${x}" y="0" width="${w}" height="${HH}" fill="#5f6873"/><text x="${x+w/2}" y="${HH/2+6}" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">${y}</text>`;
-    s+=`<line x1="${x}" y1="${HH}" x2="${x}" y2="${H}" stroke="#dfe5ec"/>`;}
-  const bx=TBX;
-  s+=`<rect x="${bx}" y="0" width="${TBW}" height="${H}" rx="14" fill="#fff" stroke="#e3e8ef"/><rect x="${bx}" y="0" width="${TBW}" height="${HH}" fill="#f1f4f8"/>`;
-  [['Hito',16,'start'],['A',TBW*.47,'middle'],['B',TBW*.7,'middle'],['Δ días',TBW-52,'middle']].forEach(([t,x,a])=>{s+=`<text x="${bx+x}" y="${HH/2+6}" text-anchor="${a}" font-size="15" font-weight="700" fill="#33404f">${t==='A'?esc(_deltaA):t==='B'?esc(_deltaB):t}</text>`;});
-  const diamond=(x,y,c)=>`<path d="M${x} ${y-10}L${x+10} ${y}L${x} ${y+10}L${x-10} ${y}Z" fill="${c}"/>`;
+  const fsz=+gv('presFontSz',12),yrSz=+gv('presYearSz',15),ds=+gv('presDiamondSz',9),showD=gc('presShowDates',true),showEl=gc('presShowElapsed',false)&&showD;
+  const title=gc('presMainTitleOn',true)?gv('presMainTitleInp',''):'';
+  const tSz=+gv('presMainTitleSize',16),tOff=+gv('presMainTitleYOffset',0),tCol=(_presTitleColors&&_presTitleColors.presMainTitleColor)||'#2c3e50';
+  const exL=+gv('presExtraLeft',0),exR=+gv('presExtraRight',0),exT=+gv('presExtraTop',0),exB=+gv('presExtraBottom',0);
+  const fD=d=>fmtD(d,true);
+  const dOf=(r,k)=>(k==='A'?r.metadata.refA:r.metadata.refB).iRP;
+  const ds2=[];rows.forEach(r=>{ds2.push(dOf(r,'A'),dOf(r,'B'));});
+  const est=g('estDate'),estD=gc('presShowHoy',false)&&est&&est.value?parseLocal(est.value):null;
+  const mn=new Date(Math.min(...ds2)),mx=new Date(Math.max(...ds2)),scaleKey=gv('presScale','anios');
+  const S=buildScale(scaleKey,mn,mx,+gv('presYearWMul',1)||1,PRES_YEAR_WIDTH_MUL),TW=S.totalPx;
+  const LW=170+exL,DW=80,W=LW+TW+DW+40+exR,TT=(title?tSz+18:8)+exT,YH=yrSz+14,SGH=gc('presShowSeg',false)&&scaleKey!=='anios'?16:0,RH=Math.max(58,ds*2+fsz*2+22),H=TT+YH+SGH+rows.length*RH+8+exB;
+  const X=d=>LW+S.x(d),Y0=TT+YH+SGH;
+  let s='';
+  if(title)s+=`<text x="${W/2}" y="${tSz+6-tOff+exT}" text-anchor="middle" font-size="${tSz}" font-weight="bold" fill="${tCol}">${esc(title)}</text>`;
+  const yrs=[];for(let y=mn.getFullYear();y<=mx.getFullYear();y++)yrs.push(y);
+  yrs.forEach((y,i)=>{const x0=Math.max(LW,X(new Date(y,0,1))),x1=Math.min(LW+TW,X(new Date(y+1,0,1))),w=x1-x0,yc=PRES_YEAR_COLORS[y]||(i%2===0?'#666':'#999'),fg=PRES_YEAR_TEXT_COLORS[y]||'#fff';
+    s+=`<rect x="${x0}" y="${TT}" width="${w}" height="${YH}" rx="2" fill="${yc}" data-pres-year="${y}" style="cursor:pointer"/><text x="${x0+w/2}" y="${TT+YH/2+yrSz*.35}" text-anchor="middle" font-size="${yrSz}" font-weight="bold" fill="${fg}" pointer-events="none">${y}</text>`;});
+  if(SGH)S.minor.forEach(mi=>{if(!mi.lbl)return;s+=`<rect x="${LW+mi.x}" y="${TT+YH}" width="${mi.w}" height="${SGH}" fill="#e8e8e8" stroke="#d8d8d8" stroke-width=".5"/>`+(mi.w>12?`<text x="${LW+mi.x+mi.w/2}" y="${TT+YH+12}" text-anchor="middle" font-size="${Math.max(8,yrSz-4)}" fill="#888" pointer-events="none">${esc(mi.lbl)}</text>`:'');});
+  if(gc('presYearDivOn',true)){const dd=gv('presYearDivDash','solid'),da=dd==='dotted'?' stroke-dasharray="2,3"':dd==='dashed'?' stroke-dasharray="8,4"':dd==='dashed2'?' stroke-dasharray="10,4,2,4"':'',dw=Math.max(.5,Math.min(6,+gv('presYearDivW',.5)));
+    yrs.forEach((y,i)=>{if(!i)return;const x=X(new Date(y,0,1));s+=`<line x1="${x}" y1="${TT+YH}" x2="${x}" y2="${H}" stroke="${_presYearDivCol}" stroke-width="${dw}"${da}/>`;});}
+  s+=`<text x="${LW+TW+DW/2+10}" y="${TT+YH/2+4}" text-anchor="middle" font-size="${fsz}" font-weight="bold" fill="#666">Δ días</text>`;
+  const dia=(x,y,c,k)=>`<g data-pres-mito="${esc(k)}" style="cursor:pointer"><title>Doble clic para editar</title><polygon points="${x},${y-ds} ${x+ds},${y} ${x},${y+ds} ${x-ds},${y}" fill="${c}" stroke="${c}" stroke-width="1.5"/></g>`;
+  const d1=Math.min(...ds2);
+  const el=d=>showEl?` · diast: ${Math.floor((+d-d1)/864e5)+1}`:'';
   rows.forEach((r,i)=>{
-    const cy=HH+i*RH+RH/2,xa=X(r.finishA),xb=X(r.finishB),n=r.deltaFinishDays,col=n>0?'#e11d1d':n<0?'#1a7f37':'#7b8794',txt=(n>0?'+':'')+n;
-    s+=`<text x="16" y="${cy-2}" font-size="19" font-weight="800" fill="#1f2a3a">${esc(r.name)}</text><text x="16" y="${cy+20}" font-size="13" fill="#5b6778">${esc(r.metadata.c2||r.metadata.c1||'')}</text>`;
-    if(n)s+=`<line x1="${xa+12}" y1="${cy}" x2="${xb-14}" y2="${cy}" stroke="#9aa5b1" stroke-width="2" stroke-dasharray="6 5"/><path d="M${xb-14} ${cy-4}L${xb-8} ${cy}L${xb-14} ${cy+4}" fill="none" stroke="#9aa5b1" stroke-width="2"/>`;
-    s+=`<text x="${(xa+xb)/2}" y="${cy-18}" text-anchor="middle" font-size="15" font-weight="700" fill="${col}">${txt} d</text>`;
-    s+=diamond(xa,cy,'#1a5fb4')+(n?diamond(xb,cy,'#e11d1d'):'');
-    s+=`<text x="${xa}" y="${cy+32}" text-anchor="${n?'end':'middle'}" font-size="14" fill="#1a5fb4">${fm(r.finishA)}</text>`;
-    if(n)s+=`<text x="${xb}" y="${cy+32}" text-anchor="start" font-size="14" fill="#e11d1d">${fm(r.finishB)}</text>`;
-    const ty=HH+i*RH;
-    if(i%2===1)s+=`<rect x="${bx+1}" y="${ty}" width="${TBW-2}" height="${RH}" fill="#f4f7fb"/>`;
-    s+=`<text x="${bx+16}" y="${cy+6}" font-size="16" font-weight="800" fill="#1f2a3a">${esc(r.name)}</text><text x="${bx+TBW*.47}" y="${cy+6}" text-anchor="middle" font-size="15" fill="#33404f">${fm(r.finishA)}</text><text x="${bx+TBW*.7}" y="${cy+6}" text-anchor="middle" font-size="15" fill="#33404f">${fm(r.finishB)}</text>`;
-    s+=`<rect x="${bx+TBW-88}" y="${cy-16}" width="72" height="32" rx="9" fill="${n>0?'#fde3e3':n<0?'#dff3e5':'#eceff3'}"/><text x="${bx+TBW-52}" y="${cy+6}" text-anchor="middle" font-size="16" font-weight="800" fill="${col}">${txt}</text>`;
+    const dA=dOf(r,'A'),dB=dOf(r,'B'),cy=Y0+i*RH+RH/2-4,xa=X(dA),xb=X(dB),n=r.deltaFinishDays,col=n>0?cb:n<0?'#1a7f37':'#888',txt=(n>0?'+':'')+n,kA=pkOf(r.metadata.refA),kB=pkOf(r.metadata.refB);
+    s+=`<line x1="4" y1="${Y0+(i+1)*RH}" x2="${LW+TW+DW+30}" y2="${Y0+(i+1)*RH}" stroke="#eee"/>`;
+    s+=`<text x="4" y="${cy+4}" font-size="${fsz}" font-weight="bold" fill="#333">${esc(((PRES_OPTS[kA]||{}).label||'').trim()||r.name)}</text>`;
+    if(n){const l=Math.min(xa,xb),rr=Math.max(xa,xb);if(rr-l>2*ds+8)s+=`<line x1="${l+ds+3}" y1="${cy}" x2="${rr-ds-3}" y2="${cy}" stroke="#999" stroke-width="1.5" stroke-dasharray="4,3"/>`;}
+    s+=`<text x="${(xa+xb)/2}" y="${cy-ds-4}" text-anchor="middle" font-size="${Math.max(8,fsz-1)}" font-weight="bold" fill="${col}">${txt} d</text>`;
+    s+=dia(xa,cy,ca,kA)+(n?dia(xb,cy,cb,kB):'');
+    const dy=cy+ds+fsz+2,fs2=Math.max(7,fsz-1);
+    if(showD){if(n){const aL=xa<=xb;
+      s+=`<text x="${xa+(aL?-2:2)}" y="${dy}" text-anchor="${aL?'end':'start'}" font-size="${fs2}" fill="${ca}">${fD(dA)}${el(dA)}</text><text x="${xb+(aL?2:-2)}" y="${dy}" text-anchor="${aL?'start':'end'}" font-size="${fs2}" fill="${cb}">${fD(dB)}${el(dB)}</text>`;}
+      else s+=`<text x="${xa}" y="${dy}" text-anchor="middle" font-size="${fs2}" fill="${ca}">${fD(dA)}${el(dA)}</text>`;}
+    s+=`<text x="${LW+TW+DW/2+10}" y="${cy+4}" text-anchor="middle" font-size="${fsz+1}" font-weight="bold" fill="${col}">${txt}</text>`;
   });
+  if(estD){const hx=X(estD),hCol=_presHoyCol||'#FF0000',hW=parseFloat(gv('presHoyW',2))||2,hd=gv('presHoyDash','solid'),da=hd==='dotted'?'2,3':hd==='dashed'?'8,4':hd==='dashed2'?'10,4,2,4':'';
+    s+=`<line x1="${hx}" y1="${TT+YH+SGH}" x2="${hx}" y2="${H}" stroke="${hCol}" stroke-width="${hW}"${da?` stroke-dasharray="${da}"`:''} opacity=".85" pointer-events="none"/><text x="${hx}" y="${TT-2}" text-anchor="middle" font-size="10" font-weight="bold" fill="${hCol}">${esc(fD(estD))}</text>`;}
   return head(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;font-family:${ff}">${s}</svg>`);
 }
-/* ═══ SCHEDULE INTELLIGENCE — INTERFAZ (pestaña Análisis) ═══
-   Solo presentación: todos los cálculos vienen de SI (motor de arriba). */
-const SI_UI={a:'',b:'',basis:'RP',tab:'delta',q:'',status:'',kind:'',onlyChanges:false,onlyKey:false,multi:[],sortK:'',sortDir:1,limit:400,res:null,msg:''};
-const SI_STATUS={
-  retrasado:{g:'▲',t:'Retrasado',c:'#c0392b'},adelantado:{g:'▼',t:'Adelantado',c:'#1a7f37'},sin_cambio:{g:'＝',t:'Sin cambio',c:'var(--muted)'},
-  modificado:{g:'◆',t:'Modificado',c:'#b7791f'},agregado:{g:'＋',t:'Agregado',c:'#1a5fb4'},eliminado:{g:'－',t:'Eliminado',c:'#6b7280'},no_comparable:{g:'？',t:'No comparable',c:'#6b7280'}
-};
-const SI_METHOD={uid:'UID',contexto:'Contexto',nombre:'Nombre'};
-function siOnOpen(){
-  const list=scenList();
-  if(!list.some(s=>s.key===SI_UI.a))SI_UI.a=list[0]?list[0].key:'';
-  if(!list.some(s=>s.key===SI_UI.b)||SI_UI.b===SI_UI.a)SI_UI.b=(list.find(s=>s.key!==SI_UI.a)||{}).key||'';
-  // Por defecto A = original y B = la copia (las copias se nombran «… (copia)»)
-  if(/\(copia/.test(SI_UI.a)&&!/\(copia/.test(SI_UI.b)){const t=SI_UI.a;SI_UI.a=SI_UI.b;SI_UI.b=t;}
-  siRun();siRender();
-}
-function siRun(){
-  SI_UI.res=null;SI_UI.msg='';
-  if(!TASKS.length){SI_UI.msg='Aún no hay datos: cargue un Excel o un XML de Project.';return;}
-  const list=scenList();
-  if(list.length<2){SI_UI.msg='Se necesitan al menos dos escenarios para comparar. Cargue otro XML o use «Duplicar» en Gestión de escenarios.';return;}
-  if(!SI_UI.a||!SI_UI.b||SI_UI.a===SI_UI.b){SI_UI.msg='Elija dos escenarios distintos.';return;}
-  const tk=k=>TASKS.filter(t=>scenKey(t)===k);
-  SI_UI.res=SI.compare(tk(SI_UI.a),tk(SI_UI.b),{scenarioA:scenLabel(SI_UI.a),scenarioB:scenLabel(SI_UI.b),basis:SI_UI.basis,keyCfg:SI_CFG});
-}
-function siSet(k,v){SI_UI[k]=v;if(k==='a'||k==='b'||k==='basis')siRun();SI_UI.limit=400;siRender();}
-function siSwap(){const t=SI_UI.a;SI_UI.a=SI_UI.b;SI_UI.b=t;siRun();siRender();}
-function siSort(k){if(SI_UI.sortK===k)SI_UI.sortDir=-SI_UI.sortDir;else{SI_UI.sortK=k;SI_UI.sortDir=1;}siRender();}
-function siToggleKey(nameKey){
-  const cur=SI.isKey(nameKey,SI_CFG);SI_CFG.manual[nameKey]=!cur;
-  if(typeof markDirty==='function')markDirty();
-  siRun();siRender();
-}
-const siDelta=n=>n==null?'<span class="si-na" title="No disponible">—</span>':(n===0?'<span class="si-z">0</span>':`<span style="color:${n>0?'#c0392b':'#1a7f37'};font-weight:600">${n>0?'+':'−'}${Math.abs(n)}</span>`);
-const siChip=s=>{const m=SI_STATUS[s]||SI_STATUS.no_comparable;return`<span class="si-chip" style="color:${m.c}"><span aria-hidden="true">${m.g}</span> ${m.t}</span>`;};
-const siD=n=>n==null?'—':SI.iso(n);
-function siFilterRows(rows,milestonesOnly){
-  const q=SI.norm(SI_UI.q);
-  let out=rows.filter(r=>{
-    if(milestonesOnly&&!r.isMilestone)return false;
-    if(SI_UI.status&&r.status!==SI_UI.status)return false;
-    if(SI_UI.kind==='hito'&&!r.isMilestone)return false;
-    if(SI_UI.kind==='tarea'&&r.kind!=='tarea')return false;
-    if(SI_UI.onlyChanges&&(r.status==='sin_cambio'))return false;
-    if(SI_UI.onlyKey&&!r.isKey)return false;
-    if(q&&!(SI.norm(r.name).includes(q)||SI.norm(r.entityId).includes(q)))return false;
-    return true;
-  });
-  const k=SI_UI.sortK;
-  if(k){const d=SI_UI.sortDir;out=out.slice().sort((x,y)=>{const a=x[k],b=y[k];if(a==null&&b==null)return 0;if(a==null)return 1;if(b==null)return-1;return(typeof a==='string'?a.localeCompare(b,'es'):a-b)*d;});}
-  return out;
-}
-function siTh(k,label,cls){const on=SI_UI.sortK===k;return`<th scope="col" class="${cls||''}" aria-sort="${on?(SI_UI.sortDir>0?'ascending':'descending'):'none'}"><button type="button" class="si-th" onclick="siSort('${k}')">${label}${on?(SI_UI.sortDir>0?' ▲':' ▼'):''}</button></th>`;}
-function siFacts(r){
-  const s=r.summary,c=s.counts,m=s.milestones,f=[];
-  const dd=n=>`${n>0?'+':n<0?'−':''}${Math.abs(n)} día${Math.abs(n)===1?'':'s'}`;
-  f.push(`${m.changed} de ${m.total} hito${m.total===1?'':'s'} cambiaron (${m.delayed} retrasado${m.delayed===1?'':'s'}, ${m.advanced} adelantado${m.advanced===1?'':'s'}).`);
-  if(s.maxMilestoneShift)f.push(`Mayor desplazamiento de un hito: ${dd(s.maxMilestoneShift.deltaFinishDays)} («${esc(s.maxMilestoneShift.name)}»).`);
-  if(s.finishDeltaDays!=null)f.push(`Fin del cronograma: ${dd(s.finishDeltaDays)} (${siD(s.projectA.finish)} → ${siD(s.projectB.finish)}).`);
-  if(s.durationDeltaDays!=null)f.push(`Duración total del cronograma: ${dd(s.durationDeltaDays)}.`);
-  f.push(`Actividades: ${c.matched} emparejadas, ${c.added} agregada${c.added===1?'':'s'}, ${c.removed} eliminada${c.removed===1?'':'s'}${c.incomparable?`, ${c.incomparable} no comparable${c.incomparable===1?'':'s'}`:''}.`);
-  return f;
-}
-function siKpi(l,v,sub){return`<div class="si-kpi"><div class="si-kpi-l">${l}</div><div class="si-kpi-v">${v}</div>${sub?`<div class="si-kpi-s">${sub}</div>`:''}</div>`;}
-function siRender(){
-  const box=document.getElementById('siBody');if(!box)return;
-  const list=scenList(),opt=(sel)=>list.map(s=>`<option value="${esc(s.key)}"${s.key===sel?' selected':''}>${esc(scenLabel(s.key))} (${s.n})</option>`).join('');
-  document.getElementById('siCtl').innerHTML=
-    `<label>Escenario A <select onchange="siSet('a',this.value)">${opt(SI_UI.a)}</select></label>`+
-    `<button type="button" class="rb-flat" onclick="siSwap()" title="Intercambiar A y B" aria-label="Intercambiar A y B"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg></button>`+
-    `<label>Escenario B <select onchange="siSet('b',this.value)">${opt(SI_UI.b)}</select></label>`+
-    `<label>Fechas <select onchange="siSet('basis',this.value)"><option value="RP"${SI_UI.basis==='RP'?' selected':''}>Real / Proyectada</option><option value="LB"${SI_UI.basis==='LB'?' selected':''}>Línea base</option></select></label>`+
-    `<span style="flex:1"></span><button type="button" class="rb-flat" onclick="siRun();siRender()" title="Recalcular con los datos actuales">Recalcular</button><button type="button" class="rb-flat" onclick="siExportCsv()" title="Exportar la tabla mostrada a CSV">Exportar CSV</button>`;
-  const r=SI_UI.res;
-  if(!r&&!(SI_UI.tab==='multi'&&TASKS.length&&scenList().length>=2)){box.innerHTML=`<div class="si-empty">${esc(SI_UI.msg||'Sin datos para analizar.')}</div>`;return;}
-  if(!r){box.innerHTML=siTabsHtml()+'<div id="siTable"></div>';siRenderTab();return;}
-  const s=r.summary,c=s.counts,m=s.milestones,dl=n=>n==null?'—':(n===0?'sin cambio':`${n>0?'+':'−'}${Math.abs(n)} d`);
-  const kpis=
-    siKpi('Fin del cronograma',dl(s.finishDeltaDays),`${siD(s.projectA.finish)} → ${siD(s.projectB.finish)}`)+
-    siKpi('Duración total',dl(s.durationDeltaDays),`${s.projectA.duration??'—'} → ${s.projectB.duration??'—'} días`)+
-    siKpi('Hitos afectados',`${m.changed} <span class="si-of">de ${m.total}</span>`,`${m.delayed} retrasados · ${m.advanced} adelantados`)+
-    siKpi('Actividades afectadas',`${c.delayed+c.advanced+c.modified} <span class="si-of">de ${c.matched}</span>`,`${c.delayed} retrasadas · ${c.advanced} adelantadas · ${c.modified} modificadas`)+
-    siKpi('Mayor desplazamiento',s.maxShift?dl(s.maxShift.deltaFinishDays):'—',s.maxShift?esc(s.maxShift.name):'')+
-    siKpi('Agregadas / eliminadas',`${c.added} <span class="si-of">/</span> ${c.removed}`,c.incomparable?`${c.incomparable} no comparables`:'');
-  const facts=`<div class="si-card"><h3>Qué cambió</h3><ul>${siFacts(r).map(x=>`<li>${x}</li>`).join('')}</ul><p class="si-note">Hechos calculados por el motor de análisis, en días calendario. No se infiere causalidad.</p></div>`;
-  const tabs=siTabsHtml();
-  const hitos=SI_UI.tab==='hitos',dtab=SI_UI.tab==='delta'||SI_UI.tab==='hitos';
-  const flt=!dtab?'':`<div class="si-flt"><input type="search" placeholder="Buscar por nombre o ID" value="${esc(SI_UI.q)}" oninput="SI_UI.q=this.value;SI_UI.limit=400;siRenderTable()" aria-label="Buscar">`+
-    `<select onchange="siSet('status',this.value)" aria-label="Estado"><option value="">Todos los estados</option>${Object.keys(SI_STATUS).map(k=>`<option value="${k}"${SI_UI.status===k?' selected':''}>${SI_STATUS[k].t}</option>`).join('')}</select>`+
-    (hitos?'':`<select onchange="siSet('kind',this.value)" aria-label="Tipo"><option value="">Hitos y tareas</option><option value="hito"${SI_UI.kind==='hito'?' selected':''}>Solo hitos</option><option value="tarea"${SI_UI.kind==='tarea'?' selected':''}>Solo tareas</option></select>`)+
-    `<label class="si-chk"><input type="checkbox" ${SI_UI.onlyChanges?'checked':''} onchange="siSet('onlyChanges',this.checked)">Solo con cambios</label>`+
-    (hitos?`<label class="si-chk"><input type="checkbox" ${SI_UI.onlyKey?'checked':''} onchange="siSet('onlyKey',this.checked)">Solo hitos clave</label><label class="si-chk" title="Detecta FID, Gate, NTP, CV0, CN1… por el nombre del hito"><input type="checkbox" ${SI_CFG.auto?'checked':''} onchange="SI_CFG.auto=this.checked;siRun();siRender()">Detectar por nombre</label>`:'')+`</div>`;
-  box.innerHTML=(SI_UI.tab==='multi'?'':`<div class="si-kpis">${kpis}</div>${facts}`)+`${tabs}${flt}<div id="siTable"></div>`;
-  siRenderTab();
-}
-function siRenderTable(){
-  const r=SI_UI.res,el=document.getElementById('siTable');if(!r||!el)return;
-  const hitos=SI_UI.tab==='hitos',rows=siFilterRows(r.rows,hitos),shown=rows.slice(0,SI_UI.limit);
-  const a=esc(r.scenarioA),b=esc(r.scenarioB);
-  let head,body;
-  if(hitos){
-    const base=r.summary.projectA.start;
-    head=`<tr><th scope="col" class="si-c" title="Hito clave">★</th>${siTh('name','Hito')}${siTh('entityId','ID')}${siTh('finishA','Fecha A')}${siTh('finishB','Fecha B')}${siTh('deltaFinishDays','Δ días')}<th scope="col" title="Δ días relativo al plazo desde el inicio del cronograma A hasta la fecha A">Δ % del plazo</th>${siTh('status','Estado')}<th scope="col">Crítica</th><th scope="col" title="La holgura no está disponible en los datos importados">Holgura</th></tr>`;
-    body=shown.map(x=>{
-      const nk=SI.norm(x.name),pct=(x.deltaFinishDays!=null&&x.finishA!=null&&base!=null&&x.finishA-base>0)?(Math.round(x.deltaFinishDays/(x.finishA-base)*1000)/10)+' %':'—';
-      return`<tr><td class="si-c"><button type="button" class="si-star${x.isKey?' on':''}" onclick="siToggleKey('${esc(nk).replace(/'/g,'&#39;')}')" aria-pressed="${x.isKey}" aria-label="Marcar «${esc(x.name)}» como hito clave" title="${x.isKey?'Hito clave (clic para quitar)':'Marcar como hito clave'}">${x.isKey?'★':'☆'}</button></td><td class="si-nm" title="${esc(x.name)}">${esc(x.name)}</td><td>${esc(x.entityId)}</td><td>${siD(x.finishA)}</td><td>${siD(x.finishB)}</td><td class="si-n">${siDelta(x.deltaFinishDays)}</td><td class="si-n">${pct}</td><td>${siChip(x.status)}</td><td>${x.metadata.crit?'Sí':'—'}</td><td class="si-na" title="No disponible">n/d</td></tr>`;}).join('');
-  }else{
-    head=`<tr>${siTh('status','Estado')}${siTh('entityId','ID')}${siTh('name','Actividad')}<th scope="col">Tipo</th>${siTh('startA','Inicio A')}${siTh('startB','Inicio B')}${siTh('deltaStartDays','Δ inicio')}${siTh('finishA','Fin A')}${siTh('finishB','Fin B')}${siTh('deltaFinishDays','Δ fin')}${siTh('durationA','Dur A')}${siTh('durationB','Dur B')}${siTh('deltaDurationDays','Δ dur')}${siTh('percentChange','Δ %')}<th scope="col">Coincidencia</th></tr>`;
-    body=shown.map(x=>`<tr><td>${siChip(x.status)}</td><td>${esc(x.entityId)}</td><td class="si-nm" title="${esc(x.name)}">${esc(x.name)}</td><td>${x.kind}</td><td>${siD(x.startA)}</td><td>${siD(x.startB)}</td><td class="si-n">${siDelta(x.deltaStartDays)}</td><td>${siD(x.finishA)}</td><td>${siD(x.finishB)}</td><td class="si-n">${siDelta(x.deltaFinishDays)}</td><td class="si-n">${x.durationA??'—'}</td><td class="si-n">${x.durationB??'—'}</td><td class="si-n">${siDelta(x.deltaDurationDays)}</td><td class="si-n">${x.percentChange==null?'<span class="si-na" title="No aplica (duración A = 0 o sin dato)">—</span>':x.percentChange+' %'}</td><td>${x.method?SI_METHOD[x.method]+(x.metadata.ambiguous?' (aprox.)':''):'—'}</td></tr>`).join('');
-  }
-  el.innerHTML=`<div class="si-count">${rows.length} elemento${rows.length===1?'':'s'}${rows.length>shown.length?` · mostrando ${shown.length}`:''}</div><div class="si-tw"><table class="si-t"><caption class="si-sr">${hitos?'Análisis de hitos':'Delta de actividades'} entre ${a} (A) y ${b} (B). Δ = B − A en días calendario.</caption><thead>${head}</thead><tbody>${body||'<tr><td colspan="15" class="si-empty">Ningún elemento coincide con los filtros.</td></tr>'}</tbody></table></div>${rows.length>shown.length?`<div style="text-align:center;margin:10px"><button type="button" class="rb-flat" onclick="SI_UI.limit+=800;siRenderTable()">Mostrar más</button></div>`:''}`;
-}
-function siExportCsv(){
-  const r=SI_UI.res;if(!r)return;
-  const hitos=SI_UI.tab==='hitos',rows=siFilterRows(r.rows,hitos);
-  const H=['Estado','ID','Actividad','Tipo','Inicio A','Inicio B','Delta inicio (d)','Fin A','Fin B','Delta fin (d)','Duracion A','Duracion B','Delta duracion (d)','Delta %','Coincidencia','Hito clave'];
-  const q=v=>{v=v==null?'':String(v);return/[",\n;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
-  const lines=[H.join(',')].concat(rows.map(x=>[SI_STATUS[x.status].t,x.entityId,x.name,x.kind,siD(x.startA),siD(x.startB),x.deltaStartDays,siD(x.finishA),siD(x.finishB),x.deltaFinishDays,x.durationA,x.durationB,x.deltaDurationDays,x.percentChange,x.method,x.isKey?'Sí':''].map(q).join(',')));
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}));
-  a.download='Analisis_'+(hitos?'hitos':'delta')+'_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
-}
-
-/* ── Intervalos, deriva y N escenarios (fases 3 y 4) ── */
-const SI_PAL=['#2563eb','#d97706','#16a34a','#9333ea','#dc2626','#0891b2','#65a30d','#be185d'];
-const siFmtD=n=>n==null?'—':(n===0?'0':(n>0?'+':'−')+Math.abs(n));
-const siTxt=(x,y,t,o)=>`<text x="${x}" y="${y}" style="fill:var(--${(o&&o.c)||'ink'});font-size:${(o&&o.s)||11}px" text-anchor="${(o&&o.a)||'start'}"${o&&o.b?' font-weight="700"':''}>${esc(t)}</text>`;
-function siTabsHtml(){
-  const T=[['delta','Delta de actividades'],['hitos','Hitos'],['intervalos','Intervalos'],['deriva','Deriva'],['multi','Escenarios']];
-  return`<div class="si-tabs" role="tablist">${T.map(t=>`<button role="tab" aria-selected="${SI_UI.tab===t[0]}" class="${SI_UI.tab===t[0]?'on':''}" onclick="siSet('tab','${t[0]}')">${t[1]}</button>`).join('')}</div>`;
-}
-function siKeyOpts(){return`<div class="si-flt"><label class="si-chk"><input type="checkbox" ${SI_UI.onlyKey?'checked':''} onchange="siSet('onlyKey',this.checked)">Solo hitos clave (si hay al menos 2)</label><label class="si-chk" title="Detecta FID, Gate, NTP, CV0, CN1… por el nombre del hito"><input type="checkbox" ${SI_CFG.auto?'checked':''} onchange="SI_CFG.auto=this.checked;siRun();siRender()">Detectar por nombre</label></div>`;}
-function siRenderTab(){
-  const el=document.getElementById('siTable');if(!el)return;
-  if(SI_UI.tab==='intervalos')return siRenderIntervals(el);
-  if(SI_UI.tab==='deriva')return siRenderDrift(el);
-  if(SI_UI.tab==='multi')return siRenderMulti(el);
-  siRenderTable();
-}
-function siRenderIntervals(el){
-  const r=SI_UI.res,it=SI.intervals(r.rows,{onlyKey:SI_UI.onlyKey});
-  if(it.intervals.length===0){el.innerHTML=`<div class="si-empty">Se necesitan al menos dos hitos emparejados entre A y B (hay ${it.count}).</div>`;return;}
-  const dd=n=>n==null?'—':(n===0?'0':(n>0?'+':'−')+Math.abs(n))+' d';
-  const cards=`<div class="si-kpis">${siKpi('Corrimiento del primer hito',dd(it.firstShiftDays),esc(it.intervals[0].fromName))}${siKpi('Cambio acumulado de intervalos',dd(it.sumDeltaDays),'suma de expansiones y compresiones')}${siKpi('Corrimiento del último hito',dd(it.lastShiftDays),esc(it.intervals[it.intervals.length-1].toName))}</div>`+
-    `<p class="si-note" style="margin:0 0 10px">Corrimiento del primer hito + cambio acumulado de intervalos = corrimiento del último hito. Distingue un <b>desplazamiento del cronograma</b> (todos los hitos se mueven igual) de un <b>cambio de duración</b> (los intervalos se expanden o comprimen).</p>`;
-  const W=900,rowH=46,left=230,right=90,mx=Math.max(...it.intervals.map(x=>Math.max(x.durationA,x.durationB)),1),sc=(W-left-right)/mx;
-  let svg=`<svg viewBox="0 0 ${W} ${it.intervals.length*rowH+30}" width="100%" role="img" aria-label="Duración de cada intervalo entre hitos en A y B" style="max-width:${W}px">`;
-  svg+=siTxt(left,14,'A (gris) · B (color)',{c:'muted',s:10});
-  it.intervals.forEach((x,i)=>{
-    const y=24+i*rowH,col=x.type==='expansion'?'#c0392b':x.type==='compresion'?'#1a7f37':'#6b7280';
-    svg+=siTxt(left-10,y+13,`${x.fromName} → ${x.toName}`,{a:'end'});
-    svg+=`<rect x="${left}" y="${y}" width="${Math.max(1,x.durationA*sc)}" height="12" rx="2" style="fill:var(--line)"/>`+siTxt(left+x.durationA*sc+6,y+10,x.durationA+' d',{c:'muted',s:10});
-    svg+=`<rect x="${left}" y="${y+16}" width="${Math.max(1,x.durationB*sc)}" height="12" rx="2" fill="${col}"/>`+siTxt(left+x.durationB*sc+6,y+26,x.durationB+' d',{s:10});
-  });
-  svg+='</svg>';
-  const rows=it.intervals.map(x=>`<tr><td>${esc(x.fromName)} → ${esc(x.toName)}</td><td class="si-n">${x.durationA}</td><td class="si-n">${x.durationB}</td><td class="si-n">${siDelta(x.deltaDays)}</td><td class="si-n">${x.percentChange==null?'—':x.percentChange+' %'}</td><td><span class="si-chip" style="color:${x.type==='expansion'?'#c0392b':x.type==='compresion'?'#1a7f37':'var(--muted)'}"><span aria-hidden="true">${x.type==='expansion'?'▲':x.type==='compresion'?'▼':'＝'}</span> ${x.type==='expansion'?'Expansión':x.type==='compresion'?'Compresión':'Sin cambio'}</span></td></tr>`).join('');
-  el.innerHTML=siKeyOpts()+cards+`<div class="si-card">${svg}</div><div class="si-tw"><table class="si-t"><caption class="si-sr">Intervalos entre hitos consecutivos</caption><thead><tr><th scope="col">Intervalo</th><th scope="col" class="si-n">Días A</th><th scope="col" class="si-n">Días B</th><th scope="col" class="si-n">Δ días</th><th scope="col" class="si-n">Δ %</th><th scope="col">Tipo</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-function siRenderDrift(el){
-  const r=SI_UI.res,d=SI.drift(r.rows,{onlyKey:SI_UI.onlyKey});
-  if(!d.stats){el.innerHTML=`<div class="si-empty">No hay hitos emparejados entre A y B para calcular la deriva.</div>`;return;}
-  const s=d.stats,dd=n=>n==null?'—':(n===0?'0':(n>0?'+':'−')+Math.abs(n))+' d';
-  const cards=`<div class="si-kpis">${siKpi('Desviación máxima',dd(s.max),'')}${siKpi('Desviación mínima',dd(s.min),'')}${siKpi('Promedio',dd(Math.round(s.mean*10)/10),`${s.count} hitos`)}${siKpi('Tendencia',s.trend[0].toUpperCase()+s.trend.slice(1),s.slopeDaysPerYear==null?'':(s.slopeDaysPerYear>0?'+':'')+s.slopeDaysPerYear+' d por año')}${siKpi('Primera desviación',s.firstSignificant?esc(s.firstSignificant.name):'Ninguna',s.firstSignificant?`${siD(s.firstSignificant.dayA)} · ${dd(s.firstSignificant.delta)}`:`umbral ${s.threshold} d`)}</div>`;
-  const W=900,H=280,L=52,R=20,T=16,B=34,pts=d.points,x0=Math.min(...pts.map(p=>p.dayA)),x1=Math.max(...pts.map(p=>p.dayA)),lo=Math.min(0,s.min),hi=Math.max(0,s.max),pad=Math.max(5,(hi-lo)*0.1);
-  const X=v=>L+(x1===x0?(W-L-R)/2:(v-x0)/(x1-x0)*(W-L-R)),Y=v=>T+(hi+pad-v)/((hi+pad)-(lo-pad))*(H-T-B);
-  let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Desviación de cada hito respecto de A a lo largo del cronograma" style="max-width:${W}px">`;
-  for(let i=0;i<=4;i++){const v=lo-pad+(hi+pad-(lo-pad))*i/4;svg+=`<line x1="${L}" y1="${Y(v)}" x2="${W-R}" y2="${Y(v)}" style="stroke:var(--line)"/>`+siTxt(L-6,Y(v)+4,Math.round(v)+' d',{a:'end',c:'muted',s:10});}
-  svg+=`<line x1="${L}" y1="${Y(0)}" x2="${W-R}" y2="${Y(0)}" style="stroke:var(--muted)" stroke-dasharray="4 3"/>`;
-  svg+=`<polyline fill="none" stroke="#2563eb" stroke-width="2" points="${pts.map(p=>X(p.dayA)+','+Y(p.delta)).join(' ')}"/>`;
-  pts.forEach((p,i)=>{svg+=`<circle cx="${X(p.dayA)}" cy="${Y(p.delta)}" r="${p.isKey?5:3.5}" fill="${p.delta>0?'#c0392b':p.delta<0?'#1a7f37':'#6b7280'}" stroke="#fff"><title>${esc(p.name)}: ${dd(p.delta)} (${siD(p.dayA)})</title></circle>`;
-    if(p.isKey||pts.length<=12)svg+=siTxt(X(p.dayA),Y(p.delta)-9,p.name.length>18?p.name.slice(0,17)+'…':p.name,{a:'middle',s:9,c:'muted'});});
-  svg+=siTxt(L,H-8,siD(x0),{c:'muted',s:10})+siTxt(W-R,H-8,siD(x1),{a:'end',c:'muted',s:10})+siTxt((L+W-R)/2,H-8,'Fecha del hito en A',{a:'middle',c:'muted',s:10});
-  svg+='</svg>';
-  const rows=pts.map(p=>`<tr><td>${esc(p.name)}</td><td>${siD(p.dayA)}</td><td class="si-n">${siDelta(p.delta)}</td><td class="si-n">${siDelta(p.step)}</td></tr>`).join('');
-  el.innerHTML=siKeyOpts()+cards+`<div class="si-card"><h3>Deriva del desplazamiento</h3>${svg}<p class="si-note">Observado: diferencia de fecha de cada hito (B − A) en orden cronológico; «incremento» es el cambio respecto del hito anterior. Esto describe el comportamiento, no su causa: si un cambio se propagó por dependencias se analiza aparte.</p></div><div class="si-tw"><table class="si-t"><caption class="si-sr">Desviación por hito</caption><thead><tr><th scope="col">Hito</th><th scope="col">Fecha A</th><th scope="col" class="si-n">Δ días</th><th scope="col" class="si-n">Incremento</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-function siMultiKeys(){
-  const list=scenList().map(s=>s.key);
-  SI_UI.multi=(SI_UI.multi||[]).filter(k=>list.includes(k));
-  if(!SI_UI.multi.length)SI_UI.multi=list.slice(0,6);
-  return list;
-}
-function siToggleMulti(k,on){
-  const sel=new Set(SI_UI.multi);if(on)sel.add(k);else sel.delete(k);
-  SI_UI.multi=scenList().map(s=>s.key).filter(x=>sel.has(x));siRender();
-}
-function siRenderMulti(el){
-  const all=siMultiKeys(),sel=SI_UI.multi;
-  const pick=`<div class="si-flt">${all.map(k=>`<label class="si-chk"><input type="checkbox" ${sel.includes(k)?'checked':''} onchange="siToggleMulti('${esc(k).replace(/'/g,'&#39;')}',this.checked)">${esc(scenLabel(k))}</label>`).join('')}</div>`;
-  if(sel.length<2){el.innerHTML=siKeyOpts()+pick+`<div class="si-empty">Seleccione al menos dos escenarios. El primero de la lista es la referencia.</div>`;return;}
-  const M=SI.multi(sel.map(k=>({key:k,label:scenLabel(k),tasks:TASKS.filter(t=>scenKey(t)===k)})),{basis:SI_UI.basis,keyCfg:SI_CFG});
-  const dd=n=>n==null?'—':(n===0?'0':(n>0?'+':'−')+Math.abs(n));
-  const ps=M.projectSpread,ss=M.spreadStats;
-  const cards=`<div class="si-kpis">${siKpi('Dispersión del fin del cronograma',ps?ps.spreadDays+' d':'—',ps?`${siD(ps.earliest)} → ${siD(ps.latest)}`:'')}${siKpi('Hitos con mayor dispersión',ss?ss.max+' d':'—',ss?`promedio ${ss.mean} d`:'')}${siKpi('Comportamiento',ss?({diverge:'Divergen',converge:'Convergen',constante:'Separación constante',indeterminado:'Indeterminado'})[ss.behavior]:'—',ss&&ss.slopeDaysPerYear!=null?(ss.slopeDaysPerYear>0?'+':'')+ss.slopeDaysPerYear+' d de separación por año':'')}</div>`;
-  const matrix=`<div class="si-tw"><table class="si-t"><caption class="si-sr">Matriz de escenarios</caption><thead><tr><th scope="col">Escenario</th><th scope="col">Inicio</th><th scope="col">Fin</th><th scope="col" class="si-n">Δ fin vs ref.</th><th scope="col" class="si-n">Duración (d)</th><th scope="col" class="si-n">Actividades</th><th scope="col" class="si-n">Hitos</th><th scope="col" class="si-n">Modificadas</th><th scope="col" class="si-n">Agregadas</th><th scope="col" class="si-n">Eliminadas</th><th scope="col" class="si-n">Desplaz. promedio</th><th scope="col" class="si-n">Desplaz. máximo</th></tr></thead><tbody>${M.scenarios.map((s,i)=>`<tr><td><span class="si-dot" style="background:${SI_PAL[i%SI_PAL.length]}"></span>${esc(s.label)}${s.isRef?' <span class="si-na">(referencia)</span>':''}</td><td>${siD(s.start)}</td><td>${siD(s.finish)}</td><td class="si-n">${s.isRef?'—':siDelta(s.finishDeltaDays)}</td><td class="si-n">${s.duration??'—'}</td><td class="si-n">${s.activities}</td><td class="si-n">${s.milestones}</td><td class="si-n">${s.isRef?'—':s.modified}</td><td class="si-n">${s.isRef?'—':s.added}</td><td class="si-n">${s.isRef?'—':s.removed}</td><td class="si-n">${s.isRef?'—':(s.meanShift==null?'—':siDelta(Math.round(s.meanShift)))}</td><td class="si-n">${s.isRef?'—':siDelta(s.maxShift)}</td></tr>`).join('')}</tbody></table></div>`;
-  let ms=M.milestones;if(SI_UI.onlyKey){const k=ms.filter(m=>m.isKey);if(k.length)ms=k;}
-  let chart='';
-  if(ms.length){
-    const W=900,rowH=26,L=210,R=20,all=ms.flatMap(m=>m.dates.filter(d=>d!=null)),a=Math.min(...all),b=Math.max(...all),X=v=>L+(b===a?(W-L-R-60)/2:(v-a)/(b-a)*(W-L-R-60));
-    chart=`<svg viewBox="0 0 ${W} ${ms.length*rowH+34}" width="100%" role="img" aria-label="Fecha de cada hito en cada escenario" style="max-width:${W}px">`;
-    ms.forEach((m,i)=>{const y=18+i*rowH;
-      chart+=siTxt(L-8,y+4,m.name.length>30?m.name.slice(0,29)+'…':m.name,{a:'end',s:10});
-      chart+=`<line x1="${X(m.earliest)}" y1="${y}" x2="${X(m.latest)}" y2="${y}" style="stroke:var(--muted)" stroke-width="2"/>`;
-      m.dates.forEach((d,j)=>{if(d!=null)chart+=`<circle cx="${X(d)}" cy="${y}" r="5" fill="${SI_PAL[j%SI_PAL.length]}" stroke="#fff"><title>${esc(m.name)} · ${esc(M.scenarios[j].label)}: ${siD(d)}</title></circle>`;});
-      chart+=siTxt(W-R,y+4,m.spreadDays?m.spreadDays+' d':'',{a:'end',c:'muted',s:10});});
-    chart+=siTxt(L,ms.length*rowH+28,siD(a),{c:'muted',s:10})+siTxt(W-R,ms.length*rowH+28,siD(b),{a:'end',c:'muted',s:10})+'</svg>';
-  }
-  const legend=`<div class="si-flt" style="margin-bottom:0">${M.scenarios.map((s,i)=>`<span class="si-chk"><span class="si-dot" style="background:${SI_PAL[i%SI_PAL.length]}"></span>${esc(s.label)}</span>`).join('')}</div>`;
-  const rows=ms.map(m=>`<tr><td>${m.isKey?'★ ':''}${esc(m.name)}</td>${m.dates.map((d,j)=>`<td>${siD(d)}${j&&d!=null?` <span class="si-n">${siDelta(m.deltas[j])}</span>`:''}</td>`).join('')}<td class="si-n">${m.present>=2?m.spreadDays+' d':'—'}</td></tr>`).join('');
-  const mt=`<div class="si-tw"><table class="si-t"><caption class="si-sr">Fechas de cada hito por escenario y dispersión</caption><thead><tr><th scope="col">Hito</th>${M.scenarios.map(s=>`<th scope="col">${esc(s.label)}</th>`).join('')}<th scope="col" class="si-n">Dispersión</th></tr></thead><tbody>${rows||'<tr><td colspan="9" class="si-empty">No hay hitos.</td></tr>'}</tbody></table></div>`;
-  el.innerHTML=siKeyOpts()+pick+cards+`<h3 class="si-h3">Matriz de escenarios</h3>${matrix}<h3 class="si-h3">Dispersión por hito</h3><div class="si-card">${legend}${chart}<p class="si-note">Cada punto es la fecha del hito en un escenario; la línea une la más temprana con la más tardía. La comparación es contra el primer escenario seleccionado (referencia). La herramienta muestra hechos y diferencias; no califica un escenario como mejor.</p></div>${mt}`;
-}
-
 /* ═══ IMPACTO: días de diferencia entre dos barras/hitos de la LdT (p. ej. mismo hito en dos escenarios) ═══ */
 let _impMode=false,_impPick=[];
 function presImpactToggle(){_impMode=!_impMode;_impPick=[];presImpactUI();}
