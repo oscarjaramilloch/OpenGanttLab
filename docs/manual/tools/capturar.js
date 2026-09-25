@@ -715,6 +715,12 @@ FIGS['90'] = async b => {   // Agrupador horizontal + vertical
   await ldtShot(p, 'fig-90-ldt-agrupador-horizontal');
   await p.close();
 };
+FIGS['9e'] = async b => {   // Agrupador horizontal pegado a la franja de años
+  const p = await ldt(b); await set(p, 'presShowSubproc', true);
+  await p.evaluate(() => { document.getElementById('presSubprocPos').value = 'axis'; renderPres(); }); await sleep(700);
+  await ldtShot(p, 'fig-905-ldt-agrupador-horizontal-eje', false);
+  await p.close();
+};
 FIGS['91'] = async b => {   // opciones del agrupador horizontal
   const p = await ldt(b); await set(p, 'presShowSubproc', true); await click(p, '#btnPresCapasMenu');
   await click(p, '#btnPresSubprocMenu');
