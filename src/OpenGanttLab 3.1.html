@@ -6252,7 +6252,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
   const axisY0=titleH+_spH+(_gapMan!==null?_gapMan:Math.max(miTopH,_hoyGutter)+_topPad)+_extraTop,axisH=yrH+segH;
   // Medidas de tiempo (flecha doble): una franja de 26 px por medida bajo el eje de años; las tareas se desplazan hacia abajo
   const _dimKeys=new Set();all.forEach(t=>{_dimKeys.add(useLB?'LB|'+pkOf(t):pkOf(t));});
-  const _dimSpace=presVisibleDims(_dimKeys).length*26;
+  const _dimVis=presVisibleDims(_dimKeys),_dimSpace=_dimVis.length*26;
   const taskY0=axisY0+axisH+12+_dimSpace;
   const layerH=execMode?Math.max(barH+10,ds0*2+fsz+Math.max(6,fsz-2)+16):barH+10;
   const taskZH=numLy*layerH+10;
@@ -6276,7 +6276,9 @@ function _presSVG(all,S,TW,mn,mx,opts){
   // Tamaño natural del contenido (sin relleno artificial). El "uso de todo el espacio disponible"
   // no se logra agregando lienzo en blanco, sino ajustando el ZOOM tras el render (ver _presApplyZoom /
   // PRES_AUTO_FIT) para que este contenido natural escale y ocupe #presViewport, igual que hace el Gantt.
-  const W=_natW,H=_natH+_extraH+_extraBottom;
+  // Si una medida se baja a mano por debajo del final del diagrama, el área de renderizado crece para contenerla
+  const _dimBottom=_dimVis.reduce((m,c,i)=>Math.max(m,axisY0+axisH+24+i*26+Math.max(16-(24+i*26),(c.dy||0))+24),0);
+  const W=_natW,H=Math.max(_natH+_extraH+_extraBottom,Math.ceil(_dimBottom));
   const patDefs=`<defs>
     <pattern id="pat-diagonal" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="rgba(0,0,0,0.28)" stroke-width="2.5"/></pattern>
     <pattern id="pat-diagonal-lt" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="8" stroke="rgba(255,255,255,0.38)" stroke-width="2.5"/></pattern>
@@ -11687,7 +11689,7 @@ document.addEventListener('keydown',e=>{
             <li><b>Timeline Delta:</b> nuevo modo que compara los hitos de dos escenarios (A y B) con flecha de desviación y columna «Δ días»; usa la escala, el formato de fecha, los años, los filtros y los controles de la Línea de Tiempo.</li>
             <li><b>Vista Hitos:</b> botón de opciones con «Días desplazados entre escenarios» (línea en escuadra con «+N días» entre el mismo hito de bandas consecutivas); con «Días transcurridos» el hito muestra «diast: N» arriba, la fecha bajo el rombo y el nombre a la derecha.</li>
             <li><b>Hitos:</b> forma elegible (rombo, triángulos, círculo, cuadrado, estrella) y texto adicional que se arrastra con el mouse.</li>
-            <li><b>Conectores:</b> nuevo botón que une dos barras/hitos visibles (recta, escuadra con tramo vertical arrastrable, dos tipos de L) y <b>medidas de tiempo</b> (flecha doble con la diferencia en años y meses, meses o días; comienzo/fin de A contra comienzo/fin de B; en una franja propia bajo los años, texto libre movible). Color, grosor, estilo y flecha editables; Supr elimina.</li>
+            <li><b>Conectores:</b> nuevo botón que une dos barras/hitos visibles (recta, escuadra con tramo vertical arrastrable, dos tipos de L) y <b>medidas de tiempo</b> (flecha doble con la diferencia en años y meses, meses o días; comienzo/fin de A contra comienzo/fin de B; en una franja propia bajo los años que se sube o baja arrastrando —el área de renderizado crece sola—, con el texto siempre centrado sobre la barra). Color, grosor, estilo y flecha editables; Supr elimina.</li>
             <li><b>Impacto:</b> ahora dibuja la medición entre A y B como medida de tiempo y permite dejarla en la lámina.</li>
             <li><b>Leyenda configurable</b> (campo, estilo, título, tamaño, entradas visibles) e <b>imágenes e íconos</b> (biblioteca de 12 o archivo propio, hasta 3 MB) como formas libres.</li>
             <li><b>Análisis de escenarios (Schedule Intelligence):</b> pestaña Análisis con comparación de dos o más escenarios (Delta, Hitos, intervalos y deriva). <b>Gestión de escenarios:</b> cambiar el nombre de un escenario.</li>
