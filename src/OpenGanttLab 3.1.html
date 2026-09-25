@@ -310,6 +310,7 @@ th,td{padding:0}
 .btn-outline{background:#fff;border:1.5px solid var(--accent);color:var(--accent-fg)}
 .rb-act{padding:.4rem .7rem;font-size:11px;margin:2px}
 .epreds::placeholder,#pbmDepPreds::placeholder{font-style:italic;opacity:.55}
+[data-rap-resize]:hover{fill:rgba(59,110,165,.35)!important} /* asas de ajuste del Agrupador: se iluminan al pasar el mouse */
 .filtro-menu-item{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:none;background:none;border-radius:6px;cursor:pointer;font:inherit;font-size:12px;color:var(--ink);text-align:left}
 .filtro-menu-item svg{width:16px;height:16px;flex-shrink:0;color:var(--muted)}
 .filtro-menu-item:hover{background:var(--bg)}
@@ -6026,7 +6027,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
       }
       // Asa de arrastre: divisor de esta columna → ajustar su ancho
       const _lastB=rapBands[rapBands.length-1];
-      svg+=`<rect x="${cx1-3}" y="${taskY0}" width="6" height="${(_lastB.startLy+_lastB.rows)*layerH}" fill="transparent" data-rap-resize="o${l}" data-w="${_outerW[l]}" style="cursor:ew-resize"><title>Arrastre para ajustar el ancho de esta columna</title></rect>`;
+      svg+=`<rect x="${cx1-4}" y="${taskY0}" width="8" height="${(_lastB.startLy+_lastB.rows)*layerH}" fill="transparent" data-rap-resize="o${l}" data-w="${_outerW[l]}" style="cursor:ew-resize"><title>Arrastre para ajustar el ancho de esta columna</title></rect>`;
     }
     // Asa de arrastre: divisor entre la columna de Categoría 1 y el Gantt → ajustar su ancho
     const _rapLastBand=rapBands[rapBands.length-1];
