@@ -1463,7 +1463,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <div class="tb-pop-title">CONTENIDO</div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.3 9.4l6-.9L12 3z"/></svg><span class="tg-label">Marca Activity</span><input type="checkbox" id="presShowMarca2" onchange="renderPres()"><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 6v4"/><path d="M21 6v4"/><path d="M7 14h10"/><path d="M7 18h6"/></svg><span class="tg-label">Resumen</span><input type="checkbox" id="presShowSummary" onchange="renderPres()"><span class="tg-track"></span></label></div>
-        <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h.01"/><path d="M11 9h6"/><path d="M7 13h.01"/><path d="M11 13h6"/><path d="M7 17h.01"/><path d="M11 17h4"/></svg><span class="tg-label">Leyenda</span><input type="checkbox" id="presShowLegend" onchange="renderPres()"><span class="tg-track"></span></label></div>
+        <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h.01"/><path d="M11 9h6"/><path d="M7 13h.01"/><path d="M11 13h6"/><path d="M7 17h.01"/><path d="M11 17h4"/></svg><span class="tg-label">Leyenda</span><input type="checkbox" id="presShowLegend" onchange="renderPres()"><span class="tg-track"></span></label><div style="position:relative;display:none" id="presLegendMenuWrap"><button class="tb-btn sm" id="btnPresLegendMenu" aria-label="Opciones de la leyenda" aria-haspopup="true" onclick="presLegendFill();toggleLayerOptions(event,'btnPresLegendMenu','presLegendMenuPanel')" title="Configurar la leyenda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presLegendMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresLegendMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:250px;max-height:70vh;overflow:auto"></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="M8 2v4"/><path d="M16 2v4"/></svg><span class="tg-label">Fechas</span><input type="checkbox" id="presShowDates" checked onchange="renderPres()"><span class="tg-track"></span></label><div style="position:relative;display:none" id="presFechasMenuWrap"><button class="tb-btn sm" id="btnPresFechasMenu" aria-label="Opciones de fechas" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresFechasMenu','presFechasMenuPanel')" title="Fechas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presFechasMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresFechasMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:220px"><label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--ink)" title="Rotula, sobre cada barra y cada hito, los días transcurridos desde el día 1 (la fecha más temprana del diagrama) hasta su fecha de fin o de ocurrencia"><input type="checkbox" id="presShowElapsed" onchange="renderPres()" data-noreset>Días transcurridos desde el día 1</label></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Flechas entre predecesoras y sucesoras. No se dibujan en las vistas Ejecutivo ni Hitos. Con un clic en una barra se resalta su cadena."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="6" height="4" rx="1"/><rect x="15.5" y="16" width="6" height="4" rx="1"/><path d="M5.5 8v6a2 2 0 0 0 2 2H14"/><path d="m12.5 13.5 2 2.5-2 2.5"/></svg><span class="tg-label">Dependencias</span><input type="checkbox" id="presShowDeps" onchange="renderPres()"><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12l-6 6z"/><path d="M12 9v12" stroke-dasharray="2.5 2.5"/></svg><span class="tg-label">Fecha de estado</span><input type="checkbox" id="presShowHoy" onchange="togglePresHoy()"><span class="tg-track"></span></label>
@@ -1512,7 +1512,8 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h14"/><path d="m17 20 4-4-4-4"/><path d="M21 16H7"/></svg><span class="tg-label">Comparador</span><input type="checkbox" id="presShowLB" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="1.5"/><path d="M9 9v6"/><path d="M15 9v6"/></svg><span class="tg-label">Segmentación</span><input type="checkbox" id="presShowSeg" onchange="renderPres()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presSegMenuWrap"><button class="tb-btn sm" id="btnPresSegMenu" aria-label="Opciones de segmentación" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresSegMenu','presSegMenuPanel')" title="segmentación"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presSegMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresSegMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:200px"><div id="presYearDivWrap" style="display:flex;flex-direction:column;gap:8px"><label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--ink)"><input type="checkbox" id="presYearDivOn" checked onchange="renderPres()" data-noreset>Divisor de año</label><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Grosor:</span><input type="number" id="presYearDivW" value="0.5" min="0.5" max="6" step="0.5" onchange="renderPres()" style="width:44px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px" title="Grosor (px)"><span style="font-size:10px;color:var(--muted)">px</span></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Estilo:</span><select id="presYearDivDash" onchange="renderPres()" style="font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:48px">Color:</span><span id="presYearDivColor" onclick="pickPresYearDivColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#eeeeee" title="Color"></span></div></div></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg><span class="tg-label">Ejecutivo</span><input type="checkbox" id="presShowExecutive" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
-        <div class="tb-lrow-wrap"><label class="toggle tb-lrow" id="presRapToggleWrap" title="Agrupa las barras en bandas por la columna que elijas (Categoría 1 por defecto), con el color de Categoría 2."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span class="tg-label">Agrupador</span><input type="checkbox" id="presShowRaP" onchange="togglePresRaP()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presGroupMenuWrap"><button class="tb-btn sm" id="btnPresGroupMenu" aria-label="Opciones de agrupador" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresGroupMenu','presGroupMenuPanel')" title="agrupador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presGroupMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresGroupMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:240px"><div id="presGroupFieldWrap" style="display:flex;flex-direction:column;align-items:stretch;gap:4px"></div></div></div></div>
+        <div class="tb-lrow-wrap"><label class="toggle tb-lrow" id="presRapToggleWrap" title="Agrupa las barras en bandas por la columna que elijas (Categoría 1 por defecto), con el color de Categoría 2."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span class="tg-label">Agrupador vertical</span><input type="checkbox" id="presShowRaP" onchange="togglePresRaP()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presGroupMenuWrap"><button class="tb-btn sm" id="btnPresGroupMenu" aria-label="Opciones de agrupador" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresGroupMenu','presGroupMenuPanel')" title="agrupador"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presGroupMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresGroupMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:240px"><div id="presGroupFieldWrap" style="display:flex;flex-direction:column;align-items:stretch;gap:4px"></div></div></div></div>
+        <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Agrupador horizontal — banda sobre la franja de años: un rectángulo por cada valor de la columna elegida, del inicio de su primera tarea al fin de su última"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="8" height="5" rx="1.5"/><rect x="13" y="5" width="8" height="5" rx="1.5"/><path d="M3 15h18"/><path d="M3 19h18"/></svg><span class="tg-label">Agrupador horizontal</span><input type="checkbox" id="presShowSubproc" onchange="renderPres()"><span class="tg-track"></span></label><div style="position:relative;display:none" id="presSubprocMenuWrap"><button class="tb-btn sm" id="btnPresSubprocMenu" aria-label="Opciones del agrupador horizontal" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresSubprocMenu','presSubprocMenuPanel')" title="Opciones del agrupador horizontal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presSubprocMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresSubprocMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:220px"><div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:56px">Agrupar por:</span><select id="presSubprocField" onchange="renderPres()" data-noreset style="font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px"><option value="c1">Categoría 1</option><option value="c2">Categoría 2</option><option value="escenario">Escenario</option></select></div><div style="display:flex;gap:8px;align-items:center"><span style="font-size:11px;color:var(--muted);min-width:56px">Color:</span><span id="presSubprocColor" onclick="pickPresSubprocColor()" style="width:20px;height:15px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:#c9e4f7" title="Color de las bandas"></span></div><div style="display:flex;gap:8px;align-items:center" title="Espacio en blanco entre las bandas y la franja de años. Vacío = automático. También se arrastra el borde inferior de las bandas."><span style="font-size:11px;color:var(--muted);min-width:56px">Espacio:</span><input type="number" id="presSubprocGap" min="0" max="600" step="2" placeholder="auto" onchange="renderPres()" data-noreset style="width:56px;font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 4px"><span style="font-size:10px;color:var(--muted)">px</span><button type="button" class="rb-flat" style="padding:2px 6px;font-size:11px" onclick="document.getElementById('presSubprocGap').value='';renderPres()">Auto</button></div></div></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Muestra únicamente los hitos de la Línea de Tiempo — oculta todas las tareas y filas de resumen."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 9-9 9-9-9z"/></svg><span class="tg-label">Vista Hitos</span><input type="checkbox" id="presShowHitos" onchange="renderPres()" data-noreset><span class="tg-track"></span></label><div style="position:relative;display:none" id="presHitosMenuWrap"><button class="tb-btn sm" id="btnPresHitosMenu" aria-label="Opciones de Vista Hitos" aria-haspopup="true" onclick="toggleLayerOptions(event,'btnPresHitosMenu','presHitosMenuPanel')" title="Opciones de Vista Hitos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9"/><path d="M17 7h3"/><circle cx="15" cy="7" r="2"/><path d="M4 17h3"/><path d="M11 17h9"/><circle cx="9" cy="17" r="2"/></svg><svg class="tb-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button><div id="presHitosMenuPanel" class="rb-menu-panel tb-opt-panel" data-menu-btn="btnPresHitosMenu" style="display:none;position:fixed;z-index:99999;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(11,34,57,.12);padding:10px;min-width:240px"><label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--ink)" title="Une el mismo hito entre escenarios (con el Agrupador por escenario) y rotula los días de desplazamiento"><input type="checkbox" id="presShowMsDelta" checked onchange="renderPres()" data-noreset>Días desplazados entre escenarios</label></div></div></div>
         <div class="tb-lrow-wrap"><label class="toggle tb-lrow" title="Compara los hitos de dos escenarios: flecha de desviación y días de diferencia (Δ) por hito."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h12"/><path d="m13 8 4 4-4 4"/><path d="M4 5v14"/></svg><span class="tg-label">Timeline Delta</span><input type="checkbox" id="presShowDelta" onchange="renderPres()" data-noreset><span class="tg-track"></span></label></div>
         <div class="tb-pop-sep"></div>
@@ -1520,8 +1521,9 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       </div>
     </div>
       <button type="button" class="tb-pill" data-layer="presShowMarca2" role="switch" aria-checked="false" title="Marca Activity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.3 9.4l6-.9L12 3z"/></svg><span>Marca Activity</span><span class="tb-sw" aria-hidden="true"></span></button>
-      <button type="button" class="tb-pill" data-layer="presShowRaP" role="switch" aria-checked="false" title="Agrupador — agrupa las barras en bandas por la columna elegida"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span>Agrupador</span><span class="tb-sw" aria-hidden="true"></span></button>
+      <button type="button" class="tb-pill" data-layer="presShowRaP" role="switch" aria-checked="false" title="Agrupador vertical — agrupa las barras en bandas por la columna elegida"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span>Agrupador vertical</span><span class="tb-sw" aria-hidden="true"></span></button>
       <button type="button" class="tb-pill" data-layer="presShowOnlyCrit" role="switch" aria-checked="false" title="Ruta crítica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h6a3 3 0 0 0 0-6h-2a3 3 0 0 1 0-6h6"/></svg><span>Ruta crítica</span><span class="tb-sw" aria-hidden="true"></span></button>
+      <button type="button" class="tb-btn icon" id="btnPresConn" onclick="presConnToggle()" aria-pressed="false" title="Conector: una dos barras o hitos visibles con una línea (recta, en escuadra o en L). Doble clic o clic derecho sobre un conector para editarlo; Supr lo elimina"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v12h6"/><path d="m14 15 3 3-3 3"/><rect x="2" y="4" width="4" height="4" rx=".8"/></svg></button>
       <button type="button" class="tb-btn icon" id="btnPresImpact" onclick="presImpactToggle()" aria-pressed="false" title="Impacto: elija dos barras o hitos (por ejemplo de dos escenarios) y mida los días de diferencia entre sus fechas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z"/><path d="m8 8 2 2"/><path d="m11 5 2 2"/><path d="m5 11 2 2"/></svg></button>
       <button id="execHiddenBtn" class="tb-btn icon" onclick="openExecHiddenModal()" style="display:none;position:relative" title="Tareas ocultas (0)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span id="execHiddenCount" style="display:none;position:absolute;top:0;right:0;min-width:14px;height:14px;padding:0 3px;border-radius:7px;background:#e8622c;border:1.5px solid var(--panel);color:#fff;font-size:9px;font-weight:700;line-height:11px;text-align:center"></span></button>
     <span class="tb-div" role="separator"></span>
@@ -1604,6 +1606,10 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
             <button class="filtro-menu-item" onclick="presToggleShapePicker(event)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
               Insertar forma
+            </button>
+            <button class="filtro-menu-item" onclick="presToggleIconPicker(event)" title="Íconos (pozo, check, llama…) o una imagen de su equipo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m21 16-5-5-8 8"/></svg>
+              Insertar imagen o ícono
             </button>
             <div id="presShapePicker" style="display:none;position:fixed;z-index:100020;background:#fff;border:1px solid #c8cdd5;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.2);padding:6px;grid-template-columns:repeat(4,1fr);gap:4px;width:176px">
               <button onclick="presAddShape('rect')" title="Rectángulo" style="border:1px solid #ddd;border-radius:4px;background:#f8f8f8;cursor:pointer;padding:6px;font-size:18px">▭</button>
@@ -2060,6 +2066,13 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         </div>
       </div>
     </div>
+    <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:6px">
+      <div class="pop-label" style="margin-bottom:0">Forma</div>
+      <div class="pbm-seg" id="pbmMitoShapes" role="group" aria-label="Forma del marcador"><button type="button" class="pbm-seg-btn" data-shape="diamond" onclick="presSetMitoShape('diamond')" title="Rombo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 9-8 9-8-9z"/></svg></button><button type="button" class="pbm-seg-btn" data-shape="triangleDown" onclick="presSetMitoShape('triangleDown')" title="Triángulo hacia abajo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-8 15z"/></svg></button><button type="button" class="pbm-seg-btn" data-shape="triangleUp" onclick="presSetMitoShape('triangleUp')" title="Triángulo hacia arriba"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l8 15H4z"/></svg></button><button type="button" class="pbm-seg-btn" data-shape="circle" onclick="presSetMitoShape('circle')" title="Círculo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/></svg></button><button type="button" class="pbm-seg-btn" data-shape="square" onclick="presSetMitoShape('square')" title="Cuadrado"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1"/></svg></button><button type="button" class="pbm-seg-btn" data-shape="star" onclick="presSetMitoShape('star')" title="Estrella"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></button></div>
+      <div class="pop-label" style="margin:4px 0 0">Texto adicional</div>
+      <textarea id="pbmMitoNote" rows="2" oninput="presSetMitoNote(this.value)" onfocus="presLabelSnap()" placeholder="Ej.: $2,25 MUSD · Reservas (2,4 – 6,5 mbls)" style="width:100%;box-sizing:border-box;font:11px inherit;padding:4px 6px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--ink);resize:vertical"></textarea>
+      <div style="display:flex;align-items:center;gap:6px;font-size:9.5px;color:var(--muted)"><span style="flex:1;line-height:1.3">Arrastre el texto en la LdT para moverlo.</span><button type="button" class="rb-flat" style="padding:2px 6px" onclick="presResetMitoNote()">Restablecer posición</button></div>
+    </div>
     <!-- Fondo propio del hito (usa pbmSwatch compartido pero aquí está contextualizado) -->
     <div style="border-top:1px solid var(--grid);padding-top:6px;padding-bottom:6px;display:flex;flex-direction:column;gap:4px">
       <button type="button" class="pop-label" onclick="pbmToggleSection('pbmMitoFondoBody',this)" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;padding:0;cursor:pointer;font:inherit">
@@ -2369,6 +2382,14 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <option value="14">14</option><option value="15" selected>15</option><option value="16">16</option>
       <option value="18">18</option><option value="20">20</option><option value="24">24</option>
     </select>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px" title="Une este año con los siguientes en una sola banda de la franja">
+    <span style="font-size:10px;color:#666;min-width:42px">Unir hasta:</span>
+    <select id="pymMergeTo" onchange="presYearMergeSet()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1"></select>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <span style="font-size:10px;color:#666;min-width:42px">Texto:</span>
+    <input type="text" id="pymMergeLbl" placeholder="p. ej. 2030 - 2033" oninput="presYearMergeSet(true)" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1;min-width:0">
   </div>
   <div style="display:flex;align-items:center;gap:8px">
     <span style="font-size:10px;color:#666;min-width:42px">Ancho:</span>
@@ -3031,7 +3052,48 @@ function pickPresYearDivColor(){
   const cp=document.getElementById('colorPicker');
   cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
 }
+let _presSubprocCol='#c9e4f7',_presSubprocColors={};
+function presOpenSubprocBandColor(v,x,y){
+  _cpTarget={type:'pressubprocband',v};
+  document.getElementById('cpLabel').textContent='Color de «'+v+'»';
+  const cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.max(4,Math.min(x+8,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(y+8,innerHeight-(cp.offsetHeight||300)))+'px';
+}
+document.getElementById('presBody').addEventListener('dblclick',e=>{
+  const b=e.target.closest&&e.target.closest('[data-sp-band]');if(!b)return;
+  e.stopImmediatePropagation();e.stopPropagation();
+  presOpenSubprocBandColor(b.getAttribute('data-sp-band'),e.clientX,e.clientY);
+},true);
+(function(){
+  let drag=null;
+  const pb=document.getElementById('presBody');if(!pb)return;
+  pb.addEventListener('mousedown',e=>{
+    const hd=e.target.closest&&e.target.closest('[data-sp-gap]');if(!hd)return;
+    e.preventDefault();e.stopPropagation();
+    drag={y:e.clientY,g:+hd.dataset.spGap||0,raf:0};
+  },true);
+  pb.addEventListener('dblclick',e=>{
+    if(!(e.target.closest&&e.target.closest('[data-sp-gap]')))return;
+    e.stopImmediatePropagation();const ge=document.getElementById('presSubprocGap');if(ge){ge.value='';renderPres();}
+  },true);
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    const z=(typeof PRES_ZOOM==='number'&&PRES_ZOOM>0)?PRES_ZOOM:1,ng=Math.max(0,Math.round(drag.g+(e.clientY-drag.y)/z));
+    const ge=document.getElementById('presSubprocGap');if(ge)ge.value=ng;
+    if(drag.raf)return;drag.raf=requestAnimationFrame(()=>{if(drag){drag.raf=0;renderPres();}});
+  });
+  document.addEventListener('mouseup',()=>{if(drag){drag=null;renderPres();}});
+})();
+function pickPresSubprocColor(){
+  _cpTarget={type:'pressubproccolor'};
+  document.getElementById('cpLabel').textContent='Color de subprocesos (LdT)';
+  const r=document.getElementById('presSubprocColor').getBoundingClientRect();
+  const cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.min(r.right+4,innerWidth-250)+'px';cp.style.top=Math.min(r.top,innerHeight-(cp.offsetHeight||300))+'px';
+}
 function presSyncSegUI(){
+  {const lc=document.getElementById('presShowLegend'),lw=document.getElementById('presLegendMenuWrap');if(lw)lw.style.display=lc&&lc.checked?'inline-block':'none';}
+  {const sc=document.getElementById('presShowSubproc'),sw=document.getElementById('presSubprocMenuWrap'),sv=document.getElementById('presSubprocColor');if(sw)sw.style.display=sc&&sc.checked?'inline-block':'none';if(sv)sv.style.background=_presSubprocCol;}
   {const hc=document.getElementById('presShowHitos'),hw=document.getElementById('presHitosMenuWrap');if(hw)hw.style.display=hc&&hc.checked?'inline-block':'none';}
   const _fd=document.getElementById('presShowDates'),_fw=document.getElementById('presFechasMenuWrap');if(_fw)_fw.style.display=_fd&&_fd.checked?'inline-block':'none';
   const seg=document.getElementById('presShowSeg'),w=document.getElementById('presYearDivWrap'),sw=document.getElementById('presYearDivColor');
@@ -4167,6 +4229,11 @@ function applyPickerColor(color){
   else if(_cpTarget.type==='presyearfg'){_presSnap();(_presYearIsLB?PRES_LB_YEAR_TEXT_COLORS:PRES_YEAR_TEXT_COLORS)[_cpTarget.name]=color;document.getElementById('pymFgSwatch').style.background=color;closeColorPicker();renderPres();return;}
   else if(_cpTarget.type==='hoycolor'){_hoyLineCol=color;_hoyTextCol=color;const sw=document.getElementById('hoyLineColor');if(sw)sw.style.background=color;applyHoyStyle();closeColorPicker();return;}
   else if(_cpTarget.type==='presdeltacolor'){if(_cpTarget.w==='A')_deltaCA=color;else _deltaCB=color;renderPres();closeColorPicker();return;}
+  else if(_cpTarget.type==='preslegtitle'){PRES_LEGEND_CFG.titleColor=color;const sw=document.getElementById('plgTitleColor');if(sw)sw.style.background=color;renderPres();closeColorPicker();return;}
+  else if(_cpTarget.type==='presconn'){const c=PRES_CONNECTORS.find(q=>q.id===_conMenuId);if(c){_presSnap();c.color=color;const sw=document.getElementById('pcmColor');if(sw)sw.style.background=color;renderPres();}closeColorPicker();return;}
+  else if(_cpTarget.type==='presborder'){if(_presBorderCtx){_presSnap();_presBorderObj(_presBorderCtx).borderColor=color;const sw=document.getElementById('pbdColor');if(sw)sw.style.background=color;renderPres();}closeColorPicker();return;}
+  else if(_cpTarget.type==='pressubprocband'){_presSubprocColors[_cpTarget.v]=color;renderPres();closeColorPicker();return;}
+  else if(_cpTarget.type==='pressubproccolor'){_presSubprocCol=color;_presSubprocColors={};presSyncSegUI();renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='presyeardivcolor'){_presYearDivCol=color;presSyncSegUI();renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='preshoycolor'){_presHoyCol=color;const sw=document.getElementById('presHoyColor');if(sw)sw.style.background=color;applyPresHoyStyle();closeColorPicker();return;}
   else if(_cpTarget.type==='prestitlecolor'){_presTitleColors[_cpTarget.name]=color;const sw=document.getElementById(_cpTarget.name);if(sw)sw.style.background=color;closeColorPicker();renderPres();return;}
@@ -5022,7 +5089,7 @@ function _buildShareBlob(shared){
   const data={shared:!!shared,sessionName:AP_SESSION_NAME,tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||'',preds:t.preds||'',pscope:t.pscope||''})),
     scenarios:SCENARIOS,on:SCEN_ON,color:SCEN_COLOR,escColor:ESC_COLOR,cat2color:CAT2_COLOR,eventocolor:EVENTO_COLOR,presOpts:PRES_OPTS,presHidden:[...PRES_HIDDEN_KEYS],presTextBoxes:PRES_TEXTBOXES,presShapes:PRES_SHAPES,ganttTextBoxes:GANTT_TEXTBOXES,ganttOrder:GANTT_ORDER,ganttC2Order:GANTT_C2_ORDER,ganttTaskOrder:GANTT_TASK_ORDER,
     scale:document.getElementById('scale').value,mode:document.querySelector('input[name=mode]:checked').value,
-    showLB:document.getElementById('showLB').checked,showDeps:document.getElementById('showDeps').checked,showDates:document.getElementById('showDates').checked,presShowDates:document.getElementById('presShowDates').checked,
+    showLB:document.getElementById('showLB').checked,showDeps:document.getElementById('showDeps').checked,showDates:document.getElementById('showDates').checked,presShowDates:document.getElementById('presShowDates').checked,presShowSubproc:(document.getElementById('presShowSubproc')||{}).checked,presSubprocField:(document.getElementById('presSubprocField')||{}).value,presSubprocGap:(document.getElementById('presSubprocGap')||{}).value,presSubprocColor:_presSubprocCol,presSubprocColors:_presSubprocColors,presYearMerge:PRES_YEAR_MERGE,presSubprocStyle:_presSubprocStyle,presConnectors:PRES_CONNECTORS,presLegendCfg:PRES_LEGEND_CFG,
     presExtraH:+document.getElementById('presExtraH').value||0,presExtraTop:+document.getElementById('presExtraTop').value||0,presExtraBottom:+(document.getElementById('presExtraBottom')||{value:0}).value||0,presExtraLeft:+(document.getElementById('presExtraLeft')||{value:0}).value||0,presExtraRight:+(document.getElementById('presExtraRight')||{value:0}).value||0,presLegendPos:PRES_LEGEND_POS,presLegendSize:PRES_LEGEND_SIZE,
     fontFamily:document.getElementById('fontFamily').value,
     fontSizes:{dates:document.getElementById('fsDates').value,months:document.getElementById('fsMonths').value,years:document.getElementById('fsYears').value,cat1:document.getElementById('fsCat1').value,cat2:document.getElementById('fsCat2').value,tasks:document.getElementById('fsTasks').value},
@@ -5208,6 +5275,15 @@ function loadEmbedded(){
   if(d.showDeps!=null)document.getElementById('showDeps').checked=d.showDeps;
   if(d.showDates!=null)document.getElementById('showDates').checked=d.showDates;
   if(d.presShowDates!=null)document.getElementById('presShowDates').checked=d.presShowDates;
+  if(d.presShowSubproc!=null)document.getElementById('presShowSubproc').checked=d.presShowSubproc;
+  if(d.presSubprocField)document.getElementById('presSubprocField').value=d.presSubprocField;
+  {const ge=document.getElementById('presSubprocGap');if(ge)ge.value=d.presSubprocGap==null?'':d.presSubprocGap;}
+  if(d.presSubprocColor)_presSubprocCol=d.presSubprocColor;
+  _presSubprocColors=Object.assign({},d.presSubprocColors||{});
+  PRES_YEAR_MERGE=Object.assign({},d.presYearMerge||{});
+  _presSubprocStyle=Object.assign({},d.presSubprocStyle||{});
+  PRES_CONNECTORS=Array.isArray(d.presConnectors)?d.presConnectors:[];
+  if(d.presLegendCfg)PRES_LEGEND_CFG=Object.assign({field:'c2',titleOn:false,title:'',titleSize:12,titleColor:'#2c3e50',fs:10,box:true,style:'swatch',hidden:[]},d.presLegendCfg);
   if(d.presExtraH!=null)document.getElementById('presExtraH').value=d.presExtraH;
   if(d.presExtraTop!=null)document.getElementById('presExtraTop').value=d.presExtraTop;
   if(d.presExtraBottom!=null&&document.getElementById('presExtraBottom'))document.getElementById('presExtraBottom').value=d.presExtraBottom;
@@ -5574,6 +5650,143 @@ function apRestoreExecConfigLocal(){
 }
 let PRES_YEAR_COLORS={};
 let PRES_YEAR_TEXT_COLORS={};
+// Forma del marcador de un hito (opt.miShape) y texto adicional (opt.miNote) movible con el mouse (opt.miNoteDx/Dy)
+function presMsShape(shape,x,y,ds,col,attrs){
+  const st='fill="'+col+'" stroke="'+col+'" stroke-width="1.5"'+attrs;
+  if(shape==='triangleDown')return'<polygon points="'+(x-ds)+','+(y-ds)+' '+(x+ds)+','+(y-ds)+' '+x+','+(y+ds)+'" '+st+'/>';
+  if(shape==='triangleUp')return'<polygon points="'+x+','+(y-ds)+' '+(x+ds)+','+(y+ds)+' '+(x-ds)+','+(y+ds)+'" '+st+'/>';
+  if(shape==='circle')return'<circle cx="'+x+'" cy="'+y+'" r="'+ds+'" '+st+'/>';
+  if(shape==='square')return'<rect x="'+(x-ds)+'" y="'+(y-ds)+'" width="'+(2*ds)+'" height="'+(2*ds)+'" '+st+'/>';
+  if(shape==='star'){let p=[];for(let i=0;i<10;i++){const r=i%2?ds*0.45:ds*1.15,a=-Math.PI/2+i*Math.PI/5;p.push((x+r*Math.cos(a)).toFixed(1)+','+(y+r*Math.sin(a)).toFixed(1));}return'<polygon points="'+p.join(' ')+'" '+st+'/>';}
+  return'<polygon points="'+x+','+(y-ds)+' '+(x+ds)+','+y+' '+x+','+(y+ds)+' '+(x-ds)+','+y+'" '+st+'/>';
+}
+function presMsNote(o,key,bx,by,fs,col){
+  const txt=(o&&o.miNote)||'';if(!String(txt).trim())return'';
+  const x=bx+(o.miNoteDx||0),y=by+(o.miNoteDy||0),lh=fs*1.25,esc2=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const lines=String(txt).split(/\r?\n/);
+  return'<text data-mi-note="'+esc2(key)+'" x="'+x+'" y="'+y+'" text-anchor="middle" font-size="'+fs+'" fill="'+(col||'#333')+'" style="cursor:move">'+lines.map((l,i)=>'<tspan x="'+x+'" dy="'+(i?lh:0)+'">'+esc2(l)+'</tspan>').join('')+'<title>Arrastre para mover el texto</title></text>';
+}
+(function(){
+  let drag=null;const pb=document.getElementById('presBody');if(!pb)return;
+  pb.addEventListener('mousedown',e=>{
+    const n=e.target.closest&&e.target.closest('[data-mi-note]');if(!n)return;
+    const key=n.getAttribute('data-mi-note'),o=PRES_OPTS[key];if(!o)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    _presSnap();drag={key,x:e.clientX,y:e.clientY,dx:o.miNoteDx||0,dy:o.miNoteDy||0,raf:0};
+  },true);
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;const o=PRES_OPTS[drag.key];if(!o)return;
+    const z=(typeof PRES_ZOOM==='number'&&PRES_ZOOM>0)?PRES_ZOOM:1;
+    o.miNoteDx=Math.round(drag.dx+(e.clientX-drag.x)/z);o.miNoteDy=Math.round(drag.dy+(e.clientY-drag.y)/z);
+    if(drag.raf)return;drag.raf=requestAnimationFrame(()=>{if(drag){drag.raf=0;renderPres();}});
+  });
+  document.addEventListener('mouseup',()=>{if(drag){drag=null;renderPres();}});
+})();
+function presSetMitoShape(shape){
+  if(!_presBarKey)return;_presSnap();
+  if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={};
+  PRES_OPTS[_presBarKey].miShape=shape;_pbmSyncMitoShape(PRES_OPTS[_presBarKey]);renderPres();
+}
+function presSetMitoNote(v){
+  if(!_presBarKey)return;
+  if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={};
+  PRES_OPTS[_presBarKey].miNote=v;renderPres();
+}
+function presResetMitoNote(){
+  if(!_presBarKey||!PRES_OPTS[_presBarKey])return;_presSnap();
+  delete PRES_OPTS[_presBarKey].miNoteDx;delete PRES_OPTS[_presBarKey].miNoteDy;renderPres();
+}
+function _pbmSyncMitoShape(o){
+  const s=(o&&o.miShape)||'diamond';
+  document.querySelectorAll('#pbmMitoShapes [data-shape]').forEach(b=>b.classList.toggle('active',b.dataset.shape===s));
+  const ta=document.getElementById('pbmMitoNote');if(ta&&document.activeElement!==ta)ta.value=(o&&o.miNote)||'';
+}
+// Borde de los rectángulos agrupadores (verticales: PRES_OPTS['RAPC1|'+valor]; horizontales: _presSubprocStyle[valor])
+let _presSubprocStyle={},_presBorderCtx=null;
+function presDashAttr(d){return d==='dotted'?' stroke-dasharray="2,3"':d==='dashed'?' stroke-dasharray="8,4"':d==='dashed2'?' stroke-dasharray="10,4,2,4"':'';}
+function presBorderAttr(o,defCol,defW){return' stroke="'+((o&&o.borderColor)||defCol)+'" stroke-width="'+((o&&o.borderW!=null&&o.borderW!=='')?o.borderW:defW)+'"'+presDashAttr(o&&o.borderDash);}
+function _presBorderObj(ctx){
+  if(ctx.kind==='rap'){const k='RAPC1|'+ctx.key;if(!PRES_OPTS[k])PRES_OPTS[k]={};return PRES_OPTS[k];}
+  if(!_presSubprocStyle[ctx.key])_presSubprocStyle[ctx.key]={};return _presSubprocStyle[ctx.key];
+}
+function presOpenBorderMenu(kind,key,x,y){
+  _presBorderCtx={kind,key};
+  let m=document.getElementById('presBorderMenu');
+  if(!m){m=document.createElement('div');m.id='presBorderMenu';m.style.cssText='position:fixed;z-index:100005;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:220px;font-size:11px;color:#333;display:none';document.body.appendChild(m);
+    document.addEventListener('mousedown',e=>{if(m.style.display!=='none'&&!m.contains(e.target)&&!e.target.closest('#colorPicker'))m.style.display='none';},true);}
+  const o=_presBorderObj(_presBorderCtx),bw=(o.borderW!=null&&o.borderW!=='')?o.borderW:(kind==='rap'?1.5:0);
+  const dash=o.borderDash||'solid',col=o.borderColor||(kind==='rap'?'#9aa5b1':'#7a8ea3');
+  const S=(v,t)=>'<option value="'+v+'"'+(dash===v?' selected':'')+'>'+t+'</option>';
+  m.innerHTML='<div style="font-weight:700;margin-bottom:8px">Borde · '+String(key).replace(/</g,'&lt;')+'</div>'
+   +(kind==='rap'?'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Forma:</span><select id="pbdShape" onchange="presBorderSet()" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><option value="box"'+(o.borderShape!=='line'?' selected':'')+'>Caja completa</option><option value="line"'+(o.borderShape==='line'?' selected':'')+'>Solo línea inferior</option></select></div>':'')
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Grosor:</span><input type="number" id="pbdW" min="0" max="8" step="0.5" value="'+bw+'" oninput="presBorderSet()" style="width:56px;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><span style="color:#999">px</span></div>'
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Estilo:</span><select id="pbdDash" onchange="presBorderSet()" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px">'+S('solid','— Continua')+S('dotted','· · Punteada')+S('dashed','— Rayada')+S('dashed2','— Mixta')+'</select></div>'
+   +'<div style="display:flex;gap:8px;align-items:center"><span style="min-width:44px;color:#666">Color:</span><span id="pbdColor" onclick="presBorderPickColor()" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+col+'"></span><button type="button" onclick="presBorderReset()" style="margin-left:auto;font-size:10px;padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer">Restablecer</button></div>';
+  m.style.display='block';m.style.left=Math.max(4,Math.min(x+4,innerWidth-232))+'px';m.style.top=Math.max(4,Math.min(y+4,innerHeight-(m.offsetHeight||180)-8))+'px';
+}
+function presBorderSet(){
+  if(!_presBorderCtx)return;_presSnap();
+  const o=_presBorderObj(_presBorderCtx),w=document.getElementById('pbdW'),d=document.getElementById('pbdDash'),s=document.getElementById('pbdShape');
+  if(w&&w.value!=='')o.borderW=Math.max(0,Math.min(8,+w.value));
+  if(d)o.borderDash=d.value;
+  if(s)o.borderShape=s.value;
+  renderPres();
+}
+function presBorderPickColor(){
+  _cpTarget={type:'presborder'};
+  document.getElementById('cpLabel').textContent='Color del borde';
+  const r=document.getElementById('pbdColor').getBoundingClientRect(),cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
+}
+function presBorderReset(){
+  if(!_presBorderCtx)return;_presSnap();
+  const o=_presBorderObj(_presBorderCtx);delete o.borderColor;delete o.borderW;delete o.borderDash;delete o.borderShape;
+  const m=document.getElementById('presBorderMenu');if(m)m.style.display='none';renderPres();
+}
+document.getElementById('presBody').addEventListener('contextmenu',e=>{
+  const sp=e.target.closest&&e.target.closest('[data-sp-band]');
+  const rp=e.target.closest&&e.target.closest('[data-rap-reorder],[data-rap-olbl],[data-rap-band-border]');
+  if(!sp&&!rp)return;
+  e.preventDefault();e.stopPropagation();
+  if(sp)presOpenBorderMenu('sp',sp.getAttribute('data-sp-band'),e.clientX,e.clientY);
+  else presOpenBorderMenu('rap',rp.dataset.c1,e.clientX,e.clientY);
+},true);
+// Configuración de la leyenda (columna de colores, título propio, tamaño, estilo y entradas ocultas)
+let PRES_LEGEND_CFG={field:'c2',titleOn:false,title:'',titleSize:12,titleColor:'#2c3e50',fs:10,box:true,style:'swatch',hidden:[]};
+const _PL_FIELDS=[['c2','Categoría 2'],['c1','Categoría 1'],['escenario','Escenario']];
+function presLegendColor(field,v){return(field==='c2'?CAT2_COLOR[v]:field==='c1'?SCEN_COLOR[v]:ESC_COLOR[v])||'#A5C867';}
+function presLegendValues(field){return[...new Set(TASKS.map(t=>t[field]==null?'':t[field]))].filter(v=>v!==''||field==='c2');}
+function presLegendSet(k,v){
+  const c=PRES_LEGEND_CFG;
+  if(k==='fs'||k==='titleSize')c[k]=Math.max(6,Math.min(40,+v||10));
+  else if(k==='hide'){const i=c.hidden.indexOf(v.value);if(v.on&&i>=0)c.hidden.splice(i,1);else if(!v.on&&i<0)c.hidden.push(v.value);}
+  else c[k]=v;
+  if(k==='field'){c.hidden=[];presLegendFill();}
+  renderPres();
+}
+function presLegendPickTitleColor(){
+  _cpTarget={type:'preslegtitle'};document.getElementById('cpLabel').textContent='Color del título de la leyenda';
+  const r=document.getElementById('plgTitleColor').getBoundingClientRect(),cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
+}
+function presLegendFill(){
+  const p=document.getElementById('presLegendMenuPanel');if(!p)return;const c=PRES_LEGEND_CFG;
+  const row=(l,inner)=>'<div style="display:flex;gap:8px;align-items:center;margin-bottom:7px"><span style="font-size:11px;color:var(--muted);min-width:64px">'+l+'</span>'+inner+'</div>';
+  const inp='font:inherit;font-size:11px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink);padding:3px 5px';
+  const vals=presLegendValues(c.field);
+  p.innerHTML=row('Mostrar por:','<select onchange="presLegendSet(\'field\',this.value)" style="'+inp+'">'+_PL_FIELDS.map(f=>'<option value="'+f[0]+'"'+(c.field===f[0]?' selected':'')+'>'+f[1]+'</option>').join('')+'</select>')
+   +row('Estilo:','<select onchange="presLegendSet(\'style\',this.value)" style="'+inp+'"><option value="swatch"'+(c.style==='swatch'?' selected':'')+'>Muestra y texto</option><option value="chip"'+(c.style==='chip'?' selected':'')+'>Etiqueta de color</option></select>')
+   +row('Letra:','<input type="number" min="6" max="40" value="'+c.fs+'" oninput="presLegendSet(\'fs\',this.value)" style="width:52px;'+inp+'"><span style="font-size:10px;color:var(--muted)">px</span>')
+   +'<label style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:7px;cursor:pointer"><input type="checkbox" '+(c.box?'checked':'')+' onchange="presLegendSet(\'box\',this.checked)">Recuadro de fondo</label>'
+   +'<label style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:7px;cursor:pointer"><input type="checkbox" '+(c.titleOn?'checked':'')+' onchange="presLegendSet(\'titleOn\',this.checked)">Título</label>'
+   +row('Texto:','<input type="text" value="'+String(c.title).replace(/"/g,'&quot;')+'" placeholder="Título de la leyenda" oninput="presLegendSet(\'title\',this.value)" style="flex:1;min-width:0;'+inp+'">')
+   +row('Tamaño / color:','<input type="number" min="6" max="40" value="'+c.titleSize+'" oninput="presLegendSet(\'titleSize\',this.value)" style="width:52px;'+inp+'"><span id="plgTitleColor" onclick="presLegendPickTitleColor()" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:4px;cursor:pointer;background:'+c.titleColor+'"></span>')
+   +'<div style="font-size:11px;color:var(--muted);margin:6px 0 4px">Entradas visibles</div>'
+   +vals.map(v=>'<label style="display:flex;align-items:center;gap:6px;font-size:11px;margin-bottom:3px;cursor:pointer"><input type="checkbox" '+(c.hidden.indexOf(v)<0?'checked':'')+' onchange="presLegendSet(\'hide\',{value:this.dataset.v,on:this.checked})" data-v="'+String(v).replace(/"/g,'&quot;')+'"><span style="width:10px;height:10px;border-radius:2px;background:'+presLegendColor(c.field,v)+';display:inline-block"></span>'+String(v||'(Sin valor)').replace(/</g,'&lt;')+'</label>').join('')
+   +'<div style="font-size:10px;color:var(--muted);margin-top:6px">Arrastre la leyenda en la LdT para moverla.</div>';
+}
+let PRES_CONNECTORS=[]; // {id,a,b,type:'straight'|'z'|'l1'|'l2',color,w,dash,arrow} — a/b: claves de barras/hitos visibles
+let PRES_YEAR_MERGE={}; // año inicial → {to:año final, label:texto} — tramos que unen varios años en una sola banda de la franja
 let PRES_YEAR_WIDTH_MUL={}; // año (número) → multiplicador de ancho individual (0.5–4), aparte del multiplicador global "presYearWMul"
 let PRES_LB_YEAR_COLORS={};
 let PRES_LB_YEAR_TEXT_COLORS={};
@@ -5607,6 +5820,8 @@ function _presSnap(){
     lyc:JSON.stringify(PRES_LB_YEAR_COLORS),
     lytc:JSON.stringify(PRES_LB_YEAR_TEXT_COLORS),
     ywm:JSON.stringify(PRES_YEAR_WIDTH_MUL),
+    ym:JSON.stringify(PRES_YEAR_MERGE),
+    pcn:JSON.stringify(PRES_CONNECTORS),
     lp:JSON.stringify(PRES_LEGEND_POS),
     ls:JSON.stringify(PRES_LEGEND_SIZE)
   });
@@ -5623,6 +5838,8 @@ function _presCurrentSnap(){
     lyc:JSON.stringify(PRES_LB_YEAR_COLORS),
     lytc:JSON.stringify(PRES_LB_YEAR_TEXT_COLORS),
     ywm:JSON.stringify(PRES_YEAR_WIDTH_MUL),
+    ym:JSON.stringify(PRES_YEAR_MERGE),
+    pcn:JSON.stringify(PRES_CONNECTORS),
     lp:JSON.stringify(PRES_LEGEND_POS),
     ls:JSON.stringify(PRES_LEGEND_SIZE)
   };
@@ -5635,6 +5852,8 @@ function _presRestoreSnap(snap){
   PRES_LB_YEAR_COLORS=JSON.parse(snap.lyc);
   PRES_LB_YEAR_TEXT_COLORS=JSON.parse(snap.lytc);
   PRES_YEAR_WIDTH_MUL=snap.ywm?JSON.parse(snap.ywm):{};
+  PRES_YEAR_MERGE=snap.ym?JSON.parse(snap.ym):{};
+  PRES_CONNECTORS=snap.pcn?JSON.parse(snap.pcn):[];
   PRES_LEGEND_POS=snap.lp?JSON.parse(snap.lp):{x:null,y:null};
   PRES_LEGEND_SIZE=snap.ls?JSON.parse(snap.ls):{w:null,h:null};
 }
@@ -5986,7 +6205,9 @@ function _presSVG(all,S,TW,mn,mx,opts){
   const titleY=_titleShift+_titleBaseH-6-titleYOffset;
   const yrH=Math.round(yrSz*1.8),segH=showSeg&&scaleKey!=='anios'?Math.round(yrSz*1.4):0;
   const ds0=+(document.getElementById('presDiamondSz')||{value:9}).value||9;
-  const miTopH=(milestones.length||eventos.length)?Math.max(100, ds0*2+fsz*2+20):10;
+  const _spOn0=(document.getElementById('presShowSubproc')||{checked:false}).checked;
+  const _hasAbove=eventos.length>0||milestones.some(m=>{const k=pkOf(m),o=PRES_OPTS[useLB?'LB|'+k:k]||{};return o.miAbove!==false;});
+  const miTopH=((milestones.length||eventos.length)&&(_hasAbove||!_spOn0))?Math.max(100, ds0*2+fsz*2+20):10;
   const _extraH=+(document.getElementById('presExtraH')||{value:0}).value||0;
   // Reservar espacio arriba para la etiqueta de la línea de Fecha de estado (si va a mostrarse), evita que se corte
   const _hoyLabelOn=(document.getElementById('presShowHoy')||{checked:true}).checked;
@@ -6013,8 +6234,26 @@ function _presSVG(all,S,TW,mn,mx,opts){
       if(_need>_topPad)_topPad=_need;
     }
   });
-  const axisY0=titleH+Math.max(miTopH,_hoyGutter)+_topPad+_extraTop,axisH=yrH+segH;
-  const taskY0=axisY0+axisH+12;
+  // Subprocesos: un rectángulo por valor de la columna elegida (Cat 1 por defecto), del inicio de su primera tarea
+  // al fin de la última — va sobre los hitos, bajo el título, y empuja el resto hacia abajo
+  const _spOn=(document.getElementById('presShowSubproc')||{checked:false}).checked;
+  const _spField=(document.getElementById('presSubprocField')||{value:'c1'}).value||'c1';
+  const _spBands=[];
+  if(_spOn){
+    const mp=new Map();
+    all.forEach(t=>{const v=String(t[_spField]==null?'':t[_spField]).trim();if(!v)return;const a=+(useLB?t.iLB:t.iRP),b=+(useLB?t.fLB:t.fRP);if(isNaN(a)||isNaN(b))return;
+      const r=mp.get(v);if(!r)mp.set(v,{v,a,b});else{if(a<r.a)r.a=a;if(b>r.b)r.b=b;}});
+    mp.forEach(r=>_spBands.push(r));
+    _spBands.sort((p,q)=>p.a-q.a);
+  }
+  const _spH=_spBands.length?Math.max(26,Math.round(fsz*2.2))+10:0;
+  const _gapRaw=(document.getElementById('presSubprocGap')||{value:''}).value;
+  const _gapMan=(_spBands.length&&_gapRaw!==''&&!isNaN(+_gapRaw))?Math.max(0,+_gapRaw):null;
+  const axisY0=titleH+_spH+(_gapMan!==null?_gapMan:Math.max(miTopH,_hoyGutter)+_topPad)+_extraTop,axisH=yrH+segH;
+  // Medidas de tiempo (flecha doble): una franja de 26 px por medida bajo el eje de años; las tareas se desplazan hacia abajo
+  const _dimKeys=new Set();all.forEach(t=>{_dimKeys.add(useLB?'LB|'+pkOf(t):pkOf(t));});
+  const _dimSpace=presVisibleDims(_dimKeys).length*26;
+  const taskY0=axisY0+axisH+12+_dimSpace;
   const layerH=execMode?Math.max(barH+10,ds0*2+fsz+Math.max(6,fsz-2)+16):barH+10;
   const taskZH=numLy*layerH+10;
   const miBotStart=taskY0+taskZH;
@@ -6065,7 +6304,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     <pattern id="pat-dots-dense-lt" patternUnits="userSpaceOnUse" width="5" height="5"><circle cx="2.5" cy="2.5" r="1.2" fill="rgba(255,255,255,0.42)"/></pattern>
   </defs>`;
   const _msPerPx=TW>0?(+mx- +mn)/TW:0;
-  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" data-task-y0="${taskY0}" data-layer-h="${layerH}" data-ms-per-px="${_msPerPx}" data-ml="${ML}" data-rap-lw="${RAP_LABEL_W}" data-use-lb="${useLB?1:0}" style="font-family:${ff};background:#fff">${patDefs}`;
+  let svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" data-dim-y0="${axisY0+axisH}" data-task-y0="${taskY0}" data-layer-h="${layerH}" data-ms-per-px="${_msPerPx}" data-ml="${ML}" data-rap-lw="${RAP_LABEL_W}" data-use-lb="${useLB?1:0}" style="font-family:${ff};background:#fff">${patDefs}`;
   // Vista RaP: caja + etiqueta por cada banda de Categoría 1 (color de separación gris —
   // valor provisional, a validar). La etiqueta se parte en varias líneas por palabras si no
   // cabe en el ancho reservado (RAP_LABEL_W).
@@ -6076,9 +6315,11 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const c1col=presGroupColor(b.c1);
       const _ix0=_outerSum+2; // con niveles externos, la caja de la banda interna empieza después de su columna (que queda entera)
       const bandSelCls=(b.c1===_presRapSelC1)?' class="pres-sel"':'';
-      svg+=`<rect x="${_ix0}" y="${by0}" width="${ML+TW+MR-2-_ix0}" height="${by1-by0}" rx="${_outerSum?0:8}" ry="${_outerSum?0:8}" fill="none" stroke="${bandGray}" stroke-width="1.5" data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;
+      {const _bo=PRES_OPTS['RAPC1|'+b.c1]||{};
+      if(_bo.borderShape==='line')svg+=`<line x1="${_ix0}" y1="${by1}" x2="${ML+TW+MR-2}" y2="${by1}"${presBorderAttr(_bo,bandGray,1.5)} data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;
+      else svg+=`<rect x="${_ix0}" y="${by0}" width="${ML+TW+MR-2-_ix0}" height="${by1-by0}" rx="${_outerSum?0:8}" ry="${_outerSum?0:8}" fill="none"${presBorderAttr(_bo,bandGray,1.5)} data-rap-band-border="1" data-c1="${ex(String(b.c1||''))}"${bandSelCls}/>`;}
       // Divisor vertical entre la columna de nombres de Categoría 1 y el Gantt
-      svg+=`<line x1="${_rapLblEnd}" y1="${by0}" x2="${_rapLblEnd}" y2="${by1}" stroke="${bandGray}" stroke-width="1.5"/>`;
+      if((PRES_OPTS['RAPC1|'+b.c1]||{}).borderShape!=='line')svg+=`<line x1="${_rapLblEnd}" y1="${by0}" x2="${_rapLblEnd}" y2="${by1}"${presBorderAttr(PRES_OPTS['RAPC1|'+b.c1],bandGray,1.5)}/>`;
       // Estilo/texto editable de la etiqueta de Categoría 1 — guardado en PRES_OPTS bajo una
       // clave sintética ("RAPC1|"+c1) para reutilizar el mismo menú y mecanismo de guardado
       // (presOpts) que las barras de tarea, sin tocar el dato real (TASKS.c1). Ver dblclick de
@@ -6135,8 +6376,9 @@ function _presSVG(all,S,TW,mn,mx,opts){
         if(!oLines.length)oLines.push('');
         const oGap=ofs*1.15,olx=(cx0+cx1)/2,ocy=(oy0+oy1)/2;
         const oFill=oo._textManual?oo.textColor:presGroupColor(pk);
-        svg+=`<rect x="2" y="${oy0}" width="${ML+TW+MR-4}" height="${oy1-oy0}" rx="8" ry="8" fill="none" stroke="#6b7785" stroke-width="2" pointer-events="none"/>`;
-        svg+=`<line x1="${cx1}" y1="${oy0}" x2="${cx1}" y2="${oy1}" stroke="#6b7785" stroke-width="1.5"/>`;
+        if(oo.borderShape==='line')svg+=`<line x1="2" y1="${oy1}" x2="${ML+TW+MR-2}" y2="${oy1}"${presBorderAttr(oo,'#6b7785',2)} pointer-events="none"/>`;
+        else{svg+=`<rect x="2" y="${oy0}" width="${ML+TW+MR-4}" height="${oy1-oy0}" rx="8" ry="8" fill="none"${presBorderAttr(oo,'#6b7785',2)} pointer-events="none"/>`;
+        svg+=`<line x1="${cx1}" y1="${oy0}" x2="${cx1}" y2="${oy1}"${presBorderAttr(oo,'#6b7785',1.5)}/>`;}
         svg+=`<rect x="${cx0}" y="${oy0}" width="${cx1-cx0}" height="${oy1-oy0}" fill="transparent" data-rap-olbl="1" data-c1="${ex(pk)}"/>`;
         svg+=`<text x="${olx}" y="${ocy}" text-anchor="middle" dominant-baseline="middle" font-size="${ofs}" font-weight="${oo.textBold===false?'400':'700'}" font-style="${oo.textItalic?'italic':'normal'}" text-decoration="${oo.textUnder?'underline':'none'}" fill="${oFill}" transform="rotate(-90 ${olx} ${ocy})" pointer-events="none">${oLines.map((ln,q)=>`<tspan x="${olx}" dy="${q===0?-(oLines.length-1)*oGap/2:oGap}">${ex(ln)}</tspan>`).join('')}</text>`;
         i=j+1;
@@ -6156,6 +6398,17 @@ function _presSVG(all,S,TW,mn,mx,opts){
     // necesita fuera de esta función para hacer hit-test contra la posición del puntero.
     _presLastRapBands=rapBands.map(b=>({c1:b.c1,startLy:b.startLy,rows:b.rows}));
   }
+  // Subprocesos (banda superior)
+  if(_spBands.length){
+    const bh=_spH-10,by=titleH+2;
+    _spBands.forEach((r,i)=>{
+      const x0=x(new Date(r.a)),x1=x(new Date(r.b));
+      const bc=_presSubprocColors[r.v]||_presSubprocCol,lu=(()=>{try{return .299*parseInt(bc.slice(1,3),16)+.587*parseInt(bc.slice(3,5),16)+.114*parseInt(bc.slice(5,7),16);}catch{return 200;}})();
+      svg+=`<rect x="${x0}" y="${by}" width="${Math.max(4,x1-x0)}" height="${bh}" rx="3" fill="${bc}"${(_presSubprocStyle[r.v]&&(_presSubprocStyle[r.v].borderW>0))?presBorderAttr(_presSubprocStyle[r.v],'#7a8ea3',1):''} data-sp-band="${ex(r.v)}" style="cursor:pointer"><title>${ex(r.v)} — doble clic: color · clic derecho: borde</title></rect>`;
+      svg+=`<text x="${(x0+x1)/2}" y="${by+bh/2+fsz*0.35}" text-anchor="middle" font-size="${fsz+1}" fill="${lu<128?'#fff':'#222'}" pointer-events="none">${ex(r.v)}</text>`;
+    });
+  }
+  if(_spBands.length)svg+=`<rect x="${ML}" y="${titleH+_spH-8}" width="${TW}" height="8" fill="transparent" data-sp-gap="${Math.round(axisY0-titleH-_spH-_extraTop)}" style="cursor:ns-resize"><title>Arrastre para ajustar el espacio hasta los años (doble clic: automático)</title></rect>`;
   // Título de sección
   if(sectionTitle) svg+=`<text x="${W/2}" y="${titleY}" text-anchor="middle" font-size="${titleSize}" font-weight="bold" fill="${titleColor}">${ex(sectionTitle)}</text>`;
   // Eje de años
@@ -6168,6 +6421,13 @@ function _presSVG(all,S,TW,mn,mx,opts){
     yearAxis.push({yr:String(yCur.getFullYear()),x0:Math.max(ML,yx0),w:Math.min(yx1,ML+TW)-Math.max(ML,yx0)});
     yCur=yNext;
   }
+  // Tramos: los años unidos se dibujan como una sola banda (color y fuente del primer año)
+  for(let q=0;q<yearAxis.length;q++){
+    const mg=PRES_YEAR_MERGE[yearAxis[q].yr];if(!mg||!(mg.to>+yearAxis[q].yr))continue;
+    let k=q+1,wSum=yearAxis[q].w;
+    while(k<yearAxis.length&&+yearAxis[k].yr<=mg.to){wSum+=yearAxis[k].w;k++;}
+    if(k>q+1){yearAxis[q].w=wSum;yearAxis[q].lbl=(mg.label&&mg.label.trim())?mg.label:(yearAxis[q].yr+' - '+yearAxis[k-1].yr);yearAxis.splice(q+1,k-q-1);}
+  }
   yearAxis.forEach((m,yIdx)=>{
     const yrColors=useLB?PRES_LB_YEAR_COLORS:PRES_YEAR_COLORS;
     const yc=yrColors[m.yr]||(yIdx%2===0?'#666':'#999');
@@ -6175,7 +6435,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
     svg+=`<rect x="${m.x0}" y="${axisY0}" width="${m.w}" height="${yrH}" rx="2" fill="${yc}" ${yrAttr} style="cursor:pointer"/>`;
     const yrTextColors=useLB?PRES_LB_YEAR_TEXT_COLORS:PRES_YEAR_TEXT_COLORS;
     const yfg=yrTextColors[m.yr]||'#fff';
-    svg+=`<text x="${m.x0+m.w/2}" y="${axisY0+yrH/2+yrSz*0.35}" text-anchor="middle" font-size="${yrSz}" font-weight="bold" fill="${yfg}" pointer-events="none">${m.yr}</text>`;
+    svg+=`<text x="${m.x0+m.w/2}" y="${axisY0+yrH/2+yrSz*0.35}" text-anchor="middle" font-size="${yrSz}" font-weight="bold" fill="${yfg}" pointer-events="none">${ex(m.lbl||m.yr)}</text>`;
   });
   if(showSeg&&scaleKey!=='anios'){S.minor.forEach(m=>{
     if(!m.lbl)return;const x0=ML+m.x,w=m.w;
@@ -6380,7 +6640,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const _lineY1=_aboveAxis?axisY0:axisY0+axisH;
       const _lineY2=_aboveAxis?dY+ds+1:dY-ds-1;
       if(!PRES_OPTS[mitoLbKey].lineHide) svg+=`<line x1="${mx2}" y1="${_lineY1}" x2="${mx2}" y2="${_lineY2}" stroke="${PRES_OPTS[mitoLbKey].lineColor||'#333'}" stroke-width="${lineW}"${lineDashAttr}/>`;
-      svg+=`<polygon points="${mx2},${dY-ds} ${mx2+ds},${dY} ${mx2},${dY+ds} ${mx2-ds},${dY}" fill="${col}" stroke="${col}" stroke-width="1.5"${mitoAttrs}/>`;
+      svg+=presMsShape(PRES_OPTS[mitoLbKey].miShape,mx2,dY,ds,col,mitoAttrs);
+      svg+=presMsNote(PRES_OPTS[mitoLbKey],mitoLbKey,mx2,_aboveAxis?dY+ds+mfsz+8:dY+ds+mfsz*(mitoLines.length+2)+8,Math.max(8,mfsz-1),'#333');
       svg+=elapsedTxt(useLB?m.iLB:m.iRP,_aboveAxis?mx2+ds+4:mx2,_aboveAxis?dY+3:dY-ds-3,_aboveAxis?'start':'middle',mDateSz,col);
       if(_aboveAxis){
         svg+=mitoML(mitoLines,mx2,dY-ds-(mitoLines.length-1)*mitoLineH-mfsz-2);
@@ -6392,7 +6653,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
     } else {
       const dY=miBotStart+ds+mfsz*2+16+mitoYOff;
       svg+=elapsedTxt(useLB?m.iLB:m.iRP,mx2,dY-ds-3,'middle',mDateSz,col);
-      svg+=`<polygon points="${mx2},${dY-ds} ${mx2+ds},${dY} ${mx2},${dY+ds} ${mx2-ds},${dY}" fill="${col}" stroke="${col}" stroke-width="1.5"${mitoAttrs}/>`;
+      svg+=presMsShape(PRES_OPTS[mitoLbKey].miShape,mx2,dY,ds,col,mitoAttrs);
+      svg+=presMsNote(PRES_OPTS[mitoLbKey],mitoLbKey,mx2,dY+ds+mfsz*(mitoLines.length+2)+8,Math.max(8,mfsz-1),'#333');
       svg+=mitoML(mitoLines,mx2,dY+ds+mfsz+2);
       svg+=mitoDateAt(dY,dY+ds+mfsz+2+(mitoLines.length)*mitoLineH);
     }
@@ -6414,7 +6676,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const y0=cy-(nL-1)*lh/2+mfsz*0.35;
     const selCls=(mk===_presBarKey)?' class="pres-sel"':'';
     svg+=elapsedTxt(useLB?m.iLB:m.iRP,mx3,cy-ds-3,'middle',dSz,col);
-    svg+=`<polygon points="${mx3},${cy-ds} ${mx3+ds},${cy} ${mx3},${cy+ds} ${mx3-ds},${cy}" fill="${col}" stroke="${col}" stroke-width="1.5" data-pres-mito="${ex(mk)}" data-in-band="1"${selCls} style="cursor:pointer"/>`;
+    svg+=presMsShape(o.miShape,mx3,cy,ds,col,` data-pres-mito="${ex(mk)}" data-in-band="1"${selCls} style="cursor:pointer"`);
+    svg+=presMsNote(o,mk,mx3,cy+ds+dSz*2+8,Math.max(8,mfsz-1),'#333');
     const tAttrs=`text-anchor="start" font-size="${mfsz}" font-weight="${o.textBold!==false?'bold':'normal'}" font-style="${o.textItalic?'italic':'normal'}"${o.textUnder?' text-decoration="underline"':''} fill="#333" pointer-events="none"`;
     let ts=`<text ${tAttrs}>`;
     lines.forEach((ln,i)=>{ts+=`<tspan x="${tx}" ${i===0?`y="${y0}"`:`dy="${lh}"`}>${ln}</tspan>`;});
@@ -6524,6 +6787,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
           for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5;const r=(i%2===0)?1:0.45;pts.push([cx+rx*r*Math.cos(a),cy+ry*r*Math.sin(a)]);}
         }
         svg+=`<polygon points="${pts.map(p=>p[0]+','+p[1]).join(' ')}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+      } else if(sh.type==='image'){
+        svg+=`<image href="${sh.src}" x="${sh.x}" y="${sh.y}" width="${sh.w}" height="${sh.h}" preserveAspectRatio="xMidYMid meet"/><rect x="${sh.x}" y="${sh.y}" width="${sh.w}" height="${sh.h}" fill="transparent"/>`;
       } else if(sh.type==='cross'){
         const t=Math.min(sh.w,sh.h)*0.34; // grosor del brazo
         const x=sh.x,y=sh.y,w=sh.w,h=sh.h;
@@ -6602,11 +6867,12 @@ function _presSVG(all,S,TW,mn,mx,opts){
   }
   // Leyenda de Categoría 2 (heredada del Gantt), overlay en la esquina superior derecha
   if(showLegend){
-    const legCats=[...new Set(all.map(t=>t.c2))];
+    const _lc=PRES_LEGEND_CFG,legCats=[...new Set(all.map(t=>t[_lc.field]==null?'':t[_lc.field]))].filter(v=>_lc.hidden.indexOf(v)<0&&(v!==''||_lc.field==='c2'));
     if(legCats.length){
-      const legFsz=10,legLineH=13,legPad=8,legSw=10,legRowGap=4;
+      const legFsz=_lc.fs||10,legLineH=Math.round(legFsz*1.3),legPad=8,legSw=Math.max(8,legFsz),legRowGap=4,chip=_lc.style==='chip';
+      const legTitle=(_lc.titleOn&&String(_lc.title||'').trim())?String(_lc.title).trim():'',legTitleH=legTitle?(_lc.titleSize||12)+8:0;
       const legW=Math.max(90,PRES_LEGEND_SIZE.w||220);
-      const legTextX=8+legSw+6;
+      const legTextX=chip?12:8+legSw+6;
       const legTextW=legW-legTextX-8;
       const charW=legFsz*0.56;
       const wrapLegend=str=>{
@@ -6618,21 +6884,26 @@ function _presSVG(all,S,TW,mn,mx,opts){
         if(cur)lines.push(cur);
         return lines.length?lines:[''];
       };
-      const legItems=legCats.map(c=>({c,lines:wrapLegend(c||'(Sin Categoría 2)')}));
-      const legHAuto=legPad*2+legItems.reduce((s,it)=>s+Math.max(legSw,it.lines.length*legLineH)+legRowGap,-legRowGap);
+      const legItems=legCats.map(c=>({c,lines:wrapLegend(c||'(Sin valor)')}));
+      const legHAuto=legPad*2+legTitleH+legItems.reduce((s,it)=>s+Math.max(legSw,it.lines.length*legLineH)+(chip?6:0)+legRowGap,-legRowGap);
       const legH=Math.max(legHAuto,PRES_LEGEND_SIZE.h||0);
       const legX0=Math.max(4,W-MR-legW-4),legY0=titleH+4;
       const legX=PRES_LEGEND_POS.x!=null?PRES_LEGEND_POS.x:legX0;
       const legY=PRES_LEGEND_POS.y!=null?PRES_LEGEND_POS.y:legY0;
-      svg+=`<g data-pres-legend-drag="1" style="cursor:move"><rect x="${legX}" y="${legY}" width="${legW}" height="${legH}" rx="4" fill="#ffffff" fill-opacity="0.92" stroke="#ccc" stroke-width="1"/>`;
+      svg+=`<g data-pres-legend-drag="1" style="cursor:move"><rect x="${legX}" y="${legY}" width="${legW}" height="${legH}" rx="4" fill="${_lc.box?'#ffffff':'transparent'}" fill-opacity="0.92" stroke="${_lc.box?'#ccc':'none'}" stroke-width="1"/>`;
       let cy=legY+legPad;
+      if(legTitle){svg+=`<text x="${legX+8}" y="${cy+(_lc.titleSize||12)}" font-size="${_lc.titleSize||12}" font-weight="bold" fill="${_lc.titleColor||'#2c3e50'}" pointer-events="none">${ex(legTitle)}</text>`;cy+=legTitleH;}
       legItems.forEach(({c,lines})=>{
-        const rowH=Math.max(legSw,lines.length*legLineH);
-        const col=CAT2_COLOR[c]||'#A5C867';
-        svg+=`<rect x="${legX+8}" y="${cy+(rowH-legSw)/2}" width="${legSw}" height="${legSw}" rx="2" fill="${col}"/>`;
-        lines.forEach((ln,li)=>{
-          svg+=`<text x="${legX+legTextX}" y="${cy+li*legLineH+legLineH-3}" font-size="${legFsz}" fill="#444" pointer-events="none">${ex(ln)}</text>`;
-        });
+        const rowH=Math.max(legSw,lines.length*legLineH)+(chip?6:0);
+        const col=presLegendColor(_lc.field,c);
+        if(chip){
+          const lu=(()=>{try{return .299*parseInt(col.slice(1,3),16)+.587*parseInt(col.slice(3,5),16)+.114*parseInt(col.slice(5,7),16);}catch{return 200;}})();
+          svg+=`<rect x="${legX+6}" y="${cy}" width="${legW-12}" height="${rowH}" rx="2" fill="${col}" stroke="rgba(0,0,0,.2)" stroke-width=".7"/>`;
+          lines.forEach((ln,li)=>{svg+=`<text x="${legX+legW/2}" y="${cy+3+li*legLineH+legLineH-3+(rowH-6-lines.length*legLineH)/2}" text-anchor="middle" font-size="${legFsz}" fill="${lu<128?'#fff':'#222'}" pointer-events="none">${ex(ln)}</text>`;});
+        }else{
+          svg+=`<rect x="${legX+8}" y="${cy+(rowH-legSw)/2}" width="${legSw}" height="${legSw}" rx="2" fill="${col}"/>`;
+          lines.forEach((ln,li)=>{svg+=`<text x="${legX+legTextX}" y="${cy+li*legLineH+legLineH-3}" font-size="${legFsz}" fill="#444" pointer-events="none">${ex(ln)}</text>`;});
+        }
         cy+=rowH+legRowGap;
       });
       svg+=`<rect x="${legX+legW-9}" y="${legY+legH-9}" width="9" height="9" rx="2" fill="#3b6ea5" data-pres-legend-resize="1" style="cursor:se-resize" opacity="0.8"/>`;
@@ -6888,7 +7159,7 @@ function renderPres(){
   // clientWidth/clientHeight, que es justo lo que usamos para calcular el área de renderizado.
   body.innerHTML=`<div id="presZoomSizer" style="position:relative;flex-shrink:0"><div id="presZoomInner" style="position:absolute;top:0;left:0;transform-origin:top left">${_presContentHtml}</div></div>`;
   _presApplyZoom();
-  presDrawDeps(true);presDrawMsDelta();
+  presDrawDeps(true);presDrawMsDelta();presDrawConnectors();
   }catch(err){
     body.innerHTML=`<div style="color:#c00;padding:20px;font-family:monospace;font-size:12px;white-space:pre-wrap">❌ Error en renderPres:\n${err.message}\n\n${err.stack}</div>`;
     console.error('renderPres error:',err);
@@ -7117,6 +7388,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pbmClase').style.background=CAT2_COLOR[_miParts[1]]||'#555';
     // Hito tiene swatch propio dentro de pbmMitoRow — ocultar pbmFondoRow
     document.getElementById('pbmMitoSwatchInner').style.background=opt.color;
+    _pbmSyncMitoShape(opt);
     // Sección "Fechas" del hito: estado actual de mostrar / alinear / posición
     {
       const _gD=(document.getElementById('presShowDates')||{checked:false}).checked;
@@ -7192,6 +7464,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     if(scSel) scSel.value=document.getElementById('presYearSz').value||'15';
     const wmSel=document.getElementById('pymWidthMul');
     if(wmSel) wmSel.value=PRES_YEAR_WIDTH_MUL[yrKey]||1;
+    presYearMergeFill(yrKey,isLBYear);
     const pym=document.getElementById('presYearMenu');
     pym.style.display='block';pym.style.left=Math.min(e.clientX+5,innerWidth-210)+'px';pym.style.top=Math.min(e.clientY+5,innerHeight-150)+'px';
   }
@@ -8208,6 +8481,49 @@ function ganttDeleteTextBox(){
 let PRES_TEXTBOXES=[]; // [{id,x,y,w,h,text,color,bg,border,fontSize,bold,italic,under,align}]
 let _ptbId=null; // id del cuadro activo en el menú
 let _ptbDrag=null; // {id, ox, oy, startX, startY}
+// Íconos incluidos (SVG propios, sin dependencias) — se insertan como una forma de tipo «image»
+const PRES_ICONS=[
+ ['check','Check','<circle cx="32" cy="32" r="28" fill="#22c55e"/><path d="M18 33l10 10 19-21" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>'],
+ ['pozo','Pozo / torre','<path d="M32 6 14 58h36z" fill="none" stroke="#0e7490" stroke-width="5" stroke-linejoin="round"/><path d="M22 36h20M18 48h28M27 22h10" stroke="#0e7490" stroke-width="4"/><path d="M32 6v52" stroke="#0e7490" stroke-width="3"/>'],
+ ['pozos','Pozos (grupo)','<g fill="none" stroke="#0e7490" stroke-width="3.2" stroke-linejoin="round"><path d="M10 10 3 58h14z"/><path d="M26 10 19 58h14z"/><path d="M42 10 35 58h14z"/><path d="M58 10 51 58h11z"/></g>'],
+ ['llama','Llama','<path d="M32 4c4 12 18 18 18 34a18 18 0 0 1-36 0c0-8 4-12 8-16 0 6 3 9 6 9-2-9 0-19 4-27z" fill="#f97316"/><path d="M32 60a9 9 0 0 1-9-9c0-6 5-8 6-14 4 3 12 7 12 14a9 9 0 0 1-9 9z" fill="#fde047"/>'],
+ ['alerta','Alerta','<path d="M32 6 3 58h58z" fill="#facc15" stroke="#a16207" stroke-width="3" stroke-linejoin="round"/><path d="M32 24v18" stroke="#422006" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="50" r="3.6" fill="#422006"/>'],
+ ['info','Información','<circle cx="32" cy="32" r="28" fill="#2563eb"/><circle cx="32" cy="19" r="4" fill="#fff"/><path d="M32 29v20" stroke="#fff" stroke-width="7" stroke-linecap="round"/>'],
+ ['x','Cerrar / no','<circle cx="32" cy="32" r="28" fill="#dc2626"/><path d="M21 21l22 22M43 21 21 43" stroke="#fff" stroke-width="7" stroke-linecap="round"/>'],
+ ['bandera','Bandera','<path d="M14 6v54" stroke="#475569" stroke-width="5" stroke-linecap="round"/><path d="M14 8h36l-8 12 8 12H14z" fill="#dc2626"/>'],
+ ['pin','Ubicación','<path d="M32 60S12 38 12 24a20 20 0 0 1 40 0c0 14-20 36-20 36z" fill="#ef4444"/><circle cx="32" cy="24" r="8" fill="#fff"/>'],
+ ['dolar','Dinero','<circle cx="32" cy="32" r="28" fill="#16a34a"/><path d="M40 22c-2-4-14-5-15 1-1 8 16 3 15 12-1 7-14 6-16 0M32 14v36" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/>'],
+ ['reloj','Tiempo','<circle cx="32" cy="32" r="27" fill="#fff" stroke="#334155" stroke-width="5"/><path d="M32 16v17l11 7" fill="none" stroke="#334155" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'],
+ ['estrella','Estrella','<path d="m32 5 8.5 17.6 19.5 2.8-14.1 13.7 3.4 19.4L32 49.3 14.7 58.5l3.4-19.4L4 25.4l19.5-2.8z" fill="#f59e0b"/>']];
+function presIconUri(ic){return'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">'+ic[2]+'</svg>');}
+function presToggleIconPicker(e){
+  e.stopPropagation();
+  let p=document.getElementById('presIconPicker');
+  if(!p){
+    p=document.createElement('div');p.id='presIconPicker';
+    p.style.cssText='display:none;position:fixed;z-index:100020;background:#fff;border:1px solid #c8cdd5;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.2);padding:8px;width:236px';
+    p.innerHTML='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px">'+PRES_ICONS.map((ic,i)=>'<button type="button" onclick="presAddIcon('+i+')" title="'+ic[1]+'" style="border:1px solid #ddd;border-radius:4px;background:#f8f8f8;cursor:pointer;padding:5px;height:46px"><img src="'+presIconUri(ic)+'" style="width:100%;height:100%;object-fit:contain" alt="'+ic[1]+'"></button>').join('')+'</div><button type="button" onclick="document.getElementById(\'presImgFile\').click()" style="width:100%;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;cursor:pointer;padding:5px;font-size:11px">Subir una imagen…</button><input type="file" id="presImgFile" accept="image/*" style="display:none" onchange="presAddImageFile(this)">';
+    document.body.appendChild(p);
+    document.addEventListener('click',ev=>{if(p.style.display!=='none'&&!p.contains(ev.target)&&!ev.target.closest('button[onclick^="presToggleIconPicker"]'))p.style.display='none';});
+  }
+  if(p.style.display==='none'){const r=e.currentTarget.getBoundingClientRect();p.style.left=Math.max(4,Math.min(r.left,innerWidth-244))+'px';p.style.top=Math.max(4,Math.min(r.bottom+2,innerHeight-230))+'px';p.style.display='block';}
+  else p.style.display='none';
+}
+function presAddImage(src,w,h){
+  markDirty();_presSnap();
+  const p=document.getElementById('presIconPicker');if(p)p.style.display='none';
+  const id='sh_'+Date.now();
+  PRES_SHAPES.push({id,type:'image',src,x:100,y:100,w,h,fill:'none',stroke:'#1e3a5f',strokeW:1.5,rotation:0,text:'',fontSize:12,textBold:true,textItalic:false,textUnder:false,textAlign:'middle',textPos:'center',textFull:false});
+  renderPres();
+}
+function presAddIcon(i){presAddImage(presIconUri(PRES_ICONS[i]),56,56);}
+function presAddImageFile(inp){
+  const fl=inp.files&&inp.files[0];inp.value='';if(!fl)return;
+  if(fl.size>3*1024*1024){alert('La imagen pesa más de 3 MB; use una más liviana para no inflar el archivo de la sesión.');return;}
+  const rd=new FileReader();
+  rd.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,220/Math.max(im.naturalWidth,im.naturalHeight));presAddImage(rd.result,Math.max(16,Math.round(im.naturalWidth*k)),Math.max(16,Math.round(im.naturalHeight*k)));};im.src=rd.result;};
+  rd.readAsDataURL(fl);
+}
 let PRES_SHAPES=[]; // [{id,type,x,y,w,h,fill,stroke,strokeW}] type: rect|oval|diamond|triangle|line|arrow
 let _pshId=null; // id de la forma activa en el menú
 
@@ -8228,7 +8544,7 @@ document.addEventListener('click',e=>{
   const p=document.getElementById('presShapePicker');
   if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('button[onclick^="presToggleShapePicker"]'))p.style.display='none';
 });
-const PRES_SHAPE_NAMES={rect:'▭ Rectángulo',roundrect:'▢ Rectángulo redondeado',oval:'⬭ Óvalo',diamond:'◇ Rombo',triangle:'△ Triángulo',pentagon:'⬠ Pentágono',hexagon:'⬡ Hexágono',star:'☆ Estrella',callout:'💬 Llamada',cross:'✛ Cruz',line:'╲ Línea',arrow:'➘ Flecha'};
+const PRES_SHAPE_NAMES={image:'🖼 Imagen / ícono',rect:'▭ Rectángulo',roundrect:'▢ Rectángulo redondeado',oval:'⬭ Óvalo',diamond:'◇ Rombo',triangle:'△ Triángulo',pentagon:'⬠ Pentágono',hexagon:'⬡ Hexágono',star:'☆ Estrella',callout:'💬 Llamada',cross:'✛ Cruz',line:'╲ Línea',arrow:'➘ Flecha'};
 function presAddShape(type){
   markDirty();
   document.getElementById('presShapePicker').style.display='none';
@@ -8244,7 +8560,7 @@ function presOpenShapeMenu(id,cx,cy){
   const sh=PRES_SHAPES.find(s=>s.id===id);if(!sh)return;
   const isLine=sh.type==='line'||sh.type==='arrow';
   document.getElementById('pshTitle').textContent=PRES_SHAPE_NAMES[sh.type]||'Forma';
-  document.getElementById('pshFillRow').style.display=isLine?'none':'flex';
+  document.getElementById('pshFillRow').style.display=(isLine||sh.type==='image')?'none':'flex';
   document.getElementById('pshFillSwatch').style.background=sh.fill||'#bdd7f0';
   document.getElementById('pshFillNone').checked=!sh.fill||sh.fill==='none';
   document.getElementById('pshStrokeSwatch').style.background=sh.stroke||'#1e3a5f';
@@ -8254,7 +8570,7 @@ function presOpenShapeMenu(id,cx,cy){
   // Para línea/flecha, w/h son el desplazamiento (dx/dy) del segundo extremo: pueden ser negativos
   wEl.min=isLine?'':'4';hEl.min=isLine?'':'4';
   document.getElementById('pshRotation').value=String(sh.rotation||0);
-  document.getElementById('pshTextRow').style.display=isLine?'none':'flex';
+  document.getElementById('pshTextRow').style.display=(isLine||sh.type==='image')?'none':'flex';
   document.getElementById('pshTextContent').value=sh.text||'';
   document.getElementById('pshFontSzSel').value=String(sh.fontSize||12);
   document.getElementById('pshBold').checked=sh.textBold!==false;
@@ -8518,6 +8834,26 @@ function presSetYearWidthMul(val,snapForUndo){
   const v=Math.max(0.2,Math.min(4,+val||1));
   if(snapForUndo)_presSnap();
   PRES_YEAR_WIDTH_MUL[_presYearKey]=v;
+  renderPres();
+}
+// Tramos de la franja de años: el año elegido se une con los siguientes (hasta el año indicado)
+function presYearMergeFill(yrKey,isLB){
+  const sel=document.getElementById('pymMergeTo'),lbl=document.getElementById('pymMergeLbl');if(!sel||!lbl)return;
+  const y0=+yrKey,ys=new Set();
+  (TASKS||[]).forEach(t=>{[t.iRP,t.fRP,t.iLB,t.fLB].forEach(d=>{if(d instanceof Date&&!isNaN(d))ys.add(d.getFullYear());});});
+  const mx=Math.max(...ys,y0),cur=PRES_YEAR_MERGE[y0];
+  let o='<option value="">(sin unir)</option>';
+  for(let y=y0+1;y<=mx;y++)o+='<option value="'+y+'"'+(cur&&cur.to===y?' selected':'')+'>'+y+'</option>';
+  sel.innerHTML=o;lbl.value=cur&&cur.label?cur.label:'';
+  const inMerged=Object.keys(PRES_YEAR_MERGE).some(k=>+k<y0&&PRES_YEAR_MERGE[k].to>=y0);
+  sel.disabled=inMerged;
+}
+function presYearMergeSet(onlyLabel){
+  const y0=+_presYearKey;if(!y0)return;
+  const to=+document.getElementById('pymMergeTo').value||0,label=document.getElementById('pymMergeLbl').value;
+  if(!onlyLabel)_presSnap();
+  if(to>y0){PRES_YEAR_MERGE[y0]={to,label};}
+  else delete PRES_YEAR_MERGE[y0];
   renderPres();
 }
 function presResetYearWidthMul(){
@@ -10415,14 +10751,224 @@ function siRenderMulti(el){
   el.innerHTML=siKeyOpts()+pick+cards+`<h3 class="si-h3">Matriz de escenarios</h3>${matrix}<h3 class="si-h3">Dispersión por hito</h3><div class="si-card">${legend}${chart}<p class="si-note">Cada punto es la fecha del hito en un escenario; la línea une la más temprana con la más tardía. La comparación es contra el primer escenario seleccionado (referencia). La herramienta muestra hechos y diferencias; no califica un escenario como mejor.</p></div>${mt}`;
 }
 
+/* ═══ CONECTORES: líneas entre dos barras/hitos visibles de la LdT ═══ */
+let _conMode=false,_conType='z',_conFrom=null,_conSel=null,_conMenuId=null,_conPending=null;
+const CON_TYPES=[
+  ['straight','Recta','<path d="M5 5l14 14"/><path d="M13 19h6v-6"/>'],
+  ['z','Escuadra (horizontal-vertical-horizontal)','<path d="M4 6h8v12h8"/><path d="m17 15 3 3-3 3"/>'],
+  ['l1','L (horizontal y luego vertical)','<path d="M4 6h14v13"/><path d="m15 16 3 3 3-3"/>'],
+  ['l2','L (vertical y luego horizontal)','<path d="M6 4v14h13"/><path d="m16 15 3 3-3 3"/>'],
+  ['dim','Medida de tiempo: flecha doble con la diferencia entre dos fechas','<path d="M3 12h18"/><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="M3 6v12M21 6v12" stroke-dasharray="2 2"/>']];
+function presConnToggle(){_conMode=!_conMode;_conFrom=null;presConnUI();}
+function presConnUI(){
+  const b=document.getElementById('btnPresConn');if(b){b.classList.toggle('active',_conMode);b.setAttribute('aria-pressed',_conMode?'true':'false');}
+  let c=document.getElementById('presConnCard');
+  if(!_conMode){if(c)c.remove();document.body.style.cursor='';presConnMark();return;}
+  if(!c){c=document.createElement('div');c.id='presConnCard';c.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100060;background:var(--panel,#fff);color:var(--ink,#222);border:1px solid var(--line,#ccc);border-radius:10px;box-shadow:0 6px 22px rgba(11,34,57,.22);padding:10px 14px;font-size:12px;display:flex;align-items:center;gap:10px';document.body.appendChild(c);}
+  if(_conPending){
+    const P=_conPending,sl=(k,v)=>'<select onchange="presConnPendSet(\''+k+'\',this.value)" style="font:inherit;font-size:12px;padding:3px 6px;border:1px solid #bbb;border-radius:6px"><option value="start"'+(v==='start'?' selected':'')+'>Comienzo</option><option value="end"'+(v==='end'?' selected':'')+'>Fin</option></select>';
+    c.innerHTML='<b>Medir tiempo entre</b><span>'+sl('fromEdge',P.fromEdge)+' de <b>A</b></span><span>y</span><span>'+sl('toEdge',P.toEdge)+' de <b>B</b></span><button type="button" class="rb-flat" style="padding:3px 10px" onclick="presConnPendOk()">Crear</button><button type="button" class="rb-flat" style="padding:3px 10px" onclick="presConnPendCancel()">Cancelar</button>';
+    presConnMark();return;
+  }
+  c.innerHTML='<b>Conector</b><span style="display:flex;gap:4px">'+CON_TYPES.map(t=>'<button type="button" onclick="presConnType(\''+t[0]+'\')" title="'+t[1]+'" style="width:34px;height:30px;border:1px solid '+(t[0]===_conType?'#2563eb':'var(--line,#ccc)')+';background:'+(t[0]===_conType?'#e8f0fe':'var(--panel,#fff)')+';border-radius:6px;cursor:pointer;padding:0"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+t[2]+'</svg></button>').join('')+'</span><span style="color:var(--muted)">'+(_conFrom?'Elija el elemento de destino.':'Haga clic en el elemento de origen y luego en el de destino.')+'</span><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presConnToggle()">Cerrar</button>';
+  document.body.style.cursor='crosshair';presConnMark();
+}
+function presConnType(t){_conType=t;presConnUI();}
+function presConnResetPos(){const c=PRES_CONNECTORS.find(q=>q.id===_conMenuId);if(!c)return;_presSnap();delete c.mid;delete c.dx;delete c.dy;delete c.tdx;delete c.tdy;renderPres();}
+function presConnPendSet(k,v){if(_conPending)_conPending[k]=v;}
+function presConnPendCancel(){_conPending=null;_conFrom=null;presConnUI();}
+function presConnPendOk(){
+  if(!_conPending)return;_presSnap();const P=_conPending;
+  const id='c'+Date.now().toString(36)+Math.floor(Math.random()*1e3);
+  PRES_CONNECTORS.push({id,a:P.a,b:P.b,type:'dim',fromEdge:P.fromEdge,toEdge:P.toEdge,fmt:'ym',text:'',color:'#1f6f8b',w:1.5,fs:12});
+  _conPending=null;_conFrom=null;_conSel=id;presConnUI();renderPres();
+}
+function presConnMark(){
+  document.querySelectorAll('#presBody [data-con-from]').forEach(e=>{e.removeAttribute('data-con-from');e.style.filter='';});
+  if(!_conMode||!_conFrom)return;
+  const el=_conEl(document.getElementById('presBody'),_conFrom);if(el){el.setAttribute('data-con-from','1');el.style.filter='drop-shadow(0 0 3px #2563eb) drop-shadow(0 0 3px #2563eb)';}
+}
+function _conEl(root,key){return root.querySelector('[data-pres-bar="'+CSS.escape(key)+'"],[data-pres-mito="'+CSS.escape(key)+'"],[data-pres-evento="'+CSS.escape(key)+'"]');}
+// Medida de tiempo (type 'dim'): flecha doble entre dos fechas + texto con la diferencia
+function presDimDates(c){
+  const g=(key,edge)=>{const f=_pdFindTask(key);if(!f||!f.t)return null;const t=f.t,lb=String(key).startsWith('LB|');return edge==='end'?(lb?t.fLB:t.fRP):(lb?t.iLB:t.iRP);};
+  return{dA:g(c.a,c.fromEdge||'start'),dB:g(c.b,c.toEdge||'end')};
+}
+function presDimValue(c,dA,dB){
+  if(!(dA instanceof Date)||!(dB instanceof Date)||isNaN(dA)||isNaN(dB))return'';
+  const fmt=c.fmt||'ym',ms=+dB-+dA,days=Math.round(ms/864e5),ad=Math.abs(days);
+  if(fmt==='dsign')return(days>0?'+':'')+days+' días';
+  if(fmt==='d')return ad+' día'+(ad===1?'':'s');
+  if(fmt==='none')return'';
+  const e=dA<=dB?dA:dB,l=dA<=dB?dB:dA;
+  let mo=(l.getFullYear()-e.getFullYear())*12+(l.getMonth()-e.getMonth());if(l.getDate()<e.getDate())mo--;if(mo<0)mo=0;
+  if(fmt==='m')return mo>0?mo+' mes'+(mo===1?'':'es'):ad+' día'+(ad===1?'':'s');
+  const y=Math.floor(mo/12),r=mo%12;
+  if(!mo)return ad+' día'+(ad===1?'':'s');
+  return(y?y+' año'+(y===1?'':'s'):'')+(y&&r?', ':'')+(r?r+' mes'+(r===1?'':'es'):'');
+}
+function presConnPath(A,B,type,c){
+  const hx=B.cx>=A.cx,vy=B.cy>=A.cy;let pts;
+  if(type==='l1')pts=[[hx?A.r:A.l,A.cy],[B.cx,A.cy],[B.cx,vy?B.t:B.b]];
+  else if(type==='l2')pts=[[A.cx,vy?A.b:A.t],[A.cx,B.cy],[hx?B.l:B.r,B.cy]];
+  else if(type==='straight'){
+    if(Math.abs(B.cx-A.cx)>=Math.abs(B.cy-A.cy))pts=[[hx?A.r:A.l,A.cy],[hx?B.l:B.r,B.cy]];else pts=[[A.cx,vy?A.b:A.t],[B.cx,vy?B.t:B.b]];
+  }else{const s=[hx?A.r:A.l,A.cy],e=[hx?B.l:B.r,B.cy],mx=(s[0]+e[0])/2+((c&&c.mid)||0);pts=[s,[mx,s[1]],[mx,e[1]],e];}
+  return pts;
+}
+// Conector temporal de la herramienta Impacto: une A y B con los días de diferencia (fin de B menos fin de A)
+function presImpactConnector(){
+  try{
+    if(!_impMode||_impPick.length<2)return null;
+    const a=presImpactDates(_impPick[0]),b=presImpactDates(_impPick[1]),n=Math.round((+b.f-+a.f)/864e5);
+    return{id:'__imp',a:_impPick[0].key,b:_impPick[1].key,type:'dim',fromEdge:_impFromEdge,toEdge:_impToEdge,fmt:'dsign',text:'',color:'#2563eb',w:1.5,fs:12,temp:true};
+  }catch(e){return null;}
+}
+function presVisibleDims(keySet){
+  const l=PRES_CONNECTORS.filter(c=>c.type==='dim');
+  const t=presImpactConnector();if(t&&t.type==='dim')l.push(t);
+  return l.filter(c=>keySet.has(c.a)&&keySet.has(c.b));
+}
+function presDrawConnectors(){
+  const body=document.getElementById('presBody');if(!body)return;
+  body.querySelectorAll('.presConG').forEach(g=>g.remove());
+  const _imp=presImpactConnector(),_list=_imp?PRES_CONNECTORS.concat([_imp]):PRES_CONNECTORS;
+  if(!_list.length)return;
+  body.querySelectorAll('svg').forEach(svg=>{
+    let out='';
+    let _lane=0;
+    _list.forEach(c=>{
+      const ea=_conEl(svg,c.a),eb=_conEl(svg,c.b);if(!ea||!eb)return;
+      let ba,bb;try{ba=ea.getBBox();bb=eb.getBBox();}catch(e){return;}
+      const bx=q=>({l:q.x,r:q.x+q.width,t:q.y,b:q.y+q.height,cx:q.x+q.width/2,cy:q.y+q.height/2});
+      if(c.type==='dim'){
+        const A=bx(ba),B=bx(bb),isMs=el=>el.hasAttribute('data-pres-mito')||el.hasAttribute('data-pres-evento'),xa=isMs(ea)?A.cx:((c.fromEdge==='end')?A.r:A.l),xb=isMs(eb)?B.cx:((c.toEdge==='start')?B.l:B.r);
+        const col=c.color||'#1f6f8b',w=c.w||1.5,fs=c.fs||11,y=(svg.dataset.dimY0!==undefined&&svg.dataset.dimY0!==''?(+svg.dataset.dimY0+24+(_lane++)*26):(Math.min(A.t,B.t)-26))+(c.dy||0),sel=c.id===_conSel,dd=presDimDates(c);
+        const ax=Math.min(xa,xb),bxx=Math.max(xa,xb),H2=7+w,W2=3.5+w*.5;
+        const val=presDimValue(c,dd.dA,dd.dB),pre=String(c.text==null?'':c.text),esc3=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+        if(sel)out+='<line x1="'+ax+'" y1="'+y+'" x2="'+bxx+'" y2="'+y+'" stroke="#0984e3" stroke-width="'+(w+4)+'" opacity=".35"/>';
+        // guías verticales hasta cada elemento
+        [[xa,A],[xb,B]].forEach(p=>{const yt=p[1].t>y?p[1].t:null;if(yt!=null)out+='<line x1="'+p[0]+'" y1="'+y+'" x2="'+p[0]+'" y2="'+yt+'" stroke="'+col+'" stroke-width=".8" stroke-dasharray="3,3" opacity=".7"/>';});
+        out+='<line x1="'+(ax+H2)+'" y1="'+y+'" x2="'+(bxx-H2)+'" y2="'+y+'" stroke="'+col+'" stroke-width="'+w+'"'+presDashAttr(c.dash)+'/>';
+        out+='<polygon points="'+ax+','+y+' '+(ax+H2)+','+(y-W2)+' '+(ax+H2)+','+(y+W2)+'" fill="'+col+'"/><polygon points="'+bxx+','+y+' '+(bxx-H2)+','+(y-W2)+' '+(bxx-H2)+','+(y+W2)+'" fill="'+col+'"/>';
+        const tx0=(ax+bxx)/2,ty0=y-6;
+        if(pre||val)out+='<text x="'+tx0+'" y="'+ty0+'" text-anchor="middle" font-size="'+fs+'" fill="#222" pointer-events="none">'+(pre?'<tspan font-weight="bold">'+esc3(pre)+'</tspan>':'')+(pre&&val?'<tspan> </tspan>':'')+(val?'<tspan>'+esc3(val)+'</tspan>':'')+'</text>';
+        if(!c.temp)out+='<rect x="'+ax+'" y="'+(y-fs-8)+'" width="'+Math.max(4,bxx-ax)+'" height="'+(fs+14)+'" fill="transparent" data-con-id="'+c.id+'" data-con-drag="1" style="cursor:ns-resize"><title>Arrastre para subir o bajar la medida · doble clic o clic derecho: editar · Supr: eliminar</title></rect>';
+        if(!c.temp&&(pre||val)){const tw=Math.max(30,(pre.length+val.length+1)*fs*0.56);out+='<rect x="'+(tx0-tw/2)+'" y="'+(ty0-fs-1)+'" width="'+tw+'" height="'+(fs+6)+'" fill="transparent" data-con-id="'+c.id+'" data-con-tdrag="1" style="cursor:ns-resize"><title>Arrastre para subir o bajar la medida (el texto la acompaña) · doble clic o clic derecho: editar</title></rect>';}
+        return;
+      }
+      const pts=presConnPath(bx(ba),bx(bb),c.type||'z',c);
+      const d='M'+pts.map(p=>p[0]+' '+p[1]).join(' L'),col=c.color||'#1f6f8b',w=c.w||1.5,sel=c.id===_conSel;
+      let arrow='';
+      if(c.arrow!==false){const p=pts[pts.length-1],q=pts[pts.length-2],a=Math.atan2(p[1]-q[1],p[0]-q[0]),L=8+w,W=4+w*.6;
+        arrow='<polygon points="'+p[0]+','+p[1]+' '+(p[0]-L*Math.cos(a)+W*Math.sin(a))+','+(p[1]-L*Math.sin(a)-W*Math.cos(a))+' '+(p[0]-L*Math.cos(a)-W*Math.sin(a))+','+(p[1]-L*Math.sin(a)+W*Math.cos(a))+'" fill="'+col+'"/>';}
+      if(sel)out+='<path d="'+d+'" fill="none" stroke="#0984e3" stroke-width="'+(w+4)+'" stroke-linejoin="round" opacity=".35"/>';
+      out+='<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="'+w+'" stroke-linejoin="round"'+presDashAttr(c.dash)+'/>'+arrow;
+      if(!c.temp)out+='<path d="'+d+'" data-con-id="'+c.id+'" fill="none" stroke="transparent" stroke-width="10" pointer-events="stroke" style="cursor:pointer"><title>Doble clic o clic derecho: editar · Supr: eliminar</title></path>';
+      if(!c.temp&&(c.type||'z')==='z'&&pts.length===4){
+        const vx=pts[1][0],y0=Math.min(pts[1][1],pts[2][1]),y1=Math.max(pts[1][1],pts[2][1]);
+        out+='<rect x="'+(vx-6)+'" y="'+y0+'" width="12" height="'+Math.max(6,y1-y0)+'" fill="transparent" data-con-id="'+c.id+'" data-con-mid="1" style="cursor:ew-resize"><title>Arrastre para mover el tramo vertical · doble clic o clic derecho: editar</title></rect>';
+      }
+      if(c.label){
+        // píldora en el punto medio del recorrido
+        let tot=0;const seg=[];for(let i=1;i<pts.length;i++){const l=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);seg.push(l);tot+=l;}
+        let acc=tot/2,mx=pts[0][0],my=pts[0][1];
+        for(let i=0;i<seg.length;i++){if(acc<=seg[i]||i===seg.length-1){const t=seg[i]?acc/seg[i]:0;mx=pts[i][0]+(pts[i+1][0]-pts[i][0])*t;my=pts[i][1]+(pts[i+1][1]-pts[i][1])*t;break;}acc-=seg[i];}
+        const pos=(c.labelN==null)?null:c.labelN,pc=pos==null?col:(pos>0?'#c0392b':pos<0?'#1a7f37':'#64748b'),pw=String(c.label).length*6.4+16;
+        out+='<rect x="'+(mx-pw/2)+'" y="'+(my-10)+'" width="'+pw+'" height="20" rx="8" fill="'+(pos==null?'#eef4fb':pos>0?'#fde3e3':pos<0?'#dff3e5':'#eceff3')+'" stroke="'+pc+'" stroke-width=".7"/><text x="'+mx+'" y="'+(my+4)+'" text-anchor="middle" font-size="11" font-weight="bold" fill="'+pc+'" pointer-events="none">'+String(c.label).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</text>';
+      }
+    });
+    if(out)svg.insertAdjacentHTML('beforeend','<g class="presConG">'+out+'</g>');
+  });
+}
+function presConnMenu(id,x,y){
+  const c=PRES_CONNECTORS.find(k=>k.id===id);if(!c)return;_conMenuId=id;
+  let m=document.getElementById('presConnMenu');
+  if(!m){m=document.createElement('div');m.id='presConnMenu';m.style.cssText='position:fixed;z-index:100005;background:#fff;border:1px solid #ccc;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px;width:230px;font-size:11px;color:#333;display:none';document.body.appendChild(m);
+    document.addEventListener('mousedown',e=>{if(m.style.display!=='none'&&!m.contains(e.target)&&!e.target.closest('#colorPicker'))m.style.display='none';},true);}
+  const S=(v,t)=>'<option value="'+v+'"'+((c.dash||'solid')===v?' selected':'')+'>'+t+'</option>';
+  m.innerHTML='<div style="font-weight:700;margin-bottom:8px">Conector</div>'
+   +'<div style="display:flex;gap:4px;margin-bottom:8px">'+CON_TYPES.map(t=>'<button type="button" onclick="presConnSet(\'type\',\''+t[0]+'\')" title="'+t[1]+'" style="flex:1;height:28px;border:1px solid '+((c.type||'z')===t[0]?'#2563eb':'#ccc')+';background:'+((c.type||'z')===t[0]?'#e8f0fe':'#fff')+';border-radius:5px;cursor:pointer;padding:0"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+t[2]+'</svg></button>').join('')+'</div>'
+   +(c.type==='dim'?'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Texto:</span><input type="text" value="'+String(c.text==null?'':c.text).replace(/"/g,'&quot;')+'" oninput="presConnSet(\'text\',this.value)" placeholder="p. ej. Time To Market:" style="flex:1;min-width:0;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"></div>'
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Formato:</span><select onchange="presConnSet(\'fmt\',this.value)" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px">'+[['ym','Años y meses'],['m','Meses'],['d','Días'],['dsign','Días con signo (+/−)'],['none','Sin valor']].map(o=>'<option value="'+o[0]+'"'+((c.fmt||'ym')===o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select></div>'
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Desde:</span><select onchange="presConnSet(\'fromEdge\',this.value)" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><option value="start"'+((c.fromEdge||'start')==='start'?' selected':'')+'>Comienzo de A</option><option value="end"'+(c.fromEdge==='end'?' selected':'')+'>Fin de A</option></select></div>'
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Hasta:</span><select onchange="presConnSet(\'toEdge\',this.value)" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><option value="start"'+(c.toEdge==='start'?' selected':'')+'>Comienzo de B</option><option value="end"'+((c.toEdge||'end')==='end'?' selected':'')+'>Fin de B</option></select></div>'
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Letra:</span><input type="number" min="6" max="40" value="'+(c.fs||12)+'" oninput="presConnSet(\'fs\',this.value)" style="width:56px;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><button type="button" onclick="presConnResetPos()" style="margin-left:auto;font-size:10px;padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer" title="Vuelve a la posición automática, bajo la franja de años">Restablecer posición</button></div>':'')
+   +(c.type==='z'?'<div style="margin-bottom:8px;color:#666;font-size:10px;line-height:1.3">Arrastre el tramo vertical para moverlo. <button type="button" onclick="presConnResetPos()" style="font-size:10px;padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer">Restablecer recorrido</button></div>':'')
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Grosor:</span><input type="number" id="pcmW" min="0.5" max="8" step="0.5" value="'+(c.w||1.5)+'" oninput="presConnSet(\'w\',this.value)" style="width:56px;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><span style="color:#999">px</span></div>'
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Estilo:</span><select onchange="presConnSet(\'dash\',this.value)" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px">'+S('solid','— Continua')+S('dotted','· · Punteada')+S('dashed','— Rayada')+S('dashed2','— Mixta')+'</select></div>'
+   +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Color:</span><span id="pcmColor" onclick="presConnPickColor()" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+(c.color||'#1f6f8b')+'"></span><label style="margin-left:auto;display:flex;align-items:center;gap:4px;cursor:pointer"><input type="checkbox" '+(c.arrow!==false?'checked':'')+' onchange="presConnSet(\'arrow\',this.checked)">Flecha</label></div>'
+   +'<button type="button" onclick="presConnDelete()" style="font-size:10px;padding:2px 8px;border:1px solid #f99;border-radius:3px;background:#fff5f5;color:#c00;cursor:pointer">🗑 Eliminar</button>';
+  m.style.display='block';m.style.left=Math.max(4,Math.min(x+4,innerWidth-242))+'px';m.style.top=Math.max(4,Math.min(y+4,innerHeight-(m.offsetHeight||220)-8))+'px';
+}
+function presConnSet(k,v){
+  const c=PRES_CONNECTORS.find(q=>q.id===_conMenuId);if(!c)return;_presSnap();
+  c[k]=k==='w'?Math.max(.5,Math.min(8,+v||1.5)):(k==='fs'?Math.max(6,Math.min(40,+v||12)):(k==='dy'?(+v||0):v));
+  if(k==='type'&&v==='dim'){if(!c.fromEdge)c.fromEdge='start';if(!c.toEdge)c.toEdge='end';if(c.text==null)c.text='';c.fmt=c.fmt||'ym';}
+  if(k==='type'){const m=document.getElementById('presConnMenu');if(m&&m.style.display!=='none')presConnMenu(c.id,parseFloat(m.style.left)-4,parseFloat(m.style.top)-4);}
+  renderPres();
+}
+function presConnPickColor(){
+  _cpTarget={type:'presconn'};document.getElementById('cpLabel').textContent='Color del conector';
+  const r=document.getElementById('pcmColor').getBoundingClientRect(),cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
+}
+function presConnDelete(id){
+  id=id||_conMenuId||_conSel;if(!id)return;_presSnap();
+  PRES_CONNECTORS=PRES_CONNECTORS.filter(c=>c.id!==id);_conSel=null;
+  const m=document.getElementById('presConnMenu');if(m)m.style.display='none';renderPres();
+}
+(function(){
+  const pb=document.getElementById('presBody');if(!pb)return;
+  const hitEl=e=>e.target.closest&&e.target.closest('[data-pres-bar],[data-pres-mito],[data-pres-evento]');
+  pb.addEventListener('mousedown',e=>{if(_conMode&&hitEl(e)){e.stopImmediatePropagation();e.preventDefault();}},true);
+  pb.addEventListener('click',e=>{
+    const line=e.target.closest&&e.target.closest('[data-con-id]');
+    if(line&&!_conMode){e.stopPropagation();_conSel=line.dataset.conId;renderPres();return;}
+    if(!_conMode){if(_conSel){_conSel=null;renderPres();}return;}
+    const el=hitEl(e);if(!el)return;
+    e.stopImmediatePropagation();e.preventDefault();
+    if(_conPending)return;
+    const key=el.dataset.presBar||el.dataset.presMito||el.dataset.presEvento;
+    if(!_conFrom){_conFrom=key;presConnUI();return;}
+    if(key===_conFrom){_conFrom=null;presConnUI();return;}
+    if(_conType==='dim'){_conPending={a:_conFrom,b:key,fromEdge:'start',toEdge:'end'};_conFrom=null;presConnUI();return;}
+    _presSnap();
+    const id='c'+Date.now().toString(36)+Math.floor(Math.random()*1e3);
+    PRES_CONNECTORS.push({id,a:_conFrom,b:key,type:_conType,color:'#1f6f8b',w:1.5,dash:'solid',arrow:true});
+    _conFrom=null;_conSel=id;presConnUI();renderPres();
+  },true);
+  let _dimDrag=null;
+  pb.addEventListener('mousedown',e=>{
+    if(_conMode||e.button)return;const t=e.target.closest&&e.target.closest('[data-con-mid],[data-con-tdrag],[data-con-drag]');if(!t)return;const isTxt=false,isMid=t.hasAttribute('data-con-mid');
+    const c=PRES_CONNECTORS.find(k=>k.id===t.dataset.conId);if(!c)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    _conSel=c.id;_presSnap();_dimDrag={c,txt:isTxt,mid:isMid,m0:c.mid||0,dx0:c.dx||0,x:e.clientX,y:e.clientY,dy:c.dy||0,tdx:c.tdx||0,tdy:c.tdy||0,raf:0,moved:false};
+  },true);
+  document.addEventListener('mousemove',e=>{
+    if(!_dimDrag)return;const z=(typeof PRES_ZOOM==='number'&&PRES_ZOOM>0)?PRES_ZOOM:1;
+    if(_dimDrag.mid)_dimDrag.c.mid=Math.round(_dimDrag.m0+(e.clientX-_dimDrag.x)/z);
+    else if(_dimDrag.txt){_dimDrag.c.tdx=Math.round(_dimDrag.tdx+(e.clientX-_dimDrag.x)/z);_dimDrag.c.tdy=Math.round(_dimDrag.tdy+(e.clientY-_dimDrag.y)/z);}
+    else{_dimDrag.c.dy=Math.round(_dimDrag.dy+(e.clientY-_dimDrag.y)/z);}
+    _dimDrag.moved=true;
+    if(_dimDrag.raf)return;_dimDrag.raf=requestAnimationFrame(()=>{if(_dimDrag){_dimDrag.raf=0;renderPres();}});
+  });
+  document.addEventListener('mouseup',()=>{if(_dimDrag){const m=_dimDrag.moved;_dimDrag=null;renderPres();}});
+  pb.addEventListener('dblclick',e=>{const line=e.target.closest&&e.target.closest('[data-con-id]');if(!line)return;e.stopImmediatePropagation();e.stopPropagation();presConnMenu(line.dataset.conId,e.clientX,e.clientY);},true);
+  pb.addEventListener('contextmenu',e=>{const line=e.target.closest&&e.target.closest('[data-con-id]');if(!line)return;e.preventDefault();e.stopImmediatePropagation();presConnMenu(line.dataset.conId,e.clientX,e.clientY);},true);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&_conMode){presConnToggle();return;}
+    if((e.key==='Delete'||e.key==='Backspace')&&_conSel&&!/^(INPUT|TEXTAREA|SELECT)$/.test((e.target||{}).tagName||'')){e.preventDefault();presConnDelete(_conSel);}
+  });
+})();
 /* ═══ IMPACTO: días de diferencia entre dos barras/hitos de la LdT (p. ej. mismo hito en dos escenarios) ═══ */
-let _impMode=false,_impPick=[];
+let _impMode=false,_impPick=[],_impFromEdge='end',_impToEdge='end';
 function presImpactToggle(){_impMode=!_impMode;_impPick=[];presImpactUI();}
 function presImpactDates(p){return{s:p.lb?p.t.iLB:p.t.iRP,f:p.lb?p.t.fLB:p.t.fRP};}
 function presImpactUI(){
   const b=document.getElementById('btnPresImpact');if(b){b.classList.toggle('active',_impMode);b.setAttribute('aria-pressed',_impMode?'true':'false');}
   let c=document.getElementById('presImpactCard');
-  if(!_impMode){if(c)c.remove();presImpactMark();document.body.style.cursor='';return;}
+  if(!_impMode){if(c)c.remove();presImpactMark();renderPres();document.body.style.cursor='';return;}
   if(!c){c=document.createElement('div');c.id='presImpactCard';c.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100060;background:var(--panel,#fff);color:var(--ink,#222);border:1px solid var(--line,#ccc);border-radius:10px;box-shadow:0 6px 22px rgba(11,34,57,.22);padding:12px 16px;min-width:340px;max-width:560px;font-size:12px';document.body.appendChild(c);}
   const D=d=>d instanceof Date&&!isNaN(d)?isoLocal(d):'—';
   const nm=p=>{const e=p.t.escenario||p.t.pscope||p.t.c1||'';return`<b>${esc(p.t.tarea)}</b> <span style="color:var(--muted)">· ${esc(e)}</span>`;};
@@ -10438,10 +10984,19 @@ function presImpactUI(){
       body+=row('B',_impPick[1])+`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line,#ddd)"><div>Fin: <b style="font-size:14px;color:${nf>0?'#c0392b':nf<0?'#1a7f37':'inherit'}">${nf>0?'+':''}${nf} día${Math.abs(nf)===1?'':'s'}</b> <span style="color:var(--muted)">(${say(nf)})</span></div><div>Inicio: <b>${ns>0?'+':''}${ns} día${Math.abs(ns)===1?'':'s'}</b> <span style="color:var(--muted)">(${say(ns)})</span></div></div>`;
     }else body+='<div style="color:var(--muted);margin-top:4px">Ahora elija la segunda (B).</div>';
   }
-  c.innerHTML=body;presImpactMark();
+  if(_impPick.length>1){const sl=(k,v)=>'<select onchange="presImpactEdge(\''+k+'\',this.value)" style="font:inherit;font-size:11px;padding:2px 4px;border:1px solid #bbb;border-radius:5px"><option value="start"'+(v==='start'?' selected':'')+'>Comienzo</option><option value="end"'+(v==='end'?' selected':'')+'>Fin</option></select>';body+='<div style="margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="color:var(--muted)">Dibujar entre</span>'+sl('from',_impFromEdge)+'<span>de A y</span>'+sl('to',_impToEdge)+'<span>de B</span></div>';}
+  if(_impPick.length>1)body+='<div style="margin-top:8px;text-align:right"><button type="button" class="rb-flat" style="padding:3px 10px" onclick="presImpactKeep()" title="Convierte esta medición en un conector permanente con su etiqueta de días">Dejar en la lámina</button></div>';
+  c.innerHTML=body;presImpactMark();renderPres();
   document.body.style.cursor='crosshair';
 }
 function presImpactReset(){_impPick=[];presImpactUI();}
+function presImpactEdge(k,v){if(k==='from')_impFromEdge=v;else _impToEdge=v;presImpactUI();}
+function presImpactKeep(){
+  const t=presImpactConnector();if(!t)return;_presSnap();
+  const id='c'+Date.now().toString(36)+Math.floor(Math.random()*1e3);
+  PRES_CONNECTORS.push({id,a:t.a,b:t.b,type:'dim',fromEdge:_impFromEdge,toEdge:_impToEdge,fmt:'ym',text:'',color:'#1f6f8b',w:1.5,fs:12});
+  _impPick=[];presImpactUI();renderPres();
+}
 function presImpactMark(){
   document.querySelectorAll('#presBody [data-impact]').forEach(e=>{e.removeAttribute('data-impact');e.style.filter='';});
   if(!_impMode)return;
@@ -11118,6 +11673,27 @@ document.addEventListener('keydown',e=>{
       <div id="docHist" style="display:none">
       <h2 style="color:#2c3e50;font-size:15px;border-bottom:2px solid #3b6ea5;padding-bottom:6px;margin-top:0">&#128196; Historial de cambios</h2>
       <div style="display:flex;flex-direction:column;gap:14px">
+
+        <div style="border:1px solid #e0e7ef;border-radius:7px;overflow:hidden">
+          <div style="background:#6b3fa0;color:#fff;padding:7px 14px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:10px">
+            <span style="background:rgba(255,255,255,.2);border-radius:3px;padding:1px 8px">v3.2.0</span>
+            <span>2026-09-25</span>
+            <span style="font-weight:400;font-size:11px;opacity:.85">Línea de Tiempo: agrupadores, Timeline Delta, conectores y medidas de tiempo; Análisis de escenarios</span>
+          </div>
+          <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
+            <li><b>Agrupador vertical y horizontal:</b> el «Agrupador» pasa a llamarse <b>Agrupador vertical</b> (hasta 4 niveles anidados, columna a elección, asas de ajuste). Nuevo <b>Agrupador horizontal</b>: una banda por valor de la columna elegida (Categoría 1 por defecto) sobre la franja de años, con color propio por banda (doble clic), espacio hasta los años automático o ajustable arrastrando, y borde configurable. Ambos van juntos en Capas → Modo de vista.</li>
+            <li><b>Borde de los agrupadores (clic derecho):</b> forma (caja completa o solo línea inferior), grosor, estilo y color, por banda.</li>
+            <li><b>Franja de años:</b> doble clic en un año → «Unir hasta» funde varios años en un tramo (p. ej. «2030 - 2033») con texto editable. En Vista Hitos el eje se calcula solo con los hitos.</li>
+            <li><b>Timeline Delta:</b> nuevo modo que compara los hitos de dos escenarios (A y B) con flecha de desviación y columna «Δ días»; usa la escala, el formato de fecha, los años, los filtros y los controles de la Línea de Tiempo.</li>
+            <li><b>Vista Hitos:</b> botón de opciones con «Días desplazados entre escenarios» (línea en escuadra con «+N días» entre el mismo hito de bandas consecutivas); con «Días transcurridos» el hito muestra «diast: N» arriba, la fecha bajo el rombo y el nombre a la derecha.</li>
+            <li><b>Hitos:</b> forma elegible (rombo, triángulos, círculo, cuadrado, estrella) y texto adicional que se arrastra con el mouse.</li>
+            <li><b>Conectores:</b> nuevo botón que une dos barras/hitos visibles (recta, escuadra con tramo vertical arrastrable, dos tipos de L) y <b>medidas de tiempo</b> (flecha doble con la diferencia en años y meses, meses o días; comienzo/fin de A contra comienzo/fin de B; en una franja propia bajo los años, texto libre movible). Color, grosor, estilo y flecha editables; Supr elimina.</li>
+            <li><b>Impacto:</b> ahora dibuja la medición entre A y B como medida de tiempo y permite dejarla en la lámina.</li>
+            <li><b>Leyenda configurable</b> (campo, estilo, título, tamaño, entradas visibles) e <b>imágenes e íconos</b> (biblioteca de 12 o archivo propio, hasta 3 MB) como formas libres.</li>
+            <li><b>Análisis de escenarios (Schedule Intelligence):</b> pestaña Análisis con comparación de dos o más escenarios (Delta, Hitos, intervalos y deriva). <b>Gestión de escenarios:</b> cambiar el nombre de un escenario.</li>
+            <li><b>Sesión y datos:</b> «Guardar sesión» (con nombre) separada de «Compartir»; menú Descargar (Planilla, XLSX, XML modificado con Línea Base, hito/crítica/resumen y filas nuevas o eliminadas); días transcurridos desde el día 1; divisor de año con estilo; fechas de la Tabla de Datos siempre en dd/mm/aaaa.</li>
+          </ul>
+        </div>
 
         <div style="border:1px solid #e0e7ef;border-radius:7px;overflow:hidden">
           <div style="background:#0b7285;color:#fff;padding:7px 14px;font-weight:700;font-size:12px;display:flex;align-items:center;gap:10px">

@@ -14,7 +14,14 @@ Aplicación web HTML standalone para comparar escenarios de plan de actividades,
 - `index.html` — página de descarga para GitHub Pages; `SOURCE_PATH` apunta a la versión vigente.
 - La **Ayuda** dentro de la aplicación (sección «Ayuda») documenta la interfaz y trae el historial de cambios por versión.
 
-## Novedades recientes (v3.1.2 · 2026-09-19)
+## Novedades recientes (v3.2.0 · 2026-09-25)
+
+- **Línea de Tiempo:** Agrupador vertical y **horizontal** (subprocesos sobre los años), borde configurable por clic derecho, tramos en la franja de años, forma y texto adicional en los hitos, leyenda configurable e imágenes/íconos.
+- **Timeline Delta:** compara los hitos de dos escenarios con su desviación en días. **Vista Hitos** muestra los días desplazados entre escenarios.
+- **Conectores y medidas de tiempo:** une dos elementos visibles (recta, escuadra, L) o mide el tiempo entre dos fechas; Impacto ahora dibuja la medición.
+- **Análisis de escenarios**, Guardar sesión/Compartir, XML modificado y fechas dd/mm/aaaa en la Tabla de Datos. Detalle completo en Ayuda → Historial y en el manual (`docs/manual`).
+
+### v3.1.2 · 2026-09-19
 
 - **Dependencias en el Gantt:** predecesoras y sucesoras en el formato de Project (`12FC+2 días;15CC`), desde el XML o desde el Excel (columnas «Predecesoras» / «Sucesoras»). Interruptor «Dependencias» con flechas FC/CC/FF/CF, resaltado de la cadena al hacer clic en una barra y avisos de conflictos de fechas, predecesoras inexistentes y ciclos.
 - **Ayuda:** nuevo Manual de usuario (pestañas Manual / Referencia / Historial); el PDF descargable es el manual.
