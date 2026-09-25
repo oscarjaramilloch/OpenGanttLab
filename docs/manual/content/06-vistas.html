@@ -46,7 +46,7 @@
 <tr><td>Arrastrar</td><td>Mueve la barra o el hito.</td></tr>
 <tr><td><kbd>Ctrl</kbd> o <kbd>Shift</kbd> + clic</td><td>Agrega barras a la selección; el doble clic las edita todas a la vez.</td></tr>
 <tr><td>Clic en un espacio en blanco</td><td>Limpia la selección.</td></tr>
-<tr><td>Doble clic en un año</td><td>Abre su menú: color de fondo y de fuente, escala, ancho y la opción de <b>unirlo con los años siguientes</b> en un tramo.</td></tr>
+<tr><td>Doble clic en un año</td><td>Abre su menú: color de fondo y de fuente, <b>borde</b>, escala, ancho y la opción de <b>unirlo con los años siguientes</b> en un tramo.</td></tr>
 <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Deshace y rehace cambios en la Línea de Tiempo.</td></tr>
 </table>
 <fig slug="ldt-seleccion" t="Selección de barras" legend="Barra seleccionada con un clic (borde punteado azul)|Segunda barra agregada con Ctrl + clic">Los elementos seleccionados se resaltan; con varios seleccionados, el doble clic edita todos a la vez.</fig>
@@ -98,7 +98,8 @@
 <fig slug="ldt-c1-bandas" t="Bandas del Agrupador" legend="Etiqueta vertical de la banda: se selecciona y se arrastra para reordenar|Banda de Categoría 1: su borde inferior se arrastra para ajustar el alto">Cada Categoría 1 es una banda con su etiqueta.</fig>
 <fig slug="ldt-agrupador-niveles" t="Agrupador de dos niveles" observe="La columna del nivel externo (Categoría 1) es un solo recuadro que abarca sus bandas internas.|Cada banda interna (Categoría 2) tiene su propia etiqueta.">Categoría 1 como nivel 1 y Categoría 2 como nivel 2.</fig>
 
-<h3 id="borde-agrupador">Estilo del borde de los agrupadores</h3>
+<h3 id="borde-agrupador">Estilo del borde de los agrupadores, años y tareas</h3>
+<p>El mismo menú de borde sirve para tres elementos: <b>botón «Configurar…» junto a «Borde»</b> en el menú de un año (doble clic en el año) y en la sección <ui>Fondo</ui> del panel de una barra de tarea (doble clic en la barra). Una barra con borde propio reemplaza al borde rojo de la ruta crítica.</p>
 <p>Un <b>clic derecho</b> sobre la etiqueta o el borde de una banda vertical (o sobre un rectángulo del agrupador horizontal) abre un menú con el estilo de su borde:</p>
 <ul>
 <li><b>Forma</b> (bandas verticales): <i>Caja completa</i> o <i>Solo línea inferior</i>. Con «solo línea» la banda queda como un separador entre grupos, por ejemplo una línea punteada larga entre fases.</li>
@@ -108,12 +109,13 @@
 <fig slug="agrupador-borde-menu" t="Menú de borde de un agrupador" observe="Forma: caja completa o solo línea inferior.|Grosor, estilo y color del borde.">Clic derecho sobre la etiqueta de una banda.</fig>
 
 <h2 id="agrupador-horizontal">Agrupador horizontal: subprocesos sobre los años</h2>
-<p>El <ui>Agrupador horizontal</ui> dibuja, encima de todo y bajo el título, un rectángulo por cada valor de la columna elegida. Cada rectángulo va del inicio de la primera tarea de ese valor al fin de la última, con el nombre centrado. Si las fechas de dos valores se solapan, sus rectángulos se apilan en filas para que ningún nombre quede tapado. Está pensado para mostrar las fases o subprocesos (por ejemplo «Subproceso B», «Subproceso C») sobre el tiempo. Su interruptor está junto al del Agrupador vertical en <ui>Capas</ui> → <b>Modo de vista</b>, y se usan a la vez.</p>
+<p>El <ui>Agrupador horizontal</ui> dibuja, encima de todo y bajo el título, un rectángulo por cada valor de la columna elegida. Cada rectángulo va del inicio de la primera tarea de ese valor al fin de la última, con el nombre centrado. Ocupa <b>una sola fila</b>: donde las fechas de dos valores se superponen, ese tramo común se pinta con la <b>mezcla de los colores</b> de ambos, y cada nombre se coloca en su tramo sin superposición (se abrevia si no cabe). Está pensado para mostrar las fases o subprocesos (por ejemplo «Subproceso B», «Subproceso C») sobre el tiempo. Su interruptor está junto al del Agrupador vertical en <ui>Capas</ui> → <b>Modo de vista</b>, y se usan a la vez.</p>
 <ul>
 <li><b>Agrupar por:</b> Categoría 1 (por defecto), Categoría 2 o Escenario, en el botón de opciones que aparece junto al interruptor.</li>
 <li><b>Posición:</b> <i>Encima de los hitos</i> (por defecto) o <i>Sobre la franja de años</i>, entre los hitos y los años: los hitos quedan arriba y sus líneas punteadas atraviesan las bandas hasta el eje.</li>
 <li><b>Color:</b> el selector de las opciones pinta todas las bandas; un <b>doble clic</b> sobre un rectángulo cambia solo el color de esa banda (el texto pasa a blanco con colores oscuros).</li>
 <li><b>Borde:</b> clic derecho sobre un rectángulo para dar grosor, estilo y color al contorno.</li>
+<li><b>Hitos por encima del agrupador:</b> con el agrupador encima de los hitos, un hito se puede arrastrar hacia arriba con el mouse (o subir con «Distancia al eje») y <b>pasa por encima de las bandas</b> sin agrandar el área; el área solo crece cuando llega al borde superior.</li>
 <li><b>Espacio hasta los años:</b> el espacio en blanco entre las bandas y la franja de años se ajusta solo (se reduce si no hay hitos encima del eje; en «Sobre la franja de años» queda en 6 px) y también a mano: arrastre el borde inferior de las bandas, o escriba los píxeles en el campo «Espacio» de las opciones. Se pueden pegar casi a los años (0 px). El botón «Auto» o un doble clic sobre el borde vuelven al automático.</li>
 </ul>
 <figs>
@@ -129,6 +131,7 @@
 <h2 id="hitos-forma">Hitos: forma y texto adicional</h2>
 <p>El panel de edición de un hito (doble clic) incluye dos secciones:</p>
 <ul>
+<li><b>Mover con el mouse:</b> arrastrar un hito hacia arriba o abajo cambia su <b>Distancia al eje</b> (mismo valor del panel). Es solo visual.</li>
 <li><b>Forma:</b> rombo (por defecto), triángulo hacia abajo, triángulo hacia arriba, círculo, cuadrado o estrella. Solo cambia el dibujo; no cambia la fecha ni los datos.</li>
 <li><b>Texto adicional:</b> un texto libre de una o varias líneas bajo el hito (un monto, una reserva, una nota). Se <b>arrastra con el mouse</b> a cualquier posición y el botón «Restablecer posición» lo devuelve a su lugar. Es solo visual.</li>
 </ul>
