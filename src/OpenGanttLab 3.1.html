@@ -1905,9 +1905,11 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <span id="pbmSwatch" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Clic para cambiar color barra"></span>
       <span class="pop-unit" style="font-size:8px">clic para cambiar</span>
     </div>
-    <div id="pbmBorderRow" style="display:flex;align-items:center;gap:5px;font-size:10px">
-      <span class="pop-unit" style="min-width:40px">Borde:</span>
-      <button type="button" class="rb-flat" style="padding:2px 8px" onclick="presOpenBarBorder(event)" title="Grosor, estilo y color del contorno de la barra">Configurar…</button>
+    <div id="pbmBorderRow" style="display:flex;flex-direction:column;gap:5px;font-size:10px;border-top:1px solid var(--grid);margin-top:4px;padding-top:6px">
+      <span class="pop-unit" style="font-weight:700">Borde</span>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Grosor:</span><input type="number" id="pbmBdW" class="pop-num" min="0" max="8" step="0.5" oninput="presBdSet('bar')" style="width:56px"><span class="pop-unit">px</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Estilo:</span><select id="pbmBdDash" class="rb-sel" onchange="presBdSet('bar')" style="flex:1;max-width:none"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div>
+      <div style="display:flex;align-items:center;gap:5px"><span class="pop-unit" style="min-width:40px">Color:</span><span id="pbmBdColor" onclick="presBdColor('bar')" style="width:22px;height:16px;display:inline-block;border:1px solid var(--line);border-radius:2px;cursor:pointer" title="Clic para cambiar color"></span><button type="button" class="rb-flat" style="padding:1px 6px;margin-left:auto" onclick="presBdReset('bar')">Restablecer</button></div>
     </div>
     <div id="pbmPatternRow" style="display:flex;align-items:center;gap:5px;font-size:10px">
       <span class="pop-unit" style="min-width:40px">Trama:</span>
@@ -2388,10 +2390,13 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <option value="18">18</option><option value="20">20</option><option value="24">24</option>
     </select>
   </div>
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-    <span style="font-size:10px;color:#666;min-width:42px">Borde:</span>
-    <button type="button" onclick="presOpenYearBorder(event)" style="font-size:10px;padding:2px 8px;cursor:pointer;border:1px solid #ccc;border-radius:3px;background:#f5f5f5">Configurar…</button>
+  <div style="border-top:1px solid #e3e3e3;margin:0 0 8px;padding-top:8px">
+    <div style="font-size:10px;font-weight:700;color:#555;margin-bottom:6px">Borde</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:10px;color:#666;min-width:42px">Grosor:</span><input type="number" id="pymBdW" min="0" max="8" step="0.5" oninput="presBdSet('year')" style="width:52px;font:inherit;font-size:10px;padding:2px 4px;border:1px solid #ccc;border-radius:3px"><span style="font-size:9px;color:#aaa">px</span></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:10px;color:#666;min-width:42px">Estilo:</span><select id="pymBdDash" onchange="presBdSet('year')" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1"><option value="solid">— Continua</option><option value="dotted">· · Punteada</option><option value="dashed">— Rayada</option><option value="dashed2">— Mixta</option></select></div>
+    <div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:#666;min-width:42px">Color:</span><span id="pymBdColor" onclick="presBdColor('year')" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer"></span><button type="button" onclick="presBdReset('year')" style="margin-left:auto;font-size:9px;padding:1px 6px;cursor:pointer;border:1px solid #ccc;border-radius:2px;background:#f5f5f5">Restablecer</button></div>
   </div>
+  <div style="border-top:1px solid #e3e3e3;margin:8px 0 0;padding-top:8px"></div>
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px" title="Une este año con los siguientes en una sola banda de la franja">
     <span style="font-size:10px;color:#666;min-width:42px">Unir hasta:</span>
     <select id="pymMergeTo" onchange="presYearMergeSet()" style="font:inherit;padding:2px 4px;border:1px solid #ccc;border-radius:3px;font-size:10px;flex:1"></select>
@@ -4240,7 +4245,7 @@ function applyPickerColor(color){
   else if(_cpTarget.type==='presdeltacolor'){if(_cpTarget.w==='A')_deltaCA=color;else _deltaCB=color;renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='preslegtitle'){PRES_LEGEND_CFG.titleColor=color;const sw=document.getElementById('plgTitleColor');if(sw)sw.style.background=color;renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='presconn'){const c=PRES_CONNECTORS.find(q=>q.id===_conMenuId);if(c){_presSnap();c.color=color;const sw=document.getElementById('pcmColor');if(sw)sw.style.background=color;renderPres();}closeColorPicker();return;}
-  else if(_cpTarget.type==='presborder'){if(_presBorderCtx){_presSnap();_presBorderObj(_presBorderCtx).borderColor=color;const sw=document.getElementById('pbdColor');if(sw)sw.style.background=color;renderPres();}closeColorPicker();return;}
+  else if(_cpTarget.type==='presborder'){if(_presBorderCtx){_presSnap();_presBorderObj(_presBorderCtx).borderColor=color;const sw=document.getElementById('pbdColor');if(sw)sw.style.background=color;['pymBdColor','pbmBdColor'].forEach(i=>{const e=document.getElementById(i);if(e)e.style.background=color;});renderPres();}closeColorPicker();return;}
   else if(_cpTarget.type==='pressubprocband'){_presSubprocColors[_cpTarget.v]=color;renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='pressubproccolor'){_presSubprocCol=color;_presSubprocColors={};presSyncSegUI();renderPres();closeColorPicker();return;}
   else if(_cpTarget.type==='presyeardivcolor'){_presYearDivCol=color;presSyncSegUI();renderPres();closeColorPicker();return;}
@@ -5735,6 +5740,31 @@ function presOpenBorderMenu(kind,key,x,y){
    +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="min-width:44px;color:#666">Estilo:</span><select id="pbdDash" onchange="presBorderSet()" style="flex:1;font:inherit;font-size:11px;padding:2px 4px;border:1px solid #ccc;border-radius:3px">'+S('solid','— Continua')+S('dotted','· · Punteada')+S('dashed','— Rayada')+S('dashed2','— Mixta')+'</select></div>'
    +'<div style="display:flex;gap:8px;align-items:center"><span style="min-width:44px;color:#666">Color:</span><span id="pbdColor" onclick="presBorderPickColor()" style="width:22px;height:16px;display:inline-block;border:1px solid #999;border-radius:2px;cursor:pointer;background:'+col+'"></span><button type="button" onclick="presBorderReset()" style="margin-left:auto;font-size:10px;padding:1px 6px;border:1px solid #ccc;border-radius:3px;background:#f5f5f5;cursor:pointer">Restablecer</button></div>';
   m.style.display='block';m.style.left=Math.max(4,Math.min(x+4,innerWidth-232))+'px';m.style.top=Math.max(4,Math.min(y+4,innerHeight-(m.offsetHeight||180)-8))+'px';
+}
+// Borde integrado en los menús del año y de la barra (mismos datos que el menú de borde de los agrupadores)
+function _presBdCtx(kind){return{kind,key:kind==='year'?(_presYearIsLB?'LB':'')+_presYearKey:_presBarKey};}
+function presBdFill(kind){
+  const c=_presBdCtx(kind);if(!c.key)return;_presBorderCtx=c;
+  const o=_presBorderObj(c),p=kind==='year'?'pym':'pbm';
+  const w=document.getElementById(p+'BdW'),d=document.getElementById(p+'BdDash'),s=document.getElementById(p+'BdColor');
+  if(w)w.value=(o.borderW!=null&&o.borderW!=='')?o.borderW:0;if(d)d.value=o.borderDash||'solid';if(s)s.style.background=o.borderColor||'#333333';
+}
+function presBdSet(kind){
+  const c=_presBdCtx(kind);if(!c.key)return;_presBorderCtx=c;_presSnap();
+  const o=_presBorderObj(c),p=kind==='year'?'pym':'pbm',w=document.getElementById(p+'BdW'),d=document.getElementById(p+'BdDash');
+  if(w&&w.value!=='')o.borderW=Math.max(0,Math.min(8,+w.value));if(d)o.borderDash=d.value;
+  renderPres();
+}
+function presBdColor(kind){
+  _presBorderCtx=_presBdCtx(kind);_cpTarget={type:'presborder'};
+  document.getElementById('cpLabel').textContent='Color del borde';
+  const r=document.getElementById(kind==='year'?'pymBdColor':'pbmBdColor').getBoundingClientRect(),cp=document.getElementById('colorPicker');
+  cp.style.display='block';cp.style.left=Math.max(4,Math.min(r.right+6,innerWidth-250))+'px';cp.style.top=Math.max(4,Math.min(r.top,innerHeight-(cp.offsetHeight||300)))+'px';
+}
+function presBdReset(kind){
+  const c=_presBdCtx(kind);if(!c.key)return;_presBorderCtx=c;_presSnap();
+  const o=_presBorderObj(c);delete o.borderColor;delete o.borderW;delete o.borderDash;delete o.borderShape;
+  presBdFill(kind);renderPres();
 }
 function presOpenYearBorder(e){e.stopPropagation();presOpenBorderMenu('year',(_presYearIsLB?'LB':'')+_presYearKey,e.clientX,e.clientY);}
 function presOpenBarBorder(e){e.stopPropagation();if(!_presBarKey)return;presOpenBorderMenu('bar',_presBarKey,e.clientX,e.clientY);}
@@ -7396,6 +7426,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     document.getElementById('pbmTitle').textContent=(key.startsWith('LB|')?'[LB] ':'')+parts[2];
     document.getElementById('pbmNombre').value=opt.label!==undefined?opt.label:parts[2];
     document.getElementById('pbmClase').textContent='Tarea';
+    presBdFill('bar');
     document.getElementById('pbmClase').style.background=CAT2_COLOR[parts[1]]||'#3b6ea5';
     document.getElementById('pbmSwatch').style.background=opt.color;
     // swatch de texto: mostrar color efectivo (manual si existe, si no el auto por contraste)
@@ -7522,6 +7553,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     const wmSel=document.getElementById('pymWidthMul');
     if(wmSel) wmSel.value=PRES_YEAR_WIDTH_MUL[yrKey]||1;
     presYearMergeFill(yrKey,isLBYear);
+    presBdFill('year');
     const pym=document.getElementById('presYearMenu');
     pym.style.display='block';pym.style.left=Math.min(e.clientX+5,innerWidth-210)+'px';pym.style.top=Math.min(e.clientY+5,innerHeight-150)+'px';
   }
