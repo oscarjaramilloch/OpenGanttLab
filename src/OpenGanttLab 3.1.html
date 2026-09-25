@@ -1453,6 +1453,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <button type="button" class="tb-pill" data-layer="presShowMarca2" role="switch" aria-checked="false" title="Marca Activity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.5 6 .9-4.4 4.2 1 6-5.3-2.8-5.3 2.8 1-6L3.3 9.4l6-.9L12 3z"/></svg><span>Marca Activity</span><span class="tb-sw" aria-hidden="true"></span></button>
       <button type="button" class="tb-pill" data-layer="presShowRaP" role="switch" aria-checked="false" title="Agrupador — agrupa las barras en bandas por la columna elegida"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M7 7h5"/><path d="M7 17h8"/></svg><span>Agrupador</span><span class="tb-sw" aria-hidden="true"></span></button>
       <button type="button" class="tb-pill" data-layer="presShowOnlyCrit" role="switch" aria-checked="false" title="Ruta crítica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/><path d="M7 19h6a3 3 0 0 0 0-6h-2a3 3 0 0 1 0-6h6"/></svg><span>Ruta crítica</span><span class="tb-sw" aria-hidden="true"></span></button>
+      <button type="button" class="tb-btn icon" id="btnPresImpact" onclick="presImpactToggle()" aria-pressed="false" title="Impacto: elija dos barras o hitos (por ejemplo de dos escenarios) y mida los días de diferencia entre sus fechas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z"/><path d="m8 8 2 2"/><path d="m11 5 2 2"/><path d="m5 11 2 2"/></svg></button>
       <button id="execHiddenBtn" class="tb-btn icon" onclick="openExecHiddenModal()" style="display:none;position:relative" title="Tareas ocultas (0)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><line x1="3" y1="3" x2="21" y2="21"/></svg><span id="execHiddenCount" style="display:none;position:absolute;top:0;right:0;min-width:14px;height:14px;padding:0 3px;border-radius:7px;background:#e8622c;border:1.5px solid var(--panel);color:#fff;font-size:9px;font-weight:700;line-height:11px;text-align:center"></span></button>
     <span class="tb-div" role="separator"></span>
 
@@ -6704,6 +6705,7 @@ function presToggleTitleField(toggleId,inputId,sizeId){
 function renderPres(){
   if(typeof syncLayerUI==='function')syncLayerUI();
   presSyncGroupUI();presSyncSegUI();
+  setTimeout(()=>{if(typeof presImpactMark==='function')presImpactMark();},0);
   const scaleKey=document.getElementById('presScale').value;
   const barH=+document.getElementById('presBarH').value||32;
   const fsz=+document.getElementById('presFontSz').value||12;
@@ -9829,6 +9831,52 @@ if(_apHadData){
   }
 }
 setTimeout(updateEstDateDisplay,0);
+/* ═══ IMPACTO: días de diferencia entre dos barras/hitos de la LdT (p. ej. mismo hito en dos escenarios) ═══ */
+let _impMode=false,_impPick=[];
+function presImpactToggle(){_impMode=!_impMode;_impPick=[];presImpactUI();}
+function presImpactDates(p){return{s:p.lb?p.t.iLB:p.t.iRP,f:p.lb?p.t.fLB:p.t.fRP};}
+function presImpactUI(){
+  const b=document.getElementById('btnPresImpact');if(b){b.classList.toggle('active',_impMode);b.setAttribute('aria-pressed',_impMode?'true':'false');}
+  let c=document.getElementById('presImpactCard');
+  if(!_impMode){if(c)c.remove();presImpactMark();document.body.style.cursor='';return;}
+  if(!c){c=document.createElement('div');c.id='presImpactCard';c.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100060;background:var(--panel,#fff);color:var(--ink,#222);border:1px solid var(--line,#ccc);border-radius:10px;box-shadow:0 6px 22px rgba(11,34,57,.22);padding:12px 16px;min-width:340px;max-width:560px;font-size:12px';document.body.appendChild(c);}
+  const D=d=>d instanceof Date&&!isNaN(d)?isoLocal(d):'—';
+  const nm=p=>{const e=p.t.escenario||p.t.pscope||p.t.c1||'';return`<b>${esc(p.t.tarea)}</b> <span style="color:var(--muted)">· ${esc(e)}</span>`;};
+  const row=(l,p)=>{const d=presImpactDates(p);return`<div style="margin:2px 0"><span style="display:inline-block;min-width:18px;font-weight:700;color:#1a5fb4">${l}</span> ${nm(p)}<div style="margin-left:22px;color:var(--muted)">Inicio ${D(d.s)} · Fin ${D(d.f)}</div></div>`;};
+  const dd=(x,y)=>Math.round((+y-+x)/864e5);
+  const say=n=>n===0?'sin diferencia':(n>0?`B ${Math.abs(n)} día${Math.abs(n)===1?'':'s'} después de A`:`B ${Math.abs(n)} día${Math.abs(n)===1?'':'s'} antes de A`);
+  let body='<div style="font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px">Impacto entre dos fechas<span style="flex:1"></span><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presImpactReset()">Nueva medición</button><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presImpactToggle()">Cerrar</button></div>';
+  if(!_impPick.length)body+='<div style="color:var(--muted)">Haga clic en la primera barra u hito (A) y luego en la segunda (B).</div>';
+  else{
+    body+=row('A',_impPick[0]);
+    if(_impPick.length>1){
+      const a=presImpactDates(_impPick[0]),bb=presImpactDates(_impPick[1]),nf=dd(a.f,bb.f),ns=dd(a.s,bb.s);
+      body+=row('B',_impPick[1])+`<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line,#ddd)"><div>Fin: <b style="font-size:14px;color:${nf>0?'#c0392b':nf<0?'#1a7f37':'inherit'}">${nf>0?'+':''}${nf} día${Math.abs(nf)===1?'':'s'}</b> <span style="color:var(--muted)">(${say(nf)})</span></div><div>Inicio: <b>${ns>0?'+':''}${ns} día${Math.abs(ns)===1?'':'s'}</b> <span style="color:var(--muted)">(${say(ns)})</span></div></div>`;
+    }else body+='<div style="color:var(--muted);margin-top:4px">Ahora elija la segunda (B).</div>';
+  }
+  c.innerHTML=body;presImpactMark();
+  document.body.style.cursor='crosshair';
+}
+function presImpactReset(){_impPick=[];presImpactUI();}
+function presImpactMark(){
+  document.querySelectorAll('#presBody [data-impact]').forEach(e=>{e.removeAttribute('data-impact');e.style.filter='';});
+  if(!_impMode)return;
+  _impPick.forEach((p,i)=>{const el=document.querySelector('#presBody [data-pres-bar="'+CSS.escape(p.key)+'"],#presBody [data-pres-mito="'+CSS.escape(p.key)+'"]');if(el){el.setAttribute('data-impact',i?'B':'A');el.style.filter='drop-shadow(0 0 3px #2563eb) drop-shadow(0 0 3px #2563eb)';}});
+}
+(function(){
+  const pb=document.getElementById('presBody');if(!pb)return;
+  const hit=e=>e.target.closest&&e.target.closest('[data-pres-bar],[data-pres-mito]');
+  pb.addEventListener('mousedown',e=>{if(_impMode&&hit(e)){e.stopImmediatePropagation();e.preventDefault();}},true);
+  pb.addEventListener('click',e=>{
+    if(!_impMode)return;const el=hit(e);if(!el)return;
+    e.stopImmediatePropagation();e.preventDefault();
+    const key=el.dataset.presBar||el.dataset.presMito,f=_pdFindTask(key);if(!f||!f.t)return;
+    if(_impPick.length>=2)_impPick=[];
+    _impPick.push({key,t:f.t,lb:key.startsWith('LB|')});
+    presImpactUI();
+  },true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&_impMode)presImpactToggle();});
+})();
 // Sincronizar label HOY con scroll horizontal
 document.querySelector('.wrap')&&document.querySelector('.wrap').addEventListener('scroll',updateTodayLabel);
 
