@@ -105,18 +105,24 @@
 <li><b>Grosor</b> en px (0 a 8), <b>Estilo</b> (continua, punteada, rayada o mixta) y <b>Color</b> con el selector de la aplicación.</li>
 <li><b>Restablecer</b> devuelve el borde al aspecto por defecto. Cada banda tiene su propio estilo y se guarda con la sesión.</li>
 </ul>
+<fig slug="agrupador-borde-menu" t="Menú de borde de un agrupador" observe="Forma: caja completa o solo línea inferior.|Grosor, estilo y color del borde.">Clic derecho sobre la etiqueta de una banda.</fig>
 
 <h2 id="agrupador-horizontal">Agrupador horizontal: subprocesos sobre los años</h2>
-<p>El <ui>Agrupador horizontal</ui> dibuja, encima de todo y bajo el título, un rectángulo por cada valor de la columna elegida. Cada rectángulo va del inicio de la primera tarea de ese valor al fin de la última, con el nombre centrado. Está pensado para mostrar las fases o subprocesos (por ejemplo «Subproceso B», «Subproceso C») sobre el tiempo. Su interruptor está junto al del Agrupador vertical en <ui>Capas</ui> → <b>Modo de vista</b>, y se usan a la vez.</p>
+<p>El <ui>Agrupador horizontal</ui> dibuja, encima de todo y bajo el título, un rectángulo por cada valor de la columna elegida. Cada rectángulo va del inicio de la primera tarea de ese valor al fin de la última, con el nombre centrado. Si las fechas de dos valores se solapan, sus rectángulos se apilan en filas para que ningún nombre quede tapado. Está pensado para mostrar las fases o subprocesos (por ejemplo «Subproceso B», «Subproceso C») sobre el tiempo. Su interruptor está junto al del Agrupador vertical en <ui>Capas</ui> → <b>Modo de vista</b>, y se usan a la vez.</p>
 <ul>
 <li><b>Agrupar por:</b> Categoría 1 (por defecto), Categoría 2 o Escenario, en el botón de opciones que aparece junto al interruptor.</li>
 <li><b>Color:</b> el selector de las opciones pinta todas las bandas; un <b>doble clic</b> sobre un rectángulo cambia solo el color de esa banda (el texto pasa a blanco con colores oscuros).</li>
 <li><b>Borde:</b> clic derecho sobre un rectángulo para dar grosor, estilo y color al contorno.</li>
 <li><b>Espacio hasta los años:</b> el espacio en blanco entre las bandas y la franja de años se ajusta solo (se reduce si no hay hitos encima del eje) y también a mano: arrastre el borde inferior de las bandas, o escriba los píxeles en el campo «Espacio» de las opciones. El botón «Auto» o un doble clic sobre el borde vuelven al automático.</li>
 </ul>
+<figs>
+<fig slug="ldt-agrupador-horizontal" t="Agrupador horizontal con el vertical" observe="Bandas de color sobre la franja de años, una por valor de la columna elegida.|Cada banda va del inicio de su primera tarea al fin de la última.|El Agrupador vertical (a la izquierda) puede usarse a la vez.">Subprocesos sobre los años.</fig>
+<fig slug="agrupador-horizontal-opciones" t="Opciones del Agrupador horizontal" observe="Agrupar por: Categoría 1, Categoría 2 o Escenario.|Color de las bandas y espacio hasta la franja de años (vacío = automático).">Panel junto al interruptor.</fig>
+</figs>
 
 <h2 id="tramos-anos">Franja de años: tramos</h2>
 <p>Un doble clic sobre un año abre su menú. Con <b>Unir hasta</b> se funden ese año y los siguientes en una sola banda de la franja (por ejemplo «2030 - 2033»), que conserva el color y la fuente del primer año. El campo <b>Texto</b> reemplaza la etiqueta. Para separar de nuevo, elija «(sin unir)». Los tramos se guardan con la sesión y con Compartir.</p>
+<fig slug="ldt-tramos-anos" t="Tramo en la franja de años" observe="Los años 2027 y 2028 unidos en una sola banda.|El menú del año: Unir hasta, Texto, color, fuente, escala y ancho.">Doble clic sobre el primer año del tramo.</fig>
 
 <h2 id="hitos-forma">Hitos: forma y texto adicional</h2>
 <p>El panel de edición de un hito (doble clic) incluye dos secciones:</p>
@@ -124,9 +130,11 @@
 <li><b>Forma:</b> rombo (por defecto), triángulo hacia abajo, triángulo hacia arriba, círculo, cuadrado o estrella. Solo cambia el dibujo; no cambia la fecha ni los datos.</li>
 <li><b>Texto adicional:</b> un texto libre de una o varias líneas bajo el hito (un monto, una reserva, una nota). Se <b>arrastra con el mouse</b> a cualquier posición y el botón «Restablecer posición» lo devuelve a su lugar. Es solo visual.</li>
 </ul>
+<fig slug="hito-forma-texto" t="Forma y texto adicional de un hito" legend="Hito con forma de triángulo y su texto adicional|Panel de edición del hito" observe="Forma: rombo, triángulos, círculo, cuadrado o estrella.|Texto adicional: una o varias líneas que se arrastran con el mouse.">Panel de edición de un hito.</fig>
 
 <h2 id="dias-desplazados">Días desplazados entre escenarios en Vista Hitos</h2>
 <p>Con <ui>Vista Hitos</ui> y el Agrupador vertical por escenario, cada hito aparece en la banda de su escenario. El botón de opciones junto a <ui>Vista Hitos</ui> tiene la casilla <b>Días desplazados entre escenarios</b> (marcada por defecto): une con una línea punteada en escuadra el mismo hito de bandas consecutivas y escribe en el centro «+78 días» (rojo si el de abajo es posterior, verde si es anterior). El hito se empareja por Categoría 1, Categoría 2 y nombre; los hitos sin desplazamiento no llevan etiqueta. Con «Días transcurridos» activo, cada hito muestra «diast: N» arriba, la fecha bajo el rombo y el nombre a la derecha.</p>
+<fig slug="ldt-dias-desplazados" t="Días desplazados entre escenarios" observe="Un escenario por banda, con los hitos dentro.|Línea en escuadra entre el mismo hito de las dos bandas y su etiqueta «+N días».">Vista Hitos con el Agrupador por escenario.</fig>
 
 <h2 id="timeline-delta">Timeline Delta: comparar hitos entre dos escenarios</h2>
 <p>Activar <ui>Timeline Delta</ui> (en <ui>Capas</ui> → <b>Modo de vista</b>) reemplaza el diagrama por una fila por hito. Los selectores <b>A</b> y <b>B</b> de arriba eligen los dos escenarios; los rombos de cada escenario tienen su color (un clic sobre el rombo de la leyenda abre el selector de color). Cada fila muestra el rombo de A, el de B, una flecha punteada entre ambos, la fecha bajo cada rombo y, a la derecha, la columna <b>Δ días</b> (rojo si B es posterior, verde si es anterior).</p>
@@ -135,6 +143,7 @@
 <li>Usa la escala, el formato de fecha, los años (color, ancho y tramos), el divisor, la fecha de estado, los días transcurridos y los filtros de la Línea de Tiempo. Un doble clic en un rombo abre el panel del hito; <kbd>Delete</kbd> lo oculta.</li>
 <li>Las capas propias de los otros modos (Comparador, Ejecutivo, agrupadores, Resumen, Leyenda, dependencias, formas libres) no aplican a esta vista.</li>
 </ul>
+<fig slug="ldt-timeline-delta" t="Timeline Delta" observe="Selectores A y B con el color de cada escenario.|Una fila por hito con la flecha de desviación.|Columna Δ días a la derecha.">Hitos de dos escenarios comparados.</fig>
 
 <h2 id="impacto">Impacto: días de diferencia entre dos fechas</h2>
 <p>El botón <ui>Impacto</ui> (ícono de regla, a la derecha de los accesos rápidos de la barra) mide cuántos días separan dos barras u hitos y lo <b>dibuja</b> en el diagrama. Es la forma de calcular el efecto de una reprogramación entre dos escenarios.
@@ -144,6 +153,7 @@
 <li><b>Lea el resultado</b>Una tarjeta muestra las fechas de ambos y la diferencia en días calendario de fin y de inicio (B menos A): positivo si B es posterior. Use <ui>Nueva medición</ui> para elegir otro par, y <ui>Cerrar</ui> o <kbd>Esc</kbd> para salir.</li>
 <li><b>Elija las fechas y déjelo dibujado</b>La tarjeta pregunta <i>Dibujar entre [Comienzo/Fin] de A y [Comienzo/Fin] de B</i> (por defecto, fin con fin) y dibuja una <b>medida de tiempo</b> (ver abajo) con los días con signo. <ui>Dejar en la lámina</ui> la convierte en una medida permanente.</li>
 </ol>
+<fig slug="ldt-impacto" t="Impacto dibujado en la Línea de Tiempo" observe="Las dos barras elegidas, resaltadas.|Flecha doble con los días de diferencia, bajo la franja de años.|Tarjeta con las fechas, la diferencia y «Dejar en la lámina».">Medición entre dos barras.</fig>
 
 <h2 id="conectores">Conectores y medidas de tiempo</h2>
 <p>El botón <ui>Conector</ui> (ícono de línea en escuadra, junto a Impacto) une dos barras, hitos o eventos <b>visibles</b>: haga clic en el origen y luego en el destino. La tarjeta inferior elige el tipo:</p>
@@ -154,12 +164,16 @@
 <tr><td>L horizontal-vertical y L vertical-horizontal</td><td>Un solo giro, con la flecha entrando por arriba/abajo o por el lado.</td></tr>
 <tr><td>Medida de tiempo</td><td>Flecha doble horizontal entre dos fechas, con el texto de la diferencia. Al elegir A y B pregunta qué fechas medir (comienzo o fin de cada uno).</td></tr>
 </table>
+<fig slug="conector-tipos" t="Tarjeta del conector" observe="Los cinco tipos: recta, escuadra, dos L y medida de tiempo.">Elija el tipo y luego origen y destino.</fig>
+<fig slug="ldt-conectores" t="Conectores entre tareas" observe="Escuadra, L y recta entre barras visibles.|El tramo vertical de la escuadra se arrastra.">Tres tipos de conector.</fig>
 <ul>
 <li><b>Editar:</b> doble clic o clic derecho sobre el conector abre su menú: tipo, grosor, estilo, color y flecha. <kbd>Supr</kbd> con el conector seleccionado lo elimina.</li>
 <li><b>Medida de tiempo:</b> el menú añade <i>Texto</i> (libre, vacío por defecto), <i>Formato</i> del valor (años y meses, meses, días, días con signo o sin valor), <i>Desde/Hasta</i> (comienzo o fin de A y de B) y <i>Letra</i>. El valor se recalcula solo si cambian las fechas.</li>
 <li><b>Ubicación:</b> la medida ocupa una franja propia justo bajo la franja de años (una fila por medida) y las tareas se desplazan hacia abajo para dejarle espacio. La flecha solo se mueve en vertical (sus extremos siguen las fechas) arrastrándola; el texto la acompaña y queda siempre centrado encima de la barra. Si la baja más allá del final del diagrama, el área de renderizado <b>crece sola</b> para contenerla. «Restablecer posición» la devuelve a su sitio bajo los años. Con hitos, la flecha termina en el centro del rombo.</li>
 <li>Los conectores se guardan con la sesión y con Compartir; se ven en la exportación PNG/PDF/PPTX.</li>
 </ul>
+<fig slug="ldt-medida-tiempo" t="Medida de tiempo" observe="Flecha doble bajo la franja de años, con el texto centrado encima.|Guías punteadas hasta cada elemento.">Del FID al arranque.</fig>
+<fig slug="medida-menu" t="Menú de la medida de tiempo" observe="Texto, Formato, Desde/Hasta, Letra, Grosor, Estilo y Color.|Restablecer posición y Eliminar.">Doble clic o clic derecho sobre la flecha.</fig>
 
 <h2 id="edicion">Edición: textos y formas libres</h2>
 <p>El menú <ui>Editar</ui> agrega elementos propios sobre el diagrama.</p>
@@ -169,9 +183,11 @@
 <li><b>Panel de forma:</b> relleno, borde y grosor; texto con tamaño, alineación y posición; y valores numéricos de ancho, alto, posición y giro.</li>
 <li><b>Imágenes e íconos:</b> <ui>Insertar imagen o ícono</ui> ofrece una biblioteca de 12 íconos (check, pozo, grupo de pozos, llama, alerta, información, cerrar, bandera, ubicación, dinero, tiempo y estrella) y «Subir una imagen…» (hasta 3 MB) desde el equipo. Se mueven, redimensionan y giran como cualquier forma.</li>
 </ul>
+<fig slug="iconos" t="Insertar imagen o ícono" observe="Biblioteca de 12 íconos.|Subir una imagen desde el equipo.">Menú Editar → Insertar imagen o ícono.</fig>
 
 <h3 id="leyenda-ldt">Configurar la leyenda</h3>
-<p>Con <ui>Leyenda</ui> activa, el botón de opciones de su interruptor permite elegir por qué campo mostrarla (Categoría 2, Categoría 1 o Escenario), el <b>estilo</b> (muestra de color con texto, o etiqueta de color con el texto dentro), el tamaño de letra, el recuadro de fondo, un <b>título</b> propio con tamaño y color, y qué entradas se ven. La leyenda se arrastra para moverla.
+<p>Con <ui>Leyenda</ui> activa, el botón de opciones de su interruptor permite elegir por qué campo mostrarla (Categoría 2, Categoría 1 o Escenario), el <b>estilo</b> (muestra de color con texto, o etiqueta de color con el texto dentro), el tamaño de letra, el recuadro de fondo, un <b>título</b> propio con tamaño y color, y qué entradas se ven. La leyenda se arrastra para moverla.</p>
+<fig slug="leyenda-config" t="Configuración de la leyenda" observe="Campo, estilo, tamaño de letra, recuadro y título.|Entradas visibles.">Panel del botón de opciones de la Leyenda.</fig>
 
 <h2 id="dependencias-ldt">Dependencias en la Línea de Tiempo</h2>
 <p>Active <ui>Dependencias</ui> en <ui>Capas</ui> → <ui>Contenido</ui>. Usa los mismos datos, tipos y colores que el Gantt.</p>

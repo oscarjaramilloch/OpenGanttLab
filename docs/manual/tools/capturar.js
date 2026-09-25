@@ -51,7 +51,9 @@ async function abrir(browser, { datos = true, w = W, h = H } = {}) {
   await sleep(300);
   return page;
 }
-const set = async (page, id, v) => { await page.evaluate((id, v) => { const c = document.getElementById(id); if (c && c.checked !== v) { c.checked = v; c.dispatchEvent(new Event('change', { bubbles: true })); } }, id, v); await sleep(250); };
+const set = async (page, id, v) => { await page.evaluate((id, v) => { const c = document.getElementById(id); if (c && c.checked !== v) { c.checked = v; c.dispatchEvent(new Event('change', { bubbles: true })); } }, id, v); await sleep(250);
+  // Al activar el Agrupador sin escenarios aparece un aviso modal: se acepta para que no tape la captura
+  await page.evaluate(() => { const ok = document.querySelector('#ogDlg .og-ok'); if (ok) ok.click(); }); await sleep(150); };
 const click = async (page, sel) => { await page.click(sel); await sleep(350); };
 const rectOf = (page, sel) => page.evaluate(s => { const b = document.querySelector(s).getBoundingClientRect(); return { x: b.left, y: b.top, w: b.width, h: b.height }; }, sel);
 async function shot(page, name, { clip, ann, dir = ann ? 'annotated' : 'screenshots', q = 88 } = {}) {
@@ -299,7 +301,7 @@ FIGS['27'] = async b => {
   await p.close();
 };
 FIGS['28'] = async b => {
-  const p = await ldt(b); await click(p, '#btnPresEdicionMenu');
+  const p = await ldt(b, { w: 1800 }); await click(p, '#btnPresEdicionMenu');
   await p.evaluate(() => { const t = [...document.querySelectorAll('#presEdicionMenuPanel *')].find(e => /Insertar forma/.test(e.textContent) && e.children.length < 3 && e.tagName === 'BUTTON'); t && t.click(); }); await sleep(400);
   const r = await rectOf(p, '#btnPresEdicionMenu');
   await shot(p, 'fig-28-ldt-edicion-formas', { clip: C(r.x - 200, r.y - 12, 620, 420) });
@@ -384,7 +386,7 @@ FIGS['27'] = async b => {
   await p.close();
 };
 FIGS['28'] = async b => {
-  const p = await ldt(b); await click(p, '#btnPresEdicionMenu');
+  const p = await ldt(b, { w: 1800 }); await click(p, '#btnPresEdicionMenu');
   await p.evaluate(() => { const t = [...document.querySelectorAll('#presEdicionMenuPanel button')].find(e => /Insertar forma/.test(e.textContent)); t && t.click(); }); await sleep(400);
   const r = await rectOf(p, '#btnPresEdicionMenu');
   await shot(p, 'fig-28-ldt-edicion-formas', { clip: C(r.x - 80, r.y - 14, 420, 420) });
@@ -689,6 +691,119 @@ FIGS['82'] = async b => {
   const p = await ldt(b); await set(p, 'presShowRaP', true);
   await p.evaluate(() => { PRES_GROUP_FIELDS = ['c1', 'c2']; renderPres(); }); await sleep(600);
   await ldtShot(p, 'fig-82-ldt-agrupador-niveles');
+  await p.close();
+};
+
+
+/* ══ Figuras nuevas (v3.2.0): agrupador horizontal, tramos, hitos, conectores, medidas, Timeline Delta, leyenda, íconos ══ */
+const DUP = () => {   // segundo escenario inventado: mismos datos desplazados 45 días
+  TASKS.forEach(t => { if (!t.escenario) t.escenario = 'Escenario A'; });
+  const cp = TASKS.map(x => Object.assign(Object.create(Object.getPrototypeOf(x)), x, { escenario: 'Escenario B', iRP: new Date(+x.iRP + 864e5 * 45), fRP: new Date(+x.fRP + 864e5 * 45) }));
+  cp.forEach(x => TASKS.push(x));
+  renderPres();
+};
+const barEl = (re) => (re2 => { const els = [...document.querySelectorAll('#presBody [data-pres-bar],#presBody [data-pres-mito]')]; return els.find(e => re2.test(e.dataset.presBar || e.dataset.presMito)); })(new RegExp(re));
+const clipAround = async (p, sels, pad = 24) => {
+  const rs = []; for (const s of sels) { try { rs.push(await rectOf(p, s)); } catch (e) { /* sin elemento */ } }
+  const x0 = Math.min(...rs.map(r => r.x)) - pad, y0 = Math.min(...rs.map(r => r.y)) - pad;
+  const x1 = Math.max(...rs.map(r => r.x + r.w)) + pad, y1 = Math.max(...rs.map(r => r.y + r.h)) + pad;
+  return C(Math.max(0, x0), Math.max(0, y0), Math.min(W, x1) - Math.max(0, x0), Math.min(1300, y1) - Math.max(0, y0));
+};
+FIGS['90'] = async b => {   // Agrupador horizontal + vertical
+  const p = await ldt(b); await set(p, 'presShowRaP', true); await set(p, 'presShowSubproc', true);
+  await p.evaluate(() => { PRES_GROUP_FIELDS = ['c2']; renderPres(); }); await sleep(700);
+  await ldtShot(p, 'fig-90-ldt-agrupador-horizontal');
+  await p.close();
+};
+FIGS['91'] = async b => {   // opciones del agrupador horizontal
+  const p = await ldt(b); await set(p, 'presShowSubproc', true); await click(p, '#btnPresCapasMenu');
+  await click(p, '#btnPresSubprocMenu');
+  await shot(p, 'fig-91-agrupador-horizontal-opciones', { clip: await clipAround(p, ['#presCapasMenuPanel', '#presSubprocMenuPanel'], 14) });
+  await p.close();
+};
+FIGS['92'] = async b => {   // tramo en la franja de años
+  const p = await ldt(b);
+  await p.evaluate(() => { PRES_YEAR_MERGE = { 2027: { to: 2028, label: '' } }; renderPres(); }); await sleep(500);
+  await p.evaluate(() => { const y = document.querySelector('#presBody [data-pres-year="2027"]'); const r = y.getBoundingClientRect(); y.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, clientX: r.left + 30, clientY: r.top + 10 })); }); await sleep(500);
+  const m = await rectOf(p, '#presYearMenu'), sv = await p.evaluate(() => { const r = document.querySelector('#presBody svg').getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; });
+  await shot(p, 'fig-92-ldt-tramos-anos', { clip: C(NAV, 62, Math.max(m.x + m.w + 20, sv.x + sv.w) - NAV, Math.max(m.y + m.h + 20, 300) - 62) });
+  await p.close();
+};
+FIGS['93'] = async b => {   // forma y texto adicional del hito
+  const p = await ldt(b);
+  await p.evaluate(() => { const m = TASKS.find(t => t.hito && /FID/.test(t.tarea)); const k = pkOf(m); PRES_OPTS[k] = Object.assign(PRES_OPTS[k] || { color: '#c0392b', miAbove: true }, { miShape: 'triangleDown', miNote: '$2,25 MUSD\nReservas 2,4 – 6,5 mbls' }); renderPres(); }); await sleep(600);
+  await p.evaluate(() => { const el = [...document.querySelectorAll('#presBody [data-pres-mito]')].find(e => /FID/.test(e.dataset.presMito)); const r = el.getBoundingClientRect(); el.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, clientX: r.left + 4, clientY: r.top + 4 })); }); await sleep(700);
+  const m = await rectOf(p, '#presBarMenu'), hito = await p.evaluate(() => { const e = [...document.querySelectorAll('#presBody [data-pres-mito]')].find(e => /FID/.test(e.dataset.presMito)); const r = e.getBoundingClientRect(); return { x: r.left, y: r.top, w: r.width, h: r.height }; });
+  const x0 = Math.max(NAV, Math.min(hito.x - 200, m.x - 20)), y0 = Math.max(62, Math.min(hito.y - 80, m.y - 10));
+  await shot(p, 'fig-93-hito-forma-texto', { clip: C(x0, y0, m.x + m.w + 20 - x0, Math.min(1300, Math.max(hito.y + hito.h + 120, m.y + m.h + 10)) - y0), ann: [{ n: 1, rect: hito, at: 'tl' }, { n: 2, rect: m, at: 'tr', dx: -6, dy: 10 }] });
+  await p.close();
+};
+FIGS['94'] = async b => {   // días desplazados entre escenarios (Vista Hitos + Agrupador por escenario)
+  const p = await ldt(b, { h: 1500 }); await p.evaluate(DUP);
+  await set(p, 'presShowRaP', true); await set(p, 'presShowHitos', true);
+  await p.evaluate(() => { PRES_GROUP_FIELDS = ['escenario']; renderPres(); }); await sleep(800);
+  await ldtShot(p, 'fig-94-ldt-dias-desplazados', false, 1500);
+  await p.close();
+};
+FIGS['95'] = async b => {   // Timeline Delta
+  const p = await ldt(b, { h: 1500 }); await p.evaluate(DUP); await set(p, 'presShowDelta', true); await sleep(800);
+  const r = await rectOf(p, '#presZoomInner');
+  await shot(p, 'fig-95-ldt-timeline-delta', { clip: C(Math.max(0, r.x - 8), Math.max(0, r.y - 8), Math.min(W, r.w + 16), Math.min(1500, r.h + 16)) });
+  await p.close();
+};
+FIGS['96'] = async b => {   // conectores + tarjeta de tipos
+  const p = await ldt(b);
+  await p.evaluate(() => {
+    const K = re => { const e = [...document.querySelectorAll('#presBody [data-pres-bar]')].find(x => re.test(x.dataset.presBar)); return e && e.dataset.presBar; };
+    const a = K(/Ingeniería básica/), c = K(/Especificaciones/), d = K(/Adjudicación/), e = K(/Obras civiles/), f = K(/Montaje electro/);
+    PRES_CONNECTORS = [{ id: 'a', a, b: c, type: 'z', color: '#1f6f8b', w: 1.5, dash: 'solid', arrow: true }, { id: 'b', a: d, b: e, type: 'l1', color: '#c0392b', w: 1.5, dash: 'dashed', arrow: true }, { id: 'c', a: e, b: f, type: 'straight', color: '#2c3e50', w: 1.5, dash: 'solid', arrow: true }];
+    presConnToggle(); renderPres();
+  }); await sleep(700);
+  await ldtShot(p, 'fig-96-ldt-conectores');
+  const r = await rectOf(p, '#presConnCard');
+  await shot(p, 'fig-97-conector-tipos', { clip: C(r.x - 12, r.y - 12, r.w + 24, r.h + 24) });
+  await p.close();
+};
+FIGS['98'] = async b => {   // medida de tiempo + su menú
+  const p = await ldt(b);
+  await p.evaluate(() => {
+    const K = re => { const e = [...document.querySelectorAll('#presBody [data-pres-bar],#presBody [data-pres-mito]')].find(x => re.test(x.dataset.presBar || x.dataset.presMito)); return e && (e.dataset.presBar || e.dataset.presMito); };
+    PRES_CONNECTORS = [{ id: 'm1', a: K(/FID/), b: K(/Arranque/), type: 'dim', fromEdge: 'end', toEdge: 'end', fmt: 'ym', text: 'Del FID al arranque:', color: '#1f6f8b', w: 1.5, fs: 12 }];
+    renderPres();
+  }); await sleep(700);
+  await ldtShot(p, 'fig-98-ldt-medida-tiempo');
+  await p.evaluate(() => { const ln = document.querySelector('#presBody [data-con-drag]'); const r = ln.getBoundingClientRect(); ln.dispatchEvent(new MouseEvent('dblclick', { bubbles: true, clientX: r.left + r.width / 2, clientY: r.top + 6 })); }); await sleep(500);
+  const m = await rectOf(p, '#presConnMenu');
+  await shot(p, 'fig-99-medida-menu', { clip: C(m.x - 14, m.y - 14, m.w + 28, m.h + 28) });
+  await p.close();
+};
+FIGS['9a'] = async b => {   // Impacto dibujado
+  const p = await ldt(b);
+  await p.evaluate(() => { document.getElementById('btnPresImpact').click(); }); await sleep(300);
+  await p.evaluate(() => { const els = [...document.querySelectorAll('#presBody [data-pres-bar]')]; const fire = el => ['mousedown', 'mouseup', 'click'].forEach(t => el.dispatchEvent(new MouseEvent(t, { bubbles: true, cancelable: true }))); fire(els.find(e => /Obras civiles/.test(e.dataset.presBar))); fire([...document.querySelectorAll('#presBody [data-pres-bar]')].find(e => /Montaje electro/.test(e.dataset.presBar))); }); await sleep(800);
+  const c = await rectOf(p, '#presImpactCard');
+  await shot(p, 'fig-901-ldt-impacto', { clip: C(NAV, 62, W - NAV, Math.min(1300, c.y + c.h + 20) - 62) });
+  await p.close();
+};
+FIGS['9b'] = async b => {   // menú de borde de un agrupador (clic derecho)
+  const p = await ldt(b); await set(p, 'presShowRaP', true);
+  await p.evaluate(() => { PRES_GROUP_FIELDS = ['c1']; renderPres(); }); await sleep(600);
+  await p.evaluate(() => { const l = document.querySelector('#presBody [data-rap-reorder]'); const r = l.getBoundingClientRect(); l.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: r.left + 10, clientY: r.top + 30 })); }); await sleep(500);
+  await shot(p, 'fig-902-agrupador-borde-menu', { clip: await clipAround(p, ['#presBorderMenu', '#presBody [data-rap-reorder]'], 40) });
+  await p.close();
+};
+FIGS['9c'] = async b => {   // leyenda configurada + su panel
+  const p = await ldt(b); await set(p, 'presShowLegend', true);
+  await p.evaluate(() => { PRES_LEGEND_CFG.style = 'chip'; PRES_LEGEND_CFG.titleOn = true; PRES_LEGEND_CFG.title = 'Categoría 2'; renderPres(); }); await sleep(500);
+  await click(p, '#btnPresCapasMenu'); await p.evaluate(() => presLegendFill()); await click(p, '#btnPresLegendMenu');
+  await shot(p, 'fig-903-leyenda-config', { clip: await clipAround(p, ['#presCapasMenuPanel', '#presLegendMenuPanel'], 14) });
+  await p.close();
+};
+FIGS['9d'] = async b => {   // selector de íconos e íconos insertados
+  const p = await ldt(b, { w: 1800 }); await click(p, '#btnPresEdicionMenu');
+  await p.evaluate(() => { const t = [...document.querySelectorAll('#presEdicionMenuPanel button')].find(e => /Insertar imagen/.test(e.textContent)); t && t.click(); }); await sleep(500);
+  const r = await rectOf(p, '#btnPresEdicionMenu'), pk = await rectOf(p, '#presIconPicker');
+  await shot(p, 'fig-904-iconos', { clip: C(r.x - 80, r.y - 14, Math.max(420, pk.x + pk.w - r.x + 100), Math.max(pk.y + pk.h - r.y + 40, 380)) });
   await p.close();
 };
 

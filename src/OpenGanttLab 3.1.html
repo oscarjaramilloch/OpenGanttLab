@@ -6245,8 +6245,10 @@ function _presSVG(all,S,TW,mn,mx,opts){
       const r=mp.get(v);if(!r)mp.set(v,{v,a,b});else{if(a<r.a)r.a=a;if(b>r.b)r.b=b;}});
     mp.forEach(r=>_spBands.push(r));
     _spBands.sort((p,q)=>p.a-q.a);
+    const _ends=[];
+    _spBands.forEach(r=>{let l=_ends.findIndex(e=>r.a>=e);if(l<0){l=_ends.length;_ends.push(0);}_ends[l]=r.b;r.lane=l;});
   }
-  const _spH=_spBands.length?Math.max(26,Math.round(fsz*2.2))+10:0;
+  const _spLanes=_spBands.reduce((m,r)=>Math.max(m,r.lane+1),0),_spBH=Math.max(26,Math.round(fsz*2.2)),_spH=_spBands.length?_spLanes*(_spBH+4)-4+10:0;
   const _gapRaw=(document.getElementById('presSubprocGap')||{value:''}).value;
   const _gapMan=(_spBands.length&&_gapRaw!==''&&!isNaN(+_gapRaw))?Math.max(0,+_gapRaw):null;
   const axisY0=titleH+_spH+(_gapMan!==null?_gapMan:Math.max(miTopH,_hoyGutter)+_topPad)+_extraTop,axisH=yrH+segH;
@@ -6402,8 +6404,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
   }
   // Subprocesos (banda superior)
   if(_spBands.length){
-    const bh=_spH-10,by=titleH+2;
-    _spBands.forEach((r,i)=>{
+    const bh=_spBH;
+    _spBands.forEach((r,i)=>{const by=titleH+2+r.lane*(_spBH+4);
       const x0=x(new Date(r.a)),x1=x(new Date(r.b));
       const bc=_presSubprocColors[r.v]||_presSubprocCol,lu=(()=>{try{return .299*parseInt(bc.slice(1,3),16)+.587*parseInt(bc.slice(3,5),16)+.114*parseInt(bc.slice(5,7),16);}catch{return 200;}})();
       svg+=`<rect x="${x0}" y="${by}" width="${Math.max(4,x1-x0)}" height="${bh}" rx="3" fill="${bc}"${(_presSubprocStyle[r.v]&&(_presSubprocStyle[r.v].borderW>0))?presBorderAttr(_presSubprocStyle[r.v],'#7a8ea3',1):''} data-sp-band="${ex(r.v)}" style="cursor:pointer"><title>${ex(r.v)} — doble clic: color · clic derecho: borde</title></rect>`;
@@ -11683,7 +11685,7 @@ document.addEventListener('keydown',e=>{
             <span style="font-weight:400;font-size:11px;opacity:.85">Línea de Tiempo: agrupadores, Timeline Delta, conectores y medidas de tiempo; Análisis de escenarios</span>
           </div>
           <ul style="margin:8px 0;padding-left:20px;font-size:12px;line-height:1.8">
-            <li><b>Agrupador vertical y horizontal:</b> el «Agrupador» pasa a llamarse <b>Agrupador vertical</b> (hasta 4 niveles anidados, columna a elección, asas de ajuste). Nuevo <b>Agrupador horizontal</b>: una banda por valor de la columna elegida (Categoría 1 por defecto) sobre la franja de años, con color propio por banda (doble clic), espacio hasta los años automático o ajustable arrastrando, y borde configurable. Ambos van juntos en Capas → Modo de vista.</li>
+            <li><b>Agrupador vertical y horizontal:</b> el «Agrupador» pasa a llamarse <b>Agrupador vertical</b> (hasta 4 niveles anidados, columna a elección, asas de ajuste). Nuevo <b>Agrupador horizontal</b>: una banda por valor de la columna elegida (Categoría 1 por defecto) sobre la franja de años (las que se solapan en fechas se apilan en filas), con color propio por banda (doble clic), espacio hasta los años automático o ajustable arrastrando, y borde configurable. Ambos van juntos en Capas → Modo de vista.</li>
             <li><b>Borde de los agrupadores (clic derecho):</b> forma (caja completa o solo línea inferior), grosor, estilo y color, por banda.</li>
             <li><b>Franja de años:</b> doble clic en un año → «Unir hasta» funde varios años en un tramo (p. ej. «2030 - 2033») con texto editable. En Vista Hitos el eje se calcula solo con los hitos.</li>
             <li><b>Timeline Delta:</b> nuevo modo que compara los hitos de dos escenarios (A y B) con flecha de desviación y columna «Δ días»; usa la escala, el formato de fecha, los años, los filtros y los controles de la Línea de Tiempo.</li>
