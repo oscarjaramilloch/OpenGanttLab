@@ -58,6 +58,8 @@
 <li><b>Secciones plegables</b> (Texto, Fondo, Borde, Fechas, Dependencias…): cada una con su título y una flecha para abrirla o cerrarla.</li>
 <li><b>Filas «etiqueta — íconos de acción»:</b> la etiqueta a la izquierda y, a su lado, los controles como íconos. El tamaño de la letra y el grosor son campos numéricos con <b>flechas arriba y abajo</b>; la alineación y la posición del texto, botones de ícono (el seleccionado solo cambia de color); la trama y el estilo del borde o de la línea, listas desplegables con muestras; y el color, un recuadro con un ícono de restablecer. Donde conviene, dos controles comparten fila: <b>Color y Trama</b> en Fondo, <b>Color y Estilo</b> en Borde.</li>
 <li><b>Dos tamaños de texto:</b> los títulos de sección miden 12 px y todo lo demás (etiquetas de acción, subsecciones y controles) 10 px.</li>
+<li><b>Los demás paneles siguen el mismo esquema:</b> Hito y Evento (Texto, Fondo, Borde, <b>Línea</b>, Fechas y Dependencias, con las opciones propias del hito —Forma, Texto adicional, Ubicación y Distancia al eje— al final), Año, Forma, Cuadro de texto y Medida de tiempo. En todos, <b>Borde</b> pone primero <i>Color + Estilo</i> y debajo el <i>Grosor</i>, y el botón <b>Eliminar</b> es solo un ícono de papelera.</li>
+<li><b>Siempre visibles:</b> cada panel se reubica solo para no quedar cortado por el borde de la ventana; su alto se ajusta a su contenido. Elegir un color en el selector no cierra el panel.</li>
 <li><b>Texto:</b> el nombre a mostrar no se ve mientras no se pulsa el <b>lápiz</b> de la sección; al activarlo aparece el cuadro para editarlo. Debajo, <b>Fuente</b> (color, tamaño y K S N), <b>Alinear</b>, <b>Posición</b> y el interruptor <b>Texto completo</b>.</li>
 </ul>
 <fig slug="ldt-panel-edicion" t="Panel de Tarea" legend="Barra seleccionada (doble clic)|Panel de Tarea" observe="Texto: nombre, color, tamaño, negrita, alineación y posición.|Fondo: color de la barra y trama.|Fechas: mostrar comienzo y fin, alinear y posición.|Posición: capa (arriba/abajo).">Todos los cambios del panel son visuales: nunca modifican la Tabla de Datos.</fig>
@@ -76,6 +78,9 @@
 
 <h3 id="ocultar-precedencia">Ocultar una línea de precedencia</h3>
 <p>Con <ui>Dependencias</ui> encendido en la Línea de Tiempo, haga clic sobre una flecha: se resalta con un halo azul. Pulse <kbd>Delete</kbd> (o <kbd>Backspace</kbd>) para ocultarla; el resto de flechas no cambia. Para volver a verla, abra <ui>Tareas ocultas (N)</ui>, sección <b>Líneas de precedencia</b>, y restáurela con el ojo, o use <ui>Restaurar todas</ui>. Es solo visual: los vínculos siguen en los datos, el Gantt, el Excel y el XML, y el halo de selección no sale en los exportes. Con una barra seleccionada solo se dibuja su cadena azul y las demás flechas no se pueden seleccionar.</p>
+
+<h3 id="insertar-fila">Insertar una fila vacía encima</h3>
+<p>Con <b>clic derecho sobre una barra</b> (o un hito dentro de una banda) aparece <ui>Insertar fila vacía encima</ui>: la barra elegida y todas las de abajo bajan una fila y queda un espacio en blanco. Las barras desplazadas quedan fijadas en su nueva fila, como si las hubiera arrastrado; <kbd>Ctrl</kbd>+<kbd>Z</kbd> lo deshace y <ui>Reset filas</ui> del menú <ui>Editar</ui> devuelve el orden automático. En la Tabla de Datos, el clic derecho sobre una fila ofrece la misma opción y crea una fila nueva sin datos, con el mismo escenario.</p>
 
 <h2 id="ejecutivo">Ejecutivo: ocultar tareas</h2>
 <ol class="steps">
@@ -119,7 +124,7 @@
 </table>
 <p>Las secciones propias de cada elemento no aplican a los demás: la trama y las fechas de las tareas; la forma, el texto adicional, la línea y la distancia al eje de los hitos; la escala, el ancho y la unión en tramos de los años; el campo por el que agrupa, la posición y el espacio del agrupador horizontal; los campos y las entradas visibles de la leyenda.</p>
 <ul>
-<li><b>Borde:</b> grosor de 0 a 8 px (0 = sin borde), estilo (continua, punteada, rayada o mixta), color y <b>Restablecer</b>. En las bandas verticales, además, la <b>forma</b>: caja completa o solo línea inferior (para usarla como separador entre grupos).</li>
+<li><b>Borde:</b> <b>Lados</b> (todos, ninguno, o cualquier combinación de superior, derecho, inferior e izquierdo, como los bordes de una celda de Excel), grosor de 0 a 8 px (0 = sin borde), estilo (continua, punteada, rayada o mixta), color y <b>Restablecer</b> (vuelve a mostrar los cuatro lados). En las bandas verticales, además, la <b>forma</b>: caja completa o solo línea inferior (para usarla como separador entre grupos).</li>
 <li><b>Relleno:</b> en los agrupadores, «Sin relleno» o «Restablecer» devuelven el aspecto original.</li>
 <li><b>Alineación:</b> en las bandas verticales el nombre se pega abajo, al centro o arriba; en los demás, a la izquierda, al centro o a la derecha. El texto se abrevia si no cabe.</li>
 <li>Una barra con borde propio reemplaza al borde rojo de la ruta crítica. Cada banda tiene su propio formato y todo se guarda con la sesión.</li>
@@ -132,7 +137,7 @@
 <li><b>Agrupar por:</b> Categoría 1 (por defecto), Categoría 2 o Escenario, en el botón de opciones que aparece junto al interruptor.</li>
 <li><b>Posición:</b> <i>Encima de los hitos</i> (por defecto) o <i>Sobre la franja de años</i>, entre los hitos y los años: los hitos quedan arriba y sus líneas punteadas atraviesan las bandas hasta el eje.</li>
 <li><b>Color:</b> el selector de las opciones pinta todas las bandas; un <b>doble clic</b> sobre un rectángulo cambia solo el color de esa banda (el texto pasa a blanco con colores oscuros).</li>
-<li><b>Borde:</b> clic derecho sobre un rectángulo para dar grosor, estilo y color al contorno.</li>
+<li><b>Borde:</b> clic derecho sobre un rectángulo para elegir qué lados se muestran y dar grosor, estilo y color al contorno.</li>
 <li><b>Hitos por encima del agrupador:</b> con el agrupador encima de los hitos, un hito se puede arrastrar hacia arriba con el mouse (o subir con «Distancia al eje») y <b>pasa por encima de las bandas</b> sin agrandar el área; el área solo crece cuando llega al borde superior.</li>
 <li><b>Espacio hasta los años:</b> el espacio en blanco entre las bandas y la franja de años se ajusta solo (se reduce si no hay hitos encima del eje; en «Sobre la franja de años» queda en 6 px) y también a mano: arrastre el borde inferior de las bandas, o escriba los píxeles en el campo «Espacio» de las opciones. Se pueden pegar casi a los años (0 px). El botón «Auto» o un doble clic sobre el borde vuelven al automático.</li>
 </ul>
@@ -169,6 +174,7 @@
 <fig slug="ldt-timeline-delta" t="Timeline Delta" observe="Selectores A y B con el color de cada escenario.|Una fila por hito con la flecha de desviación.|Columna Δ días a la derecha.">Hitos de dos escenarios comparados.</fig>
 
 <h2 id="impacto">Calcular días: diferencia entre dos fechas</h2>
+<p><i>Antes llamada «Impacto».</i></p>
 <p>La opción <ui>Calcular días</ui> del menú <ui>Editar</ui> (ícono de regla) mide cuántos días separan dos barras u hitos y lo <b>dibuja</b> en el diagrama. Es la forma de calcular el efecto de una reprogramación entre dos escenarios.
 <ol class="steps">
 <li><b>Active Calcular días</b>El cursor cambia y las barras dejan de abrir su panel de edición mientras la herramienta está activa.</li>
@@ -179,14 +185,14 @@
 <fig slug="ldt-impacto" t="Cálculo de días dibujado en la Línea de Tiempo" observe="Las dos barras elegidas, resaltadas.|Flecha doble con los días de diferencia, bajo la franja de años.|Tarjeta con las fechas, la diferencia y «Dejar en la lámina».">Medición entre dos barras.</fig>
 
 <h2 id="copiar-formato">Copiar formato</h2>
-<p>El botón <ui>Copiar formato</ui> (ícono de brocha, junto a Conector) toma el aspecto de un elemento y lo aplica a otros <b>del mismo tipo</b>: el formato de una tarea solo se aplica a tareas, el de un hito solo a hitos, el de un evento a eventos y el de un año a años.</p>
+<p>La opción <ui>Copiar formato</ui> del menú <ui>Editar</ui> (ícono de brocha) toma el aspecto de un elemento y lo aplica a otros <b>del mismo tipo</b>: el formato de una tarea solo se aplica a tareas, el de un hito solo a hitos, el de un evento a eventos, el de un año a años, el de una banda del <b>Agrupador horizontal</b> a otras bandas horizontales y el de una banda del <b>Agrupador vertical</b> a otras bandas verticales. Mientras la herramienta está activa, la opción y el botón <ui>Editar</ui> se ven resaltados.</p>
 <ol class="steps">
 <li><b>Elija el origen</b>Seleccione antes un elemento (un clic) y pulse el botón, o pulse el botón y haga clic en el elemento del que quiere copiar. Queda resaltado en verde.</li>
 <li><b>Aplique</b>Haga clic en cada elemento de destino: recibe el formato al instante. Si el destino es de otro tipo, la tarjeta lo avisa y no cambia nada. <ui>Elegir otro origen</ui> toma otro modelo.</li>
 <li><b>Salga</b><ui>Cerrar</ui> o <kbd>Esc</kbd>. <kbd>Ctrl</kbd>+<kbd>Z</kbd> deshace cada aplicación.</li>
 </ol>
 <ul>
-<li><b>Qué se copia:</b> colores, texto (tamaño, negrita, cursiva, subrayado, alineación), trama, borde, forma del hito, fechas visibles y línea del hito; en años, fondo, fuente y borde.</li>
+<li><b>Qué se copia:</b> colores, texto (tamaño, negrita, cursiva, subrayado, alineación), trama, borde, forma del hito, fechas visibles y línea del hito; en años, fondo, fuente y borde; en los agrupadores, texto, fuente, relleno y borde (incluidos los lados del borde), pero no el nombre de cada banda.</li>
 <li><b>Qué no se copia:</b> el nombre, el texto adicional, la posición o «Distancia al eje», la banda, ni las fechas: son propios de cada elemento.</li>
 </ul>
 <fig slug="ldt-copiar-formato" t="Copiar formato" observe="La barra de origen, resaltada en verde.|Tarjeta inferior con el origen y las instrucciones.">Aplicar el formato de una tarea a otras tareas.</fig>
