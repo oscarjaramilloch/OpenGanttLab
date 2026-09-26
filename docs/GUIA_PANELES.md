@@ -7,15 +7,15 @@ Todos los paneles que editan un elemento (barra, hito, evento, año, agrupadores
 | Necesidad | Clase / pieza | Notas |
 |---|---|---|
 | Encabezado de la ventana (nombre) | texto en línea | 12 px, negrita; «· ID n» 12 px normal |
-| Título de sección | `.pop-label` (botón o div) | **11 px, semi-negrita**, atenuado, con flecha |
-| Etiqueta de acción | `.pop-unit` con `min-width:40px` | **10 px** normal |
-| Número (grosor, distancia) | `.pop-num.pp-stepper` → **[−] valor [+]** | el campo queda oculto y sigue siendo la fuente del dato; unidad `px` en `.pop-unit` |
-| Tamaño de fuente | `select.pp-size` → **[−] valor [+]** | opciones 7–20 (y Auto donde aplique) |
-| Estilo de línea | `select.pp-dash` → 4 íconos (continua, punteada, rayada, mixta) | |
-| Trama | `#pbmPattern` → botón con muestra + paleta | |
+| Título de sección | `.pop-label` (botón o div) | **12 px, semi-negrita**, atenuado, con flecha |
+| Etiqueta de acción | `.pop-unit` con `min-width:40px` | **10 px**, normal, **gris** (`--muted`); lo mismo para el texto de los interruptores (`.tg-label`) y de las casillas: todas las etiquetas de acción y subsección comparten color, tamaño y peso |
+| Número (grosor, distancia) | `.pop-num` | campo numérico con **flechas arriba/abajo** visibles; unidad `px` en `.pop-unit` |
+| Tamaño de fuente | `select.pp-size` → campo numérico con flechas (`ppSelectToSpin`) | el `select` queda oculto como fuente del dato y admite cualquier valor 6–72 |
+| Estilo de línea | `select.pp-dash` → lista con muestras (continua, punteada, rayada, mixta) | va en la misma fila que el color |
+| Trama | `#pbmPattern` → botón con muestra + paleta | va en la misma fila que el color de fondo |
 | Lista con muchas opciones de texto | `.rb-sel` | solo cuando no hay ícono posible (formato, campo, fechas) |
 | Negrita / cursiva / subrayado | `.rb-sm` (`.active` = activo) | orden **K S N**, mismas etiquetas y `title` |
-| Alinear | `.pbm-seg` + `.pbm-seg-btn` con **íconos** | tres líneas: izquierda, centro, derecha; en bandas verticales el mismo ícono girado −90° |
+| Alinear | `.pbm-seg` + `.pbm-seg-btn` con **íconos** (el activo solo cambia el color de sus líneas, sin fondo) | tres líneas: izquierda, centro, derecha; en bandas verticales el mismo ícono girado −90° |
 | Posición del texto | `.pbm-seg` con los 5 íconos del panel de la barra | |
 | Color | recuadro 22×16 (`border:1px solid var(--line)`) + «Auto» / «Restablecer» como `.rb-flat` | selector de color de la app (`#colorPicker`) |
 | Interruptor | `label.toggle` + `.tg-track` | no usar casillas para opciones de este tipo |
@@ -24,14 +24,17 @@ Todos los paneles que editan un elemento (barra, hito, evento, año, agrupadores
 
 ## Jerarquía tipográfica
 
-Encabezado 12 (negrita) → sección 11 (semi-negrita) → acción 10. Controles de ícono de 24 px de alto; K S N de 21 px; valores −/+ de 11,5 px.
+**Solo dos tamaños de texto:** sección y encabezado **12** · etiquetas de acción, subsecciones (p. ej. «Fuente») y el texto de todos los controles **10**. Una regla CSS los impone en los paneles de propiedades y de opciones (`#presBarMenu`, `#presYearMenu`, `.tb-opt-panel`…). Controles de ícono de 24 px de alto.
+
+**Texto:** el nombre solo se muestra al activar el lápiz de la sección (`pbmToggleNombre`).
 
 ## Estructura del panel (Panel de Tarea, y todos los demás)
 
 ```
-Encabezado:  ID · nombre · tipo · restablecer · ocultar
+Encabezado:  nombre · ID · tipo · restablecer · ocultar
 Sección plegable (título + flecha)
-   etiqueta —— íconos de acción      (una fila por acción)
+   etiqueta —— íconos de acción      (una fila por acción; dos acciones afines pueden compartir fila:
+                                      Color + Trama, Color + Estilo, Comienzo + Fin)
 ```
 
 El **Panel de Tarea** (`#presBarMenu`) también sirve de Panel de Hito y de Evento.
