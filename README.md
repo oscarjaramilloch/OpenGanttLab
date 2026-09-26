@@ -18,7 +18,7 @@ Aplicación web HTML standalone para comparar escenarios de plan de actividades,
 
 - **Línea de Tiempo:** Agrupador vertical y **horizontal** (subprocesos sobre los años), borde configurable por clic derecho, tramos en la franja de años, forma y texto adicional en los hitos, leyenda configurable e imágenes/íconos.
 - **Timeline Delta:** compara los hitos de dos escenarios con su desviación en días. **Vista Hitos** muestra los días desplazados entre escenarios.
-- **Conectores y medidas de tiempo:** une dos elementos visibles (recta, escuadra, L) o mide el tiempo entre dos fechas; Impacto ahora dibuja la medición.
+- **Conectores y medidas de tiempo:** une dos elementos visibles (recta, escuadra, L) o mide el tiempo entre dos fechas; «Calcular días» (antes Impacto) dibuja la medición.
 - **Análisis de escenarios**, Guardar sesión/Compartir, XML modificado y fechas dd/mm/aaaa en la Tabla de Datos. Detalle completo en Ayuda → Historial y en el manual (`docs/manual`).
 
 ### v3.1.2 · 2026-09-19

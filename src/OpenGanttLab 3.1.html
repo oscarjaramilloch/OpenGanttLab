@@ -501,7 +501,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <p style="font-size:11.5px;color:var(--muted);margin:0 0 4px;line-height:1.7">Herramienta <strong>standalone</strong> (sin internet) para visualizar y comparar cronogramas de proyectos. Lee archivos Excel (.xlsx) con múltiples escenarios y genera un Gantt interactivo y una Línea de Tiempo ejecutiva.</p>
     </div>
     <div style="padding:20px 32px 28px;text-align:right">
-      <button onclick="document.getElementById('splashModal').style.display='none'" style="background:var(--ogl-navy);color:#fff;border:none;border-radius:8px;padding:11px 40px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-family:var(--ff)" onmouseover="this.style.background='var(--navy-border)'" onmouseout="this.style.background='var(--ogl-navy)'">Iniciar →</button>
+      <button type="button" onclick="loadDemoSchedule()" title="Carga un cronograma de ejemplo (datos ficticios) para explorar la herramienta" style="background:transparent;color:var(--ogl-navy);border:1.5px solid var(--ogl-navy);border-radius:8px;padding:9.5px 22px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;margin-right:10px;font-family:var(--ff)">Ver demo</button><button onclick="document.getElementById('splashModal').style.display='none'" style="background:var(--ogl-navy);color:#fff;border:none;border-radius:8px;padding:11px 40px;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-family:var(--ff)" onmouseover="this.style.background='var(--navy-border)'" onmouseout="this.style.background='var(--ogl-navy)'">Iniciar →</button>
     </div>
   </div>
 </div>
@@ -1642,9 +1642,9 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v12h6"/><path d="m14 15 3 3-3 3"/><rect x="2" y="4" width="4" height="4" rx=".8"/></svg>
             Conector
           </button>
-          <button type="button" class="filtro-menu-item" id="btnPresImpact" onclick="presImpactToggle();closeAllDropMenus()" aria-pressed="false" title="Impacto: elija dos barras o hitos (por ejemplo de dos escenarios) y mida los días de diferencia entre sus fechas">
+          <button type="button" class="filtro-menu-item" id="btnPresImpact" onclick="presImpactToggle();closeAllDropMenus()" aria-pressed="false" title="Calcular días: elija dos barras o hitos (por ejemplo de dos escenarios) y mida los días de diferencia entre sus fechas">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z"/><path d="m8 8 2 2"/><path d="m11 5 2 2"/><path d="m5 11 2 2"/></svg>
-            Impacto
+            Calcular días
           </button>
           <button class="filtro-menu-item" onclick="presAddTextBox();closeAllDropMenus()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
@@ -2656,6 +2656,36 @@ async function refreshFromFile(){
     const _bse=document.getElementById('btnSaveToExcel');if(_bse)_bse.style.display='flex';
     render();if(Object.keys(_ganttFilters||{}).length)applyGanttFilters();if(document.getElementById('editorModal').style.display==='flex')populateEditor();}
   catch(e){document.getElementById('status').textContent='Error: '+(e.message||e);}
+}
+// ── Cronograma de ejemplo (datos inventados: planta industrial ficticia) para probar la herramienta sin cargar un archivo ──
+const DEMO_ROWS=[
+  ["id","Escenario","Categoría 1","Categoría 2","Nombre de Tarea","Start LB","End LB","Avance %","Start R/P","End R/P","Clase","Ruta Crítica","Predecesoras"],
+  [1,"Proyecto A","Ingeniería","Conceptual","Ingeniería conceptual","2026-01-05","2026-04-30",100,"2026-01-05","2026-05-15","Tarea","No",""],
+  [2,"Proyecto A","Ingeniería","Básica","Ingeniería básica","2026-05-01","2026-09-30",100,"2026-05-16","2026-10-20","Tarea","No","1"],
+  [3,"Proyecto A","Ingeniería","Básica","FID — Decisión de inversión","2026-09-30","2026-09-30",100,"2026-10-20","2026-10-20","Hito","Si","2"],
+  [4,"Proyecto A","Ingeniería","Detalle","Ingeniería de detalle","2026-10-01","2027-04-30",85,"2026-10-21","2027-06-10","Tarea","Si","3"],
+  [5,"Proyecto A","Compras","Licitación","Especificaciones y licitación","2026-08-01","2026-12-15",100,"2026-09-01","2027-01-20","Tarea","No","2"],
+  [6,"Proyecto A","Compras","Licitación","Adjudicación de contratos","2026-12-16","2027-02-28",100,"2027-01-21","2027-04-05","Tarea","No","5"],
+  [7,"Proyecto A","Compras","Equipos críticos","Fabricación de equipos críticos","2027-03-01","2027-12-15",60,"2027-04-06","2028-02-10","Tarea","Si","6"],
+  [8,"Proyecto A","Compras","Equipos críticos","Entrega en sitio","2027-12-16","2028-02-28",10,"2028-02-11","2028-04-30","Tarea","No","7"],
+  [9,"Proyecto A","Construcción","Movilización","Movilización de contratistas","2027-01-15","2027-03-15",100,"2027-02-01","2027-04-15","Tarea","No","4"],
+  [10,"Proyecto A","Construcción","Obras civiles","Obras civiles y cimentaciones","2027-03-16","2027-11-30",70,"2027-04-16","2028-01-15","Tarea","Si","9"],
+  [11,"Proyecto A","Construcción","Montaje","Montaje electromecánico","2027-12-01","2028-06-30",20,"2028-02-01","2028-08-15","Tarea","Si","10;8"],
+  [12,"Proyecto A","Construcción","Montaje","Instalaciones auxiliares","2027-09-01","2028-03-31",30,"2027-10-01","2028-05-15","Tarea","No","10"],
+  [13,"Proyecto A","Puesta en marcha","Comisionado","Precomisionado","2028-05-01","2028-08-31",0,"2028-07-01","2028-10-15","Tarea","No","11"],
+  [14,"Proyecto A","Puesta en marcha","Comisionado","Comisionado y pruebas","2028-09-01","2028-11-30",0,"2028-10-16","2029-01-10","Tarea","Si","13"],
+  [15,"Proyecto A","Puesta en marcha","Comisionado","Arranque de la planta","2028-12-15","2028-12-15",0,"2029-02-01","2029-02-01","Hito","Si","14"],
+  [16,"Proyecto A","Compras","Licitación","Contratos principales adjudicados","2027-02-28","2027-02-28",100,"2027-04-05","2027-04-05","Hito","No","6"],
+  [17,"Proyecto A","Construcción","Montaje","Inicio de montaje","2027-12-01","2027-12-01",0,"2028-02-01","2028-02-01","Hito","Si","10"],
+  [18,"Proyecto A","Compras","Equipos críticos","Equipos críticos en sitio","2028-02-28","2028-02-28",0,"2028-04-30","2028-04-30","Hito","No","8"],
+  [19,"Proyecto A","Construcción","Montaje","Mecánica completa","2028-06-30","2028-06-30",0,"2028-08-15","2028-08-15","Hito","Si","11"]
+];
+function loadDemoSchedule(){
+  if(typeof TASKS!=='undefined'&&TASKS.length&&!confirm('Se reemplazarán los datos cargados por el cronograma de ejemplo. ¿Continuar?'))return;
+  parseRows(DEMO_ROWS.map(r=>r.slice()));
+  document.getElementById('status').textContent='Cronograma de ejemplo — '+TASKS.length+' actividades (datos ficticios).';
+  render();
+  const sp=document.getElementById('splashModal');if(sp)sp.style.display='none';
 }
 async function presRefreshExcel(){
   if(!FILE_HANDLE){alert('Primero vincula un archivo Excel desde el Gantt (botón 🔗 Vincular).');return;}
@@ -4815,6 +4845,33 @@ function addEditorRow(){
   sc.scrollTop=sc.scrollHeight;
   if(_edVirt)edRender(true);
 }
+// Clic derecho sobre una fila de la Tabla de Datos: insertar una fila vacía encima
+function insertEditorRowAbove(m){
+  const idx=_edRows.indexOf(m);if(idx<0)return;markDirty();
+  const n=_edModel({escenario:m.esc||'',c1:'',c2:'',tarea:'',iLB:new Date(),fLB:new Date(),av:0,iRP:new Date(),fRP:new Date(),hito:false,evento:false,crit:false,marca2:'',summary:false});
+  _edRows.splice(idx,0,n);
+  _edVis=_edFiltered();edRender(true);
+  const sc=document.getElementById('datosTablePane');if(_edVirt&&sc)edRender(true);
+}
+(function(){
+  const b=document.getElementById('editorBody');if(!b)return;
+  let menu=null;
+  const close=()=>{if(menu){menu.remove();menu=null;}};
+  b.addEventListener('contextmenu',e=>{
+    const tr=e.target.closest&&e.target.closest('tr');if(!tr||!tr._m)return;
+    e.preventDefault();close();
+    menu=document.createElement('div');menu.className='rb-menu-panel';
+    menu.style.cssText='position:fixed;z-index:100050;background:var(--panel,#fff);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:4px;min-width:190px';
+    menu.innerHTML='<button type="button" class="filtro-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v6"/><path d="M9 8h6"/><rect x="3" y="13" width="18" height="6" rx="1.5"/></svg>Insertar fila vacía encima</button>';
+    menu.firstChild.onclick=()=>{const m=tr._m;close();insertEditorRowAbove(m);};
+    document.body.appendChild(menu);
+    menu.style.left=Math.max(4,Math.min(e.clientX,innerWidth-menu.offsetWidth-8))+'px';
+    menu.style.top=Math.max(4,Math.min(e.clientY,innerHeight-menu.offsetHeight-8))+'px';
+  });
+  document.addEventListener('mousedown',e=>{if(menu&&!menu.contains(e.target))close();},true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+  window.addEventListener('blur',close);
+})();
 // Filas del modelo de la tabla que forman parte de un ciclo de dependencias (Kahn sobre Predecesoras)
 function _edCycNodes(){
   const L=_edRows.filter(f=>((f.tar||'').trim()||'(sin nombre)')!=='(sin nombre)').map(f=>({f,pid:String(f.pid||'').trim()||undefined,preds:String(f.preds||'').trim()||undefined,escenario:String(f.esc||'').trim(),pscope:f.ps||undefined,c1:String(f.c1||'').trim()}));
@@ -6621,7 +6678,7 @@ function _presSVG(all,S,TW,mn,mx,opts){
   const _spBands=[];
   if(_spOn){
     const mp=new Map();
-    all.forEach(t=>{const v=String(t[_spField]==null?'':t[_spField]).trim();if(!v)return;const a=+(useLB?t.iLB:t.iRP),b=+(useLB?t.fLB:t.fRP);if(isNaN(a)||isNaN(b))return;
+    all.forEach(t=>{const v=String(t[_spField]==null?'':t[_spField]).replace(/[​-‏⁠﻿ ]/g,' ').trim();if(!v||/^(undefined|null|nan)$/i.test(v))return;const a=+(useLB?t.iLB:t.iRP),b=+(useLB?t.fLB:t.fRP);if(isNaN(a)||isNaN(b))return;
       const r=mp.get(v);if(!r)mp.set(v,{v,a,b});else{if(a<r.a)r.a=a;if(b>r.b)r.b=b;}});
     mp.forEach(r=>_spBands.push(r));
     _spBands.sort((p,q)=>p.a-q.a);
@@ -6790,7 +6847,8 @@ function _presSVG(all,S,TW,mn,mx,opts){
     const hex=c=>{try{return[parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)];}catch{return[200,220,240];}};
     const lumaOf=c=>{const q=hex(c);return .299*q[0]+.587*q[1]+.114*q[2];};
     const mix=(c1,c2)=>{const p=hex(c1),q=hex(c2);return'#'+[0,1,2].map(i=>Math.max(0,Math.min(255,Math.round((p[i]+q[i])/2*0.82))).toString(16).padStart(2,'0')).join('');};
-    const B=_spBands.map(r=>({r,x0:x(new Date(r.a)),x1:x(new Date(r.b)),bc:_presSubprocColors[r.v]||_presSubprocCol}));
+    // Solo se dibuja lo que cae dentro del eje de años; lo que queda fuera (o sin ancho) no se muestra
+    const B=_spBands.map(r=>({r,x0:Math.max(ML,x(new Date(r.a))),x1:Math.min(ML+TW,x(new Date(r.b))),bc:_presSubprocColors[r.v]||_presSubprocCol})).filter(o=>o.x1-o.x0>0.5);
     B.forEach(o=>{
       svg+=`<rect x="${o.x0}" y="${by}" width="${Math.max(4,o.x1-o.x0)}" height="${bh}" rx="3" fill="${o.bc}"${(_presSubprocStyle[o.r.v]&&(_presSubprocStyle[o.r.v].borderW>0))?presBorderAttr(_presSubprocStyle[o.r.v],'#7a8ea3',1):''} data-sp-band="${ex(o.r.v)}" style="cursor:pointer"><title>${ex(o.r.v)} — doble clic: color · clic derecho: borde</title></rect>`;
     });
@@ -8363,6 +8421,40 @@ document.addEventListener('mouseup',e=>{
   renderPres();
 });
 
+// ── Clic derecho en una barra de la LdT: insertar una fila vacía encima (las barras de esa fila y de las de abajo bajan una fila) ──
+function presInsertRowAbove(key){
+  const el=document.querySelector('#presBody [data-pres-bar="'+CSS.escape(key)+'"],#presBody [data-pres-mito][data-in-band][data-pres-mito="'+CSS.escape(key)+'"]');if(!el)return;
+  const svg=el.closest('svg');if(!svg)return;
+  const taskY0=+svg.dataset.taskY0||0,layerH=+svg.dataset.layerH||42;
+  const lyOf=e=>Math.max(0,Math.round((e.getBBox().y-taskY0)/layerH));
+  const L=lyOf(el),posProp=_presLastGroupByC1?'rapPinnedLayer':'pinnedLayer';
+  _presSnap();
+  const moves=[];
+  svg.querySelectorAll('[data-pres-bar],[data-pres-mito][data-in-band]').forEach(e=>{
+    const k=e.dataset.presBar||e.dataset.presMito;const ly=lyOf(e);if(ly>=L)moves.push([k,ly+1]);
+  });
+  moves.forEach(([k,ly])=>{if(!PRES_OPTS[k])PRES_OPTS[k]={};PRES_OPTS[k][posProp]=ly;});
+  renderPres();
+}
+(function(){
+  const pb=document.getElementById('presBody');if(!pb)return;
+  let menu=null;const close=()=>{if(menu){menu.remove();menu=null;}};
+  pb.addEventListener('contextmenu',e=>{
+    if(e.target.closest('[data-con-id],[data-sp-band],[data-rap-reorder],[data-rap-olbl],[data-rap-band-border]'))return;
+    const bar=e.target.closest('[data-pres-bar],[data-pres-mito][data-in-band]');if(!bar)return;
+    e.preventDefault();close();
+    const key=bar.dataset.presBar||bar.dataset.presMito;
+    menu=document.createElement('div');menu.className='rb-menu-panel';
+    menu.style.cssText='position:fixed;z-index:100050;background:var(--panel,#fff);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:4px;min-width:190px';
+    menu.innerHTML='<button type="button" class="filtro-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v6"/><path d="M9 8h6"/><rect x="3" y="13" width="18" height="6" rx="1.5"/></svg>Insertar fila vacía encima</button>';
+    menu.firstChild.onclick=()=>{close();presInsertRowAbove(key);};
+    document.body.appendChild(menu);
+    menu.style.left=Math.max(4,Math.min(e.clientX,innerWidth-menu.offsetWidth-8))+'px';
+    menu.style.top=Math.max(4,Math.min(e.clientY,innerHeight-menu.offsetHeight-8))+'px';
+  });
+  document.addEventListener('mousedown',e=>{if(menu&&!menu.contains(e.target))close();},true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+})();
 // Elimina todos los offsets manuales de fila y desplazamientos de fecha para volver al layout automático
 function presResetLayout(){
   if(!confirm('¿Resetear posiciones manuales de barras al layout automático?'))return;
@@ -11332,14 +11424,22 @@ function presVisibleDims(keySet){
   const t=presImpactConnector();if(t&&t.type==='dim')l.push(t);
   return l.filter(c=>keySet.has(c.a)&&keySet.has(c.b));
 }
+// El área dibujada crece para que una medida arrastrada fuera de la lámina no se pierda (arriba o abajo)
+function presFitSvgToDims(svg,minY,maxY){
+  if(!svg.dataset.baseH)svg.dataset.baseH=svg.getAttribute('height');
+  const H0=+svg.dataset.baseH,W0=+svg.getAttribute('width');if(!H0||!W0)return;
+  const top=Math.min(0,Math.floor(minY)),bot=Math.max(H0,Math.ceil(maxY));
+  if(top===0&&bot===H0){svg.removeAttribute('viewBox');svg.setAttribute('height',H0);return;}
+  svg.setAttribute('viewBox','0 '+top+' '+W0+' '+(bot-top));svg.setAttribute('height',bot-top);
+}
 function presDrawConnectors(){
   const body=document.getElementById('presBody');if(!body)return;
   body.querySelectorAll('.presConG').forEach(g=>g.remove());
   const _imp=presImpactConnector(),_list=_imp?PRES_CONNECTORS.concat([_imp]):PRES_CONNECTORS;
-  if(!_list.length)return;
+  if(!_list.length){body.querySelectorAll('svg[data-base-h]').forEach(s=>presFitSvgToDims(s,0,0));return;}
   body.querySelectorAll('svg').forEach(svg=>{
     let out='';
-    let _lane=0;
+    let _lane=0,_minY=0,_maxY=0;
     _list.forEach(c=>{
       const ea=_conEl(svg,c.a),eb=_conEl(svg,c.b);if(!ea||!eb)return;
       let ba,bb;try{ba=ea.getBBox();bb=eb.getBBox();}catch(e){return;}
@@ -11348,10 +11448,11 @@ function presDrawConnectors(){
         const A=bx(ba),B=bx(bb),isMs=el=>el.hasAttribute('data-pres-mito')||el.hasAttribute('data-pres-evento'),xa=isMs(ea)?A.cx:((c.fromEdge==='end')?A.r:A.l),xb=isMs(eb)?B.cx:((c.toEdge==='start')?B.l:B.r);
         const col=c.color||'#1f6f8b',w=c.w||1.5,fs=c.fs||11,y=(svg.dataset.dimY0!==undefined&&svg.dataset.dimY0!==''?(+svg.dataset.dimY0+24+(_lane++)*26):(Math.min(A.t,B.t)-26))+(c.dy||0),sel=c.id===_conSel,dd=presDimDates(c);
         const ax=Math.min(xa,xb),bxx=Math.max(xa,xb),H2=7+w,W2=3.5+w*.5;
+        _minY=Math.min(_minY,y-fs-24);_maxY=Math.max(_maxY,y+20);
         const val=presDimValue(c,dd.dA,dd.dB),pre=String(c.text==null?'':c.text),esc3=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
         if(sel)out+='<line x1="'+ax+'" y1="'+y+'" x2="'+bxx+'" y2="'+y+'" stroke="#0984e3" stroke-width="'+(w+4)+'" opacity=".35"/>';
         // guías verticales hasta cada elemento
-        [[xa,A],[xb,B]].forEach(p=>{const yt=p[1].t>y?p[1].t:null;if(yt!=null)out+='<line x1="'+p[0]+'" y1="'+y+'" x2="'+p[0]+'" y2="'+yt+'" stroke="'+col+'" stroke-width=".8" stroke-dasharray="3,3" opacity=".7"/>';});
+        [[xa,A],[xb,B]].forEach(p=>{const yt=p[1].t>y?p[1].t:(p[1].b<y?p[1].b:null);if(yt!=null)out+='<line x1="'+p[0]+'" y1="'+y+'" x2="'+p[0]+'" y2="'+yt+'" stroke="'+col+'" stroke-width=".8" stroke-dasharray="3,3" opacity=".7"/>';});
         out+='<line x1="'+(ax+H2)+'" y1="'+y+'" x2="'+(bxx-H2)+'" y2="'+y+'" stroke="'+col+'" stroke-width="'+w+'"'+presDashAttr(c.dash)+'/>';
         out+='<polygon points="'+ax+','+y+' '+(ax+H2)+','+(y-W2)+' '+(ax+H2)+','+(y+W2)+'" fill="'+col+'"/><polygon points="'+bxx+','+y+' '+(bxx-H2)+','+(y-W2)+' '+(bxx-H2)+','+(y+W2)+'" fill="'+col+'"/>';
         const tx0=(ax+bxx)/2,ty0=y-6;
@@ -11381,6 +11482,7 @@ function presDrawConnectors(){
         out+='<rect x="'+(mx-pw/2)+'" y="'+(my-10)+'" width="'+pw+'" height="20" rx="8" fill="'+(pos==null?'#eef4fb':pos>0?'#fde3e3':pos<0?'#dff3e5':'#eceff3')+'" stroke="'+pc+'" stroke-width=".7"/><text x="'+mx+'" y="'+(my+4)+'" text-anchor="middle" font-size="11" font-weight="bold" fill="'+pc+'" pointer-events="none">'+String(c.label).replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</text>';
       }
     });
+    if(svg.dataset.dimY0!==undefined||svg.dataset.baseH)presFitSvgToDims(svg,_minY,_maxY);
     if(out)svg.insertAdjacentHTML('beforeend','<g class="presConG">'+out+'</g>');
   });
 }
@@ -11490,7 +11592,7 @@ function presImpactUI(){
   const row=(l,p)=>{const d=presImpactDates(p);return`<div style="margin:2px 0"><span style="display:inline-block;min-width:18px;font-weight:700;color:#1a5fb4">${l}</span> ${nm(p)}<div style="margin-left:22px;color:var(--muted)">Inicio ${D(d.s)} · Fin ${D(d.f)}</div></div>`;};
   const dd=(x,y)=>Math.round((+y-+x)/864e5);
   const say=n=>n===0?'sin diferencia':(n>0?`B ${Math.abs(n)} día${Math.abs(n)===1?'':'s'} después de A`:`B ${Math.abs(n)} día${Math.abs(n)===1?'':'s'} antes de A`);
-  let body='<div style="font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px">Impacto entre dos fechas<span style="flex:1"></span><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presImpactReset()">Nueva medición</button><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presImpactToggle()">Cerrar</button></div>';
+  let body='<div style="font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:8px">Calcular días entre dos fechas<span style="flex:1"></span><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presImpactReset()">Nueva medición</button><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presImpactToggle()">Cerrar</button></div>';
   if(!_impPick.length)body+='<div style="color:var(--muted)">Haga clic en la primera barra u hito (A) y luego en la segunda (B).</div>';
   else{
     body+=row('A',_impPick[0]);
@@ -12206,7 +12308,7 @@ document.addEventListener('keydown',e=>{
             <li><b>Hitos:</b> forma elegible (rombo, triángulos, círculo, cuadrado, estrella) y texto adicional que se arrastra con el mouse.</li>
             <li><b>Conectores:</b> nuevo botón que une dos barras/hitos visibles (recta, escuadra con tramo vertical arrastrable, dos tipos de L) y <b>medidas de tiempo</b> (flecha doble con la diferencia en años y meses, meses o días; comienzo/fin de A contra comienzo/fin de B; en una franja propia bajo los años que se sube o baja arrastrando —el área de renderizado crece sola—, con el texto siempre centrado sobre la barra). Color, grosor, estilo y flecha editables; Supr elimina.</li>
             <li><b>Copiar formato:</b> nuevo botón que toma el formato de una barra, un hito, un evento o un año (o del elemento seleccionado) y lo aplica con un clic a otros del mismo tipo; no copia el texto, la posición ni las fechas.</li>
-            <li><b>Impacto:</b> ahora dibuja la medición entre A y B como medida de tiempo y permite dejarla en la lámina.</li>
+            <li><b>Calcular días (antes Impacto):</b> ahora dibuja la medición entre A y B como medida de tiempo y permite dejarla en la lámina.</li>
             <li><b>Leyenda configurable</b> (campo, estilo, título, tamaño, entradas visibles) e <b>imágenes e íconos</b> (biblioteca de 12 o archivo propio, hasta 3 MB) como formas libres.</li>
             <li><b>Análisis de escenarios (Schedule Intelligence):</b> pestaña Análisis con comparación de dos o más escenarios (Delta, Hitos, intervalos y deriva). <b>Gestión de escenarios:</b> cambiar el nombre de un escenario.</li>
             <li><b>Sesión y datos:</b> «Guardar sesión» (con nombre) separada de «Compartir»; menú Descargar (Planilla, XLSX, XML modificado con Línea Base, hito/crítica/resumen y filas nuevas o eliminadas); días transcurridos desde el día 1; divisor de año con estilo; fechas de la Tabla de Datos siempre en dd/mm/aaaa.</li>
