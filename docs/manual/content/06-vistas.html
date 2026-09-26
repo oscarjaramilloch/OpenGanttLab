@@ -42,7 +42,7 @@
 <tr><th>Acción</th><th>Resultado</th></tr>
 <tr><td>Un clic en una barra, hito o evento</td><td>Lo selecciona (borde punteado azul) y lo deja listo para <kbd>Delete</kbd>.</td></tr>
 <tr><td><kbd>Delete</kbd> con algo seleccionado</td><td>Lo oculta de la Línea de Tiempo. No cambia los datos.</td></tr>
-<tr><td>Doble clic</td><td>Abre el panel de edición.</td></tr>
+<tr><td>Doble clic</td><td>Abre el Panel de Tarea (o de Hito / Evento).</td></tr>
 <tr><td>Arrastrar</td><td>Mueve la barra o el hito.</td></tr>
 <tr><td><kbd>Ctrl</kbd> o <kbd>Shift</kbd> + clic</td><td>Agrega barras a la selección; el doble clic las edita todas a la vez.</td></tr>
 <tr><td>Clic en un espacio en blanco</td><td>Limpia la selección.</td></tr>
@@ -51,9 +51,14 @@
 </table>
 <fig slug="ldt-seleccion" t="Selección de barras" legend="Barra seleccionada con un clic (borde punteado azul)|Segunda barra agregada con Ctrl + clic">Los elementos seleccionados se resaltan; con varios seleccionados, el doble clic edita todos a la vez.</fig>
 
-<h3 id="panel-edicion">El panel de edición</h3>
-<p>Un doble clic sobre una barra abre su panel de edición.</p>
-<fig slug="ldt-panel-edicion" t="Panel de edición de una barra" legend="Barra seleccionada (doble clic)|Panel de edición" observe="Texto: nombre, color, tamaño, negrita, alineación y posición.|Fondo: color de la barra y trama.|Fechas: mostrar comienzo y fin, alinear y posición.|Posición: capa (arriba/abajo).">Todos los cambios del panel son visuales: nunca modifican la Tabla de Datos.</fig>
+<h3 id="panel-edicion">El Panel de Tarea</h3>
+<p>Un doble clic sobre una barra abre el <b>Panel de Tarea</b>. El mismo panel, con sus secciones propias, sirve para los hitos y los eventos. Se organiza siempre igual:</p>
+<ul>
+<li><b>Encabezado:</b> el <b>ID</b> de la tarea, su nombre, el tipo (Tarea, Hito o Evento), <i>Restablecer nombre</i> y <i>Ocultar de la Línea de Tiempo</i>.</li>
+<li><b>Secciones plegables</b> (Texto, Fondo, Borde, Fechas, Dependencias…): cada una con su título y una flecha para abrirla o cerrarla.</li>
+<li><b>Filas «etiqueta — íconos de acción»:</b> la etiqueta a la izquierda y, a su lado, los controles como íconos. El tamaño de la letra y el grosor se cambian con <b>−</b> y <b>+</b>; el estilo del borde y de la línea, la alineación y la posición del texto, con botones de ícono; la trama, con una paleta de muestras; y el color, con su recuadro y un ícono de restablecer.</li>
+</ul>
+<fig slug="ldt-panel-edicion" t="Panel de Tarea" legend="Barra seleccionada (doble clic)|Panel de Tarea" observe="Texto: nombre, color, tamaño, negrita, alineación y posición.|Fondo: color de la barra y trama.|Fechas: mostrar comienzo y fin, alinear y posición.|Posición: capa (arriba/abajo).">Todos los cambios del panel son visuales: nunca modifican la Tabla de Datos.</fig>
 <callout type="warn" title="Lo visual no cambia los datos">
 <p>Editar el texto o el color en la Línea de Tiempo solo afecta la presentación. El dato real de la tabla, del Gantt, del Excel y del XML no se toca. La única excepción es la sección <ui>Dependencias</ui> descrita abajo.</p>
 </callout>
