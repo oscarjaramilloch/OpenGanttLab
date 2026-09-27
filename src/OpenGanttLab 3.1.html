@@ -7136,8 +7136,15 @@ function _presSVG(all,S,TW,mn,mx,opts){
     };
     if(above){
       const _spFree=_spBands.length&&_spPos==='top'&&mitoYOff>0; // hito subido a mano con las bandas arriba: puede llegar hasta encima de ellas
-      const dY_raw=_spFree?(axisY0-60-_spBlock-mitoYOff):Math.max(ds+mfsz*2+12+(mitoLines.length-1)*mitoLineH,axisY0-60-_spBlock)-mitoYOff;
-      if(_spFree){const _lt=dY_raw-ds-(mitoLines.length-1)*mitoLineH-mfsz*2-8;if(_lt<0)_hitoTopX=Math.max(_hitoTopX,Math.ceil(-_lt));}
+      let dY_raw=_spFree?(axisY0-60-_spBlock-mitoYOff):Math.max(ds+mfsz*2+12+(mitoLines.length-1)*mitoLineH,axisY0-60-_spBlock)-mitoYOff;
+      // El rombo nunca queda dentro de la banda: si cae sobre ella se acomoda en su borde superior o inferior (el más cercano)
+      // y el texto se pinta sobre la banda: bajo el rombo si está en el borde superior, sobre el rombo si está en el inferior
+      let _edgeTop=false;
+      if(_spFree){
+        const _bT=titleH+2,_bB=_bT+_spBH;
+        if(dY_raw>_bT-ds&&dY_raw<_bB+ds){if(dY_raw-_bT<_bB-dY_raw){dY_raw=_bT;_edgeTop=true;}else dY_raw=_bB;}
+        const _lt=_edgeTop?dY_raw-ds-8:dY_raw-ds-(mitoLines.length-1)*mitoLineH-mfsz*2-8;if(_lt<0)_hitoTopX=Math.max(_hitoTopX,Math.ceil(-_lt));
+      }
       // Si el diamante caería dentro o bajo la barra del eje, empujarlo completamente debajo
       const _aboveAxis=dY_raw+ds<axisY0;
       const dY=_aboveAxis?dY_raw:Math.max(dY_raw,axisY0+axisH+ds+3);
@@ -7147,7 +7154,10 @@ function _presSVG(all,S,TW,mn,mx,opts){
       svg+=presMsShape(PRES_OPTS[mitoLbKey].miShape,mx2,dY,ds,col,mitoAttrs,PRES_OPTS[mitoLbKey]);
       svg+=presMsNote(PRES_OPTS[mitoLbKey],mitoLbKey,mx2,_aboveAxis?dY+ds+mfsz+8:dY+ds+mfsz*(mitoLines.length+2)+8,Math.max(8,mfsz-1),'#333');
       svg+=elapsedTxt(useLB?m.iLB:m.iRP,_aboveAxis?mx2+ds+4:mx2,_aboveAxis?dY+3:dY-ds-3,_aboveAxis?'start':'middle',mDateSz,col);
-      if(_aboveAxis){
+      if(_aboveAxis&&_edgeTop){
+        svg+=mitoML(mitoLines,mx2,dY+ds+mfsz+2);
+        svg+=mitoDateAt(dY,dY+ds+mfsz+2+(mitoLines.length)*mitoLineH);
+      } else if(_aboveAxis){
         svg+=mitoML(mitoLines,mx2,dY-ds-(mitoLines.length-1)*mitoLineH-mfsz-2);
         svg+=mitoDateAt(dY,dY-ds-2);
       } else {
