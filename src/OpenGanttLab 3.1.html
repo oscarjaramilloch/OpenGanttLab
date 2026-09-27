@@ -2244,6 +2244,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
         </button>
       </div>
+      <label class="toggle" style="padding:0" title="Con el Agrupador horizontal, el nombre y la fecha del hito se mantienen fuera de las bandas. Actívelo para poder ponerlo encima de ellas."><span class="tg-label" style="font-size:10px">Sobre el agrupador</span><input type="checkbox" id="pbmMitoOverBands" onchange="presSetMitoOverBands(this.checked)"><span class="tg-track"></span></label>
     </div>
   </div>
 
@@ -7133,7 +7134,12 @@ function _presSVG(all,S,TW,mn,mx,opts){
       return`<text x="${xx}" y="${yy}" text-anchor="${anchor}" font-size="${mDateSz}" fill="${col}" pointer-events="none">${fD((useLB?m.iLB:m.iRP))}</text>`;
     };
     if(above){
-      const dY_raw=Math.max(ds+mfsz*2+12+(mitoLines.length-1)*mitoLineH,axisY0-60-_spBlock)-mitoYOff;
+      let dY_raw=Math.max(ds+mfsz*2+12+(mitoLines.length-1)*mitoLineH,axisY0-60-_spBlock)-mitoYOff;
+      // Con el Agrupador horizontal, el nombre y la fecha del hito no se dibujan sobre las bandas, aunque se haya movido a mano
+      if(_spBands.length&&!PRES_OPTS[mitoLbKey].miOverBands){
+        if(_spPos==='top')dY_raw=Math.max(dY_raw,titleH+_spH+ds+(mitoLines.length-1)*mitoLineH+mfsz*2+4);
+        else{const _bTop=axisY0-_gapAxis-(_spH-10);if(dY_raw+ds>_bTop&&dY_raw<axisY0)dY_raw=_bTop-ds-6;}
+      }
       // Si el diamante caería dentro o bajo la barra del eje, empujarlo completamente debajo
       const _aboveAxis=dY_raw+ds<axisY0;
       const dY=_aboveAxis?dY_raw:Math.max(dY_raw,axisY0+axisH+ds+3);
@@ -7885,7 +7891,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     const _miParts=key.startsWith('LB|')?key.slice(3).split('|'):key.split('|');
     document.getElementById('pbmTitle').textContent=_miParts[2];pbmSetId(key);
     document.getElementById('pbmMitoNombre').value=opt.label!==undefined?opt.label:_miParts[2];
-    {const _miYOff=opt.miYOffset||0;const _sl=document.getElementById('pbmMitoYOffset');if(_sl)_sl.value=_miYOff;}
+    {const _miYOff=opt.miYOffset||0;const _sl=document.getElementById('pbmMitoYOffset');if(_sl)_sl.value=_miYOff;const _ob=document.getElementById('pbmMitoOverBands');if(_ob)_ob.checked=!!opt.miOverBands;}
     const _miTask=TASKS.find(t=>t.c1===_miParts[0]&&t.c2===_miParts[1]&&t.tarea===_miParts[2]);
     document.getElementById('pbmClase').textContent='Hito';
     document.getElementById('pbmClase').style.background=CAT2_COLOR[_miParts[1]]||'#555';
@@ -8808,6 +8814,12 @@ function openExecHiddenModal(){
 function presRestoreAllExecutive(){
   PRES_EXEC_HIDDEN_KEYS.clear();PRES_DEP_HIDDEN.clear();
   openExecHiddenModal();
+  renderPres();
+}
+function presSetMitoOverBands(on){
+  if(!_presBarKey)return;_presSnap();
+  if(!PRES_OPTS[_presBarKey])PRES_OPTS[_presBarKey]={};
+  if(on)PRES_OPTS[_presBarKey].miOverBands=true;else delete PRES_OPTS[_presBarKey].miOverBands;
   renderPres();
 }
 function presSetMitoOffset(val){
