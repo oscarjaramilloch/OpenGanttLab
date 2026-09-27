@@ -7140,10 +7140,11 @@ function _presSVG(all,S,TW,mn,mx,opts){
       // El rombo nunca queda sobre la banda: si cae sobre ella, su punta inferior se apoya en el borde superior de la banda
       // (rombo y texto arriba) o su punta superior en el borde inferior (rombo y texto abajo). El texto nunca queda dentro de la banda.
       let _edgeTop=false;
-      if(_spFree){
-        const _bT=titleH+2,_bB=_bT+_spBH;
-        if(dY_raw>_bT-ds&&dY_raw<_bB+ds){if(dY_raw<(_bT+_bB)/2)dY_raw=_bT-ds;else{dY_raw=_bB+ds;_edgeTop=true;}}
-        const _lt=_edgeTop?dY_raw-ds-8:dY_raw-ds-(mitoLines.length-1)*mitoLineH-mfsz*2-8;if(_lt<0)_hitoTopX=Math.max(_hitoTopX,Math.ceil(-_lt));
+      if(_spBands.length){
+        // Igual con las bandas arriba del todo o pegadas a los años
+        const _bT=_spPos==='axis'?axisY0-_gapAxis-(_spH-10):titleH+2,_bB=_bT+_spBH;
+        if(dY_raw>_bT-ds&&dY_raw<_bB+ds){if(dY_raw<(_bT+_bB)/2||(_spPos==='axis'&&_bB+2*ds+2>axisY0))dY_raw=_bT-ds;else{dY_raw=_bB+ds;_edgeTop=true;}}
+        if(_spFree){const _lt=_edgeTop?dY_raw-ds-8:dY_raw-ds-(mitoLines.length-1)*mitoLineH-mfsz*2-8;if(_lt<0)_hitoTopX=Math.max(_hitoTopX,Math.ceil(-_lt));}
       }
       // Si el diamante caería dentro o bajo la barra del eje, empujarlo completamente debajo
       const _aboveAxis=dY_raw+ds<axisY0;
@@ -8074,7 +8075,7 @@ function exportPresPDF(){
   w.document.close();setTimeout(()=>w.print(),600);
 }
 
-async function exportPresPPTX(){
+async function exportPresPPTX(opts){
   const svg=document.querySelector('#presBody svg');
   if(!svg){alert('No hay Línea de Tiempo para exportar.');return;}
 
@@ -8097,18 +8098,23 @@ async function exportPresPPTX(){
     if(b)b.innerHTML='<span class="rb-icon">📊</span><span class="rb-text">PPTX</span>';
   }
 
-  const W=svg.width.baseVal.value||svg.clientWidth;
-  const H=svg.height.baseVal.value||svg.clientHeight;
-  const IN=v=>Math.max(+(v/96).toFixed(5),0.001); // px→in, mínimo 0.001 para evitar OOXML inválido
-  const safeIn=v=>Math.max(IN(v),0.001);
+  const W=svg.width.baseVal.value||svg.viewBox.baseVal.width||svg.clientWidth;
+  const H=svg.height.baseVal.value||svg.viewBox.baseVal.height||svg.clientHeight;
+  const IN=v=>+(v/96).toFixed(5);               // px→in (puede ser negativo: no se recorta)
+  const safeIn=v=>Math.max(+(v/96).toFixed(5),0.01); // para anchos/altos: nunca 0 (OOXML inválido)
 
+  // ── Color / opacidad ────────────────────────────────────────────────
   const toHex=c=>{
     if(!c||c==='none'||c==='transparent')return null;
-    if(c.startsWith('#')){const h=c.slice(1);return(h.length===3?h.split('').map(x=>x+x).join(''):h).toUpperCase();}
-    const m=c.match(/rgb\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)\)/i);
-    if(m)return[+m[1],+m[2],+m[3]].map(n=>n.toString(16).padStart(2,'0')).join('').toUpperCase();
+    if(c.indexOf('url(')===0)return null;       // patrones/gradientes: sin equivalente directo
+    if(c[0]==='#'){const h=c.slice(1);return(h.length===3?h.split('').map(x=>x+x).join(''):h.slice(0,6)).toUpperCase();}
+    const m=c.match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/i);
+    if(m)return[+m[1],+m[2],+m[3]].map(n=>Math.round(n).toString(16).padStart(2,'0')).join('').toUpperCase();
     return null;
   };
+  const alphaOf=c=>{const m=c&&c.match(/rgba\([^)]*,\s*([\d.]+)\s*\)$/);return m?+m[1]:1;};
+  const num=(v,d)=>{const n=parseFloat(v);return isNaN(n)?d:n;};
+  const TR=a=>Math.round(Math.max(0,Math.min(1,1-a))*100);   // alfa → transparency %
 
   const pptx=new PptxGenJS();
   pptx.defineLayout({name:'LDT',width:safeIn(W),height:safeIn(H)});
@@ -8116,104 +8122,186 @@ async function exportPresPPTX(){
   const slide=pptx.addSlide();
   slide.background={fill:'FFFFFF'};
 
-  const skip=el=>!!el.closest('defs,clipPath,pattern,mask');
+  // ── Transformaciones: CTM acumulado respecto al SVG raíz ────────────
+  // getCTM() ya compone todos los <g transform> y los rotate() anidados.
+  const ctmOf=el=>{try{return el.getCTM();}catch(e){return null;}};
+  const P=(m,x,y)=>m?{x:m.a*x+m.c*y+m.e,y:m.b*x+m.d*y+m.f}:{x,y};
+  const ANG=m=>m?Math.atan2(m.b,m.a)*180/Math.PI:0;      // rotación (grados)
+  const SX=m=>m?Math.hypot(m.a,m.b):1;
+  const SY=m=>m?Math.hypot(m.c,m.d):1;
+  const ROT=o=>{const a=o;return(Math.round(a)%360+360)%360;};
+
   const ga=(el,a)=>el.getAttribute(a)||'';
+  const cs=el=>getComputedStyle(el);
+  const skip=el=>{
+    if(el.closest('defs,clipPath,pattern,mask,marker,symbol'))return true;
+    if(el.closest('[data-dep-tmp]'))return true;          // líneas temporales de arrastre
+    const st=cs(el);
+    if(st.display==='none'||st.visibility==='hidden')return true;
+    if(num(st.opacity,1)<=0.02)return true;
+    return false;
+  };
+  // Opacidad heredada de los <g> ancestros
+  const gOpacity=el=>{let a=1,n=el;while(n&&n!==svg){a*=num(cs(n).opacity,1);n=n.parentNode;}return a;};
 
-  svg.querySelectorAll('rect,line,polygon,text').forEach(el=>{
-    if(skip(el))return;
+  const fillOf=(el,st)=>{
+    const c=toHex(st.fill);if(!c)return{type:'none'};
+    const a=alphaOf(st.fill)*num(st.fillOpacity,1)*gOpacity(el);
+    if(a<=0.02)return{type:'none'};
+    return a<0.99?{color:c,transparency:TR(a)}:{color:c};
+  };
+  const dashOf=st=>{
+    const d=st.strokeDasharray;
+    if(!d||d==='none'||d==='')return'solid';
+    const v=parseFloat(d)||3;
+    return v<=2?'sysDash':v<=4.5?'dash':'lgDash';
+  };
+  const lineOf=(el,st,sc)=>{
+    const c=toHex(st.stroke);if(!c)return{type:'none'};
+    const w=num(st.strokeWidth,0)*(sc||1);
+    if(!(w>0))return{type:'none'};
+    const a=alphaOf(st.stroke)*num(st.strokeOpacity,1)*gOpacity(el);
+    if(a<=0.02)return{type:'none'};
+    const o={color:c,width:Math.max(0.5,+(w*0.75).toFixed(2)),dashType:dashOf(st)};
+    if(a<0.99)o.transparency=TR(a);
+    return o;
+  };
+
+  // ¿La versión de pptxgenjs soporta geometría libre?
+  const HASCG=!!(pptx.ShapeType&&pptx.ShapeType.custGeom);
+  // Polígono/polilínea/path → custGeom (o rombo/caja como aproximación)
+  const addPoly=(el,st,pts,closed,m)=>{
+    const g=pts.map(p=>P(m,p[0],p[1]));
+    if(g.length<2)return;
+    const xs=g.map(p=>p.x),ys=g.map(p=>p.y);
+    const x0=Math.min(...xs),y0=Math.min(...ys);
+    const w=Math.max(...xs)-x0,h=Math.max(...ys)-y0;
+    const fill=fillOf(el,st),line=lineOf(el,st,SX(m));
+    if(fill.type==='none'&&line.type==='none')return;
+    if(HASCG){
+      const pp=g.map(p=>({x:IN(p.x-x0),y:IN(p.y-y0)}));
+      if(closed)pp.push({close:true});
+      slide.addShape('custGeom',{x:IN(x0),y:IN(y0),w:safeIn(w),h:safeIn(h),points:pp,fill,line});
+    }else{
+      // Fallback: rombo si son 4 vértices (hitos), si no la caja envolvente
+      slide.addShape(g.length===5||g.length===4?'diamond':'rect',
+        {x:IN(x0),y:IN(y0),w:safeIn(w),h:safeIn(h),fill,line});
+    }
+  };
+
+  const SEL='rect,line,polyline,polygon,path,circle,ellipse,image,text';
+  [...svg.querySelectorAll(SEL)].forEach(el=>{
     const tag=el.tagName.toLowerCase();
-    const fillHex=toHex(ga(el,'fill'));
-    const strokeHex=toHex(ga(el,'stroke'));
-    const sw=parseFloat(ga(el,'stroke-width')||0);
-    const isDash=(ga(el,'stroke-dasharray')||'')!==''&&ga(el,'stroke-dasharray')!=='none';
-
     try{
+      if(skip(el))return;
+      const st=cs(el),m=ctmOf(el),sx=SX(m),sy=SY(m),rot=ANG(m);
+
       if(tag==='rect'){
-        const x=+ga(el,'x')||0,y=+ga(el,'y')||0,w=+ga(el,'width')||0,h=+ga(el,'height')||0;
-        if(w<1||h<1)return;
-        const rx=parseFloat(ga(el,'rx')||0);
-        // Línea de borde: solo si hay stroke definido y grosor > 0
-        const lineOpts=strokeHex&&sw>0
-          ?{color:strokeHex,width:Math.max(0.25,sw*0.75),dashType:isDash?'lgDash':'solid'}
-          :{type:'none'};
-        const base={x:safeIn(x),y:safeIn(y),w:safeIn(w),h:safeIn(h),
-          fill:fillHex?{color:fillHex}:{type:'none'},line:lineOpts};
-        if(rx>0){
-          slide.addShape('roundRect',{...base,rectRadius:Math.min(rx/Math.min(w,h),0.5)});
-        }else{
-          slide.addShape('rect',base);
-        }
+        const x=num(ga(el,'x'),0),y=num(ga(el,'y'),0);
+        const w=num(ga(el,'width'),0),h=num(ga(el,'height'),0);
+        if(w<0.3||h<0.3)return;
+        const fill=fillOf(el,st),line=lineOf(el,st,sx);
+        if(fill.type==='none'&&line.type==='none')return;
+        // La rotación en PowerPoint es alrededor del centro: se sitúa el centro transformado
+        const c=P(m,x+w/2,y+h/2),bw=w*sx,bh=h*sy;
+        const base={x:IN(c.x-bw/2),y:IN(c.y-bh/2),w:safeIn(bw),h:safeIn(bh),fill,line};
+        if(Math.abs(rot)>0.5)base.rotate=ROT(rot);
+        const rx=num(ga(el,'rx'),0)*sx;
+        if(rx>0.5)slide.addShape('roundRect',{...base,rectRadius:Math.min(IN(rx),safeIn(Math.min(bw,bh))/2)});
+        else slide.addShape('rect',base);
       }
       else if(tag==='line'){
-        if(!strokeHex||sw===0)return;
-        const x1=+ga(el,'x1')||0,y1=+ga(el,'y1')||0,x2=+ga(el,'x2')||0,y2=+ga(el,'y2')||0;
-        const dx=x2-x1,dy=y2-y1;
+        const line=lineOf(el,st,sx);if(line.type==='none')return;
+        const p1=P(m,num(ga(el,'x1'),0),num(ga(el,'y1'),0));
+        const p2=P(m,num(ga(el,'x2'),0),num(ga(el,'y2'),0));
+        const dx=p2.x-p1.x,dy=p2.y-p1.y;
         if(Math.abs(dx)<0.1&&Math.abs(dy)<0.1)return;
-        const lw=Math.max(sw,1);
-        // Líneas verticales/horizontales → rectángulo delgado (evita w=0 inválido en OOXML)
-        if(Math.abs(dx)<=1){
-          // vertical
-          slide.addShape('rect',{
-            x:safeIn(x1-lw/2),y:safeIn(Math.min(y1,y2)),
-            w:safeIn(lw),h:safeIn(Math.abs(dy)),
-            fill:{color:strokeHex},line:{type:'none'},
-          });
-        } else if(Math.abs(dy)<=1){
-          // horizontal
-          slide.addShape('rect',{
-            x:safeIn(Math.min(x1,x2)),y:safeIn(y1-lw/2),
-            w:safeIn(Math.abs(dx)),h:safeIn(lw),
-            fill:{color:strokeHex},line:{type:'none'},
-          });
-        } else {
-          // diagonal → shape line con dimensiones positivas
-          slide.addShape('line',{
-            x:safeIn(Math.min(x1,x2)),y:safeIn(Math.min(y1,y2)),
-            w:safeIn(Math.abs(dx)),h:safeIn(Math.abs(dy)),
-            line:{color:strokeHex,width:Math.max(0.25,sw*0.75),dashType:isDash?'lgDash':'solid'},
-          });
+        const lw=Math.max(num(st.strokeWidth,1)*sx,0.75);
+        const solid=dashOf(st)==='solid';
+        // Vertical/horizontal sólida → rectángulo delgado (más nítido y evita w=0 en OOXML)
+        if(solid&&Math.abs(dx)<=0.6){
+          slide.addShape('rect',{x:IN(p1.x-lw/2),y:IN(Math.min(p1.y,p2.y)),w:safeIn(lw),h:safeIn(Math.abs(dy)),
+            fill:{color:line.color,...(line.transparency?{transparency:line.transparency}:{})},line:{type:'none'}});
+        }else if(solid&&Math.abs(dy)<=0.6){
+          slide.addShape('rect',{x:IN(Math.min(p1.x,p2.x)),y:IN(p1.y-lw/2),w:safeIn(Math.abs(dx)),h:safeIn(lw),
+            fill:{color:line.color,...(line.transparency?{transparency:line.transparency}:{})},line:{type:'none'}});
+        }else{
+          // Conector: caja positiva + flipH/flipV para conservar la dirección
+          const o={x:IN(Math.min(p1.x,p2.x)),y:IN(Math.min(p1.y,p2.y)),
+            w:safeIn(Math.abs(dx)),h:safeIn(Math.abs(dy)),line};
+          if(dx<0)o.flipH=true;
+          if(dy<0)o.flipV=true;
+          slide.addShape('line',o);
         }
       }
-      else if(tag==='polygon'){
-        if(!fillHex)return;
-        const pts=(ga(el,'points')||'').trim().split(/\s+/)
-          .map(p=>p.split(',').map(Number)).filter(p=>p.length===2&&!isNaN(p[0]));
-        if(pts.length<3)return;
-        const xs=pts.map(c=>c[0]),ys=pts.map(c=>c[1]);
-        const mx=Math.min(...xs),my=Math.min(...ys),mxW=Math.max(...xs),myH=Math.max(...ys);
-        slide.addShape('diamond',{
-          x:safeIn(mx),y:safeIn(my),w:safeIn(mxW-mx),h:safeIn(myH-my),
-          fill:{color:fillHex},line:{type:'none'},
-        });
+      else if(tag==='polygon'||tag==='polyline'){
+        const pts=(ga(el,'points')||'').trim().split(/[\s,]+/).map(Number);
+        const arr=[];for(let i=0;i+1<pts.length;i+=2)if(!isNaN(pts[i])&&!isNaN(pts[i+1]))arr.push([pts[i],pts[i+1]]);
+        if(arr.length<2)return;
+        addPoly(el,st,arr,tag==='polygon',m);
+      }
+      else if(tag==='path'){
+        const d=ga(el,'d');if(!d)return;
+        let len=0;try{len=el.getTotalLength();}catch(e){}
+        if(!(len>0))return;
+        const n=Math.max(2,Math.min(160,Math.round(len/3)));
+        const arr=[];
+        for(let i=0;i<=n;i++){const p=el.getPointAtLength(len*i/n);arr.push([p.x,p.y]);}
+        addPoly(el,st,arr,/[zZ]\s*$/.test(d.trim()),m);
+      }
+      else if(tag==='circle'||tag==='ellipse'){
+        const cx=num(ga(el,'cx'),0),cy=num(ga(el,'cy'),0);
+        const r=num(ga(el,'r'),0);
+        const rx=tag==='circle'?r:num(ga(el,'rx'),0),ry=tag==='circle'?r:num(ga(el,'ry'),0);
+        if(rx<=0||ry<=0)return;
+        const fill=fillOf(el,st),line=lineOf(el,st,sx);
+        if(fill.type==='none'&&line.type==='none')return;
+        const c=P(m,cx,cy),bw=rx*2*sx,bh=ry*2*sy;
+        const o={x:IN(c.x-bw/2),y:IN(c.y-bh/2),w:safeIn(bw),h:safeIn(bh),fill,line};
+        if(Math.abs(rot)>0.5)o.rotate=ROT(rot);
+        slide.addShape('ellipse',o);
+      }
+      else if(tag==='image'){
+        const href=el.getAttribute('href')||el.getAttribute('xlink:href')||'';
+        if(href.indexOf('data:')!==0)return;               // solo imágenes incrustadas
+        const x=num(ga(el,'x'),0),y=num(ga(el,'y'),0);
+        const w=num(ga(el,'width'),0),h=num(ga(el,'height'),0);
+        if(w<=0||h<=0)return;
+        const c=P(m,x+w/2,y+h/2),bw=w*sx,bh=h*sy;
+        const o={data:href,x:IN(c.x-bw/2),y:IN(c.y-bh/2),w:safeIn(bw),h:safeIn(bh)};
+        if(Math.abs(rot)>0.5)o.rotate=ROT(rot);
+        slide.addImage(o);
       }
       else if(tag==='text'){
-        const rawTxt=el.textContent.trim();if(!rawTxt)return;
-        let bbox;try{bbox=el.getBBox();}catch(e){return;}
-        if(!bbox||bbox.width<0.5)return;
-        const fsz=parseFloat(ga(el,'font-size')||12);
-        const fw=ga(el,'font-weight')||'normal';
-        const fst=ga(el,'font-style')||'normal';
-        const anchor=ga(el,'text-anchor')||'start';
-        const colorHex=toHex(ga(el,'fill'))||'333333';
-        const isBold=fw==='bold'||+fw>=700;
-        const isItalic=fst==='italic';
-        const isUnder=(ga(el,'text-decoration')||'').includes('underline');
-        const ptSz=Math.max(6,Math.round(fsz*0.75));
-        const align=anchor==='middle'?'center':anchor==='end'?'right':'left';
-        // Texto con tspans (multilínea) o texto simple
-        const tspans=[...el.querySelectorAll('tspan')];
-        const lines=tspans.length>0?tspans.map(t=>t.textContent.trim()).filter(Boolean):[rawTxt];
-        const runs=lines.map((l,i)=>({
-          text:l,
-          options:{fontSize:ptSz,bold:isBold,italic:isItalic,
-            underline:isUnder,color:colorHex,
-            breakLine:i<lines.length-1},
-        }));
-        slide.addText(runs,{
-          x:safeIn(bbox.x),y:safeIn(bbox.y),
-          w:safeIn(Math.max(bbox.width,fsz)),
-          h:safeIn(Math.max(bbox.height,fsz*1.3)),
-          align,fontFace:'Segoe UI',margin:0,
+        if(!(el.textContent||'').trim())return;
+        const fsz=num(st.fontSize,12);
+        const ff=(st.fontFamily||'').split(',')[0].replace(/["']/g,'').trim()||'Segoe UI';
+        const color=toHex(st.fill)||'333333';
+        const bold=st.fontWeight==='bold'||num(st.fontWeight,400)>=600;
+        const ital=st.fontStyle==='italic';
+        const deco=(st.textDecorationLine||st.textDecoration||'');
+        const ptSz=Math.max(5,+(fsz*sy*0.75).toFixed(1));
+        const alpha=num(st.fillOpacity,1)*alphaOf(st.fill)*gOpacity(el);
+        // Cada <tspan> es una línea propia: se coloca por su posición real,
+        // NO por el bbox del <text> (así PowerPoint no parte ni desplaza nada).
+        const tsp=[...el.querySelectorAll('tspan')];
+        (tsp.length?tsp:[el]).forEach(node=>{
+          const txt=(node.textContent||'').replace(/\s+/g,' ').trim();if(!txt)return;
+          let p0,tw;
+          try{p0=node.getStartPositionOfChar(0);tw=node.getComputedTextLength();}catch(e){return;}
+          if(!(tw>0))return;
+          // Centro del texto en el espacio local del <text>; y = línea base − ~0.32em
+          const c=P(m,p0.x+tw/2,p0.y-fsz*0.32);
+          // Caja holgada + wrap:false: las métricas de PowerPoint difieren de las del navegador
+          const bw=tw*sx*1.5+40,bh=Math.max(fsz*sy*2,14);
+          const o={x:IN(c.x-bw/2),y:IN(c.y-bh/2),w:safeIn(bw),h:safeIn(bh),
+            fontSize:ptSz,fontFace:ff,color,bold,italic:ital,
+            align:'center',valign:'middle',margin:0,wrap:false,fit:'none',
+            isTextBox:true,fill:{type:'none'},line:{type:'none'}};
+          if(deco.indexOf('underline')>=0)o.underline={style:'sng'};
+          if(alpha<0.99)o.transparency=TR(alpha);
+          if(Math.abs(rot)>0.5)o.rotate=ROT(rot);
+          slide.addText(txt,o);
         });
       }
     }catch(err){
@@ -8222,6 +8310,28 @@ async function exportPresPPTX(){
     }
   });
 
+  // ── Diapositiva 2: «copia fiel» (imagen de alta resolución del SVG) ──
+  try{
+    const png=await new Promise((res,rej)=>{
+      const cl=presExportSvg();if(!cl){rej();return;}
+      const im=new Image();
+      im.onload=()=>{
+        const sc=Math.min(3,9000/Math.max(W,H,1));
+        const cv=document.createElement('canvas');
+        cv.width=Math.round(W*sc);cv.height=Math.round(H*sc);
+        const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height);
+        cx.scale(sc,sc);cx.drawImage(im,0,0,W,H);
+        try{res(cv.toDataURL('image/png'));}catch(e){rej(e);}
+      };
+      im.onerror=rej;
+      im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(cl));
+    });
+    const s2=pptx.addSlide();
+    s2.background={fill:'FFFFFF'};
+    s2.addImage({data:png,x:0,y:0,w:safeIn(W),h:safeIn(H)});
+  }catch(e){console.warn('PPTX: no se pudo generar la copia fiel',e);}
+
+  if(opts&&opts.__b64)return await pptx.write({outputType:'base64'});
   await pptx.writeFile({fileName:'LineaDeTiempo.pptx'});
 }
 
