@@ -7137,12 +7137,12 @@ function _presSVG(all,S,TW,mn,mx,opts){
     if(above){
       const _spFree=_spBands.length&&_spPos==='top'&&mitoYOff>0; // hito subido a mano con las bandas arriba: puede llegar hasta encima de ellas
       let dY_raw=_spFree?(axisY0-60-_spBlock-mitoYOff):Math.max(ds+mfsz*2+12+(mitoLines.length-1)*mitoLineH,axisY0-60-_spBlock)-mitoYOff;
-      // El rombo nunca queda dentro de la banda: si cae sobre ella se acomoda en su borde superior o inferior (el más cercano)
-      // y el texto se pinta sobre la banda: bajo el rombo si está en el borde superior, sobre el rombo si está en el inferior
+      // El rombo nunca queda sobre la banda: si cae sobre ella, su punta inferior se apoya en el borde superior de la banda
+      // (rombo y texto arriba) o su punta superior en el borde inferior (rombo y texto abajo). El texto nunca queda dentro de la banda.
       let _edgeTop=false;
       if(_spFree){
         const _bT=titleH+2,_bB=_bT+_spBH;
-        if(dY_raw>_bT-ds&&dY_raw<_bB+ds){if(dY_raw-_bT<_bB-dY_raw){dY_raw=_bT;_edgeTop=true;}else dY_raw=_bB;}
+        if(dY_raw>_bT-ds&&dY_raw<_bB+ds){if(dY_raw<(_bT+_bB)/2)dY_raw=_bT-ds;else{dY_raw=_bB+ds;_edgeTop=true;}}
         const _lt=_edgeTop?dY_raw-ds-8:dY_raw-ds-(mitoLines.length-1)*mitoLineH-mfsz*2-8;if(_lt<0)_hitoTopX=Math.max(_hitoTopX,Math.ceil(-_lt));
       }
       // Si el diamante caería dentro o bajo la barra del eje, empujarlo completamente debajo
