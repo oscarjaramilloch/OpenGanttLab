@@ -11593,12 +11593,24 @@ function presDimValue(c,dA,dB){
   if(!mo)return ad+' día'+(ad===1?'':'s');
   return(y?y+' año'+(y===1?'':'s'):'')+(y&&r?', ':'')+(r?r+' mes'+(r===1?'':'es'):'');
 }
-// Punto medio del lado indicado de una caja ('l'/'r'/'t'/'b')
-function presConnSidePt(box,side){return side==='l'?[box.l,box.cy]:side==='r'?[box.r,box.cy]:side==='t'?[box.cx,box.t]:[box.cx,box.b];}
+// Punto en el lado indicado de una caja ('l'/'r'/'t'/'b'); pos va de -1 a 1 y desliza el punto a lo
+// largo del borde (-1 = extremo superior/izquierdo, 0 = centro, 1 = extremo inferior/derecho) — no
+// tiene por qué enganchar siempre al centro del lado.
+function presConnSidePt(box,side,pos){
+  const m=6,p=Math.max(-1,Math.min(1,pos||0));
+  if(side==='l'||side==='r'){const half=Math.max(0,box.b-box.t)/2-m,y=box.cy+p*half;return[side==='l'?box.l:box.r,y];}
+  const half=Math.max(0,box.r-box.l)/2-m,x=box.cx+p*half;return[x,side==='t'?box.t:box.b];
+}
 // Lado más cercano a un punto (para elegir a mano dónde engancha la punta al soltarla)
 function presConnNearestSide(box,x,y){
   const dl=Math.abs(x-box.l),dr=Math.abs(x-box.r),dt=Math.abs(y-box.t),db=Math.abs(y-box.b),m=Math.min(dl,dr,dt,db);
   return m===dl?'l':m===dr?'r':m===dt?'t':'b';
+}
+// Posición a lo largo de ese lado (-1..1) que corresponde al punto soltado — así la punta no queda
+// siempre en el centro del borde, sino justo donde el usuario la dejó.
+function presConnSidePos(box,side,x,y){
+  if(side==='l'||side==='r'){const half=Math.max(1,(box.b-box.t)/2-6);return Math.max(-1,Math.min(1,(y-box.cy)/half));}
+  const half=Math.max(1,(box.r-box.l)/2-6);return Math.max(-1,Math.min(1,(x-box.cx)/half));
 }
 function presConnPath(A,B,type,c){
   const hx=B.cx>=A.cx,vy=B.cy>=A.cy;
@@ -11616,7 +11628,7 @@ function presConnPath(A,B,type,c){
     if(!sideA)sideA=vert?(vy?'b':'t'):(hx?'r':'l');
     if(!sideB)sideB=vert?(vy?'t':'b'):(hx?'l':'r');
   }
-  const pA=presConnSidePt(A,sideA),pB=presConnSidePt(B,sideB);
+  const pA=presConnSidePt(A,sideA,c&&c.aPos),pB=presConnSidePt(B,sideB,c&&c.bPos);
   const horizA=sideA==='l'||sideA==='r',horizB=sideB==='l'||sideB==='r';
   const tag=r=>{r.sideA=sideA;r.sideB=sideB;return r;};
   if(type==='straight')return tag([pA,pB]);
@@ -11875,8 +11887,9 @@ function presConnDelete(id){
       if(key&&key!==otherKey){
         d.c[d.end]=key;
         try{const el=_conEl(document.querySelector('#presBody svg')||d.svg,key),box=el.getBBox();
-          const side=presConnNearestSide({l:box.x,r:box.x+box.width,t:box.y,b:box.y+box.height,cx:box.x+box.width/2,cy:box.y+box.height/2},d.x,d.y);
-          d.c[d.end+'Side']=side;
+          const bx2={l:box.x,r:box.x+box.width,t:box.y,b:box.y+box.height,cx:box.x+box.width/2,cy:box.y+box.height/2};
+          const side=presConnNearestSide(bx2,d.x,d.y);
+          d.c[d.end+'Side']=side;d.c[d.end+'Pos']=presConnSidePos(bx2,side,d.x,d.y);
         }catch(e2){}
       }
     }
