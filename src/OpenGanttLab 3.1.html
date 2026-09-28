@@ -1638,6 +1638,10 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.2-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.4-4-8-10-8Z"/></svg>
             Reset Diagrama
           </button>
+          <button type="button" class="filtro-menu-item" id="btnPresSort" onclick="presToggleSortMenu(event)" title="Ordenar filas: cronológico (de siempre) o por una columna personalizada del Excel/XML, convirtiendo su texto a número">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h13"/><path d="M3 12h9"/><path d="M3 18h5"/><path d="m17 18 4-4"/><path d="m17 18-4-4"/><path d="M17 18V6"/></svg>
+            Ordenar por columna…
+          </button>
           <button type="button" class="filtro-menu-item" id="btnPresFmt" onclick="presFmtToggle();closeAllDropMenus()" aria-pressed="false" title="Copiar formato: tome el formato de una barra, un hito o un año (o del elemento seleccionado) y aplíquelo con un clic a otros del mismo tipo">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="13" height="6" rx="1.5"/><path d="M16 6h3v5H12v3"/><rect x="10" y="14" width="4" height="7" rx="1"/></svg>
             Copiar formato
@@ -5314,6 +5318,7 @@ function _snapshotData(shared){
     presShowOnlyCrit:(document.getElementById('presShowOnlyCrit')||{checked:false}).checked,
     presCritW:(document.getElementById('presCritW')||{value:2.5}).value,
     presFilterEsc:(document.getElementById('presFilterEsc')||{value:''}).value,
+    presSortField:PRES_SORT_FIELD,
     presMainTitleOn:(document.getElementById('presMainTitleOn')||{checked:true}).checked,
     presMainTitleInp:(document.getElementById('presMainTitleInp')||{value:''}).value,
     presMainTitleSize:(document.getElementById('presMainTitleSize')||{value:16}).value,
@@ -5572,6 +5577,7 @@ function _applyEmbeddedData(d){
   _setVal('presCritW',d.presCritW);
   {const wrap=document.getElementById('presRutaCriticaMenuWrap');if(wrap)wrap.style.display=d.presShowOnlyCrit?'inline-block':'none';}
   _setVal('presFilterEsc',d.presFilterEsc);
+  PRES_SORT_FIELD=d.presSortField||null;
   _setChk('presMainTitleOn',d.presMainTitleOn);
   _setVal('presMainTitleInp',d.presMainTitleInp);
   _setVal('presMainTitleSize',d.presMainTitleSize);
@@ -6344,6 +6350,46 @@ let PRES_LB_YEAR_COLORS={};
 let PRES_LB_YEAR_TEXT_COLORS={};
 let PRES_LEGEND_POS={x:null,y:null}; // posición manual arrastrada de la leyenda (null=posición automática)
 let PRES_ZOOM=1; // zoom de render de la Línea de Tiempo (tipo Excel), 0.25–4
+// Orden de las filas en la LdT por una columna personalizada (mapeo con números como texto, p. ej. un
+// código o una prioridad importada del Excel/XML) en vez del orden cronológico de siempre. Afecta solo
+// a qué fila ocupa cada barra cuando varias se superponen en el tiempo; la posición horizontal sigue
+// siendo la fecha real. null = orden cronológico (comportamiento de siempre).
+let PRES_SORT_FIELD=null;
+function presSortKey(t){
+  if(!PRES_SORT_FIELD)return+t.iLB;
+  const raw=String((t.extra&&t.extra[PRES_SORT_FIELD])||'').trim();
+  if(!raw)return Infinity; // sin valor: al final
+  const n=parseFloat(raw.replace(',','.').replace(/[^\d.\-]/g,''));
+  return isNaN(n)?Infinity:n;
+}
+function presSortFieldLabel(){
+  if(!PRES_SORT_FIELD)return'Cronológico';
+  const d=(typeof PXML_CUSTOM!=='undefined'?PXML_CUSTOM:[]).find(c=>c.key===PRES_SORT_FIELD);
+  return d?d.label||d.key:PRES_SORT_FIELD;
+}
+function presSetSortField(key){
+  _presSnap();PRES_SORT_FIELD=key||null;closeAllDropMenus();renderPres();
+}
+function presToggleSortMenu(e){
+  e&&e.stopPropagation();
+  let m=document.getElementById('presSortMenuPanel');
+  if(m&&m.style.display!=='none'){m.style.display='none';return;}
+  if(!m){m=document.createElement('div');m.id='presSortMenuPanel';m.className='rb-menu-panel';document.body.appendChild(m);}
+  const cols=(typeof PXML_CUSTOM!=='undefined'?PXML_CUSTOM:[]);
+  let s='<button type="button" class="filtro-menu-item'+(!PRES_SORT_FIELD?' active':'')+'" onclick="presSetSortField(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Cronológico</button>';
+  if(cols.length){
+    s+='<div style="border-top:1px solid var(--grid);margin:4px 0"></div><div style="padding:4px 12px;font-size:9.5px;color:var(--muted);font-weight:600">Columna personalizada (texto convertido a número)</div>';
+    cols.forEach(c=>{s+='<button type="button" class="filtro-menu-item'+(PRES_SORT_FIELD===c.key?' active':'')+'" onclick="presSetSortField(\''+c.key.replace(/'/g,"\\'")+'\')" title="Ordena las filas de la LdT por esta columna en vez de por fecha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h13"/><path d="M3 12h9"/><path d="M3 18h5"/><path d="m17 18 4-4"/><path d="m17 18-4-4"/><path d="M17 18V6"/></svg>'+esc(c.label||c.key)+'</button>';});
+  }else{
+    s+='<div style="padding:6px 12px;font-size:10px;color:var(--muted);max-width:220px;line-height:1.4">No hay columnas personalizadas importadas del Excel/XML. Se importan automáticamente si el archivo trae columnas adicionales.</div>';
+  }
+  m.innerHTML=s;
+  m.style.cssText='position:fixed;z-index:100005;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:4px;min-width:220px;display:block';
+  const r=e.currentTarget.getBoundingClientRect();
+  m.style.top=Math.min(r.bottom+4,innerHeight-8-m.offsetHeight)+'px';
+  m.style.left=Math.min(r.left,innerWidth-8-m.offsetWidth)+'px';
+  document.addEventListener('click',function h2(ev){if(!m.contains(ev.target)&&ev.target!==e.currentTarget){m.style.display='none';document.removeEventListener('click',h2);}},{capture:true});
+}
 let PRES_AUTO_FIT=false; // por defecto la LdT abre a 100% (no auto-ajustada); true solo si el usuario pulsa "Ajustar"
 let PRES_LEGEND_SIZE={w:null,h:null}; // tamaño manual de la leyenda (null=automático)
 let _presYearKey=null;
@@ -6459,9 +6505,9 @@ function openPresentation(){
 function _presLayers(tasks, applyOffsets=true){
   // ── Paso 1: first-fit agrupado por Cat2 (posiciones naturales) ──
   const c2earliest={};
-  tasks.forEach(t=>{if(!c2earliest[t.c2]||+t.iLB<c2earliest[t.c2])c2earliest[t.c2]=+t.iLB;});
+  tasks.forEach(t=>{const k=presSortKey(t);if(!(t.c2 in c2earliest)||k<c2earliest[t.c2])c2earliest[t.c2]=k;});
   const c2order=[...new Set(
-    [...tasks].sort((a,b)=>(c2earliest[a.c2]||0)-(c2earliest[b.c2]||0)).map(t=>t.c2)
+    [...tasks].sort((a,b)=>(c2earliest[a.c2]??Infinity)-(c2earliest[b.c2]??Infinity)).map(t=>t.c2)
   )];
   const result=[];
   let baseLayer=0;
@@ -6470,7 +6516,7 @@ function _presLayers(tasks, applyOffsets=true){
   const byC2=new Map();
   tasks.forEach(t=>{const arr=byC2.get(t.c2);if(arr)arr.push(t);else byC2.set(t.c2,[t]);});
   c2order.forEach(c2=>{
-    const group=(byC2.get(c2)||[]).sort((a,b)=>+a.iLB - +b.iLB);
+    const group=(byC2.get(c2)||[]).sort((a,b)=>presSortKey(a)-presSortKey(b));
     const ends=[];
     group.forEach(t=>{
       const s=Math.min(+t.iLB,+t.iRP), e=Math.max(+t.fLB,+t.fRP);
@@ -6504,8 +6550,8 @@ function _presLayers(tasks, applyOffsets=true){
   //   1. Colisión temporal con otra barra ya colocada en esa fila.
   //   2. La fila ya tiene barras de un grupo Cat2 distinto (preserva separación visual).
   // Las barras fijadas por el usuario se respetan sin importar el grupo Cat2.
-  const pinned=result.filter(isPinned).sort((a,b)=>a.ly-b.ly||+a.t.iLB - +b.t.iLB);
-  const free=result.filter(i=>!isPinned(i)).sort((a,b)=>a.ly-b.ly||+a.t.iLB - +b.t.iLB);
+  const pinned=result.filter(isPinned).sort((a,b)=>a.ly-b.ly||presSortKey(a.t)-presSortKey(b.t));
+  const free=result.filter(i=>!isPinned(i)).sort((a,b)=>a.ly-b.ly||presSortKey(a.t)-presSortKey(b.t));
 
   const occ={};       // layer → [{s,e}]
   const layerC2={};   // layer → Set de c2 presentes
