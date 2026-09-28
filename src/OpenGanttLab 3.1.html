@@ -11512,14 +11512,14 @@ function presFmtUI(){
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&_fmtMode)presFmtToggle();});
 })();
 /* ═══ CONECTORES: líneas entre dos barras/hitos visibles de la LdT ═══ */
-let _conMode=false,_conType='z',_conFrom=null,_conSel=null,_conMenuId=null,_conPending=null;
+let _conMode=false,_conType='z',_conFrom=null,_conSel=null,_conMenuId=null,_conPending=null,_conEndDrag=null;
 const CON_TYPES=[
   ['straight','Recta','<path d="M5 5l14 14"/><path d="M13 19h6v-6"/>'],
   ['z','Escuadra (horizontal-vertical-horizontal)','<path d="M4 6h8v12h8"/><path d="m17 15 3 3-3 3"/>'],
   ['l1','L (horizontal y luego vertical)','<path d="M4 6h14v13"/><path d="m15 16 3 3 3-3"/>'],
   ['l2','L (vertical y luego horizontal)','<path d="M6 4v14h13"/><path d="m16 15 3 3-3 3"/>'],
   ['dim','Medida de tiempo: flecha doble con la diferencia entre dos fechas','<path d="M3 12h18"/><path d="m7 8-4 4 4 4"/><path d="m17 8 4 4-4 4"/><path d="M3 6v12M21 6v12" stroke-dasharray="2 2"/>']];
-function presConnToggle(){_conMode=!_conMode;_conFrom=null;presConnUI();}
+function presConnToggle(){_conMode=!_conMode;_conFrom=null;presConnUI();renderPres();}
 function presConnUI(){
   const _eb=document.getElementById('btnPresEdicionMenu');if(_eb)_eb.classList.toggle('mode-on',!!(_fmtMode||_conMode||_impMode));
   const b=document.getElementById('btnPresConn');if(b){b.classList.toggle('active',_conMode);b.setAttribute('aria-pressed',_conMode?'true':'false');}
@@ -11549,6 +11549,8 @@ function presConnMark(){
   if(!_conMode||!_conFrom)return;
   const el=_conEl(document.getElementById('presBody'),_conFrom);if(el){el.setAttribute('data-con-from','1');el.style.filter='drop-shadow(0 0 3px #2563eb) drop-shadow(0 0 3px #2563eb)';}
 }
+const CON_HIT_SEL='[data-pres-bar],[data-pres-mito],[data-pres-evento],[data-pshape]';
+function _conKeyOf(el){return el&&(el.dataset.presBar||el.dataset.presMito||el.dataset.presEvento||el.dataset.pshape);}
 function _conEl(root,key){return root.querySelector('[data-pres-bar="'+CSS.escape(key)+'"],[data-pres-mito="'+CSS.escape(key)+'"],[data-pres-evento="'+CSS.escape(key)+'"],[data-pshape="'+CSS.escape(key)+'"]');}
 // Medida de tiempo (type 'dim'): flecha doble entre dos fechas + texto con la diferencia
 function presDimDates(c){
@@ -11629,7 +11631,9 @@ function presDrawConnectors(){
         if(!c.temp&&(pre||val)){const tw=Math.max(30,(pre.length+val.length+1)*fs*0.56);out+='<rect x="'+(tx0-tw/2)+'" y="'+(ty0-fs-1)+'" width="'+tw+'" height="'+(fs+6)+'" fill="transparent" data-con-id="'+c.id+'" data-con-tdrag="1" style="cursor:ns-resize"><title>Arrastre para subir o bajar la medida (el texto la acompaña) · doble clic o clic derecho: editar</title></rect>';}
         return;
       }
-      const pts=presConnPath(bx(ba),bx(bb),c.type||'z',c);
+      let _A=bx(ba),_B=bx(bb);
+      if(_conEndDrag&&_conEndDrag.c.id===c.id){const fp={l:_conEndDrag.x,r:_conEndDrag.x,t:_conEndDrag.y,b:_conEndDrag.y,cx:_conEndDrag.x,cy:_conEndDrag.y};if(_conEndDrag.end==='a')_A=fp;else _B=fp;}
+      const pts=presConnPath(_A,_B,c.type||'z',c);
       const d='M'+pts.map(p=>p[0]+' '+p[1]).join(' L'),col=c.color||'#1f6f8b',w=c.w||1.5,sel=c.id===_conSel;
       let arrow='';
       if(c.arrow!==false){const p=pts[pts.length-1],q=pts[pts.length-2],a=Math.atan2(p[1]-q[1],p[0]-q[0]),L=8+w,W=4+w*.6;
@@ -11646,6 +11650,12 @@ function presDrawConnectors(){
           out+='<rect x="'+x0+'" y="'+(vy2-6)+'" width="'+Math.max(6,x1-x0)+'" height="12" fill="transparent" data-con-id="'+c.id+'" data-con-midh="1" style="cursor:ns-resize"><title>Arrastre para mover el tramo central · doble clic o clic derecho: editar</title></rect>';
         }
       }
+      if(!c.temp&&sel&&!_conMode&&!(_conEndDrag&&_conEndDrag.c.id===c.id)){
+        // Se dibujan después del asa del tramo central para quedar siempre encima si coinciden en pantalla
+        const p0=pts[0],p1=pts[pts.length-1];
+        out+='<circle cx="'+p0[0]+'" cy="'+p0[1]+'" r="6" fill="#fff" stroke="#0984e3" stroke-width="2" data-con-id="'+c.id+'" data-con-end="a" style="cursor:crosshair"><title>Arrastre para enganchar el inicio a otra tarea, hito o forma</title></circle>';
+        out+='<circle cx="'+p1[0]+'" cy="'+p1[1]+'" r="6" fill="#fff" stroke="#0984e3" stroke-width="2" data-con-id="'+c.id+'" data-con-end="b" style="cursor:crosshair"><title>Arrastre para enganchar el final a otra tarea, hito o forma</title></circle>';
+      }
       if(c.label){
         // píldora en el punto medio del recorrido
         let tot=0;const seg=[];for(let i=1;i<pts.length;i++){const l=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);seg.push(l);tot+=l;}
@@ -11657,6 +11667,7 @@ function presDrawConnectors(){
     });
     if(svg.dataset.dimY0!==undefined||svg.dataset.baseH)presFitSvgToDims(svg,_minY,_maxY);
     if(out)svg.insertAdjacentHTML('beforeend','<g class="presConG">'+out+'</g>');
+    if(_conEndDrag&&_conEndDrag.hoverKey){const el=_conEl(svg,_conEndDrag.hoverKey);if(el)el.style.filter='drop-shadow(0 0 3px #0984e3) drop-shadow(0 0 3px #0984e3)';}
   });
 }
 function presConnMenu(id,x,y){
@@ -11721,6 +11732,33 @@ function presConnDelete(id){
     _conFrom=null;_conSel=id;presConnUI();renderPres();
   },true);
   let _dimDrag=null,_lastCd=null;
+  pb.addEventListener('mousedown',e=>{
+    if(_conMode||e.button)return;const t=e.target.closest&&e.target.closest('[data-con-end]');if(!t)return;
+    const c=PRES_CONNECTORS.find(k=>k.id===t.dataset.conId);if(!c)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    _presSnap();const svg=t.closest('svg'),pt=_pdSvgPt(svg,e.clientX,e.clientY);
+    _conEndDrag={c,end:t.dataset.conEnd,svg,x:pt.x,y:pt.y,moved:false};
+  },true);
+  document.addEventListener('mousemove',e=>{
+    if(!_conEndDrag)return;
+    const pt=_pdSvgPt(_conEndDrag.svg,e.clientX,e.clientY);_conEndDrag.x=pt.x;_conEndDrag.y=pt.y;_conEndDrag.moved=true;
+    // El elemento bajo el cursor cambia de tamaño en cada repintado: se guarda su clave y se resalta
+    // dentro de presDrawConnectors (que corre en cada render), no aquí — si no, el atributo se pierde
+    // en el siguiente renderPres() porque reconstruye todo el HTML del cuerpo.
+    const under=document.elementFromPoint(e.clientX,e.clientY),el=under&&under.closest&&under.closest(CON_HIT_SEL);
+    _conEndDrag.hoverKey=_conKeyOf(el)||null;
+    if(_conEndDrag.raf)return;_conEndDrag.raf=requestAnimationFrame(()=>{if(_conEndDrag){_conEndDrag.raf=0;renderPres();}});
+  });
+  document.addEventListener('mouseup',e=>{
+    if(!_conEndDrag)return;
+    const d=_conEndDrag;_conEndDrag=null;
+    if(d.moved){
+      const under=document.elementFromPoint(e.clientX,e.clientY),el=under&&under.closest&&under.closest(CON_HIT_SEL),key=_conKeyOf(el);
+      const otherKey=d.end==='a'?d.c.b:d.c.a;
+      if(key&&key!==otherKey)d.c[d.end]=key;
+    }
+    renderPres();
+  });
   // Doble clic propio: el primer clic repinta la LdT y el navegador pierde el 'dblclick' nativo
   pb.addEventListener('mousedown',e=>{
     if(_conMode||e.button)return;const t=e.target.closest&&e.target.closest('[data-con-id]');if(!t)return;
