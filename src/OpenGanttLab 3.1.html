@@ -11559,6 +11559,20 @@ function presConnMark(){
   const el=_conEl(document.getElementById('presBody'),_conFrom);if(el){el.setAttribute('data-con-from','1');el.style.filter='drop-shadow(0 0 3px #2563eb) drop-shadow(0 0 3px #2563eb)';}
 }
 const CON_HIT_SEL='[data-pres-bar],[data-pres-mito],[data-pres-evento],[data-pshape]';
+// Detecta el elemento enganchable bajo el punto por su rectángulo (con un margen de tolerancia),
+// no por el píxel exacto pintado ahí: cerca de un borde, elementFromPoint puede fallar por unos
+// pocos px (por ejemplo, sobre las esquinas redondeadas de una forma) y frustra el enganche.
+function _conHitTest(clientX,clientY){
+  const pad=6;let best=null,bestArea=Infinity;
+  document.querySelectorAll('#presBody '+CON_HIT_SEL).forEach(el=>{
+    if(el.offsetParent===null&&!el.closest('svg'))return;
+    const r=el.getBoundingClientRect();if(!r.width&&!r.height)return;
+    if(clientX>=r.left-pad&&clientX<=r.right+pad&&clientY>=r.top-pad&&clientY<=r.bottom+pad){
+      const area=r.width*r.height;if(area<bestArea){bestArea=area;best=el;}
+    }
+  });
+  return best;
+}
 function _conKeyOf(el){return el&&(el.dataset.presBar||el.dataset.presMito||el.dataset.presEvento||el.dataset.pshape);}
 function _conEl(root,key){return root.querySelector('[data-pres-bar="'+CSS.escape(key)+'"],[data-pres-mito="'+CSS.escape(key)+'"],[data-pres-evento="'+CSS.escape(key)+'"],[data-pshape="'+CSS.escape(key)+'"]');}
 // Medida de tiempo (type 'dim'): flecha doble entre dos fechas + texto con la diferencia
@@ -11579,16 +11593,36 @@ function presDimValue(c,dA,dB){
   if(!mo)return ad+' día'+(ad===1?'':'s');
   return(y?y+' año'+(y===1?'':'s'):'')+(y&&r?', ':'')+(r?r+' mes'+(r===1?'':'es'):'');
 }
+// Punto medio del lado indicado de una caja ('l'/'r'/'t'/'b')
+function presConnSidePt(box,side){return side==='l'?[box.l,box.cy]:side==='r'?[box.r,box.cy]:side==='t'?[box.cx,box.t]:[box.cx,box.b];}
+// Lado más cercano a un punto (para elegir a mano dónde engancha la punta al soltarla)
+function presConnNearestSide(box,x,y){
+  const dl=Math.abs(x-box.l),dr=Math.abs(x-box.r),dt=Math.abs(y-box.t),db=Math.abs(y-box.b),m=Math.min(dl,dr,dt,db);
+  return m===dl?'l':m===dr?'r':m===dt?'t':'b';
+}
 function presConnPath(A,B,type,c){
-  const hx=B.cx>=A.cx,vy=B.cy>=A.cy;let pts;
-  if(type==='l1')pts=[[hx?A.r:A.l,A.cy],[B.cx,A.cy],[B.cx,vy?B.t:B.b]];
-  else if(type==='l2')pts=[[A.cx,vy?A.b:A.t],[A.cx,B.cy],[hx?B.l:B.r,B.cy]];
+  const hx=B.cx>=A.cx,vy=B.cy>=A.cy;
+  // Lado de salida de A y de entrada a B: el elegido a mano (aSide/bSide, al soltar la punta sobre
+  // un borde concreto) manda; si no hay elección manual, se calcula automáticamente según el tipo.
+  let sideA=c&&c.aSide,sideB=c&&c.bSide;
+  if(type==='l1'){if(!sideA)sideA=hx?'r':'l';if(!sideB)sideB=vy?'t':'b';}
+  else if(type==='l2'){if(!sideA)sideA=vy?'b':'t';if(!sideB)sideB=hx?'l':'r';}
   else if(type==='straight'){
-    if(Math.abs(B.cx-A.cx)>=Math.abs(B.cy-A.cy))pts=[[hx?A.r:A.l,A.cy],[hx?B.l:B.r,B.cy]];else pts=[[A.cx,vy?A.b:A.t],[B.cx,vy?B.t:B.b]];
-  }else if(Math.abs(B.cy-A.cy)>Math.abs(B.cx-A.cx)*1.15){
-    const s=[A.cx,vy?A.b:A.t],e=[B.cx,vy?B.t:B.b],my=(s[1]+e[1])/2+((c&&c.midY)||0);pts=[s,[s[0],my],[e[0],my],e];
-  }else{const s=[hx?A.r:A.l,A.cy],e=[hx?B.l:B.r,B.cy],mx=(s[0]+e[0])/2+((c&&c.mid)||0);pts=[s,[mx,s[1]],[mx,e[1]],e];}
-  return pts;
+    const horiz=Math.abs(B.cx-A.cx)>=Math.abs(B.cy-A.cy);
+    if(!sideA)sideA=horiz?(hx?'r':'l'):(vy?'b':'t');
+    if(!sideB)sideB=horiz?(hx?'l':'r'):(vy?'t':'b');
+  }else{ // z (escuadra): mismo par de lados en A y B — horizontal u vertical, el que quede más natural
+    const vert=Math.abs(B.cy-A.cy)>Math.abs(B.cx-A.cx)*1.15;
+    if(!sideA)sideA=vert?(vy?'b':'t'):(hx?'r':'l');
+    if(!sideB)sideB=vert?(vy?'t':'b'):(hx?'l':'r');
+  }
+  const pA=presConnSidePt(A,sideA),pB=presConnSidePt(B,sideB);
+  const horizA=sideA==='l'||sideA==='r',horizB=sideB==='l'||sideB==='r';
+  if(type==='straight')return[pA,pB];
+  if(horizA&&horizB){const mx=(pA[0]+pB[0])/2+((c&&c.mid)||0);return[pA,[mx,pA[1]],[mx,pB[1]],pB];}
+  if(!horizA&&!horizB){const my=(pA[1]+pB[1])/2+((c&&c.midY)||0);return[pA,[pA[0],my],[pB[0],my],pB];}
+  if(horizA&&!horizB)return[pA,[pB[0],pA[1]],pB];
+  return[pA,[pA[0],pB[1]],pB];
 }
 // Conector temporal de la herramienta Impacto: une A y B con los días de diferencia (fin de B menos fin de A)
 function presImpactConnector(){
@@ -11676,7 +11710,28 @@ function presDrawConnectors(){
     });
     if(svg.dataset.dimY0!==undefined||svg.dataset.baseH)presFitSvgToDims(svg,_minY,_maxY);
     if(out)svg.insertAdjacentHTML('beforeend','<g class="presConG">'+out+'</g>');
-    if(_conEndDrag&&_conEndDrag.hoverKey){const el=_conEl(svg,_conEndDrag.hoverKey);if(el)el.style.filter='drop-shadow(0 0 3px #0984e3) drop-shadow(0 0 3px #0984e3)';}
+    if(_conEndDrag){
+      // Anclas del elemento bajo el cursor (el que va a recibir la punta): resaltado + las 4 anclas,
+      // con la más cercana al cursor marcada. Y también las del OTRO extremo (el que no se mueve),
+      // para verlo igual mientras se arrastra.
+      const drawAnchors=(el,near)=>{
+        if(!el)return;
+        el.style.filter='drop-shadow(0 0 3px #0984e3) drop-shadow(0 0 3px #0984e3)';
+        try{
+          const bb2=el.getBBox(),box2={l:bb2.x,r:bb2.x+bb2.width,t:bb2.y,b:bb2.y+bb2.height,cx:bb2.x+bb2.width/2,cy:bb2.y+bb2.height/2};
+          const nr=near||presConnNearestSide(box2,box2.cx,box2.cy);
+          let dots='';
+          ['l','r','t','b'].forEach(sd=>{const p=presConnSidePt(box2,sd),on=sd===nr;dots+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(on?7:5)+'" fill="'+(on?'#0984e3':'#fff')+'" stroke="#0984e3" stroke-width="2" pointer-events="none"/>';});
+          svg.insertAdjacentHTML('beforeend','<g class="presConG">'+dots+'</g>');
+        }catch(e3){}
+      };
+      if(_conEndDrag.hoverKey){
+        const near=(()=>{try{const b=_conEl(svg,_conEndDrag.hoverKey).getBBox();return presConnNearestSide({l:b.x,r:b.x+b.width,t:b.y,b:b.y+b.height,cx:b.x+b.width/2,cy:b.y+b.height/2},_conEndDrag.x,_conEndDrag.y);}catch(e4){return null;}})();
+        drawAnchors(_conEl(svg,_conEndDrag.hoverKey),near);
+      }
+      const otherKey=_conEndDrag.end==='a'?_conEndDrag.c.b:_conEndDrag.c.a;
+      if(otherKey&&otherKey!==_conEndDrag.hoverKey)drawAnchors(_conEl(svg,otherKey),_conEndDrag.end==='a'?_conEndDrag.c.bSide:_conEndDrag.c.aSide);
+    }
   });
 }
 function presConnMenu(id,x,y){
@@ -11753,11 +11808,15 @@ function presConnDelete(id){
   },true);
   document.addEventListener('mousemove',e=>{
     if(!_conEndDrag)return;
-    const pt=_pdSvgPt(_conEndDrag.svg,e.clientX,e.clientY);_conEndDrag.x=pt.x;_conEndDrag.y=pt.y;_conEndDrag.moved=true;
+    // El <svg> se reconstruye por completo en cada repintado (para que la línea siga al cursor); la
+    // referencia guardada al iniciar el arrastre queda "huérfana" después del primer repintado, así
+    // que se busca el <svg> vigente en cada movimiento en vez de reutilizar la referencia inicial.
+    const _cs=document.querySelector('#presBody svg')||_conEndDrag.svg;_conEndDrag.svg=_cs;
+    const pt=_pdSvgPt(_cs,e.clientX,e.clientY);_conEndDrag.x=pt.x;_conEndDrag.y=pt.y;_conEndDrag.moved=true;
     // El elemento bajo el cursor cambia de tamaño en cada repintado: se guarda su clave y se resalta
     // dentro de presDrawConnectors (que corre en cada render), no aquí — si no, el atributo se pierde
     // en el siguiente renderPres() porque reconstruye todo el HTML del cuerpo.
-    const under=document.elementFromPoint(e.clientX,e.clientY),el=under&&under.closest&&under.closest(CON_HIT_SEL);
+    const el=_conHitTest(e.clientX,e.clientY);
     _conEndDrag.hoverKey=_conKeyOf(el)||null;
     if(_conEndDrag.raf)return;_conEndDrag.raf=requestAnimationFrame(()=>{if(_conEndDrag){_conEndDrag.raf=0;renderPres();}});
   });
@@ -11765,9 +11824,16 @@ function presConnDelete(id){
     if(!_conEndDrag)return;
     const d=_conEndDrag;_conEndDrag=null;
     if(d.moved){
-      const under=document.elementFromPoint(e.clientX,e.clientY),el=under&&under.closest&&under.closest(CON_HIT_SEL),key=_conKeyOf(el);
-      const otherKey=d.end==='a'?d.c.b:d.c.a;
-      if(key&&key!==otherKey)d.c[d.end]=key;
+      // Se usa el mismo elemento que estaba resaltado (hoverKey), no una detección aparte en este
+      // instante: así el enganche coincide siempre con lo que el usuario vio iluminado en pantalla.
+      const key=d.hoverKey,otherKey=d.end==='a'?d.c.b:d.c.a;
+      if(key&&key!==otherKey){
+        d.c[d.end]=key;
+        try{const el=_conEl(document.querySelector('#presBody svg')||d.svg,key),box=el.getBBox();
+          const side=presConnNearestSide({l:box.x,r:box.x+box.width,t:box.y,b:box.y+box.height,cx:box.x+box.width/2,cy:box.y+box.height/2},d.x,d.y);
+          d.c[d.end+'Side']=side;
+        }catch(e2){}
+      }
     }
     renderPres();
   });
