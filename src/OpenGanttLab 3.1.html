@@ -6503,6 +6503,20 @@ function openPresentation(){
   const _pb=document.getElementById('presBody');if(_pb){_pb.scrollTop=0;_pb.scrollLeft=0;}
 }
 function _presLayers(tasks, applyOffsets=true){
+  // Con una columna de orden activa: una fila por barra, en el orden pedido — sin agrupar por Cat2
+  // ni compactar varias tareas que no se solapan en una misma fila (eso solo tiene sentido para el
+  // orden cronológico, donde "fila" es solo un hueco libre; aquí la fila ES el orden).
+  if(PRES_SORT_FIELD){
+    const ordered=[...tasks].sort((a,b)=>presSortKey(a)-presSortKey(b)||tasks.indexOf(a)-tasks.indexOf(b));
+    const result=ordered.map((t,i)=>({t,ly:i,baseLy:i}));
+    if(!applyOffsets)return result;
+    result.forEach(item=>{
+      const k=pkOf(item.t),opt=PRES_OPTS[k];if(!opt)return;
+      if(opt.pinnedLayer!==undefined)item.ly=Math.max(0,opt.pinnedLayer);
+      else if(opt.layerOffset)item.ly=Math.max(0,item.baseLy+opt.layerOffset);
+    });
+    return result;
+  }
   // ── Paso 1: first-fit agrupado por Cat2 (posiciones naturales) ──
   const c2earliest={};
   tasks.forEach(t=>{const k=presSortKey(t);if(!(t.c2 in c2earliest)||k<c2earliest[t.c2])c2earliest[t.c2]=k;});
