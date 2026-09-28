@@ -2449,17 +2449,25 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <div id="presFilterScenChecks"></div>
     </div>
   </div>
-  <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex-shrink:0">
+  <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;position:relative;flex-shrink:0">
     <span style="font-size:10.5px;color:var(--muted);font-weight:600">Cat 1</span>
-    <select id="presFilterCat" onchange="presFilterPopulate()" class="rb-sel" style="flex:1;font-size:10.5px;max-width:none">
-      <option value="__ALL__">— Todas —</option>
-    </select>
+    <button id="presFilterCat1DropBtn" onclick="togglePresFilterCat1Drop(event)" class="rb-sel" style="flex:1;font-size:10.5px;text-align:left;display:flex;align-items:center;justify-content:space-between;cursor:pointer;max-width:none">
+      <span id="presFilterCat1DropLabel">— sin datos —</span>
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div id="presFilterCat1DropPanel" class="rb-menu-panel" data-menu-btn="presFilterCat1DropBtn" style="display:none;position:fixed;z-index:100010;background:var(--panel);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(11,34,57,.15);padding:4px 0;max-height:240px;overflow-y:auto">
+      <div id="presFilterCat1Checks"></div>
+    </div>
   </div>
-  <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;flex-shrink:0">
+  <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;position:relative;flex-shrink:0">
     <span style="font-size:10.5px;color:var(--muted);font-weight:600">Cat 2</span>
-    <select id="presFilterCat2" onchange="presFilterCat2Change()" class="rb-sel" style="flex:1;font-size:10.5px;max-width:none">
-      <option value="__ALL__">— Todas —</option>
-    </select>
+    <button id="presFilterCat2DropBtn" onclick="togglePresFilterCat2Drop(event)" class="rb-sel" style="flex:1;font-size:10.5px;text-align:left;display:flex;align-items:center;justify-content:space-between;cursor:pointer;max-width:none">
+      <span id="presFilterCat2DropLabel">— sin datos —</span>
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div id="presFilterCat2DropPanel" class="rb-menu-panel" data-menu-btn="presFilterCat2DropBtn" style="display:none;position:fixed;z-index:100010;background:var(--panel);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(11,34,57,.15);padding:4px 0;max-height:240px;overflow-y:auto">
+      <div id="presFilterCat2Checks"></div>
+    </div>
   </div>
   <div id="presFilterList" style="overflow-y:auto;flex:1;min-height:120px;padding:4px 0"></div>
   <div style="padding:6px 12px;border-top:1px solid var(--line);font-size:9px;color:var(--muted);flex-shrink:0" id="presFilterCount"></div>
@@ -7538,17 +7546,26 @@ function _pfBase(){
   const escF=(document.getElementById('presFilterEsc')||{value:''}).value;
   return TASKS.filter(t=>!escF||(t.escenario||'')===escF);
 }
-function _pfScenarios(){ // Cat 1 presentes en la LdT (respeta el filtro de Escenario del menú «Escenario»)
+function _pfScenarios(){ // valores de Escenario presentes en la LdT (campo Escenario real, no Categoría 1)
+  const present=[...new Set(_pfBase().map(t=>t.escenario||'').filter(Boolean))];
+  const esc=[...new Set(TASKS.map(t=>t.escenario).filter(Boolean))];
+  return esc.filter(s=>present.includes(s)).concat(present.filter(s=>!esc.includes(s)));
+}
+function _pfCat1List(){ // Categoría 1 presente en la LdT
   const present=new Set(_pfBase().map(t=>t.c1));
   return SCENARIOS.filter(s=>present.has(s)).concat([...present].filter(s=>!SCENARIOS.includes(s)));
+}
+function _pfCat2List(){ // Categoría 2 presente en la LdT
+  const present=[...new Set(_pfBase().map(t=>t.c2).filter(v=>v!=null&&v!==''))];
+  const all=[...new Set(TASKS.map(t=>t.c2).filter(v=>v!=null&&v!==''))];
+  return all.filter(v=>present.includes(v)).concat(present.filter(v=>!all.includes(v)));
 }
 function openPresFilter(e){
   const panel=document.getElementById('presFilterPanel');
   _presFilterSnapshot=new Set(PRES_HIDDEN_KEYS); // para "Cancelar"
-  const c1=document.getElementById('presFilterCat');
-  const prev=c1.value;
-  c1.innerHTML='<option value="__ALL__">— Todas —</option>'+_pfScenarios().map(c=>`<option value="${esc(c)}"${c===prev?' selected':''}>${esc(c)}</option>`).join('');
   presFilterBuildScen();
+  presFilterBuildCat1();
+  presFilterBuildCat2();
   presFilterPopulate();
   // Posicionar el panel bajo el elemento que se hizo clic (el botón real
   // #btnPresFilter está oculto/no usado — usarlo aquí daba un rect en 0,0,
@@ -7561,49 +7578,69 @@ function openPresFilter(e){
   e&&e.stopPropagation();
 }
 function togglePresFilterScenDrop(e){toggleDropMenu(e,'presFilterScenDropBtn','presFilterScenDropPanel','block');}
-function presFilterBuildScen(){
-  const box=document.getElementById('presFilterScenChecks'),lbl=document.getElementById('presFilterScenDropLabel');
+function togglePresFilterCat1Drop(e){toggleDropMenu(e,'presFilterCat1DropBtn','presFilterCat1DropPanel','block');}
+function togglePresFilterCat2Drop(e){toggleDropMenu(e,'presFilterCat2DropBtn','presFilterCat2DropPanel','block');}
+// Construye un desplegable de casillas (Escenarios/Cat 1/Cat 2, mismo patrón para los tres): una fila
+// por valor presente, con su color, marcada según si sus tareas están visibles, y "Todas"/"Ninguna"
+// ya cubiertas por los botones del encabezado del panel (afectan a todo, incluidas estas casillas).
+function _pfBuildGroup(opts){
+  const{boxId,lblId,values,colorOf,match,emptyTxt}=opts;
+  const box=document.getElementById(boxId),lbl=document.getElementById(lblId);
   if(!box)return;
   box.innerHTML='';
-  const base=_pfBase(),scs=_pfScenarios();
-  if(!scs.length){if(lbl)lbl.textContent='— sin datos —';return;}
+  const base=_pfBase();
+  if(!values.length){if(lbl)lbl.textContent=emptyTxt;return;}
   const shown=[];let allFull=true;
-  scs.forEach(s=>{
-    const ts=base.filter(t=>t.c1===s);
+  values.forEach(v=>{
+    const ts=base.filter(t=>match(t,v));
     const nVis=ts.filter(t=>!PRES_HIDDEN_KEYS.has(_pfKey(t))).length;
-    if(nVis>0)shown.push(s);
+    if(nVis>0)shown.push(v);
     if(nVis<ts.length)allFull=false;
     const row=document.createElement('div');
     row.style.cssText='display:flex;align-items:center;gap:6px;padding:4px 10px;cursor:pointer;user-select:none;white-space:nowrap';
     row.onmouseenter=()=>{row.style.background='var(--bg)';};
     row.onmouseleave=()=>{row.style.background='';};
     const cb=document.createElement('input');cb.type='checkbox';cb.style.accentColor='var(--accent)';cb.style.cursor='pointer';
-    cb.checked=ts.length>0&&nVis===ts.length;cb.indeterminate=nVis>0&&nVis<ts.length; // parcial: algunas tareas ocultas
+    cb.checked=ts.length>0&&nVis===ts.length;cb.indeterminate=nVis>0&&nVis<ts.length;
     const sw=document.createElement('span');
-    sw.style.cssText=`background:${SCEN_COLOR[s]||'#888'};width:12px;height:12px;border-radius:2px;flex-shrink:0;border:1px solid rgba(0,0,0,.15);display:inline-block`;
-    const nm=document.createElement('span');nm.textContent=s;nm.style.cssText='font-size:11px;color:var(--ink)';
-    cb.addEventListener('change',()=>presFilterScenToggle(s,cb.checked));
-    // stopPropagation: la fila se reconstruye al alternar y, ya desconectada, el clic parecería "fuera" y cerraría los paneles
-    row.addEventListener('click',e=>{if(e.target===cb)return;e.stopPropagation();cb.checked=!cb.checked;presFilterScenToggle(s,cb.checked);});
+    sw.style.cssText=`background:${colorOf(v)||'#888'};width:12px;height:12px;border-radius:2px;flex-shrink:0;border:1px solid rgba(0,0,0,.15);display:inline-block`;
+    const nm=document.createElement('span');nm.textContent=v;nm.style.cssText='font-size:11px;color:var(--ink)';
+    cb.addEventListener('change',()=>opts.toggle(v,cb.checked));
+    row.addEventListener('click',e2=>{if(e2.target===cb)return;e2.stopPropagation();cb.checked=!cb.checked;opts.toggle(v,cb.checked);});
     row.append(cb,sw,nm);box.appendChild(row);
   });
-  if(lbl){const txt=shown.join(', ');lbl.textContent=shown.length===0?'Ninguno':(allFull&&shown.length===scs.length)?'Todos':txt.slice(0,28)+(txt.length>28?'…':'');}
+  if(lbl){const txt=shown.join(', ');lbl.textContent=shown.length===0?'Ninguno':(allFull&&shown.length===values.length)?'Todas':txt.slice(0,28)+(txt.length>28?'…':'');}
 }
-function presFilterScenToggle(s,show){ // muestra/oculta todas las tareas de esa Cat 1
+function presFilterBuildScen(){
+  _pfBuildGroup({boxId:'presFilterScenChecks',lblId:'presFilterScenDropLabel',values:_pfScenarios(),
+    colorOf:v=>ESC_COLOR[v],match:(t,v)=>(t.escenario||'')===v,toggle:presFilterScenToggle,emptyTxt:'— sin datos —'});
+}
+function presFilterScenToggle(s,show){ // muestra/oculta todas las tareas de ese Escenario
   _presSnap();
-  _pfBase().filter(t=>t.c1===s).forEach(t=>{const k=_pfKey(t);if(show)PRES_HIDDEN_KEYS.delete(k);else PRES_HIDDEN_KEYS.add(k);});
+  _pfBase().filter(t=>(t.escenario||'')===s).forEach(t=>{const k=_pfKey(t);if(show)PRES_HIDDEN_KEYS.delete(k);else PRES_HIDDEN_KEYS.add(k);});
   presFilterBuildScen();presFilterPopulate();renderPres();
+}
+function presFilterBuildCat1(){
+  _pfBuildGroup({boxId:'presFilterCat1Checks',lblId:'presFilterCat1DropLabel',values:_pfCat1List(),
+    colorOf:v=>SCEN_COLOR[v],match:(t,v)=>t.c1===v,toggle:presFilterCat1Toggle,emptyTxt:'— sin datos —'});
+}
+function presFilterCat1Toggle(c1,show){
+  _presSnap();
+  _pfBase().filter(t=>t.c1===c1).forEach(t=>{const k=_pfKey(t);if(show)PRES_HIDDEN_KEYS.delete(k);else PRES_HIDDEN_KEYS.add(k);});
+  presFilterBuildCat1();presFilterBuildCat2();presFilterPopulate();renderPres();
+}
+function presFilterBuildCat2(){
+  _pfBuildGroup({boxId:'presFilterCat2Checks',lblId:'presFilterCat2DropLabel',values:_pfCat2List(),
+    colorOf:v=>CAT2_COLOR[v],match:(t,v)=>t.c2===v,toggle:presFilterCat2Toggle,emptyTxt:'— sin datos —'});
+}
+function presFilterCat2Toggle(c2,show){
+  _presSnap();
+  _pfBase().filter(t=>t.c2===c2).forEach(t=>{const k=_pfKey(t);if(show)PRES_HIDDEN_KEYS.delete(k);else PRES_HIDDEN_KEYS.add(k);});
+  presFilterBuildCat2();presFilterPopulate();renderPres();
 }
 function presFilterPopulate(){
   const base=_pfBase();
-  const cat=(document.getElementById('presFilterCat')||{value:'__ALL__'}).value;
-  // Cat 2 en cascada según la Cat 1 elegida (igual que en el Gantt)
-  const cat2El=document.getElementById('presFilterCat2');
-  const prev=cat2El.value;
-  const c2vals=[...new Set(base.filter(t=>cat==='__ALL__'||t.c1===cat).map(t=>t.c2))];
-  cat2El.innerHTML='<option value="__ALL__">— Todas —</option>'+c2vals.map(v=>`<option value="${esc(v)}"${v===prev?' selected':''}>${esc(v)}</option>`).join('');
-  const cat2=cat2El.value;
-  const tasks=base.filter(t=>(cat==='__ALL__'||t.c1===cat)&&(cat2==='__ALL__'||t.c2===cat2));
+  const tasks=base;
   const seen=new Set(),items=[];
   tasks.forEach(t=>{const k=_pfKey(t);if(!seen.has(k)){seen.add(k);items.push({k,t});}});
   // ordenar cronológicamente
@@ -7621,20 +7658,10 @@ function presFilterPopulate(){
   }).join('')||'<div style="padding:10px;color:var(--muted);font-size:11px">Sin resultados</div>';
   presFilterCount();
 }
-function presFilterCat2Change(){
-  const cat=document.getElementById('presFilterCat').value,cat2=document.getElementById('presFilterCat2').value;
-  // Al elegir una Cat 2 específica se muestran automáticamente todas sus tareas (igual que en el Gantt)
-  if(cat2!=='__ALL__'){
-    _presSnap();
-    _pfBase().filter(t=>(cat==='__ALL__'||t.c1===cat)&&t.c2===cat2).forEach(t=>PRES_HIDDEN_KEYS.delete(_pfKey(t)));
-    presFilterBuildScen();renderPres();
-  }
-  presFilterPopulate();
-}
 function presFilterToggle(cb){
   const k=cb.dataset.pfk;
   _presSnap();if(cb.checked) PRES_HIDDEN_KEYS.delete(k); else PRES_HIDDEN_KEYS.add(k);
-  presFilterBuildScen();presFilterCount();renderPres();
+  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterCount();renderPres();
 }
 function presFilterCheckAll(show){
   _presSnap(); // un solo punto de deshacer para todo el lote
@@ -7643,17 +7670,15 @@ function presFilterCheckAll(show){
     const k=cb.dataset.pfk;
     if(show) PRES_HIDDEN_KEYS.delete(k); else PRES_HIDDEN_KEYS.add(k);
   });
-  presFilterBuildScen();presFilterCount();renderPres();
+  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterCount();renderPres();
 }
 function presFilterReset(){
   _presSnap();PRES_HIDDEN_KEYS.clear();
-  document.getElementById('presFilterCat').value='__ALL__';
-  document.getElementById('presFilterCat2').value='__ALL__';
-  presFilterBuildScen();presFilterPopulate();
+  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterPopulate();
   renderPres();
 }
 function presFilterClose(){
-  ['presFilterPanel','presFilterScenDropPanel'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.display='none';});
+  ['presFilterPanel','presFilterScenDropPanel','presFilterCat1DropPanel','presFilterCat2DropPanel'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.display='none';});
 }
 function presFilterCancel(){ // descarta los cambios hechos desde que se abrió el panel
   if(_presFilterSnapshot){_presSnap();PRES_HIDDEN_KEYS=new Set(_presFilterSnapshot);renderPres();}
@@ -12160,7 +12185,7 @@ document.getElementById('gtbBorderSwatch').addEventListener('click',e=>{
 // Cerrar presFilterPanel y presTextBoxMenu al hacer clic fuera
 document.addEventListener('click',e=>{
   const p=document.getElementById('presFilterPanel');
-  if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('#btnPresFilter')&&!e.target.closest('#presFilterScenDropPanel'))
+  if(p&&p.style.display!=='none'&&!p.contains(e.target)&&!e.target.closest('#btnPresFilter')&&!e.target.closest('#presFilterScenDropPanel')&&!e.target.closest('#presFilterCat1DropPanel')&&!e.target.closest('#presFilterCat2DropPanel'))
     presFilterClose();
   const m=document.getElementById('presTextBoxMenu');
   if(m&&(m.style.display!=='none'||_ptbId)&&!m.contains(e.target)&&!e.target.closest('[data-ptb]')&&!(e.composedPath&&e.composedPath().some(n=>n.id==='colorPicker'))){
