@@ -853,7 +853,8 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <button class="tb-btn" id="btnSaveSessionGantt" data-tb="save" title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
       </button>
-      <button type="button" class="tb-btn icon" id="btnDupTabGantt" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
+      <button type="button" class="tb-btn icon" id="btnDupTabGantt" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa e independiente (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
+      <button type="button" class="tb-btn icon" id="btnDupTabLinkedGantt" onclick="duplicateTabLinked()" style="position:relative" title="Duplicar pestaña vinculada: abre una copia y la mantiene sincronizada — los cambios en cualquiera de las dos se reflejan en la otra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L12.5 19.5"/></svg><span class="sync-dot" title="" style="display:none;position:absolute;bottom:2px;right:2px;width:7px;height:7px;border-radius:50%;background:#16a34a;border:1.5px solid #fff"></span></button>
       <button class="tb-btn dirty-save-btn" id="btnSaveGantt" data-tb="share" title="Compartir" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
         <span class="tb-lbl">Compartir</span>
@@ -1148,7 +1149,8 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button class="rb-flat" id="btnSaveSession"title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
         </button>
-        <button type="button" class="rb-flat" id="btnDupTab" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
+        <button type="button" class="rb-flat" id="btnDupTab" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa e independiente (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
+        <button type="button" class="rb-flat" id="btnDupTabLinked" onclick="duplicateTabLinked()" style="position:relative" title="Duplicar pestaña vinculada: abre una copia y la mantiene sincronizada — los cambios en cualquiera de las dos se reflejan en la otra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L12.5 19.5"/></svg><span class="sync-dot" title="" style="display:none;position:absolute;bottom:2px;right:2px;width:7px;height:7px;border-radius:50%;background:#16a34a;border:1.5px solid #fff"></span></button>
         <button class="rb-flat dirty-save-btn" id="btnSave" title="Compartir" style="position:relative">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
           <span class="dirty-dot" title="Cambios sin compartir" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:#e8622c;border:1.5px solid #fff"></span>
@@ -1808,7 +1810,8 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <button class="tb-btn" id="btnSaveSessionPres" data-tb="save" title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
       </button>
-      <button type="button" class="tb-btn icon" id="btnDupTabPres" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
+      <button type="button" class="tb-btn icon" id="btnDupTabPres" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa e independiente (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
+      <button type="button" class="tb-btn icon" id="btnDupTabLinkedPres" onclick="duplicateTabLinked()" style="position:relative" title="Duplicar pestaña vinculada: abre una copia y la mantiene sincronizada — los cambios en cualquiera de las dos se reflejan en la otra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11.5 4.5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L12.5 19.5"/></svg><span class="sync-dot" title="" style="display:none;position:absolute;bottom:2px;right:2px;width:7px;height:7px;border-radius:50%;background:#16a34a;border:1.5px solid #fff"></span></button>
       <button class="tb-btn dirty-save-btn" id="btnSavePres" data-tb="share" title="Compartir" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
         <span class="tb-lbl">Compartir</span>
@@ -3913,6 +3916,7 @@ function closeDepIssues(){const m=document.getElementById('depIssuesModal');if(m
 let _tipRegistry={};let _tipSeq=0;
 function mkTip(html){const id='t'+(_tipSeq++);_tipRegistry[id]=html;return id;}
 function render(){
+  _syncSchedule();
   const wrap=document.getElementById('wrap');
   if(typeof syncLayerUI==='function')syncLayerUI();
   if(!TASKS.length)return;
@@ -5005,7 +5009,7 @@ function applyEditorChanges(silent){
   // Con la Tabla de Datos abierta el Gantt/LdT están ocultos: repintarlos en cada edición es
   // trabajo perdido (crítico con cientos de tareas). Se difiere hasta salir de la tabla.
   const ed=document.getElementById('editorModal');
-  if(ed&&ed.style.display==='flex')_editorRenderPending=true;
+  if(ed&&ed.style.display==='flex'){_editorRenderPending=true;_syncSchedule();}
   else{_editorRenderPending=false;buildScenarioChecks();render();}
   document.getElementById('status').textContent=`✓ Guardado automático — ${TASKS.length} actividades.`;_updateDatosStats();
   _edUpdateBtns();
@@ -5226,9 +5230,55 @@ function apRenderConfigUI(){
 // archivo sin volver a pedir selector cada 5 minutos. Nunca se asigna desde "Compartir": esa
 // copia queda bloqueada (AP_SHARED) y no debe recibir escrituras silenciosas posteriores.
 let _workFileHandle=null;
-function _buildShareBlob(shared){
-  closeAllDropMenus(); // que ningún popover (Capas, Más…) quede congelado abierto en el snapshot
-  const data={shared:!!shared,sessionName:AP_SESSION_NAME,tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||'',preds:t.preds||'',pscope:t.pscope||''})),
+// Sincronización en vivo entre pestañas "vinculadas": un archivo abierto con file:// no comparte
+// localStorage ni BroadcastChannel con las pestañas que abre (cada una queda en un origen/partición
+// propio — se comprobó que ninguno de los dos llega). Lo que sí funciona entre ventanas sin importar
+// el origen es la referencia directa que deja window.open() (y window.opener en la ventana abierta):
+// la pestaña que abre guarda esa referencia y le escribe directo con postMessage; la pestaña abierta
+// hace lo mismo con window.opener. Así se arma una pequeña cadena si se vincula más de dos.
+let _syncActive=false,_syncApplying=false,_syncTimer=0,_syncPeer=null,_syncChildren=[];
+const _syncSelfId=Math.random().toString(36).slice(2)+Date.now().toString(36);
+function _syncIndicator(){
+  document.querySelectorAll('.sync-dot').forEach(el=>{el.style.display=_syncActive?'inline-block':'none';el.title=_syncActive?'Pestaña vinculada: los cambios se comparten en vivo con otras pestañas abiertas desde aquí.':'';});
+}
+window.addEventListener('message',e=>{
+  const m=e.data;if(!m||!m.__oglSync||m.from===_syncSelfId||!_syncActive)return;
+  _syncApplying=true;
+  try{_applyEmbeddedData(m.data);document.getElementById('status').textContent='Actualizado desde una pestaña vinculada.';}
+  finally{_syncApplying=false;}
+  // reenviar a las demás pestañas de la cadena que yo conozca, sin devolvérselo a quien lo mandó
+  _syncChildren=_syncChildren.filter(w=>w&&!w.closed);
+  _syncChildren.forEach(w=>{if(w!==e.source)try{w.postMessage(m,'*');}catch(err){}});
+  if(_syncPeer&&!_syncPeer.closed&&_syncPeer!==e.source)try{_syncPeer.postMessage(m,'*');}catch(err){}
+});
+function _syncSchedule(){
+  if(!_syncActive||_syncApplying)return;
+  clearTimeout(_syncTimer);
+  _syncTimer=setTimeout(()=>{
+    const msg={__oglSync:true,from:_syncSelfId,data:_snapshotData(false)};
+    _syncChildren=_syncChildren.filter(w=>w&&!w.closed);
+    _syncChildren.forEach(w=>{try{w.postMessage(msg,'*');}catch(e){}});
+    if(_syncPeer&&!_syncPeer.closed)try{_syncPeer.postMessage(msg,'*');}catch(e){}
+  },500);
+}
+// Duplicar pestaña VINCULADA: como "Duplicar pestaña", pero además ambas quedan enlazadas — un
+// cambio en cualquiera de las dos (Tabla de Datos, Gantt o LdT) se refleja en la otra en vivo.
+let _snapshotLinkOnOpen=false;
+function duplicateTabLinked(){
+  if(!TASKS.length){alert('Primero carga datos.');return;}
+  _snapshotLinkOnOpen=true;
+  const blob=_buildShareBlob(false);
+  _snapshotLinkOnOpen=false;
+  if(!blob)return;
+  const url=URL.createObjectURL(blob);
+  const w=window.open(url,'_blank');
+  if(!w){alert('El navegador bloqueó la ventana nueva. Permite las ventanas emergentes para este sitio e inténtalo de nuevo.');URL.revokeObjectURL(url);return;}
+  _syncChildren.push(w);_syncActive=true;_syncIndicator();
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+  document.getElementById('status').textContent='Pestaña vinculada creada — los cambios se compartirán en vivo entre ambas.';
+}
+function _snapshotData(shared){
+  const data={shared:!!shared,sessionName:AP_SESSION_NAME,linkOnOpen:!!_snapshotLinkOnOpen,tasks:TASKS.map(t=>({id:t.id,escenario:t.escenario||'',c1:t.c1,c2:t.c2,tarea:t.tarea,iLB:isoLocal(t.iLB),fLB:isoLocal(t.fLB),iRP:isoLocal(t.iRP),fRP:isoLocal(t.fRP),av:t.av,hito:t.hito,evento:t.evento,crit:t.crit,marca2:t.marca2||'',summary:t.summary||false,pid:t.pid||'',preds:t.preds||'',pscope:t.pscope||''})),
     scenarios:SCENARIOS,on:SCEN_ON,color:SCEN_COLOR,escColor:ESC_COLOR,cat2color:CAT2_COLOR,eventocolor:EVENTO_COLOR,presOpts:PRES_OPTS,presHidden:[...PRES_HIDDEN_KEYS],presTextBoxes:PRES_TEXTBOXES,presShapes:PRES_SHAPES,ganttTextBoxes:GANTT_TEXTBOXES,ganttOrder:GANTT_ORDER,ganttC2Order:GANTT_C2_ORDER,ganttTaskOrder:GANTT_TASK_ORDER,
     scale:document.getElementById('scale').value,mode:document.querySelector('input[name=mode]:checked').value,
     showLB:document.getElementById('showLB').checked,showDeps:document.getElementById('showDeps').checked,showDates:document.getElementById('showDates').checked,presShowDates:document.getElementById('presShowDates').checked,presShowSubproc:(document.getElementById('presShowSubproc')||{}).checked,presSubprocField:(document.getElementById('presSubprocField')||{}).value,presSubprocGap:(document.getElementById('presSubprocGap')||{}).value,presSubprocPos:(document.getElementById('presSubprocPos')||{}).value,presSubprocColor:_presSubprocCol,presSubprocColors:_presSubprocColors,presYearMerge:PRES_YEAR_MERGE,presSubprocStyle:_presSubprocStyle,presYearBorder:PRES_YEAR_BORDER,presYearFmt:PRES_YEAR_FMT,presConnectors:PRES_CONNECTORS,presLegendCfg:PRES_LEGEND_CFG,
@@ -5265,6 +5315,12 @@ function _buildShareBlob(shared){
     presLbTitleSize:(document.getElementById('presLbTitleSize')||{value:16}).value,
     presLbTitleYOffset:(document.getElementById('presLbTitleYOffset')||{value:0}).value,
     presTitleColors:_presTitleColors};
+  return data;
+}
+
+function _buildShareBlob(shared){
+  closeAllDropMenus(); // que ningún popover (Capas, Más…) quede congelado abierto en el snapshot
+  const data=_snapshotData(shared);
   const safe=JSON.stringify(data).replace(/<\//g,'\\u003c/');
   // Limpiar contenido dinámico antes de serializar (reduce tamaño y evita HTML roto)
   const _dynIds=['wrap','scenarioList','filterList','legend','ganttTip','presBody'];
@@ -5391,6 +5447,12 @@ function loadEmbedded(){
   if(!_emEl||!_emEl.textContent.trim())return false;
   document.getElementById('splashModal').style.display='none';
   const d=JSON.parse(_emEl.textContent);
+  return _applyEmbeddedData(d);
+}
+// Aplica un snapshot completo (el mismo formato que genera _snapshotData/"Guardar sesión") al estado
+// en vivo de la app: lo usan tanto abrir un archivo con datos incrustados (loadEmbedded) como recibir
+// una actualización de una pestaña vinculada (ver duplicateTabLinked).
+function _applyEmbeddedData(d){
   // d.shared===false → viene de "Guardar sesión de trabajo": archivo propio, edición normal.
   // d.shared===true, o ausente (archivos "Compartir" guardados antes de esta distinción) → se
   // trata como copia compartida y se bloquea el motor de precedencias y las celdas sensibles.
@@ -5514,7 +5576,9 @@ function loadEmbedded(){
     _presTitleColors=Object.assign({presMainTitleColor:'#2c3e50',presLbTitleColor:'#2c3e50'},d.presTitleColors);
     Object.keys(_presTitleColors).forEach(k=>{const sw=document.getElementById(k);if(sw)sw.style.background=_presTitleColors[k];});
   }
-  buildScenarioChecks();document.getElementById('status').textContent=`Datos incrustados — ${TASKS.length} actividades.`;render();return true;
+  buildScenarioChecks();document.getElementById('status').textContent=`Datos incrustados — ${TASKS.length} actividades.`;
+  if(d.linkOnOpen&&window.opener){_syncPeer=window.opener;_syncActive=true;_syncIndicator();}
+  render();return true;
 }
 
 /* ═══ EXPORTAR PNG ═══ */
@@ -7614,6 +7678,7 @@ function presToggleTitleField(toggleId,inputId,sizeId){
   renderPres();
 }
 function renderPres(){
+  _syncSchedule();
   if(typeof syncLayerUI==='function')syncLayerUI();
   presSyncGroupUI();presSyncSegUI();
   setTimeout(()=>{if(typeof presImpactMark==='function')presImpactMark();},0);
