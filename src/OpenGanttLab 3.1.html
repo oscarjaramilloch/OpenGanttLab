@@ -853,6 +853,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <button class="tb-btn" id="btnSaveSessionGantt" data-tb="save" title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
       </button>
+      <button type="button" class="tb-btn icon" id="btnDupTabGantt" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
       <button class="tb-btn dirty-save-btn" id="btnSaveGantt" data-tb="share" title="Compartir" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
         <span class="tb-lbl">Compartir</span>
@@ -1147,6 +1148,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
         <button class="rb-flat" id="btnSaveSession"title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
         </button>
+        <button type="button" class="rb-flat" id="btnDupTab" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
         <button class="rb-flat dirty-save-btn" id="btnSave" title="Compartir" style="position:relative">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
           <span class="dirty-dot" title="Cambios sin compartir" style="display:none;position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:#e8622c;border:1.5px solid #fff"></span>
@@ -1806,6 +1808,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <button class="tb-btn" id="btnSaveSessionPres" data-tb="save" title="Guardar sesión de trabajo (copia completa, sin restricciones al reabrir)" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
       </button>
+      <button type="button" class="tb-btn icon" id="btnDupTabPres" onclick="duplicateTab()" title="Duplicar pestaña: abre una copia completa (con los datos y el formato actuales) en una pestaña nueva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg></button>
       <button class="tb-btn dirty-save-btn" id="btnSavePres" data-tb="share" title="Compartir" style="position:relative">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.5 6.8-3.9"/><path d="m8.6 13.5 6.8 3.9"/></svg>
         <span class="tb-lbl">Compartir</span>
@@ -5334,6 +5337,17 @@ async function _doSave(shared,suggestedName){
   _dirty=false;updateDirtyIndicator();
 }
 function saveShare(){return _doSave(true,'OpenGanttLab_compartir.html');}
+// Duplicar pestaña: abre una copia completa e independiente (con los datos y el formato actuales) en
+// una pestaña nueva del navegador — como "Duplicar pestaña" de Chrome, pero generando la copia real
+// (Chrome solo recargaría el archivo original, sin lo que aún no se ha guardado en disco).
+function duplicateTab(){
+  if(!TASKS.length){alert('Primero carga datos.');return;}
+  const blob=_buildShareBlob(false);if(!blob)return;
+  const url=URL.createObjectURL(blob);
+  const w=window.open(url,'_blank');
+  if(!w){alert('El navegador bloqueó la ventana nueva. Permite las ventanas emergentes para este sitio e inténtalo de nuevo.');URL.revokeObjectURL(url);return;}
+  setTimeout(()=>URL.revokeObjectURL(url),30000);
+}
 async function saveSession(){
   if(!TASKS.length){alert('Primero carga datos.');return;}
   const n=await ogDialog({title:'Guardar sesión de trabajo',msg:'Nombre de la sesión. Se muestra en la pestaña del navegador para distinguirla de otras ventanas de OpenGanttLab abiertas.',input:{value:AP_SESSION_NAME,placeholder:'Ej.: RaP SubB — escenario P50',validate:v=>v?'':'Escribe un nombre para la sesión.'},ok:'Guardar'});
