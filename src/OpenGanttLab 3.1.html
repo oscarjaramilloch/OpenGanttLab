@@ -11618,19 +11618,20 @@ function presConnPath(A,B,type,c){
   }
   const pA=presConnSidePt(A,sideA),pB=presConnSidePt(B,sideB);
   const horizA=sideA==='l'||sideA==='r',horizB=sideB==='l'||sideB==='r';
-  if(type==='straight')return[pA,pB];
+  const tag=r=>{r.sideA=sideA;r.sideB=sideB;return r;};
+  if(type==='straight')return tag([pA,pB]);
   // Tramo mínimo antes del primer quiebre: al enganchar por izquierda/derecha (o arriba/abajo) la línea
   // sale un poco derecho antes de girar, en vez de doblar pegada al borde — se ve más ordenado y dan
   // más quiebres cuando el destino queda casi en la misma columna/fila (los que pedía el usuario).
   const STUB=14;
   if(horizA&&horizB){let mx=(pA[0]+pB[0])/2+((c&&c.mid)||0);
     if(!((c&&c.mid)||0)){const dir=sideA==='r'?1:-1;const minMx=pA[0]+dir*STUB;mx=dir>0?Math.max(mx,minMx):Math.min(mx,minMx);}
-    return[pA,[mx,pA[1]],[mx,pB[1]],pB];}
+    return tag([pA,[mx,pA[1]],[mx,pB[1]],pB]);}
   if(!horizA&&!horizB){let my=(pA[1]+pB[1])/2+((c&&c.midY)||0);
     if(!((c&&c.midY)||0)){const dir=sideA==='b'?1:-1;const minMy=pA[1]+dir*STUB;my=dir>0?Math.max(my,minMy):Math.min(my,minMy);}
-    return[pA,[pA[0],my],[pB[0],my],pB];}
-  if(horizA&&!horizB)return[pA,[pB[0],pA[1]],pB];
-  return[pA,[pA[0],pB[1]],pB];
+    return tag([pA,[pA[0],my],[pB[0],my],pB]);}
+  if(horizA&&!horizB)return tag([pA,[pB[0],pA[1]],pB]);
+  return tag([pA,[pA[0],pB[1]],pB]);
 }
 // Aparta el tramo central de un conector en escuadra (4 puntos) para que no cruce por encima de otras
 // barras/hitos/formas — lo desplaza justo detrás del borde más cercano del obstáculo que estorba.
@@ -11733,8 +11734,13 @@ function presDrawConnectors(){
         }
       }
       if(!c.temp&&sel&&!_conMode&&!(_conEndDrag&&_conEndDrag.c.id===c.id)){
-        // Se dibujan después del asa del tramo central para quedar siempre encima si coinciden en pantalla
-        const p0=pts[0],p1=pts[pts.length-1];
+        // Se dibujan después del asa del tramo central para quedar siempre encima si coinciden en pantalla.
+        // Se corren un poco hacia afuera del elemento (según el lado enganchado) para no quedar montadas
+        // sobre su relleno/borde — si no, al enganchar por arriba o por abajo se veía como si la
+        // "cortaran" (por izquierda/derecha ya caían fuera, en el espacio en blanco, por eso no se notaba).
+        const NRM={l:[-1,0],r:[1,0],t:[0,-1],b:[0,1]},OUT=7;
+        const na=NRM[pts.sideA]||[0,0],nb=NRM[pts.sideB]||[0,0];
+        const p0=[pts[0][0]+na[0]*OUT,pts[0][1]+na[1]*OUT],p1=[pts[pts.length-1][0]+nb[0]*OUT,pts[pts.length-1][1]+nb[1]*OUT];
         out+='<circle cx="'+p0[0]+'" cy="'+p0[1]+'" r="6" fill="#fff" stroke="#0984e3" stroke-width="2" data-con-id="'+c.id+'" data-con-end="a" style="cursor:crosshair"><title>Arrastre para enganchar el inicio a otra tarea, hito o forma</title></circle>';
         out+='<circle cx="'+p1[0]+'" cy="'+p1[1]+'" r="6" fill="#fff" stroke="#0984e3" stroke-width="2" data-con-id="'+c.id+'" data-con-end="b" style="cursor:crosshair"><title>Arrastre para enganchar el final a otra tarea, hito o forma</title></circle>';
       }
