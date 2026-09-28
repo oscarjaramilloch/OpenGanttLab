@@ -11535,7 +11535,7 @@ function presConnUI(){
   document.body.style.cursor='crosshair';presConnMark();
 }
 function presConnType(t){_conType=t;presConnUI();}
-function presConnResetPos(){const c=PRES_CONNECTORS.find(q=>q.id===_conMenuId);if(!c)return;_presSnap();delete c.mid;delete c.dx;delete c.dy;delete c.tdx;delete c.tdy;renderPres();}
+function presConnResetPos(){const c=PRES_CONNECTORS.find(q=>q.id===_conMenuId);if(!c)return;_presSnap();delete c.mid;delete c.midY;delete c.dx;delete c.dy;delete c.tdx;delete c.tdy;renderPres();}
 function presConnPendSet(k,v){if(_conPending)_conPending[k]=v;}
 function presConnPendCancel(){_conPending=null;_conFrom=null;presConnUI();}
 function presConnPendOk(){
@@ -11574,6 +11574,8 @@ function presConnPath(A,B,type,c){
   else if(type==='l2')pts=[[A.cx,vy?A.b:A.t],[A.cx,B.cy],[hx?B.l:B.r,B.cy]];
   else if(type==='straight'){
     if(Math.abs(B.cx-A.cx)>=Math.abs(B.cy-A.cy))pts=[[hx?A.r:A.l,A.cy],[hx?B.l:B.r,B.cy]];else pts=[[A.cx,vy?A.b:A.t],[B.cx,vy?B.t:B.b]];
+  }else if(Math.abs(B.cy-A.cy)>Math.abs(B.cx-A.cx)*1.15){
+    const s=[A.cx,vy?A.b:A.t],e=[B.cx,vy?B.t:B.b],my=(s[1]+e[1])/2+((c&&c.midY)||0);pts=[s,[s[0],my],[e[0],my],e];
   }else{const s=[hx?A.r:A.l,A.cy],e=[hx?B.l:B.r,B.cy],mx=(s[0]+e[0])/2+((c&&c.mid)||0);pts=[s,[mx,s[1]],[mx,e[1]],e];}
   return pts;
 }
@@ -11636,8 +11638,13 @@ function presDrawConnectors(){
       out+='<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="'+w+'" stroke-linejoin="round"'+presDashAttr(c.dash)+'/>'+arrow;
       if(!c.temp)out+='<path d="'+d+'" data-con-id="'+c.id+'" fill="none" stroke="transparent" stroke-width="10" pointer-events="stroke" style="cursor:pointer"><title>Doble clic o clic derecho: editar · Supr: eliminar</title></path>';
       if(!c.temp&&(c.type||'z')==='z'&&pts.length===4){
-        const vx=pts[1][0],y0=Math.min(pts[1][1],pts[2][1]),y1=Math.max(pts[1][1],pts[2][1]);
-        out+='<rect x="'+(vx-6)+'" y="'+y0+'" width="12" height="'+Math.max(6,y1-y0)+'" fill="transparent" data-con-id="'+c.id+'" data-con-mid="1" style="cursor:ew-resize"><title>Arrastre para mover el tramo vertical · doble clic o clic derecho: editar</title></rect>';
+        if(pts[1][0]===pts[2][0]){
+          const vx=pts[1][0],y0=Math.min(pts[1][1],pts[2][1]),y1=Math.max(pts[1][1],pts[2][1]);
+          out+='<rect x="'+(vx-6)+'" y="'+y0+'" width="12" height="'+Math.max(6,y1-y0)+'" fill="transparent" data-con-id="'+c.id+'" data-con-mid="1" style="cursor:ew-resize"><title>Arrastre para mover el tramo central · doble clic o clic derecho: editar</title></rect>';
+        }else{
+          const vy2=pts[1][1],x0=Math.min(pts[1][0],pts[2][0]),x1=Math.max(pts[1][0],pts[2][0]);
+          out+='<rect x="'+x0+'" y="'+(vy2-6)+'" width="'+Math.max(6,x1-x0)+'" height="12" fill="transparent" data-con-id="'+c.id+'" data-con-midh="1" style="cursor:ns-resize"><title>Arrastre para mover el tramo central · doble clic o clic derecho: editar</title></rect>';
+        }
       }
       if(c.label){
         // píldora en el punto medio del recorrido
@@ -11668,7 +11675,7 @@ function presConnMenu(id,x,y){
       +ppRow('Desde:',ppSel('',"presConnSet('fromEdge',this.value)",[['start','Comienzo de A'],['end','Fin de A']],c.fromEdge||'start'))
       +ppRow('Hasta:',ppSel('',"presConnSet('toEdge',this.value)",[['start','Comienzo de B'],['end','Fin de B']],c.toEdge||'end'));
   }
-  if(c.type==='z')s+='<div class="pop-unit" style="margin:4px 0;line-height:1.3;font-style:italic">Arrastre el tramo vertical para moverlo.</div>';
+  if(c.type==='z')s+='<div class="pop-unit" style="margin:4px 0;line-height:1.3;font-style:italic">Arrastre el tramo central para moverlo.</div>';
   s+=ppDiv()+ppSec('Línea')
     +ppRow('Color:',ppSwatch('pcmColor',c.color||'#1f6f8b','event.stopPropagation();presConnPickColor()')+'<span class="pop-unit" style="margin-left:auto">Estilo:</span>'+ppSel('',"presConnSet('dash',this.value)",[['solid','— Continua'],['dotted','· · Punteada'],['dashed','— Rayada'],['dashed2','— Mixta']],c.dash||'solid'))
     +ppRow('Grosor:',ppNum('pcmW','min="0.5" max="8" step="0.5"',"presConnSet('w',this.value)",c.w||1.5)+'<span class="pop-unit">px</span>');
@@ -11722,14 +11729,15 @@ function presConnDelete(id){
     _lastCd={id:t.dataset.conId,t:now};
   },true);
   pb.addEventListener('mousedown',e=>{
-    if(_conMode||e.button)return;const t=e.target.closest&&e.target.closest('[data-con-mid],[data-con-tdrag],[data-con-drag]');if(!t)return;const isTxt=false,isMid=t.hasAttribute('data-con-mid');
+    if(_conMode||e.button)return;const t=e.target.closest&&e.target.closest('[data-con-mid],[data-con-midh],[data-con-tdrag],[data-con-drag]');if(!t)return;const isTxt=false,isMid=t.hasAttribute('data-con-mid'),isMidH=t.hasAttribute('data-con-midh');
     const c=PRES_CONNECTORS.find(k=>k.id===t.dataset.conId);if(!c)return;
     e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-    _conSel=c.id;_presSnap();_dimDrag={c,txt:isTxt,mid:isMid,m0:c.mid||0,dx0:c.dx||0,x:e.clientX,y:e.clientY,dy:c.dy||0,tdx:c.tdx||0,tdy:c.tdy||0,raf:0,moved:false};
+    _conSel=c.id;_presSnap();_dimDrag={c,txt:isTxt,mid:isMid,midh:isMidH,m0:c.mid||0,mY0:c.midY||0,dx0:c.dx||0,x:e.clientX,y:e.clientY,dy:c.dy||0,tdx:c.tdx||0,tdy:c.tdy||0,raf:0,moved:false};
   },true);
   document.addEventListener('mousemove',e=>{
     if(!_dimDrag)return;const z=(typeof PRES_ZOOM==='number'&&PRES_ZOOM>0)?PRES_ZOOM:1;
     if(_dimDrag.mid)_dimDrag.c.mid=Math.round(_dimDrag.m0+(e.clientX-_dimDrag.x)/z);
+    else if(_dimDrag.midh)_dimDrag.c.midY=Math.round(_dimDrag.mY0+(e.clientY-_dimDrag.y)/z);
     else if(_dimDrag.txt){_dimDrag.c.tdx=Math.round(_dimDrag.tdx+(e.clientX-_dimDrag.x)/z);_dimDrag.c.tdy=Math.round(_dimDrag.tdy+(e.clientY-_dimDrag.y)/z);}
     else{_dimDrag.c.dy=Math.round(_dimDrag.dy+(e.clientY-_dimDrag.y)/z);}
     _dimDrag.moved=true;
