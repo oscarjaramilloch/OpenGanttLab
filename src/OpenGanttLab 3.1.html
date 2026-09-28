@@ -11619,10 +11619,47 @@ function presConnPath(A,B,type,c){
   const pA=presConnSidePt(A,sideA),pB=presConnSidePt(B,sideB);
   const horizA=sideA==='l'||sideA==='r',horizB=sideB==='l'||sideB==='r';
   if(type==='straight')return[pA,pB];
-  if(horizA&&horizB){const mx=(pA[0]+pB[0])/2+((c&&c.mid)||0);return[pA,[mx,pA[1]],[mx,pB[1]],pB];}
-  if(!horizA&&!horizB){const my=(pA[1]+pB[1])/2+((c&&c.midY)||0);return[pA,[pA[0],my],[pB[0],my],pB];}
+  // Tramo mínimo antes del primer quiebre: al enganchar por izquierda/derecha (o arriba/abajo) la línea
+  // sale un poco derecho antes de girar, en vez de doblar pegada al borde — se ve más ordenado y dan
+  // más quiebres cuando el destino queda casi en la misma columna/fila (los que pedía el usuario).
+  const STUB=14;
+  if(horizA&&horizB){let mx=(pA[0]+pB[0])/2+((c&&c.mid)||0);
+    if(!((c&&c.mid)||0)){const dir=sideA==='r'?1:-1;const minMx=pA[0]+dir*STUB;mx=dir>0?Math.max(mx,minMx):Math.min(mx,minMx);}
+    return[pA,[mx,pA[1]],[mx,pB[1]],pB];}
+  if(!horizA&&!horizB){let my=(pA[1]+pB[1])/2+((c&&c.midY)||0);
+    if(!((c&&c.midY)||0)){const dir=sideA==='b'?1:-1;const minMy=pA[1]+dir*STUB;my=dir>0?Math.max(my,minMy):Math.min(my,minMy);}
+    return[pA,[pA[0],my],[pB[0],my],pB];}
   if(horizA&&!horizB)return[pA,[pB[0],pA[1]],pB];
   return[pA,[pA[0],pB[1]],pB];
+}
+// Aparta el tramo central de un conector en escuadra (4 puntos) para que no cruce por encima de otras
+// barras/hitos/formas — lo desplaza justo detrás del borde más cercano del obstáculo que estorba.
+function presConnDodge(pts,obstacles){
+  if(!obstacles||!obstacles.length||pts.length!==4)return pts;
+  const vertical=pts[1][0]===pts[2][0],pad=6,gap=10;
+  if(vertical){
+    const y0=Math.min(pts[1][1],pts[2][1]),y1=Math.max(pts[1][1],pts[2][1]);
+    const inLane=obstacles.filter(ob=>!(ob.b<y0-pad||ob.t>y1+pad));
+    if(!inLane.length)return pts;
+    const orig=pts[1][0],crossesAt=x=>inLane.filter(ob=>x>=ob.l-pad&&x<=ob.r+pad).length;
+    if(!crossesAt(orig))return pts;
+    // Candidatas: justo detrás del borde izquierdo o derecho de cada obstáculo del carril
+    const cands=[];inLane.forEach(ob=>{cands.push(ob.l-gap,ob.r+gap);});
+    let best=orig,bestN=crossesAt(orig);
+    cands.forEach(x=>{const n=crossesAt(x);if(n<bestN||(n===bestN&&Math.abs(x-orig)<Math.abs(best-orig))){best=x;bestN=n;}});
+    pts[1][0]=best;pts[2][0]=best;
+  }else{
+    const x0=Math.min(pts[1][0],pts[2][0]),x1=Math.max(pts[1][0],pts[2][0]);
+    const inLane=obstacles.filter(ob=>!(ob.r<x0-pad||ob.l>x1+pad));
+    if(!inLane.length)return pts;
+    const orig=pts[1][1],crossesAt=y=>inLane.filter(ob=>y>=ob.t-pad&&y<=ob.b+pad).length;
+    if(!crossesAt(orig))return pts;
+    const cands=[];inLane.forEach(ob=>{cands.push(ob.t-gap,ob.b+gap);});
+    let best=orig,bestN=crossesAt(orig);
+    cands.forEach(y=>{const n=crossesAt(y);if(n<bestN||(n===bestN&&Math.abs(y-orig)<Math.abs(best-orig))){best=y;bestN=n;}});
+    pts[1][1]=best;pts[2][1]=best;
+  }
+  return pts;
 }
 // Conector temporal de la herramienta Impacto: une A y B con los días de diferencia (fin de B menos fin de A)
 function presImpactConnector(){
@@ -11653,6 +11690,8 @@ function presDrawConnectors(){
   body.querySelectorAll('svg').forEach(svg=>{
     let out='';
     let _lane=0,_minY=0,_maxY=0;
+    // Cajas de todo lo enganchable en esta lámina (para que el tramo central del conector las esquive)
+    const _obAll=[...svg.querySelectorAll(CON_HIT_SEL)].map(el=>{try{const b=el.getBBox();return{el,l:b.x,r:b.x+b.width,t:b.y,b:b.y+b.height};}catch(e){return null;}}).filter(Boolean);
     _list.forEach(c=>{
       const ea=_conEl(svg,c.a),eb=_conEl(svg,c.b);if(!ea||!eb)return;
       let ba,bb;try{ba=ea.getBBox();bb=eb.getBBox();}catch(e){return;}
@@ -11676,7 +11715,7 @@ function presDrawConnectors(){
       }
       let _A=bx(ba),_B=bx(bb);
       if(_conEndDrag&&_conEndDrag.c.id===c.id){const fp={l:_conEndDrag.x,r:_conEndDrag.x,t:_conEndDrag.y,b:_conEndDrag.y,cx:_conEndDrag.x,cy:_conEndDrag.y};if(_conEndDrag.end==='a')_A=fp;else _B=fp;}
-      const pts=presConnPath(_A,_B,c.type||'z',c);
+      const pts=presConnDodge(presConnPath(_A,_B,c.type||'z',c),_obAll.filter(o=>o.el!==ea&&o.el!==eb).map(o=>({l:o.l,r:o.r,t:o.t,b:o.b})));
       const d='M'+pts.map(p=>p[0]+' '+p[1]).join(' L'),col=c.color||'#1f6f8b',w=c.w||1.5,sel=c.id===_conSel;
       let arrow='';
       if(c.arrow!==false){const p=pts[pts.length-1],q=pts[pts.length-2],a=Math.atan2(p[1]-q[1],p[0]-q[0]),L=8+w,W=4+w*.6;
