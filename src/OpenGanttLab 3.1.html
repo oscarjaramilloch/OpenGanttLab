@@ -1638,7 +1638,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="13" height="6" rx="1.5"/><path d="M16 6h3v5H12v3"/><rect x="10" y="14" width="4" height="7" rx="1"/></svg>
             Copiar formato
           </button>
-          <button type="button" class="filtro-menu-item" id="btnPresConn" onclick="presConnToggle();closeAllDropMenus()" aria-pressed="false" title="Conector: una dos barras o hitos visibles con una línea (recta, en escuadra o en L). Doble clic o clic derecho sobre un conector para editarlo; Supr lo elimina">
+          <button type="button" class="filtro-menu-item" id="btnPresConn" onclick="presConnToggle();closeAllDropMenus()" aria-pressed="false" title="Conector: una dos barras o hitos visibles con una línea (recta, en escuadra o en L). Al crearlo queda seleccionado: arrastre los círculos de sus puntas para engancharlas a otro elemento. Doble clic o clic derecho sobre un conector para editarlo; Supr lo elimina">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h6v12h6"/><path d="m14 15 3 3-3 3"/><rect x="2" y="4" width="4" height="4" rx=".8"/></svg>
             Conector
           </button>
@@ -11524,6 +11524,7 @@ function presConnUI(){
   const _eb=document.getElementById('btnPresEdicionMenu');if(_eb)_eb.classList.toggle('mode-on',!!(_fmtMode||_conMode||_impMode));
   const b=document.getElementById('btnPresConn');if(b){b.classList.toggle('active',_conMode);b.setAttribute('aria-pressed',_conMode?'true':'false');}
   let c=document.getElementById('presConnCard');
+  if(_conMode){const h=document.getElementById('presConnHint');if(h)h.remove();}
   if(!_conMode){if(c)c.remove();document.body.style.cursor='';presConnMark();return;}
   if(!c){c=document.createElement('div');c.id='presConnCard';c.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100060;background:var(--panel,#fff);color:var(--ink,#222);border:1px solid var(--line,#ccc);border-radius:10px;box-shadow:0 6px 22px rgba(11,34,57,.22);padding:10px 14px;font-size:12px;display:flex;align-items:center;gap:10px';document.body.appendChild(c);}
   if(_conPending){
@@ -11531,7 +11532,7 @@ function presConnUI(){
     c.innerHTML='<b>Medir tiempo entre</b><span>'+sl('fromEdge',P.fromEdge)+' de <b>A</b></span><span>y</span><span>'+sl('toEdge',P.toEdge)+' de <b>B</b></span><button type="button" class="rb-flat" style="padding:3px 10px" onclick="presConnPendOk()">Crear</button><button type="button" class="rb-flat" style="padding:3px 10px" onclick="presConnPendCancel()">Cancelar</button>';
     presConnMark();return;
   }
-  c.innerHTML='<b>Conector</b><span style="display:flex;gap:4px">'+CON_TYPES.map(t=>'<button type="button" onclick="presConnType(\''+t[0]+'\')" title="'+t[1]+'" style="width:34px;height:30px;border:1px solid '+(t[0]===_conType?'#2563eb':'var(--line,#ccc)')+';background:'+(t[0]===_conType?'#e8f0fe':'var(--panel,#fff)')+';border-radius:6px;cursor:pointer;padding:0"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+t[2]+'</svg></button>').join('')+'</span><span style="color:var(--muted)">'+(_conFrom?'Elija el elemento de destino.':'Haga clic en el elemento de origen y luego en el de destino.')+'</span><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presConnToggle()">Cerrar</button>';
+  c.innerHTML='<b>Conector</b><span style="display:flex;gap:4px">'+CON_TYPES.map(t=>'<button type="button" onclick="presConnType(\''+t[0]+'\')" title="'+t[1]+'" style="width:34px;height:30px;border:1px solid '+(t[0]===_conType?'#2563eb':'var(--line,#ccc)')+';background:'+(t[0]===_conType?'#e8f0fe':'var(--panel,#fff)')+';border-radius:6px;cursor:pointer;padding:0"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+t[2]+'</svg></button>').join('')+'</span><span style="color:var(--muted)">'+(_conFrom?'Elija el elemento de destino.':'Haga clic en el elemento de origen y luego en el de destino. Al crearlo podrá arrastrar sus puntas.')+'</span><button type="button" class="rb-flat" style="padding:2px 8px" onclick="presConnToggle()">Cerrar</button>';
   document.body.style.cursor='crosshair';presConnMark();
 }
 function presConnType(t){_conType=t;presConnUI();}
@@ -11542,7 +11543,15 @@ function presConnPendOk(){
   if(!_conPending)return;_presSnap();const P=_conPending;
   const id='c'+Date.now().toString(36)+Math.floor(Math.random()*1e3);
   PRES_CONNECTORS.push({id,a:P.a,b:P.b,type:'dim',fromEdge:P.fromEdge,toEdge:P.toEdge,fmt:'ym',text:'',color:'#1f6f8b',w:1.5,fs:12});
-  _conPending=null;_conFrom=null;_conSel=id;presConnUI();renderPres();
+  _conPending=null;_conFrom=null;_conSel=id;_conMode=false;presConnUI();renderPres();
+  presConnHint('Medida creada. Arrástrela para subirla o bajarla; doble clic para editarla.');
+}
+// Aviso breve al pie de la LdT (se cierra solo); reutiliza el mismo estilo de la tarjeta de modo
+function presConnHint(msg){
+  let h=document.getElementById('presConnHint');
+  if(!h){h=document.createElement('div');h.id='presConnHint';h.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:100060;background:var(--panel,#fff);color:var(--ink,#222);border:1px solid var(--line,#ccc);border-radius:10px;box-shadow:0 6px 22px rgba(11,34,57,.22);padding:10px 14px;font-size:12px;display:flex;align-items:center;gap:10px';document.body.appendChild(h);}
+  h.innerHTML='<span>'+msg+'</span><button type="button" class="rb-flat" style="padding:2px 8px" onclick="this.parentElement.remove()">Cerrar</button>';
+  clearTimeout(presConnHint._t);presConnHint._t=setTimeout(()=>{const e=document.getElementById('presConnHint');if(e)e.remove();},6000);
 }
 function presConnMark(){
   document.querySelectorAll('#presBody [data-con-from]').forEach(e=>{e.removeAttribute('data-con-from');e.style.filter='';});
@@ -11729,7 +11738,10 @@ function presConnDelete(id){
     _presSnap();
     const id='c'+Date.now().toString(36)+Math.floor(Math.random()*1e3);
     PRES_CONNECTORS.push({id,a:_conFrom,b:key,type:_conType,color:'#1f6f8b',w:1.5,dash:'solid',arrow:true});
-    _conFrom=null;_conSel=id;presConnUI();renderPres();
+    // Al crear se sale del modo y el conector queda seleccionado: así se ven de inmediato
+    // los círculos de las puntas y se pueden arrastrar sin ningún paso extra.
+    _conFrom=null;_conSel=id;_conMode=false;presConnUI();renderPres();
+    presConnHint('Conector creado. Arrastre los círculos azules de las puntas para engancharlo a otra tarea, hito, evento o forma.');
   },true);
   let _dimDrag=null,_lastCd=null;
   pb.addEventListener('mousedown',e=>{
