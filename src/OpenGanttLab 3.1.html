@@ -11549,7 +11549,7 @@ function presConnMark(){
   if(!_conMode||!_conFrom)return;
   const el=_conEl(document.getElementById('presBody'),_conFrom);if(el){el.setAttribute('data-con-from','1');el.style.filter='drop-shadow(0 0 3px #2563eb) drop-shadow(0 0 3px #2563eb)';}
 }
-function _conEl(root,key){return root.querySelector('[data-pres-bar="'+CSS.escape(key)+'"],[data-pres-mito="'+CSS.escape(key)+'"],[data-pres-evento="'+CSS.escape(key)+'"]');}
+function _conEl(root,key){return root.querySelector('[data-pres-bar="'+CSS.escape(key)+'"],[data-pres-mito="'+CSS.escape(key)+'"],[data-pres-evento="'+CSS.escape(key)+'"],[data-pshape="'+CSS.escape(key)+'"]');}
 // Medida de tiempo (type 'dim'): flecha doble entre dos fechas + texto con la diferencia
 function presDimDates(c){
   const g=(key,edge)=>{const f=_pdFindTask(key);if(!f||!f.t)return null;const t=f.t,lb=String(key).startsWith('LB|');return edge==='end'?(lb?t.fLB:t.fRP):(lb?t.iLB:t.iRP);};
@@ -11695,7 +11695,7 @@ function presConnDelete(id){
 }
 (function(){
   const pb=document.getElementById('presBody');if(!pb)return;
-  const hitEl=e=>e.target.closest&&e.target.closest('[data-pres-bar],[data-pres-mito],[data-pres-evento]');
+  const hitEl=e=>e.target.closest&&e.target.closest('[data-pres-bar],[data-pres-mito],[data-pres-evento],[data-pshape]');
   pb.addEventListener('mousedown',e=>{if(_conMode&&hitEl(e)){e.stopImmediatePropagation();e.preventDefault();}},true);
   pb.addEventListener('click',e=>{
     const line=e.target.closest&&e.target.closest('[data-con-id]');
@@ -11704,7 +11704,7 @@ function presConnDelete(id){
     const el=hitEl(e);if(!el)return;
     e.stopImmediatePropagation();e.preventDefault();
     if(_conPending)return;
-    const key=el.dataset.presBar||el.dataset.presMito||el.dataset.presEvento;
+    const key=el.dataset.presBar||el.dataset.presMito||el.dataset.presEvento||el.dataset.pshape;
     if(!_conFrom){_conFrom=key;presConnUI();return;}
     if(key===_conFrom){_conFrom=null;presConnUI();return;}
     if(_conType==='dim'){_conPending={a:_conFrom,b:key,fromEdge:'start',toEdge:'end'};_conFrom=null;presConnUI();return;}
