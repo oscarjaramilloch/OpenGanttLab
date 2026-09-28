@@ -7590,6 +7590,18 @@ function _pfBuildGroup(opts){
   box.innerHTML='';
   const base=_pfBase();
   if(!values.length){if(lbl)lbl.textContent=emptyTxt;return;}
+  // "Todas"/"Ninguna" propias del desplegable: marcan o desmarcan de un golpe solo los valores de
+  // este grupo (Escenarios, Cat 1 o Cat 2 — cada uno el suyo), sin tocar los otros dos.
+  const bar=document.createElement('div');
+  bar.style.cssText='display:flex;gap:4px;padding:2px 10px 6px;border-bottom:1px solid var(--grid);margin-bottom:2px';
+  const mkBtn=(txt,show)=>{const b=document.createElement('button');b.type='button';b.textContent=txt;
+    b.style.cssText='font-size:9.5px;padding:2px 7px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink);cursor:pointer';
+    b.onclick=e=>{e.stopPropagation();_presSnap();const setAll=base.filter(t=>values.some(v=>match(t,v)));
+      setAll.forEach(t=>{const k=_pfKey(t);if(show)PRES_HIDDEN_KEYS.delete(k);else PRES_HIDDEN_KEYS.add(k);});
+      opts.rebuild();presFilterCount();renderPres();};
+    return b;};
+  bar.append(mkBtn('Todas',true),mkBtn('Ninguna',false));
+  box.appendChild(bar);
   const shown=[];let allFull=true;
   values.forEach(v=>{
     const ts=base.filter(t=>match(t,v));
@@ -7613,7 +7625,8 @@ function _pfBuildGroup(opts){
 }
 function presFilterBuildScen(){
   _pfBuildGroup({boxId:'presFilterScenChecks',lblId:'presFilterScenDropLabel',values:_pfScenarios(),
-    colorOf:v=>ESC_COLOR[v],match:(t,v)=>(t.escenario||'')===v,toggle:presFilterScenToggle,emptyTxt:'— sin datos —'});
+    colorOf:v=>ESC_COLOR[v],match:(t,v)=>(t.escenario||'')===v,toggle:presFilterScenToggle,emptyTxt:'— sin datos —',
+    rebuild:()=>{presFilterBuildScen();presFilterPopulate();}});
 }
 function presFilterScenToggle(s,show){ // muestra/oculta todas las tareas de ese Escenario
   _presSnap();
@@ -7622,7 +7635,8 @@ function presFilterScenToggle(s,show){ // muestra/oculta todas las tareas de ese
 }
 function presFilterBuildCat1(){
   _pfBuildGroup({boxId:'presFilterCat1Checks',lblId:'presFilterCat1DropLabel',values:_pfCat1List(),
-    colorOf:v=>SCEN_COLOR[v],match:(t,v)=>t.c1===v,toggle:presFilterCat1Toggle,emptyTxt:'— sin datos —'});
+    colorOf:v=>SCEN_COLOR[v],match:(t,v)=>t.c1===v,toggle:presFilterCat1Toggle,emptyTxt:'— sin datos —',
+    rebuild:()=>{presFilterBuildCat1();presFilterBuildCat2();presFilterPopulate();}});
 }
 function presFilterCat1Toggle(c1,show){
   _presSnap();
@@ -7631,7 +7645,8 @@ function presFilterCat1Toggle(c1,show){
 }
 function presFilterBuildCat2(){
   _pfBuildGroup({boxId:'presFilterCat2Checks',lblId:'presFilterCat2DropLabel',values:_pfCat2List(),
-    colorOf:v=>CAT2_COLOR[v],match:(t,v)=>t.c2===v,toggle:presFilterCat2Toggle,emptyTxt:'— sin datos —'});
+    colorOf:v=>CAT2_COLOR[v],match:(t,v)=>t.c2===v,toggle:presFilterCat2Toggle,emptyTxt:'— sin datos —',
+    rebuild:()=>{presFilterBuildCat2();presFilterPopulate();}});
 }
 function presFilterCat2Toggle(c2,show){
   _presSnap();
