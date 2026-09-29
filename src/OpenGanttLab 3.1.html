@@ -8313,7 +8313,7 @@ document.getElementById('pbmDE').addEventListener('change',e=>{
 });
 document.addEventListener('click',e=>{
   const pbm=document.getElementById('presBarMenu');
-  if(pbm.style.display!=='none'&&!pbm.contains(e.target)
+  if(pbm&&pbm.style.display!=='none'&&!pbm.contains(e.target)
      &&!e.target.closest('[data-pres-bar]')
      &&!e.target.closest('[data-pres-mito]')
      &&!e.target.closest('[data-pres-evento]')
