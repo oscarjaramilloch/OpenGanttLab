@@ -12001,7 +12001,7 @@ function presConnDodge(pts,obstacles){
 // Conector temporal de la herramienta Impacto: une A y B con los días de diferencia (fin de B menos fin de A)
 function presImpactConnector(){
   try{
-    if(!_impMode||_impPick.length<2)return null;
+    if(!_impMode||_impPick.length<2||_impKeptId)return null;
     const a=presImpactDates(_impPick[0]),b=presImpactDates(_impPick[1]),n=Math.round((+b.f-+a.f)/864e5);
     return{id:'__imp',a:_impPick[0].key,b:_impPick[1].key,type:'dim',fromEdge:_impFromEdge,toEdge:_impToEdge,fmt:'dsign',text:'',color:'#2563eb',w:1.5,fs:12,temp:true};
   }catch(e){return null;}
@@ -12250,8 +12250,8 @@ function presConnDelete(id){
   });
 })();
 /* ═══ IMPACTO: días de diferencia entre dos barras/hitos de la LdT (p. ej. mismo hito en dos escenarios) ═══ */
-let _impMode=false,_impPick=[],_impFromEdge='end',_impToEdge='end';
-function presImpactToggle(){_impMode=!_impMode;_impPick=[];presImpactUI();}
+let _impMode=false,_impPick=[],_impFromEdge='end',_impToEdge='end',_impKeptId=null;
+function presImpactToggle(){_impMode=!_impMode;_impPick=[];_impKeptId=null;presImpactUI();}
 function presImpactDates(p){return{s:p.lb?p.t.iLB:p.t.iRP,f:p.lb?p.t.fLB:p.t.fRP};}
 function presImpactUI(){
   const _eb=document.getElementById('btnPresEdicionMenu');if(_eb)_eb.classList.toggle('mode-on',!!(_fmtMode||_conMode||_impMode));
@@ -12274,17 +12274,25 @@ function presImpactUI(){
     }else body+='<div style="color:var(--muted);margin-top:4px">Ahora elija la segunda (B).</div>';
   }
   if(_impPick.length>1){const sl=(k,v)=>'<select onchange="presImpactEdge(\''+k+'\',this.value)" style="font:inherit;font-size:11px;padding:2px 4px;border:1px solid #bbb;border-radius:5px"><option value="start"'+(v==='start'?' selected':'')+'>Comienzo</option><option value="end"'+(v==='end'?' selected':'')+'>Fin</option></select>';body+='<div style="margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="color:var(--muted)">Dibujar entre</span>'+sl('from',_impFromEdge)+'<span>de A y</span>'+sl('to',_impToEdge)+'<span>de B</span></div>';}
-  if(_impPick.length>1)body+='<div style="margin-top:8px;text-align:right"><button type="button" class="rb-flat" style="padding:3px 10px" onclick="presImpactKeep()" title="Convierte esta medición en un conector permanente con su etiqueta de días">Dejar en la lámina</button></div>';
-  c.innerHTML=body;presImpactMark();renderPres();
+  if(_impPick.length>1)body+='<div style="margin-top:8px;color:var(--muted);text-align:right">Se deja en la lámina automáticamente. Doble clic sobre la medida para editarla.</div>';
+  c.innerHTML=body;presImpactMark();
+  // Al completar el par A/B, se agrega de una vez como conector permanente (sin pedir
+  // confirmación) — antes había que pulsar "Dejar en la lámina"; ahora esa etiqueta y su
+  // línea de medida ya quedan en PRES_CONNECTORS apenas se elige B.
+  if(_impPick.length>1&&!_impKeptId){
+    _presSnap();
+    const id='c'+Date.now().toString(36)+Math.floor(Math.random()*1e3);
+    PRES_CONNECTORS.push({id,a:_impPick[0].key,b:_impPick[1].key,type:'dim',fromEdge:_impFromEdge,toEdge:_impToEdge,fmt:'ym',text:'',color:'#1f6f8b',w:1.5,fs:12});
+    _impKeptId=id;
+  }
+  renderPres();
   document.body.style.cursor='crosshair';
 }
-function presImpactReset(){_impPick=[];presImpactUI();}
-function presImpactEdge(k,v){if(k==='from')_impFromEdge=v;else _impToEdge=v;presImpactUI();}
-function presImpactKeep(){
-  const t=presImpactConnector();if(!t)return;_presSnap();
-  const id='c'+Date.now().toString(36)+Math.floor(Math.random()*1e3);
-  PRES_CONNECTORS.push({id,a:t.a,b:t.b,type:'dim',fromEdge:_impFromEdge,toEdge:_impToEdge,fmt:'ym',text:'',color:'#1f6f8b',w:1.5,fs:12});
-  _impPick=[];presImpactUI();renderPres();
+function presImpactReset(){_impPick=[];_impKeptId=null;presImpactUI();}
+function presImpactEdge(k,v){
+  if(k==='from')_impFromEdge=v;else _impToEdge=v;
+  if(_impKeptId){const c=PRES_CONNECTORS.find(c=>c.id===_impKeptId);if(c){c.fromEdge=_impFromEdge;c.toEdge=_impToEdge;}}
+  presImpactUI();
 }
 function presImpactMark(){
   document.querySelectorAll('#presBody [data-impact]').forEach(e=>{e.removeAttribute('data-impact');e.style.filter='';});
@@ -12299,7 +12307,7 @@ function presImpactMark(){
     if(!_impMode)return;const el=hit(e);if(!el)return;
     e.stopImmediatePropagation();e.preventDefault();
     const key=el.dataset.presBar||el.dataset.presMito,f=_pdFindTask(key);if(!f||!f.t)return;
-    if(_impPick.length>=2)_impPick=[];
+    if(_impPick.length>=2){_impPick=[];_impKeptId=null;}
     _impPick.push({key,t:f.t,lb:key.startsWith('LB|')});
     presImpactUI();
   },true);
