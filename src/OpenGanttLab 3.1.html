@@ -2473,6 +2473,7 @@ tr.ed-mv input.eirp,tr.ed-mv input.efrp,tr.ed-mv input.edur{background:#fff1cf;b
       <div id="presFilterCat2Checks"></div>
     </div>
   </div>
+  <div id="presFilterExtraGroups"></div>
   <div id="presFilterList" style="overflow-y:auto;flex:1;min-height:120px;padding:4px 0"></div>
   <div style="padding:6px 12px;border-top:1px solid var(--line);font-size:9px;color:var(--muted);flex-shrink:0" id="presFilterCount"></div>
   <div style="display:flex;justify-content:flex-end;gap:8px;padding:8px 12px;border-top:1px solid var(--line);flex-shrink:0">
@@ -4541,7 +4542,61 @@ function edSyncExtraCols(){
 }
 function buildEditorHead(){
   const tr=document.getElementById('edTableHeadRow');if(!tr||tr.children.length)return;
-  tr.innerHTML=ED_COLS.map(c=>`<th data-col="${c.key}"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.label)}<span class="ed-filter-btn" data-hcol="${c.key}" onclick="edfOpenFilter(event,'${c.key}','${esc(c.label)}','${c.type}')" title="Filtrar" style="display:${_edFiltersOn?'inline-flex':'none'};align-items:center;justify-content:center;cursor:pointer;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span></div><div class="col-resize" data-col="${c.key}"></div></th>`).join('')+'<th></th>';
+  tr.innerHTML=ED_COLS.map(c=>`<th data-col="${c.key}" oncontextmenu="datosHeaderMenu(event,'${c.key}');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.label)}<span class="ed-filter-btn" data-hcol="${c.key}" onclick="edfOpenFilter(event,'${c.key}','${esc(c.label)}','${c.type}')" title="Filtrar" style="display:${_edFiltersOn?'inline-flex':'none'};align-items:center;justify-content:center;cursor:pointer;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span></div><div class="col-resize" data-col="${c.key}"></div></th>`).join('')+'<th oncontextmenu="datosHeaderMenu(event,null);return false"></th>';
+}
+/* ── Clic derecho en un encabezado de la Tabla de Datos: agregar/quitar columnas de campos
+   personalizados del XML (ExtendedAttribute) sin pasar por el panel completo de Mapeo de columnas. ── */
+function _datosXmlAvailFields(){
+  // Campos del/los XML cargados, agrupados por alias (mismo nombre en varios archivos = un solo campo
+  // para el usuario), excluyendo los que ya están agregados como columna (PXML_CUSTOM).
+  const used=new Set(PXML_CUSTOM.map(c=>(c.label||'').trim().toLowerCase()));
+  const byAlias=new Map();
+  PXML_DB.forEach(db=>db.customCols.forEach(cc=>{
+    const key=(cc.alias||cc.fname||'').trim();if(!key)return;
+    const norm=key.toLowerCase();
+    if(used.has(norm))return;
+    if(!byAlias.has(norm))byAlias.set(norm,{alias:key,count:0});
+    byAlias.get(norm).count+=(cc.count||0);
+  }));
+  return[...byAlias.values()].sort((a,b)=>a.alias.localeCompare(b.alias,'es',{sensitivity:'base'}));
+}
+function datosAddXmlColumn(alias){
+  const key='x'+(++_pxmlCustomSeq);
+  PXML_CUSTOM.push({key,label:alias});
+  const norm=alias.trim().toLowerCase();
+  PXML_DB.forEach(db=>{
+    if(!db.mapping)db.mapping={};
+    if(db.mapping[key]&&db.mapping[key]!=='__NONE__')return;
+    const found=db.customCols.find(cc=>(cc.alias||cc.fname||'').trim().toLowerCase()===norm);
+    if(found)db.mapping[key]=found.id;
+  });
+  pxmlBuildMapGrid();edSyncExtraCols();pxmlAutoApply();
+  if(document.getElementById('editorModal').style.display==='flex'&&TASKS.length)populateEditor();
+}
+function datosHeaderMenu(e,col){
+  e.stopPropagation();e.preventDefault();
+  document.querySelectorAll('.rb-menu-panel').forEach(m=>m.remove());
+  if(!PXML_DB.length)return; // sin XML cargado no hay campos que ofrecer
+  const menu=document.createElement('div');menu.className='rb-menu-panel';
+  menu.style.cssText='position:fixed;z-index:100050;background:var(--panel,#fff);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:4px;min-width:220px;max-height:60vh;overflow-y:auto';
+  let html='';
+  if(col&&col.startsWith('x:')){
+    const key=col.slice(2),c=PXML_CUSTOM.find(x=>x.key===key);
+    if(c)html+=`<button type="button" class="filtro-menu-item" onclick="document.querySelectorAll('.rb-menu-panel').forEach(m=>m.remove());pxmlRemoveCustom('${key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Quitar columna «${esc(c.label)}»</button><div style="height:1px;background:var(--line);margin:4px 2px"></div>`;
+  }
+  const avail=_datosXmlAvailFields();
+  if(avail.length){
+    html+='<div style="padding:4px 10px;font-size:10px;color:var(--muted);font-weight:600">Agregar columna del XML</div>'+
+      avail.map(f=>`<button type="button" class="filtro-menu-item" onclick="document.querySelectorAll('.rb-menu-panel').forEach(m=>m.remove());datosAddXmlColumn('${esc(f.alias).replace(/'/g,"\\'")}')" title="${f.count} tarea(s) con dato">${esc(f.alias)}</button>`).join('');
+  } else if(!html){
+    html='<div style="padding:6px 10px;font-size:11px;color:var(--muted)">No hay más campos del XML por agregar.</div>';
+  }
+  menu.innerHTML=html;
+  document.body.appendChild(menu);
+  menu.style.left=Math.max(4,Math.min(e.clientX,innerWidth-menu.offsetWidth-8))+'px';
+  menu.style.top=Math.max(4,Math.min(e.clientY,innerHeight-menu.offsetHeight-8))+'px';
+  const close=ev=>{if(!menu.contains(ev.target)){menu.remove();document.removeEventListener('mousedown',close,true);}};
+  setTimeout(()=>document.addEventListener('mousedown',close,true),0);
 }
 function toggleEdFilters(){
   _edFiltersOn=!_edFiltersOn;
@@ -5592,7 +5647,12 @@ function _applyEmbeddedData(d){
   }
   buildScenarioChecks();document.getElementById('status').textContent=`Datos incrustados — ${TASKS.length} actividades.`;
   if(d.linkOnOpen&&window.opener){_syncPeer=window.opener;_syncActive=true;_syncIndicator();}
-  render();return true;
+  render();
+  // Si la Tabla de Datos está abierta en esta pestaña, TASKS ya se actualizó arriba pero la
+  // grilla en pantalla no se repinta sola (igual que al importar XML) — sin esto, una pestaña
+  // vinculada mostrando "Tabla de Datos" parece no recibir la sincronización en vivo.
+  if(document.getElementById('editorModal').style.display==='flex')populateEditor();
+  return true;
 }
 
 /* ═══ EXPORTAR PNG ═══ */
@@ -7626,6 +7686,7 @@ function openPresFilter(e){
   presFilterBuildScen();
   presFilterBuildCat1();
   presFilterBuildCat2();
+  presFilterBuildExtraGroups();
   presFilterPopulate();
   // Posicionar el panel bajo el elemento que se hizo clic (el botón real
   // #btnPresFilter está oculto/no usado — usarlo aquí daba un rect en 0,0,
@@ -7713,6 +7774,41 @@ function presFilterCat2Toggle(c2,show){
   _pfBase().filter(t=>t.c2===c2).forEach(t=>{const k=_pfKey(t);if(show)PRES_HIDDEN_KEYS.delete(k);else PRES_HIDDEN_KEYS.add(k);});
   presFilterBuildCat2();presFilterPopulate();renderPres();
 }
+/* ── Filtros por campo personalizado del XML (PXML_CUSTOM): un desplegable más por cada columna
+   agregada desde la Tabla de Datos (clic derecho en encabezado, ver datosAddXmlColumn), mismo patrón
+   de casillas Todas/Ninguna que Escenarios/Cat 1/Cat 2. Los desplegables se generan en cada apertura. ── */
+function _pfExtraVal(t,key){return(t.extra&&t.extra[key])||'';}
+function _pfExtraList(key){
+  const present=[...new Set(_pfBase().map(t=>_pfExtraVal(t,key)).filter(v=>v!==''))];
+  const all=[...new Set(TASKS.map(t=>_pfExtraVal(t,key)).filter(v=>v!==''))];
+  return all.filter(v=>present.includes(v)).concat(present.filter(v=>!all.includes(v)));
+}
+function togglePresFilterExtraDrop(e,key){toggleDropMenu(e,'presFilterX_'+key+'DropBtn','presFilterX_'+key+'DropPanel','block');}
+function presFilterExtraToggle(key,val,show){
+  _presSnap();
+  _pfBase().filter(t=>_pfExtraVal(t,key)===val).forEach(t=>{const k=_pfKey(t);if(show)PRES_HIDDEN_KEYS.delete(k);else PRES_HIDDEN_KEYS.add(k);});
+  presFilterBuildExtraGroups();presFilterPopulate();renderPres();
+}
+function presFilterBuildExtraGroups(){
+  const cont=document.getElementById('presFilterExtraGroups');if(!cont)return;
+  if(!PXML_CUSTOM.length){cont.innerHTML='';return;}
+  cont.innerHTML=PXML_CUSTOM.map(c=>`
+    <div style="padding:8px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;position:relative;flex-shrink:0">
+      <span style="font-size:10.5px;color:var(--muted);font-weight:600;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c.label||c.key)}">${esc(c.label||c.key)}</span>
+      <button id="presFilterX_${c.key}DropBtn" onclick="togglePresFilterExtraDrop(event,'${c.key}')" class="rb-sel" style="flex:1;font-size:10.5px;text-align:left;display:flex;align-items:center;justify-content:space-between;cursor:pointer;max-width:none">
+        <span id="presFilterX_${c.key}DropLabel">— sin datos —</span>
+        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div id="presFilterX_${c.key}DropPanel" class="rb-menu-panel" data-menu-btn="presFilterX_${c.key}DropBtn" style="display:none;position:fixed;z-index:100010;background:var(--panel);border:1px solid var(--line);border-radius:6px;box-shadow:0 4px 14px rgba(11,34,57,.15);padding:4px 0;max-height:240px;overflow-y:auto">
+        <div id="presFilterX_${c.key}Checks"></div>
+      </div>
+    </div>`).join('');
+  PXML_CUSTOM.forEach(c=>{
+    _pfBuildGroup({boxId:'presFilterX_'+c.key+'Checks',lblId:'presFilterX_'+c.key+'DropLabel',values:_pfExtraList(c.key),
+      colorOf:()=>'#888',match:(t,v)=>_pfExtraVal(t,c.key)===v,toggle:(v,show)=>presFilterExtraToggle(c.key,v,show),emptyTxt:'— sin datos —',
+      rebuild:()=>{presFilterBuildExtraGroups();presFilterPopulate();}});
+  });
+}
 function presFilterPopulate(){
   const base=_pfBase();
   const tasks=base;
@@ -7736,7 +7832,7 @@ function presFilterPopulate(){
 function presFilterToggle(cb){
   const k=cb.dataset.pfk;
   _presSnap();if(cb.checked) PRES_HIDDEN_KEYS.delete(k); else PRES_HIDDEN_KEYS.add(k);
-  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterCount();renderPres();
+  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterBuildExtraGroups();presFilterCount();renderPres();
 }
 function presFilterCheckAll(show){
   _presSnap(); // un solo punto de deshacer para todo el lote
@@ -7745,15 +7841,16 @@ function presFilterCheckAll(show){
     const k=cb.dataset.pfk;
     if(show) PRES_HIDDEN_KEYS.delete(k); else PRES_HIDDEN_KEYS.add(k);
   });
-  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterCount();renderPres();
+  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterBuildExtraGroups();presFilterCount();renderPres();
 }
 function presFilterReset(){
   _presSnap();PRES_HIDDEN_KEYS.clear();
-  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterPopulate();
+  presFilterBuildScen();presFilterBuildCat1();presFilterBuildCat2();presFilterBuildExtraGroups();presFilterPopulate();
   renderPres();
 }
 function presFilterClose(){
   ['presFilterPanel','presFilterScenDropPanel','presFilterCat1DropPanel','presFilterCat2DropPanel'].forEach(id=>{const p=document.getElementById(id);if(p)p.style.display='none';});
+  document.querySelectorAll('[id^="presFilterX_"][id$="DropPanel"]').forEach(p=>p.style.display='none');
 }
 function presFilterCancel(){ // descarta los cambios hechos desde que se abrió el panel
   if(_presFilterSnapshot){_presSnap();PRES_HIDDEN_KEYS=new Set(_presFilterSnapshot);renderPres();}
