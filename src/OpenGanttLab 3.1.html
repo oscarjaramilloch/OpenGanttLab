@@ -4573,21 +4573,22 @@ function datosAddXmlColumn(alias){
   pxmlBuildMapGrid();edSyncExtraCols();pxmlAutoApply();
   if(document.getElementById('editorModal').style.display==='flex'&&TASKS.length)populateEditor();
 }
+function _datosCloseHeaderMenu(){const m=document.getElementById('datosHeaderMenuPanel');if(m)m.remove();}
 function datosHeaderMenu(e,col){
   e.stopPropagation();e.preventDefault();
-  document.querySelectorAll('.rb-menu-panel').forEach(m=>m.remove());
+  _datosCloseHeaderMenu(); // solo el propio menú — .rb-menu-panel también la usan paneles fijos de la app (p.ej. presBarMenu); un querySelectorAll+remove los borraría del DOM para siempre
   if(!PXML_DB.length)return; // sin XML cargado no hay campos que ofrecer
-  const menu=document.createElement('div');menu.className='rb-menu-panel';
+  const menu=document.createElement('div');menu.id='datosHeaderMenuPanel';menu.className='rb-menu-panel';
   menu.style.cssText='position:fixed;z-index:100050;background:var(--panel,#fff);border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:4px;min-width:220px;max-height:60vh;overflow-y:auto';
   let html='';
   if(col&&col.startsWith('x:')){
     const key=col.slice(2),c=PXML_CUSTOM.find(x=>x.key===key);
-    if(c)html+=`<button type="button" class="filtro-menu-item" onclick="document.querySelectorAll('.rb-menu-panel').forEach(m=>m.remove());pxmlRemoveCustom('${key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Quitar columna «${esc(c.label)}»</button><div style="height:1px;background:var(--line);margin:4px 2px"></div>`;
+    if(c)html+=`<button type="button" class="filtro-menu-item" onclick="_datosCloseHeaderMenu();pxmlRemoveCustom('${key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Quitar columna «${esc(c.label)}»</button><div style="height:1px;background:var(--line);margin:4px 2px"></div>`;
   }
   const avail=_datosXmlAvailFields();
   if(avail.length){
     html+='<div style="padding:4px 10px;font-size:10px;color:var(--muted);font-weight:600">Agregar columna del XML</div>'+
-      avail.map(f=>`<button type="button" class="filtro-menu-item" onclick="document.querySelectorAll('.rb-menu-panel').forEach(m=>m.remove());datosAddXmlColumn('${esc(f.alias).replace(/'/g,"\\'")}')" title="${f.count} tarea(s) con dato">${esc(f.alias)}</button>`).join('');
+      avail.map(f=>`<button type="button" class="filtro-menu-item" onclick="_datosCloseHeaderMenu();datosAddXmlColumn('${esc(f.alias).replace(/'/g,"\\'")}')" title="${f.count} tarea(s) con dato">${esc(f.alias)}</button>`).join('');
   } else if(!html){
     html='<div style="padding:6px 10px;font-size:11px;color:var(--muted)">No hay más campos del XML por agregar.</div>';
   }
@@ -4595,7 +4596,7 @@ function datosHeaderMenu(e,col){
   document.body.appendChild(menu);
   menu.style.left=Math.max(4,Math.min(e.clientX,innerWidth-menu.offsetWidth-8))+'px';
   menu.style.top=Math.max(4,Math.min(e.clientY,innerHeight-menu.offsetHeight-8))+'px';
-  const close=ev=>{if(!menu.contains(ev.target)){menu.remove();document.removeEventListener('mousedown',close,true);}};
+  const close=ev=>{if(!menu.contains(ev.target)){_datosCloseHeaderMenu();document.removeEventListener('mousedown',close,true);}};
   setTimeout(()=>document.addEventListener('mousedown',close,true),0);
 }
 function toggleEdFilters(){
