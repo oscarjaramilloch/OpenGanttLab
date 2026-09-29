@@ -6966,9 +6966,11 @@ function _presSVG(all,S,TW,mn,mx,opts){
   const _spPos=(document.getElementById('presSubprocPos')||{value:'top'}).value==='axis'?'axis':'top';
   const _gapAxis=_gapMan!==null?_gapMan:6,_spBlock=(_spBands.length&&_spPos==='axis')?_spH+_gapAxis:0;
   const axisY0=(_spBands.length&&_spPos==='axis')?(titleH+Math.max(miTopH,_hoyGutter)+_topPad+_extraTop+_spBlock):(titleH+_spH+(_gapMan!==null?_gapMan:Math.max(miTopH,_hoyGutter)+Math.max(0,_topPad-_spH))+_extraTop),axisH=yrH+segH;
-  // Medidas de tiempo (flecha doble): una franja de 26 px por medida bajo el eje de años; las tareas se desplazan hacia abajo
+  // Medidas de tiempo (flecha doble): una franja de 26 px por medida bajo el eje de años; las tareas se desplazan hacia abajo.
+  // Si el usuario arrastró una medida hacia abajo (c.dy>0), ya no necesita su franja completa
+  // reservada arriba — se descuenta lo arrastrado (hasta liberarla del todo a partir de 26px).
   const _dimKeys=new Set();all.forEach(t=>{_dimKeys.add(useLB?'LB|'+pkOf(t):pkOf(t));});
-  const _dimVis=presVisibleDims(_dimKeys),_dimSpace=_dimVis.length*26;
+  const _dimVis=presVisibleDims(_dimKeys),_dimSpace=_dimVis.reduce((s,c)=>s+Math.max(0,26-Math.max(0,c.dy||0)),0);
   const _rapGapRaw=(document.getElementById('presRapGapTop')||{value:''}).value;
   const _rapGapTop=(groupByC1&&_rapGapRaw!==''&&!isNaN(+_rapGapRaw))?Math.max(0,+_rapGapRaw):12;
   const taskY0=axisY0+axisH+_rapGapTop+_dimSpace;
