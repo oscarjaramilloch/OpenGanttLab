@@ -187,6 +187,7 @@
 <!-- Íconos (outline) -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-dl" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+  <symbol id="i-launch" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></symbol>
   <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></symbol>
   <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/></symbol>
@@ -221,6 +222,7 @@
     </nav>
     <span class="spacer"></span>
     <a class="gh" href="https://github.com/oscarjaramilloch/OpenGanttLab" target="_blank" rel="noopener" aria-label="Código fuente en GitHub"><svg class="ic"><use href="#i-gh"/></svg></a>
+    <a class="btn btn-ghost btn-sm" href="src/OpenGanttLab%203.1.html" target="_blank" rel="noopener" title="Abre la app en esta pestaña del navegador, sin descargar nada"><svg class="ic"><use href="#i-launch"/></svg>Usar en línea</a>
     <a class="btn btn-primary btn-sm js-download" href="src/OpenGanttLab%203.1.html" download="OpenGanttLab.html"><svg class="ic"><use href="#i-dl"/></svg>Descargar</a>
   </div>
 </header>
@@ -239,10 +241,10 @@
           <li><svg class="ic"><use href="#i-code"/></svg><span><b>Código abierto</b>GNU GPLv3</span></li>
         </ul>
         <div class="cta-row">
-          <a class="btn btn-primary js-download" href="src/OpenGanttLab%203.1.html" download="OpenGanttLab.html"><svg class="ic"><use href="#i-dl"/></svg>Descargar OpenGanttLab.html</a>
-          <a class="btn btn-ghost" href="#vistas">Ver las vistas</a>
+          <a class="btn btn-primary" href="src/OpenGanttLab%203.1.html" target="_blank" rel="noopener" title="Abre la app en esta pestaña del navegador, sin descargar nada"><svg class="ic"><use href="#i-launch"/></svg>Usar en línea, sin descargar</a>
+          <a class="btn btn-ghost js-download" href="src/OpenGanttLab%203.1.html" download="OpenGanttLab.html"><svg class="ic"><use href="#i-dl"/></svg>Descargar</a>
         </div>
-        <p class="micro" id="status">Listo para usar: guárdalo y ábrelo con tu navegador.</p>
+        <p class="micro" id="status">Se abre en tu navegador; también puedes descargarlo y usarlo sin internet.</p>
       </div>
       <div class="frame" aria-label="Captura del Gantt de OpenGanttLab">
         <div class="bar"><i></i><i></i><i></i><span>OpenGanttLab · Comparador de escenarios</span></div>
@@ -394,8 +396,11 @@
   <section class="final">
     <div class="wrap">
       <h2>Empieza en menos de un minuto</h2>
-      <p class="sub">Descarga el archivo, ábrelo y carga tu primer cronograma.</p>
-      <a class="btn btn-primary js-download" href="src/OpenGanttLab%203.1.html" download="OpenGanttLab.html"><svg class="ic"><use href="#i-dl"/></svg>Descargar OpenGanttLab.html</a>
+      <p class="sub">Úsalo ahora mismo en el navegador, o descárgalo para trabajar sin internet.</p>
+      <div class="cta-row" style="justify-content:center">
+        <a class="btn btn-primary" href="src/OpenGanttLab%203.1.html" target="_blank" rel="noopener" title="Abre la app en esta pestaña del navegador, sin descargar nada"><svg class="ic"><use href="#i-launch"/></svg>Usar en línea, sin descargar</a>
+        <a class="btn btn-ghost js-download" href="src/OpenGanttLab%203.1.html" download="OpenGanttLab.html"><svg class="ic"><use href="#i-dl"/></svg>Descargar OpenGanttLab.html</a>
+      </div>
     </div>
   </section>
 </main>
