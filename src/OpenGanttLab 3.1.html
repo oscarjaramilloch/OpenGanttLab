@@ -3382,6 +3382,9 @@ const _COL_DEFS=[
   {id:'c3',  label:'Nombre de Tarea', selector:'.hcat3,.c3'},
 ];
 let _colVis={c1:true,c2:true,esc:true,m2:true,c3:true};
+// _COL_DEFS usa esc/c1/c2/c3; AP_FIELD_LABELS (ver datosMapXmlColumnAsStandard) usa escenario/c1/c2/tarea.
+const _COL_DEF_FIELD={esc:'escenario',c1:'c1',c2:'c2',c3:'tarea'};
+function _colDefLabel(d){const f=_COL_DEF_FIELD[d.id];return(f&&AP_FIELD_LABELS[f])||d.label;}
 function openColMenu(e,col){
   e.stopPropagation();
   const menu=document.getElementById('colMenu');
@@ -3390,14 +3393,14 @@ function openColMenu(e,col){
   const item=d=>`
     <label style="display:flex;gap:8px;align-items:center;padding:5px 14px;cursor:pointer;font-size:11px" onmouseenter="this.style.background='#f5f7fa'" onmouseleave="this.style.background=''">
       <input type="checkbox" ${_colVis[d.id]?'checked':''} onchange="toggleColVisibility('${d.id}',this.checked)">
-      <span>${esc(d.label)}</span>
+      <span>${esc(_colDefLabel(d))}</span>
     </label>`;
   // una sola lista: todas son columnas de la Tabla de Datos (las de la izquierda visibles por defecto, el resto ocultas)
   list.innerHTML=[..._COL_DEFS,..._ganttExtDefs()].map(item).join('');
   // Ajustar texto: solo ícono (outline), primero en las opciones y POR COLUMNA (la del encabezado clicado);
   // activo = ajustado (2 líneas), inactivo = una línea con "…"
   const _wOn=_wrapOn(col);
-  const _wLbl=(([..._COL_DEFS,..._ganttExtDefs()].find(d=>d.id===col))||{}).label||'';
+  const _wLbl=_colDefLabel((([..._COL_DEFS,..._ganttExtDefs()].find(d=>d.id===col))||{label:''}));
   list.innerHTML=`<div style="padding:2px 14px 6px;border-bottom:1px solid #eee;margin-bottom:2px"><button type="button" id="ganttWrapBtn" onclick="setGanttWrapCol('${esc(col)}')" title="Ajustar texto — ${esc(_wLbl)}" style="${_wrapBtnStyle(_wOn)}"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><path d="M3 12h15a3 3 0 1 1 0 6h-4"/><polyline points="16 16 14 18 16 20"/><line x1="3" y1="18" x2="10" y2="18"/></svg></button><span style="font-size:10px;color:var(--muted);margin-left:8px">${esc(_wLbl)}</span></div>`+list.innerHTML;
   menu.style.maxHeight='70vh';menu.style.overflowY='auto';
   document.body.appendChild(menu);
@@ -4159,11 +4162,11 @@ function render(){
   const minors=S.minor.map(m=>m.lbl?`<div class="mo" style="left:${m.x+XPAD}px;width:${m.w}px;top:${hasSuper?yH*2:yH}px;height:${yH}px;line-height:${yH}px${m.x<=0?';border-left:none':''}"${m.tip?` title="${esc(m.tip)}"`:''}>${m.lbl}</div>`:'').join('');
   const estHdr=(estX!=null&&SHOW_HOY)?`<div class="tl" id="todayLine" style="left:${estX}px"></div>`:'';
 
-  const hEsc=_colVis.esc?`<th class="hcat1 hcat-esc" style="left:0;width:${ESCENARIO_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'esc');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Escenario<span class="hdr-filter-btn" data-hcol="esc" onclick="edfOpenFilter(event,'esc','Escenario','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="esc"></div></div></th>`:'';
-  const hC1=_colVis.c1?`<th class="hcat1" style="left:${lC1}px;width:${CAT1_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c1');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 1<span class="hdr-filter-btn" data-hcol="c1" onclick="edfOpenFilter(event,'c1','Categoría 1','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c1"></div></div></th>`:'';
-  const hC2=_colVis.c2?`<th class="hcat2" style="left:${lC2}px;width:${CAT2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Categoría 2<span class="hdr-filter-btn" data-hcol="c2" onclick="edfOpenFilter(event,'c2','Categoría 2','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c2"></div></div></th>`:'';
+  const hEsc=_colVis.esc?`<th class="hcat1 hcat-esc" style="left:0;width:${ESCENARIO_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'esc');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(AP_FIELD_LABELS.escenario)}<span class="hdr-filter-btn" data-hcol="esc" onclick="edfOpenFilter(event,'esc','${esc(AP_FIELD_LABELS.escenario)}','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="esc"></div></div></th>`:'';
+  const hC1=_colVis.c1?`<th class="hcat1" style="left:${lC1}px;width:${CAT1_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c1');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(AP_FIELD_LABELS.c1)}<span class="hdr-filter-btn" data-hcol="c1" onclick="edfOpenFilter(event,'c1','${esc(AP_FIELD_LABELS.c1)}','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c1"></div></div></th>`:'';
+  const hC2=_colVis.c2?`<th class="hcat2" style="left:${lC2}px;width:${CAT2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(AP_FIELD_LABELS.c2)}<span class="hdr-filter-btn" data-hcol="c2" onclick="edfOpenFilter(event,'c2','${esc(AP_FIELD_LABELS.c2)}','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c2"></div></div></th>`:'';
   const hM2=_colVis.m2?`<th class="hcat2 hcat-m2" style="left:${lM2}px;width:${MARCA2_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'m2');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Marca Activity<span class="hdr-filter-btn" data-hcol="m2" onclick="edfOpenFilter(event,'m2','Marca Activity','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="m2"></div></div></th>`:'';
-  const hC3=_colVis.c3?`<th class="hcat3" style="left:${lC3}px;width:${CAT3_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c3');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">Nombre de Tarea<span class="hdr-filter-btn" data-hcol="c3" onclick="edfOpenFilter(event,'c3','Nombre de Tarea','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c3"></div></div></th>`:'';
+  const hC3=_colVis.c3?`<th class="hcat3" style="left:${lC3}px;width:${CAT3_W}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'c3');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(AP_FIELD_LABELS.tarea)}<span class="hdr-filter-btn" data-hcol="c3" onclick="edfOpenFilter(event,'c3','${esc(AP_FIELD_LABELS.tarea)}','text','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="c3"></div></div></th>`:'';
   const hX=xcols.map(c=>`<th class="hxc" style="left:${c.left}px;width:${c.w}px;min-width:40px;height:${HH}px;position:sticky;top:0;z-index:25" oncontextmenu="openColMenu(event,'${c.d.id}');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.d.label)}<span class="hdr-filter-btn" data-hcol="${c.d.id}" onclick="edfOpenFilter(event,'${c.d.id}','${esc(c.d.label)}','${c.d.type}','gantt')" title="Filtrar" style="cursor:pointer;font-size:9px;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span><div class="col-resize" data-col="ext:${c.d.id}"></div></div></th>`).join('');
   const totalTableW=lC3+wC3+wX+W;
   wrap.innerHTML=`<table><thead><tr>`+
@@ -4517,6 +4520,10 @@ function closeConfigPanel(){document.getElementById('configModal').style.display
    Cada una se guarda en t.extra[key] y aparece como columna al final de la Tabla de Datos. */
 let PXML_CUSTOM=[];   // [{key:'x1',label:'Nombre'}]
 let _pxmlCustomSeq=0;
+// Etiquetas visibles de los 4 campos estándar que se pueden "reasignar" desde el clic derecho de una
+// columna x: (ver datosMapXmlColumnAsStandard) — el dato interno sigue siendo escenario/c1/c2/tarea,
+// solo cambia cómo se llama en la Tabla de Datos y el Gantt (fase 1: no toca Agrupador/Filtros de LdT/exportación).
+let AP_FIELD_LABELS={escenario:'Escenario',c1:'Categoría 1',c2:'Categoría 2',tarea:'Nombre de Tarea'};
 const ED_COLS=[
   {key:'escenario',label:'Escenario',type:'text'},{key:'c1',label:'Categoría 1',type:'text'},{key:'c2',label:'Categoría 2',type:'text'},{key:'tarea',label:'Nombre de Tarea',type:'text'},
   {key:'iLB',label:'Start LB',type:'date'},{key:'fLB',label:'End LB',type:'date'},{key:'av',label:'Avance Real',type:'number'},
@@ -4542,7 +4549,7 @@ function edSyncExtraCols(){
 }
 function buildEditorHead(){
   const tr=document.getElementById('edTableHeadRow');if(!tr||tr.children.length)return;
-  tr.innerHTML=ED_COLS.map(c=>`<th data-col="${c.key}" oncontextmenu="datosHeaderMenu(event,'${c.key}');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(c.label)}<span class="ed-filter-btn" data-hcol="${c.key}" onclick="edfOpenFilter(event,'${c.key}','${esc(c.label)}','${c.type}')" title="Filtrar" style="display:${_edFiltersOn?'inline-flex':'none'};align-items:center;justify-content:center;cursor:pointer;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span></div><div class="col-resize" data-col="${c.key}"></div></th>`).join('')+'<th oncontextmenu="datosHeaderMenu(event,null);return false"></th>';
+  tr.innerHTML=ED_COLS.map(c=>{const lbl=AP_FIELD_LABELS[c.key]||c.label;return `<th data-col="${c.key}" oncontextmenu="datosHeaderMenu(event,'${c.key}');return false"><div style="position:relative;height:100%;display:flex;align-items:center;justify-content:center;gap:4px">${esc(lbl)}<span class="ed-filter-btn" data-hcol="${c.key}" onclick="edfOpenFilter(event,'${c.key}','${esc(lbl)}','${c.type}')" title="Filtrar" style="display:${_edFiltersOn?'inline-flex':'none'};align-items:center;justify-content:center;cursor:pointer;color:#3b6ea5;line-height:1;padding:2px 3px;border-radius:3px;border:1px solid #3b6ea5;user-select:none">${EDF_FUNNEL}</span></div><div class="col-resize" data-col="${c.key}"></div></th>`;}).join('')+'<th oncontextmenu="datosHeaderMenu(event,null);return false"></th>';
 }
 /* ── Clic derecho en un encabezado de la Tabla de Datos: agregar/quitar columnas de campos
    personalizados del XML (ExtendedAttribute) sin pasar por el panel completo de Mapeo de columnas. ── */
@@ -4574,6 +4581,27 @@ function datosAddXmlColumn(alias){
   if(document.getElementById('editorModal').style.display==='flex'&&TASKS.length)populateEditor();
 }
 function _datosCloseHeaderMenu(){const m=document.getElementById('datosHeaderMenuPanel');if(m)m.remove();}
+// Reasigna una columna x: (agregada del XML) a uno de los 4 campos estándar que alimentan el
+// Gantt/LdT (Escenario/Categoría 1/Categoría 2/Nombre de Tarea). El mapeo anterior de ese campo
+// se descarta (no se conserva como columna aparte); la columna x: se retira porque el dato ya
+// vive en el campo estándar. Fase 1: solo renombra el encabezado en Tabla de Datos + Gantt.
+function datosMapXmlColumnAsStandard(key,stdField){
+  const c=PXML_CUSTOM.find(x=>x.key===key);if(!c)return;
+  const norm=c.label.trim().toLowerCase();
+  PXML_DB.forEach(db=>{
+    if(!db.mapping)db.mapping={};
+    const found=db.customCols.find(cc=>(cc.alias||cc.fname||'').trim().toLowerCase()===norm);
+    if(found)db.mapping[stdField]=found.id;
+    delete db.mapping[stdField+'_fixed'];
+  });
+  PXML_CUSTOM=PXML_CUSTOM.filter(x=>x.key!==key);
+  PXML_DB.forEach(db=>{if(db.mapping){delete db.mapping[key];delete db.mapping[key+'_fixed'];}});
+  TASKS.forEach(t=>{if(t.extra)delete t.extra[key];});
+  delete _colVis['x:'+key];delete _ganttFilters['x:'+key];delete _extW['x:'+key];
+  AP_FIELD_LABELS[stdField]=c.label;
+  pxmlBuildMapGrid();edSyncExtraCols();pxmlAutoApply();
+  if(document.getElementById('editorModal').style.display==='flex'&&TASKS.length)populateEditor();
+}
 function datosHeaderMenu(e,col){
   e.stopPropagation();e.preventDefault();
   _datosCloseHeaderMenu(); // solo el propio menú — .rb-menu-panel también la usan paneles fijos de la app (p.ej. presBarMenu); un querySelectorAll+remove los borraría del DOM para siempre
@@ -4583,7 +4611,12 @@ function datosHeaderMenu(e,col){
   let html='';
   if(col&&col.startsWith('x:')){
     const key=col.slice(2),c=PXML_CUSTOM.find(x=>x.key===key);
-    if(c)html+=`<button type="button" class="filtro-menu-item" onclick="_datosCloseHeaderMenu();pxmlRemoveCustom('${key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Quitar columna «${esc(c.label)}»</button><div style="height:1px;background:var(--line);margin:4px 2px"></div>`;
+    if(c){
+      html+=`<button type="button" class="filtro-menu-item" onclick="_datosCloseHeaderMenu();pxmlRemoveCustom('${key}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Quitar columna «${esc(c.label)}»</button><div style="height:1px;background:var(--line);margin:4px 2px"></div>`+
+        `<div style="padding:4px 10px;font-size:10px;color:var(--muted);font-weight:600">Usar como…</div>`+
+        ['escenario','c1','c2','tarea'].map(f=>`<button type="button" class="filtro-menu-item" onclick="_datosCloseHeaderMenu();datosMapXmlColumnAsStandard('${key}','${f}')" title="La columna se llamará «${esc(c.label)}» y alimentará este campo en el Gantt/LdT">${esc(AP_FIELD_LABELS[f])}</button>`).join('')+
+        `<div style="height:1px;background:var(--line);margin:4px 2px"></div>`;
+    }
   }
   const avail=_datosXmlAvailFields();
   if(avail.length){
