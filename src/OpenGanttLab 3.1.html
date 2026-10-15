@@ -4621,7 +4621,9 @@ function datosHeaderMenu(e,col){
   const avail=_datosXmlAvailFields();
   if(avail.length){
     html+='<div style="padding:4px 10px;font-size:10px;color:var(--muted);font-weight:600">Agregar columna del XML</div>'+
-      avail.map(f=>`<button type="button" class="filtro-menu-item" onclick="_datosCloseHeaderMenu();datosAddXmlColumn('${esc(f.alias).replace(/'/g,"\\'")}')" title="${f.count} tarea(s) con dato">${esc(f.alias)}</button>`).join('');
+      `<div style="padding:0 10px 4px"><input type="search" id="datosAddColSearch" placeholder="Buscar columna…" autocomplete="off" oninput="_datosFilterAddColList(this.value)" onkeydown="event.stopPropagation()" style="width:100%;box-sizing:border-box;font:inherit;font-size:11px;padding:4px 7px;border:1px solid var(--line);border-radius:4px;background:var(--panel,#fff);color:var(--ink)"></div>`+
+      `<div id="datosAddColList">`+avail.map(f=>`<button type="button" class="filtro-menu-item" data-search="${esc(f.alias.toLowerCase())}" onclick="_datosCloseHeaderMenu();datosAddXmlColumn('${esc(f.alias).replace(/'/g,"\\'")}')" title="${f.count} tarea(s) con dato">${esc(f.alias)}</button>`).join('')+`</div>`+
+      `<div id="datosAddColEmpty" style="display:none;padding:6px 10px;font-size:11px;color:var(--muted)">Sin resultados.</div>`;
   } else if(!html){
     html='<div style="padding:6px 10px;font-size:11px;color:var(--muted)">No hay más campos del XML por agregar.</div>';
   }
@@ -4631,6 +4633,18 @@ function datosHeaderMenu(e,col){
   menu.style.top=Math.max(4,Math.min(e.clientY,innerHeight-menu.offsetHeight-8))+'px';
   const close=ev=>{if(!menu.contains(ev.target)){_datosCloseHeaderMenu();document.removeEventListener('mousedown',close,true);}};
   setTimeout(()=>document.addEventListener('mousedown',close,true),0);
+  const searchInp=document.getElementById('datosAddColSearch');if(searchInp)searchInp.focus();
+}
+function _datosFilterAddColList(q){
+  q=q.trim().toLowerCase();
+  const list=document.getElementById('datosAddColList');if(!list)return;
+  let shown=0;
+  list.querySelectorAll('button[data-search]').forEach(b=>{
+    const match=!q||b.dataset.search.includes(q);
+    b.style.display=match?'':'none';
+    if(match)shown++;
+  });
+  const empty=document.getElementById('datosAddColEmpty');if(empty)empty.style.display=shown?'none':'block';
 }
 function toggleEdFilters(){
   _edFiltersOn=!_edFiltersOn;
