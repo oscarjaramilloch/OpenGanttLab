@@ -4103,10 +4103,10 @@ function render(){
         const dateCY=rpTop+rpH/2;
         // dibujar TODAS las instancias (misma fila, distintas posiciones X)
         tg.insts.forEach(t=>{
-          const _c1col=SCEN_COLOR[t.c1]||'#444';const _c2col=CAT2_COLOR[t.c2]||'#666';const tipLB=`<b>${esc(t.tarea)}</b>${depIdTag(t)}<br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📐 LB: ${fmtD(t.iLB)} → ${fmtD(t.fLB)}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
+          const _c1col=SCEN_COLOR[t.c1]||'#444';const _c2col=CAT2_COLOR[t.c2]||'#666';const tipLB=`<b>${esc(t.tarea)}</b>${depIdTag(t)}<br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📐 LB: ${fmtD(t.iLB)} → ${fmtD(t.fLB)} · ${Math.round((+t.fLB-+t.iLB)/86400000)+1} d${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
           const _diasRest=Math.round((+t.fRP-Date.now())/86400000);
           const _avTxt=AP_PREFS.avanceUnidad==='dias'?`Avance: ${t.av}% · ${_diasRest>0?`faltan ${_diasRest} día${_diasRest===1?'':'s'}`:_diasRest===0?'vence hoy':`vencida hace ${-_diasRest} día${_diasRest===-1?'':'s'}`}`:`Avance: ${t.av}%`;
-          const tipRP=`<b>${esc(t.tarea)}</b>${depIdTag(t)}<br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📊 R/P: ${fmtD(t.iRP)} → ${fmtD(t.fRP)}<br>${_avTxt}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
+          const tipRP=`<b>${esc(t.tarea)}</b>${depIdTag(t)}<br><span style=color:${_c1col}>${esc(t.c1)}</span> › <span style=color:${_c2col}>${esc(t.c2)}</span><br>📊 R/P: ${fmtD(t.iRP)} → ${fmtD(t.fRP)} · ${Math.round((+t.fRP-+t.iRP)/86400000)+1} d<br>${_avTxt}${t.crit?'<br><b style=color:red>⚠ Ruta Crítica</b>':''}${depTipHtml(t)}`;
           if(t.hito){
             const xi=S.x(t.iLB)+XPAD;
             const dBorder=t.crit?`${critW}px solid #FF0000`:`1.5px solid ${barColor}`;
@@ -9934,8 +9934,10 @@ function presYearAutoFg(){
       } else {
         html+=`<div>&#9646; <b>Inicio LB:</b> ${fD2(t.iLB)}</div>`;
         html+=`<div>&#9646; <b>Fin LB:</b> ${fD2(t.fLB)}</div>`;
+        {const _dl=Math.round((+t.fLB-+t.iLB)/86400000)+1;html+=`<div>&#9646; <b>Duración LB:</b> ${_dl} día${_dl===1?'':'s'}</div>`;}
         html+=`<div>&#9646; <b>Inicio R/P:</b> ${fD2(t.iRP)}</div>`;
         html+=`<div>&#9646; <b>Fin R/P:</b> ${fD2(t.fRP)}</div>`;
+        {const _du=Math.round((+t.fRP-+t.iRP)/86400000)+1;html+=`<div>&#9646; <b>Duración R/P:</b> ${_du} día${_du===1?'':'s'}</div>`;}
         if(t.av>0) html+=`<div>&#9632; <b>Avance:</b> ${t.av.toFixed(0)}%</div>`;
         if(t.crit) html+=`<div style="color:#c00;font-weight:bold">⚠ Ruta Crítica</div>`;
       }
