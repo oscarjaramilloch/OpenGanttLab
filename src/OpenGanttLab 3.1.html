@@ -11129,7 +11129,8 @@ function pxmlAutoGuessMapping(db){
   // Escenario y Categoría 1 no tienen equivalente estándar en el XML — si no se encontró
   // un campo personalizado esperado, "Valor fijo" en blanco como punto de partida.
   if(!m.escenario||m.escenario==='__NONE__'){m.escenario='__FIXED__';if(m.escenario_fixed===undefined)m.escenario_fixed='';}
-  if(!m.c1||m.c1==='__NONE__'){m.c1='__FIXED__';if(m.c1_fixed===undefined)m.c1_fixed='';}
+  // Categoría 1 es obligatoria: sin campo equivalente se usa el nombre de la variante (archivo) como valor fijo.
+  if(!m.c1||m.c1==='__NONE__'){m.c1='__FIXED__';if(!m.c1_fixed)m.c1_fixed=db.variantName||db.projectName||db.fileName||'Variante 1';}
   // Categoría 2: si no se encontró "Especialidad Tarea" como campo personalizado, "General" fijo como respaldo.
   if(!m.c2||m.c2==='__NONE__'){m.c2='__FIXED__';m.c2_fixed='General';}
 }
