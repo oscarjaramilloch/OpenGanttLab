@@ -8317,7 +8317,7 @@ document.getElementById('presBody').addEventListener('dblclick',e=>{
     presYearMergeFill(yrKey,isLBYear);
     presBdFill('year');
     const pym=document.getElementById('presYearMenu');
-    pym.style.display='block';pym.style.left=Math.min(e.clientX+5,innerWidth-210)+'px';pym.style.top=Math.min(e.clientY+5,innerHeight-150)+'px';
+    pym.style.display='block';pym.style.left=Math.max(5,Math.min(e.clientX+5,innerWidth-244))+'px';{const _ph=pym.offsetHeight||400;pym.style.top=Math.max(5,Math.min(e.clientY+5,innerHeight-_ph-8))+'px';}
   }
 });
 // swatch del menú → abre picker principal (misma paleta 80 colores)
