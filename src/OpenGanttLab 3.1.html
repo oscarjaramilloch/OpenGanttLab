@@ -2796,9 +2796,12 @@ function parseRows(rows){
   SCEN_COLOR={};
   for(let i=hr+1;i<rows.length;i++){
     const r=rows[i];if(!r)continue;
-    const tar=r[col.tar],c1=r[col.c1],iLB=toDate(r[col.iLB]),fLB=toDate(r[col.fLB]);
+    const tar=r[col.tar],c1=r[col.c1];
+    // La línea base es opcional: si falta, se usa R/P (y viceversa); se descarta la fila solo si no hay ninguna fecha.
+    const _lbS=toDate(r[col.iLB]),_lbF=toDate(r[col.fLB]),_rpS=toDate(r[col.iRP]),_rpF=toDate(r[col.fRP]);
+    const iLB=_lbS||_rpS||_lbF||_rpF,fLB=_lbF||_lbS||_rpF||_rpS;
     if(!tar||!c1||!iLB||!fLB)continue;
-    const iRP=toDate(r[col.iRP])||iLB,fRP=toDate(r[col.fRP])||fLB;
+    const iRP=_rpS||_rpF||iLB,fRP=_rpF||_rpS||fLB;
     let av=Number(r[col.av])||0;
     if(av>0&&av<=1) av=Math.round(av*10000)/100; // Excel guarda 50% como 0.5 → convertir
     av=Math.max(0,Math.min(100,av));
